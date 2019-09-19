@@ -12,7 +12,7 @@ define( require => {
   /**
    * @constructor
    */
-  class CollisionLabModel  {
+  class CollisionLabModel {
 
     /**
      * @param {Tandem} tandem
