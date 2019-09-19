@@ -27,7 +27,7 @@ define( require => {
 
       super(
         () => new CollisionLabModel( tandem.createTandem( 'model' ) ),
-        ( model ) => new CollisionLabScreenView( model, tandem.createTandem( 'view' ) ),
+        model => new CollisionLabScreenView( model, tandem.createTandem( 'view' ) ),
         options
       );
     }
