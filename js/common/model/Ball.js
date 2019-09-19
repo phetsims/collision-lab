@@ -23,7 +23,7 @@ define( require => {
      */
     constructor( mass, position, velocity ) {
 
-      this.setBall(mass, position, velocity);
+      this.setBall( mass, position, velocity );
     }
 
     // @public resets the model
