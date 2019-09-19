@@ -16,74 +16,130 @@ define( require => {
    */
   class TwoVector {
     /**
-     * @param {number} x - X coordinate
-     * @param {number} y - Y coordinate
+     * @param {number} x - X component
+     * @param {number} y - Y component
      */
     constructor( x, y ) {
+
+      // @private
       this.currentVector = new Vector2( x, y );
-      this.lastVector = new Vector2( x, y );
-    }//end of constructor
 
+      // @private
+      this.oldVector = new Vector2( x, y );
+    }
 
+    /**
+     * Returns the current vector
+     * @returns {TwoVector}
+     */
     clone() {
       return new TwoVector( this.currentVector.x, this.currentVector.y );
     }
 
-    initializeXLastYLast() {
-      this.lastVector = this.currentVector.copy();
+    /**
+     * Sets the old vector to be a copy of the current vector
+     */
+    initializeXOldYOld() {
+      this.oldVector = this.currentVector.copy();
     }
 
+    /**
+     * Gets the magnitude of the vector
+     * @returns {number}
+     */
     getMagnitude() {
       return this.currentVector.magnitude;
     }
 
+    /**
+     * Gets the angle of the vector in radians
+     * @returns {number}
+     */
     getAngle() {
       return this.currentVector.angle;  //angle in radians
     }
 
+    /**
+     * Sets the x components of the vector and oldVector
+     * @param {number} x
+     */
     setX( x ) {
       this.currentVector.setX( x );
-      this.lastVector.setX( x );
+      this.oldVector.setX( x );
     }
 
+    /**
+     * Sets the y component of the vector and oldVector
+     * @param {number} y
+     */
     setY( y ) {
-
       this.currentVector.setY( y );
-      this.lastVector.setY( y );
-
+      this.oldVector.setY( y );
     }
 
+    /**
+     * Sets the components of the vector and oldVector
+     * @param {number} x - x component
+     * @param {number} y - y component
+     */
     setXY( x, y ) {
       this.currentVector.set( x, y );
-      this.lastVector.set( x, y );
+      this.oldVector.set( x, y );
     }
 
+    /**
+     * Flips the vector
+     */
     flipVector() {
       this.currentVector.times( -1 );
     }
 
+    /**
+     * Gets the x component of the vector
+     * @returns {number}
+     */
     getX() {
       return this.currentVector.x;
     }
 
+    /**
+     * Gets the y component of the vector
+     * @returns {number}
+     */
     getY() {
       return this.currentVector.y;
     }
 
-    getXLast() {
-      return this.lastVector.x;
+    /**
+     * Gets the x component of the old vector
+     * @returns {number}
+     */
+    getXOld() {
+      return this.oldVector.x;
     }
 
-    getYLast() {
-      return this.lastVector.y;
+    /**
+     * Gets the y component of the old vector
+     * @returns {number}
+     */
+    getYOld() {
+      return this.oldVector.y;
     }
 
-    setXLast( xLast ) {
-      this.lastVector.x = xLast;
+    /**
+     * Sets the x component of the old vector
+     * @param {number} xOld
+     */
+    setXOld( xOld ) {
+      this.oldVector.x = xOld;
     }
 
-    setYLast( yLast ) {
-      this.lastVector.y = yLast;
+    /**
+     * Sets the y component of the old vector
+     * @param {number} yOld
+     */
+    setYOld( yOld ) {
+      this.oldVector.y = yOld;
     }
   }
 
