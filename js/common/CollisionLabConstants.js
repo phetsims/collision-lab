@@ -18,7 +18,7 @@ define( require => {
     MAX_BALLS: 5,
     BORDER_WIDTH: 3.2, // horizontal length of pool table in meters
     BORDER_HEIGHT_1D: 0.8, // vertical height of pool table in meters
-    BORDER_HEIGHT_2D: 1.9, // vertical height of pool table in meters
+    BORDER_HEIGHT_2D: 1.6, // vertical height of pool table in meters
 
     VIEW_TO_MODEL_SCALING: 200, // meter to view coordinates (1 m = 200 coordinates)
 
