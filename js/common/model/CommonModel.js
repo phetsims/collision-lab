@@ -1,26 +1,25 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
+ * Common Model for collision lab
  * @author Martin Veillette
  */
 define( require => {
   'use strict';
 
   // modules
-  const CommonModel = require( 'COLLISION_LAB/common/model/CommonModel' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
 
   /**
    * @constructor
    */
-  class CollisionLabModel extends CommonModel {
+  class CommonModel {
 
     /**
      * @param {Tandem} tandem
      */
     constructor( tandem ) {
-
-      super( tandem );
+      //TODO
     }
 
     // @public resets the model
@@ -34,5 +33,5 @@ define( require => {
     }
   }
 
-  return collisionLab.register( 'CollisionLabModel', CollisionLabModel );
+  return collisionLab.register( 'CommonModel', CommonModel );
 } );
