@@ -24,10 +24,10 @@ define( function( require ) {
 
       super();
 
-      const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-        Vector2.ZERO,
-        this.layoutBounds.leftCenter,
-        CollisionLabConstants.VIEW_TO_MODEL_SCALING );
+      // const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      //   Vector2.ZERO,
+      //   this.layoutBounds.leftCenter,
+      //   CollisionLabConstants.VIEW_TO_MODEL_SCALING );
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
