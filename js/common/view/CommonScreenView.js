@@ -8,11 +8,11 @@ define( function( require ) {
 
   // modules
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/CollisionLabConstants' );
+  // const CollisionLabConstants = require( 'COLLISION_LAB/CollisionLabConstants' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const ModelViewTransform2 = require( 'PHETCOMMON/ModelViewTransform2' );
-  const Vector2 = require( 'DOT/Vector2' );
+  // const ModelViewTransform2 = require( 'PHETCOMMON/ModelViewTransform2' );
+  // const Vector2 = require( 'DOT/Vector2' );
 
   class CommonScreenView extends ScreenView {
 
