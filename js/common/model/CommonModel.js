@@ -13,7 +13,7 @@ define( require => {
   const NumberProperty = require( 'AXON/NumberProperty' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const Vector2 = require( 'DOT/Vector2' );
-  const Ball = require( 'COLLISION_LAB/Common/Model/Ball' );
+  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const Range = require( 'DOT/Range' );
   const ObservableArray = require( 'AXON/ObservableArray' );
 
