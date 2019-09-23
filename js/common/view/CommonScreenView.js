@@ -8,7 +8,10 @@ define( function( require ) {
 
   // modules
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  // const CollisionLabConstants = require( 'COLLISION_LAB/CollisionLabConstants' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const NumberSpinner = require( 'SUN/NumberSpinner' );
+  const Property = require( 'AXON/Property' );
+  const Range = require( 'DOT/Range' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   // const ModelViewTransform2 = require( 'PHETCOMMON/ModelViewTransform2' );
@@ -29,6 +32,11 @@ define( function( require ) {
       //   this.layoutBounds.leftCenter,
       //   CollisionLabConstants.VIEW_TO_MODEL_SCALING );
 
+
+      const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
+      const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
+      this.addChild( numberOfBallsSpinner );
+
       const resetAllButton = new ResetAllButton( {
         listener: () => {
           model.reset();
@@ -38,6 +46,7 @@ define( function( require ) {
         tandem: tandem.createTandem( 'resetAllButton' )
       } );
       this.addChild( resetAllButton );
+
     }
 
     // @public

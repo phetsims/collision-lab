@@ -46,7 +46,24 @@ define( require => {
 
       this.initializeBalls();
 
-      console.log( 'hello' );
+      const self = this;
+
+      // update the number of balls
+      this.numberOfBallsProperty.lazyLink( function( newValue, oldValue ) {
+        const difference = newValue - oldValue;
+
+        if ( difference < 0 ) {
+
+          // remove ball(s) from observableArray
+          self.balls.splice( oldValue - 1, Math.abs( difference ) );
+        }
+        else {
+          // add balls to observableArray
+          for ( let i = oldValue; i < newValue; i++ ) {
+            self.balls.push( self.prepopulatedBalls[ i ] );
+          }
+        }
+      } );
     }
 
     /**
@@ -69,7 +86,7 @@ define( require => {
     step( dt ) {
       this.balls.forEach( function( ball ) {
         ball.step( dt );
-        console.log( ball.position );
+        // console.log( ball.position );
       } );
     }
 
