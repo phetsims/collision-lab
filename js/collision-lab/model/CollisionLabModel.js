@@ -25,12 +25,12 @@ define( require => {
 
     // @public resets the model
     reset() {
-      //TODO Reset things here.
+      super.reset();
     }
 
     // @public
     step( dt ) {
-      //TODO Handle model animation here.
+      super.step( dt );
     }
   }
 

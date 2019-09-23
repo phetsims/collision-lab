@@ -9,6 +9,13 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const NumberProperty = require( 'AXON/NumberProperty' );
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const Vector2 = require( 'DOT/Vector2' );
+  const Ball = require( 'COLLISION_LAB/Common/Model/Ball' );
+  const Range = require( 'DOT/Range' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
 
   /**
    * @constructor
@@ -19,17 +26,90 @@ define( require => {
      * @param {Tandem} tandem
      */
     constructor( tandem ) {
-      //TODO
+
+      // @public
+      this.numberOfBallsProperty = new NumberProperty( 2 );
+
+      // @public read-only
+      this.centerOfMassPosition = new Vector2( 0, 0 );
+
+      // @public
+      this.elasticityProperty = new NumberProperty( 1, { range: new Range( 0, 1 ) } );
+
+      // @public
+      this.isBorderReflecting = new BooleanProperty( true );
+
+      // @public
+      this.balls = new ObservableArray();
+
+      this.createInitialBallData();
+
+      this.initializeBalls();
+
+      console.log( 'hello' );
     }
 
-    // @public resets the model
+    /**
+     * Resets the model
+     * @public
+     */
     reset() {
-      //TODO Reset things here.
+      this.numberOfBallsProperty.reset();
+      this.isBorderReflecting.reset();
+      this.elasticityProperty.reset();
+      this.createInitialBallData();
+      this.initializeBalls();
     }
 
-    // @public
+    /**
+     * Steps the model forward in time
+     * @public
+     * @param {number} dt
+     */
     step( dt ) {
-      //TODO Handle model animation here.
+      this.balls.forEach( function( ball ) {
+        ball.step( dt );
+        console.log( ball.position );
+      } );
+    }
+
+    /**
+     * @private
+     */
+    createInitialBallData() {
+
+      this.prepopulatedBalls = new Array( CollisionLabConstants.MAX_BALLS );
+      this.prepopulatedBalls[ 0 ] = new Ball( 0.5, new Vector2( 1, 1 ), new Vector2( 1, 0.3 ) );
+      this.prepopulatedBalls[ 1 ] = new Ball( 1.5, new Vector2( 2, 0.5 ), new Vector2( -0.5, -0.5 ) );
+      this.prepopulatedBalls[ 2 ] = new Ball( 1, new Vector2( 1, -0.5 ), new Vector2( -0.5, -0.25 ) );
+      this.prepopulatedBalls[ 3 ] = new Ball( 4, new Vector2( 2.2, -1.2 ), new Vector2( 1.1, 0.2 ) );
+      this.prepopulatedBalls[ 4 ] = new Ball( 5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
+    }
+
+    /**
+     * @private
+     */
+    initializeBalls() {
+      this.balls.clear();
+      for ( let i = 0; i < this.numberOfBallsProperty.value; i++ ) {
+        this.balls.push( this.prepopulatedBalls[ i ] );
+      }
+    }
+
+
+    /**
+     * @public
+     */
+    setCenterOfMass() {
+      let totalMass = 0;
+      let totalFirstMoment = new Vector2( 0, 0 );
+
+      this.balls.forEach( function( ball ) {
+        totalMass += ball.getMass();
+        totalFirstMoment = totalFirstMoment.plus( ball.getFirstMoment() );
+      } );
+
+      this.centerOfMassPosition = totalFirstMoment.divideScalar( totalMass );
     }
   }
 

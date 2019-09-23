@@ -93,6 +93,13 @@ define( require => {
       this.velocity.multiplyScalar( -1 );
     }
 
+    /**
+     * time steps for ballistic (unimpeded) motion
+     * @param {number} dt
+     */
+    step( dt ) {
+      this.position.add( this.velocity.timesScalar( dt ) );
+    }
   }
 
   return collisionLab.register( 'Ball', Ball );
