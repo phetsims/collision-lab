@@ -7,6 +7,7 @@
  *   - Keeping track of the number of Balls in the PlayArea.
  *   - Keeping track of the total kinetic energy of all the Balls in the PlayArea.
  *   - Stepping each Ball at each step call.
+ *   - Elasticity of all Balls in the PlayArea.
  *
  * @author Brandon Li
  */
