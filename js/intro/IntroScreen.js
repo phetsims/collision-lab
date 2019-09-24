@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * Top Level View for the 'Intro' screen.
+ * The 'Intro' screen. Conforms to the contract specified in joist/Screen.
  *
  * @author Brandon Li
  */
@@ -29,7 +29,7 @@ define( require => {
 
       const options = {
         name: screenIntroString,
-        backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND_COLOR ),
+        backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
         tandem: tandem
       };
 

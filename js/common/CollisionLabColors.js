@@ -17,7 +17,7 @@ define( require => {
 
     //----------------------------------------------------------------------------------------
     // Screen colors
-    SCREEN_BACKGROUND_COLOR: 'rgb( 255, 250, 227 )',
+    SCREEN_BACKGROUND: 'rgb( 255, 250, 227 )',
 
     // play area background
     PLAY_AREA_BACKGROUND_COLOR: 'rgb(255, 204, 153)',
