@@ -7,8 +7,8 @@ define( require => {
   'use strict';
 
   // modules
-  const CommonModel = require( 'COLLISION_LAB/common/model/CommonModel' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CommonModel = require( 'COLLISION_LAB/common/model/CommonModel' );
 
   /**
    * @constructor

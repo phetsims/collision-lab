@@ -10,8 +10,8 @@ define( require => {
   'use strict';
 
   // modules
-  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   const CollisionLabConstants = {
 

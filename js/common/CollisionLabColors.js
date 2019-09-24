@@ -10,8 +10,8 @@ define( require => {
   'use strict';
 
   // modules
-  const Color = require( 'SCENERY/util/Color' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const Color = require( 'SCENERY/util/Color' );
 
   const CollisionLabColors = {
 

@@ -1,5 +1,8 @@
 {
   "collision-lab.title": {
     "value": "Collision Lab"
+  },
+  "screen.intro": {
+    "value": "Intro"
   }
 }

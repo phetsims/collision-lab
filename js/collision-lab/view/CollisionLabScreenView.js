@@ -7,8 +7,8 @@ define( require => {
   'use strict';
 
   // modules
-  const CommonScreenView = require( 'COLLISION_LAB/common/view/CommonScreenView' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CommonScreenView = require( 'COLLISION_LAB/common/view/CommonScreenView' );
 
   class CollisionLabScreenView extends CommonScreenView {
 
