@@ -145,4 +145,3 @@ define( require => {
 
   return collisionLab.register( 'TwoVector', TwoVector );
 } );
-

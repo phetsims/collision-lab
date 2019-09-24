@@ -104,7 +104,3 @@ define( require => {
 
   return collisionLab.register( 'Ball', Ball );
 } );
-
-
-
-
