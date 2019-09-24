@@ -8,14 +8,14 @@ define( require => {
   'use strict';
 
   // modules
+  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const NumberProperty = require( 'AXON/NumberProperty' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
-  const Vector2 = require( 'DOT/Vector2' );
-  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
-  const Range = require( 'DOT/Range' );
   const ObservableArray = require( 'AXON/ObservableArray' );
+  const Range = require( 'DOT/Range' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   /**
    * @constructor

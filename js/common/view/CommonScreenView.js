@@ -7,13 +7,13 @@ define( function( require ) {
   'use strict';
 
   // modules
-  const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const NumberSpinner = require( 'SUN/NumberSpinner' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
+  const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   // const ModelViewTransform2 = require( 'PHETCOMMON/ModelViewTransform2' );
   // const Vector2 = require( 'DOT/Vector2' );
 

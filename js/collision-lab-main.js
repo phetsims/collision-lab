@@ -9,9 +9,9 @@ define( require => {
   'use strict';
 
   // modules
+  const CollisionLabScreen = require( 'COLLISION_LAB/collision-lab/CollisionLabScreen' );
   const Sim = require( 'JOIST/Sim' );
   const SimLauncher = require( 'JOIST/SimLauncher' );
-  const CollisionLabScreen = require( 'COLLISION_LAB/collision-lab/CollisionLabScreen' );
   const Tandem = require( 'TANDEM/Tandem' );
 
   // strings
