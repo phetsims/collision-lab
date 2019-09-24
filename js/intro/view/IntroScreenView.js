@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * Top level ScreenView for the 'Intro' screen.
+ * Top level view for the 'Intro' screen.
  *
  * @author BrandonLi
  */
