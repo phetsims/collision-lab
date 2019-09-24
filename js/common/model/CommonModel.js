@@ -49,7 +49,7 @@ define( require => {
       const self = this;
 
       // update the number of balls
-      this.numberOfBallsProperty.lazyLink( function( newValue, oldValue ) {
+      this.numberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
         const difference = newValue - oldValue;
 
         if ( difference < 0 ) {
@@ -84,7 +84,7 @@ define( require => {
      * @param {number} dt
      */
     step( dt ) {
-      this.balls.forEach( function( ball ) {
+      this.balls.forEach( ball => {
         ball.step( dt );
         // console.log( ball.position );
       } );
@@ -121,7 +121,7 @@ define( require => {
       let totalMass = 0;
       let totalFirstMoment = new Vector2( 0, 0 );
 
-      this.balls.forEach( function( ball ) {
+      this.balls.forEach( ball => {
         totalMass += ball.getMass();
         totalFirstMoment = totalFirstMoment.plus( ball.getFirstMoment() );
       } );
