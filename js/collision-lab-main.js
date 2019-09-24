@@ -9,7 +9,6 @@ define( require => {
   'use strict';
 
   // modules
-  const CollisionLabScreen = require( 'COLLISION_LAB/collision-lab/CollisionLabScreen' );
   const IntroScreen = require( 'COLLISION_LAB/intro/IntroScreen' );
   const Sim = require( 'JOIST/Sim' );
   const SimLauncher = require( 'JOIST/SimLauncher' );
@@ -35,8 +34,7 @@ define( require => {
   // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
   SimLauncher.launch( () => {
     const sim = new Sim( collisionLabTitleString, [
-      new IntroScreen( Tandem.rootTandem.createTandem( 'introScreen' ) ),
-      new CollisionLabScreen( Tandem.rootTandem.createTandem( 'collisionLabScreen' ) )
+      new IntroScreen( Tandem.rootTandem.createTandem( 'introScreen' ) )
     ], simOptions );
     sim.start();
   } );
