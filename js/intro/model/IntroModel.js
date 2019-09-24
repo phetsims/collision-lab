@@ -11,10 +11,10 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CommonModel = require( 'COLLISION_LAB/common/model/CommonModel' ); // TODO: #13
+  const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const Tandem = require( 'TANDEM/Tandem' );
 
-  class IntroModel extends CommonModel {
+  class IntroModel extends CollisionLabModel {
 
     /**
      * @param {Tandem} tandem

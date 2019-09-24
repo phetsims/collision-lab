@@ -20,7 +20,7 @@ define( require => {
   /**
    * @constructor
    */
-  class CommonModel {
+  class CollisionLabModel {
 
     /**
      * @param {Tandem} tandem
@@ -130,5 +130,5 @@ define( require => {
     }
   }
 
-  return collisionLab.register( 'CommonModel', CommonModel );
+  return collisionLab.register( 'CollisionLabModel', CollisionLabModel );
 } );

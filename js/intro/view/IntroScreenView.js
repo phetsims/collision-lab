@@ -11,10 +11,10 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CommonScreenView = require( 'COLLISION_LAB/common/view/CommonScreenView' ); // TODO #13
+  const CollisionLabScreenView = require( 'COLLISION_LAB/common/view/CollisionLabScreenView' );
   const Tandem = require( 'TANDEM/Tandem' );
 
-  class IntroScreenView extends CommonScreenView {
+  class IntroScreenView extends CollisionLabScreenView {
 
     /**
      * @param {IntroModel} model

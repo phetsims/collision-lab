@@ -17,7 +17,7 @@ define( require => {
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
 
-  class CommonScreenView extends ScreenView {
+  class CollisionLabScreenView extends ScreenView {
 
     /**
      * @param {CollisionLabModel} model
@@ -55,5 +55,5 @@ define( require => {
     }
   }
 
-  return collisionLab.register( 'CommonScreenView', CommonScreenView );
+  return collisionLab.register( 'CollisionLabScreenView', CollisionLabScreenView );
 } );
