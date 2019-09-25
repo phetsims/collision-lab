@@ -120,6 +120,15 @@ define( require => {
     get velocity() { return this.positionPropety.value; }
 
     /**
+     * Gets the kinetic energy of this ball.
+     * @returns {number} - Kg * (m/s)^2 = Joules
+     * @public
+     */
+    getKineticEnergy() {
+      return 0.5 * this.mass * this.velocity.magnitudeSquared; // KE = (1/2) * m * |v|^2
+    }
+
+    /**
      * Moves this Ball by one time step.
      * @param {number} dt - time delta, in ps
      * @public
