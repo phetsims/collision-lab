@@ -54,6 +54,7 @@ define( require => {
 
       //----------------------------------------------------------------------------------------
       // Handle dispose
+      // @private
       this.disposeBall = () => {
         this.massProperty.unlink( this.radiusProperty );
       };
