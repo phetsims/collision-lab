@@ -13,6 +13,7 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const NumberProperty = require( 'AXON/NumberProperty' );
+  const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
 
   class Ball {
@@ -23,6 +24,12 @@ define( require => {
      * @param {Vector2} velocity - initial velocity of the center of mass of the ball
      */
     constructor( mass, position, velocity ) {
+
+      assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
+      assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+      assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+
+      //----------------------------------------------------------------------------------------
 
       // @public (read-only) massProperty - Property of the mass of the ball (kg)
       this.massProperty = new NumberProperty( mass );
@@ -42,14 +49,22 @@ define( require => {
       const updateRadiusListener = mass => {
         // The radius of the ball is a function of the mass
         this.radius = 0.15 * Math.pow( this.mass, 1 / 3 );
-      }
+      };
       this.massProperty.link( updateRadiusListener );
 
       //----------------------------------------------------------------------------------------
       // Handle dispose
       this.disposeBall = () => {
         this.massProperty.unlink( this.radiusProperty );
-      }
+      };
+    }
+
+    /**
+     * Disposes this Ball object
+     * @public
+     */
+    dispose() {
+      this.disposeBall();
     }
 
     /**
@@ -58,7 +73,8 @@ define( require => {
      * @param {number} mass
      */
     set mass( mass ) {
-      this.massProperty.vaue = mass;
+      assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
+      this.massProperty.value = mass;
     }
 
     /**
@@ -69,12 +85,48 @@ define( require => {
     get mass() { return this.massProperty.value; }
 
     /**
-     * time steps for ballistic (unimpeded) motion
-     * @param {number} dt
+     * Sets the position of the ball.
+     * @public
+     * @param {Vector2} position
+     */
+    set position( position ) {
+      assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+      this.positionPropety.value = position;
+    }
+
+    /**
+     * Gets the position of the ball.
+     * @public
+     * @returns {Vector2}
+     */
+    get position() { return this.positionPropety.value; }
+
+    /**
+     * Sets the velocity of the ball.
+     * @public
+     * @param {Vector2} velocity
+     */
+    set velocity( velocity ) {
+      assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+      this.positionPropety.value = velocity;
+    }
+
+    /**
+     * Gets the velocity of the ball.
+     * @public
+     * @returns {Vector2}
+     */
+    get velocity() { return this.positionPropety.value; }
+
+    /**
+     * Moves this Ball by one time step.
+     * @param {number} dt - time delta, in ps
+     * @public
      */
     step( dt ) {
-      // TODO
-      // this.positionPropety.value.add( this.velocity.timesScalar( dt ) );
+      assert && assert( typeof dt === 'number' && dt > 0, `invalid dt: ${dt}` );
+
+      this.position = new Vector2( this.position.x + dt * this.velocity.x, this.position.y + dt * this.velocity.y );
     }
   }
 
