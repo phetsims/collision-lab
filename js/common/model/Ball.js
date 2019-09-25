@@ -124,8 +124,17 @@ define( require => {
      * @returns {number} - Kg * (m/s)^2 = Joules
      * @public
      */
-    getKineticEnergy() {
+    get kineticEnergy() {
       return 0.5 * this.mass * this.velocity.magnitudeSquared; // KE = (1/2) * m * |v|^2
+    }
+
+    /**
+     * Gets the linear momentum of this ball.
+     * @returns {number} - Kg * (m/s)
+     * @public
+     */
+    get momentum() {
+      return this.mass * this.velocity.magnitude; // Momentum = m * v
     }
 
     /**
