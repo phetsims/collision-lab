@@ -17,9 +17,6 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const Vector2 = require( 'DOT/Vector2' );
 
-  /**
-   * @constructor
-   */
   class CollisionLabModel {
 
     /**
