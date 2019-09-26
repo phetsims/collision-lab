@@ -73,7 +73,6 @@ define( require => {
      */
     get radius() { return this.radiusProperty.value; }
 
-
     /**
      * Gets the position of the ball.
      * @public
@@ -131,6 +130,16 @@ define( require => {
      */
     get momentum() {
       return this.velocity.timesScalar( this.mass ); // Momentum = m * v
+    }
+
+    /**
+     * Resets the ball properties.
+     * @public
+     */
+    reset() {
+      this.massProperty.reset();
+      this.positionProperty.reset();
+      this.velocityProperty.reset();
     }
 
     /**
