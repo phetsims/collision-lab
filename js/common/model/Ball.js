@@ -15,6 +15,7 @@ define( require => {
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
 
   class Ball {
 
@@ -34,8 +35,8 @@ define( require => {
       // @public (read-only) massProperty - Property of the mass of the ball (kg)
       this.massProperty = new NumberProperty( mass );
 
-      // @public (read-only) positionPropety - Property of the center of the ball's position.
-      this.positionPropety = new Vector2Property( position );
+      // @public (read-only) positionProperty - Property of the center of the ball's position.
+      this.positionProperty = new Vector2Property( position );
 
       // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
       this.velocityProperty = new Vector2Property( velocity );
@@ -43,30 +44,17 @@ define( require => {
       //----------------------------------------------------------------------------------------
       // Handle the changing radius of the Ball based on the mass
 
-      // @public (read-only) - Property of the radius (model) of the ball set to an arbitrary number (to be updated)
-      this.radiusProperty = new NumberProperty( 0 );
+      // @public (read-only) - Property of the radius (model) of the ball
+      this.radiusProperty = new DerivedProperty( [this.massProperty], mass => 0.15 * Math.pow( mass, 1 / 3 ) );
 
-      const updateRadiusListener = mass => {
-        // The radius of the ball is a function of the mass
-        this.radius = 0.15 * Math.pow( this.mass, 1 / 3 );
-      };
-      this.massProperty.link( updateRadiusListener );
-
-      //----------------------------------------------------------------------------------------
-      // Handle dispose
-      // @private
-      this.disposeBall = () => {
-        this.massProperty.unlink( this.radiusProperty );
-      };
     }
 
     /**
-     * Disposes this Ball object
+     * Gets the mass.
      * @public
+     * @returns {number}
      */
-    dispose() {
-      this.disposeBall();
-    }
+    get mass() { return this.massProperty.value; }
 
     /**
      * Sets the mass of the ball.
@@ -79,11 +67,18 @@ define( require => {
     }
 
     /**
-     * Gets the mass.
+     * Gets the radius.
      * @public
      * @returns {number}
      */
-    get mass() { return this.massProperty.value; }
+    get radius() { return this.radiusProperty.value; }
+
+    /**
+     * Gets the position of the ball.
+     * @public
+     * @returns {Vector2}
+     */
+    get position() { return this.positionProperty.value; }
 
     /**
      * Sets the position of the ball.
@@ -92,15 +87,22 @@ define( require => {
      */
     set position( position ) {
       assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-      this.positionPropety.value = position;
+      this.positionProperty.value = position;
     }
 
     /**
-     * Gets the position of the ball.
+     * Gets the first moment of the ball, i.e.  mass* position
+     * @public
+     * @returns {Vector2}  kg * m
+     */
+    get firstMoment() { return this.position.times( this.mass ); }
+
+    /**
+     * Gets the velocity of the ball.
      * @public
      * @returns {Vector2}
      */
-    get position() { return this.positionPropety.value; }
+    get velocity() { return this.velocityProperty.value; }
 
     /**
      * Sets the velocity of the ball.
@@ -109,19 +111,12 @@ define( require => {
      */
     set velocity( velocity ) {
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-      this.positionPropety.value = velocity;
+      this.velocityProperty.value = velocity;
     }
 
     /**
-     * Gets the velocity of the ball.
-     * @public
-     * @returns {Vector2}
-     */
-    get velocity() { return this.positionPropety.value; }
-
-    /**
      * Gets the kinetic energy of this ball.
-     * @returns {number} - Kg * (m/s)^2 = Joules
+     * @returns {number} - kg * (m/s)^2 = Joules
      * @public
      */
     get kineticEnergy() {
@@ -130,22 +125,32 @@ define( require => {
 
     /**
      * Gets the linear momentum of this ball.
-     * @returns {number} - Kg * (m/s)
+     * @returns {Vector2} - kg * (m/s)
      * @public
      */
     get momentum() {
-      return this.mass * this.velocity.magnitude; // Momentum = m * v
+      return this.velocity.times( this.mass ); // Momentum = m * v
+    }
+
+    /**
+     * Resets the ball properties.
+     * @public
+     */
+    reset() {
+      this.massProperty.reset();
+      this.positionProperty.reset();
+      this.velocityProperty.reset();
     }
 
     /**
      * Moves this Ball by one time step.
-     * @param {number} dt - time delta, in ps
+     * @param {number} dt - time in seconds
      * @public
      */
     step( dt ) {
       assert && assert( typeof dt === 'number' && dt > 0, `invalid dt: ${dt}` );
 
-      this.position = new Vector2( this.position.x + dt * this.velocity.x, this.position.y + dt * this.velocity.y );
+      this.positionProperty.value = this.position.plus( this.velocity.times( dt ) );
     }
   }
 

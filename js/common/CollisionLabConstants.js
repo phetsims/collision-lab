@@ -12,6 +12,7 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Bounds2 = require( 'DOT/Bounds2' );
 
   const CollisionLabConstants = {
 
@@ -21,6 +22,8 @@ define( require => {
     BORDER_HEIGHT_2D: 1.6, // vertical height of pool table in meters
 
     VIEW_TO_MODEL_SCALING: 200, // meter to view coordinates (1 m = 200 coordinates)
+
+    TABLE_BOUNDS: new Bounds2( -1.6, -0.8, 1.6, 0.8 ),
 
     ARROW_OPTIONS: {
       headWidth: 11.5,
