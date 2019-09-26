@@ -62,7 +62,7 @@ define( require => {
       } );
 
       ball.radiusProperty.link( radius => {
-        diskNode.radius = modelViewTransform.modelToViewDeltaX( ball.radius );
+        diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
       } );
 
 
