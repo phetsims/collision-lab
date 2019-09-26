@@ -102,7 +102,7 @@ define( require => {
 
     /**
      * Gets the kinetic energy of this ball.
-     * @returns {number} - Kg * (m/s)^2 = Joules
+     * @returns {number} - kg * (m/s)^2 = Joules
      * @public
      */
     get kineticEnergy() {
@@ -116,14 +116,6 @@ define( require => {
      */
     get momentum() {
       return this.velocity.timesScalar( this.mass ); // Momentum = m * v
-    }
-
-    /**
-     * Disposes this Ball object
-     * @public
-     */
-    dispose() {
-      this.disposeBall();
     }
 
     /**
