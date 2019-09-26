@@ -67,6 +67,14 @@ define( require => {
     }
 
     /**
+     * Gets the radius.
+     * @public
+     * @returns {number}
+     */
+    get radius() { return this.radiusProperty.value; }
+
+
+    /**
      * Gets the position of the ball.
      * @public
      * @returns {Vector2}
