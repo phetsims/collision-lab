@@ -10,6 +10,7 @@ define( require => {
   // modules
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const NumberProperty = require( 'AXON/NumberProperty' );
@@ -27,12 +28,6 @@ define( require => {
       // @public
       this.numberOfBallsProperty = new NumberProperty( 2 );
 
-      // @public read-only
-      this.centerOfMassPosition = new Vector2( 0, 0 );
-
-      // @public read-only
-      this.centerOfMassVelocity = new Vector2( 0, 0 );
-
       // @public
       this.elasticityProperty = new NumberProperty( 1, { range: new Range( 0, 1 ) } );
 
@@ -46,7 +41,8 @@ define( require => {
 
       this.initializeBalls();
 
-      const self = this;
+      // @public (read-only)
+      this.centerOfMass = new CenterOfMass( this.balls );
 
       // update the number of balls
       this.numberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
@@ -55,12 +51,12 @@ define( require => {
         if ( difference < 0 ) {
 
           // remove ball(s) from observableArray
-          self.balls.splice( oldValue - 1, Math.abs( difference ) );
+          this.balls.splice( oldValue - 1, Math.abs( difference ) );
         }
         else {
           // add balls to observableArray
           for ( let i = oldValue; i < newValue; i++ ) {
-            self.balls.push( self.prepopulatedBalls[ i ] );
+            this.balls.push( this.prepopulatedBalls[ i ] );
           }
         }
       } );
@@ -84,17 +80,20 @@ define( require => {
      * @param {number} dt
      */
     step( dt ) {
+
+      // updates the position and velocity of each ball
       this.balls.forEach( ball => {
         ball.step( dt );
-        // console.log( ball.position );
       } );
+
+      // updates the position and velocity of center of mass
+      this.centerOfMass.update();
     }
 
     /**
      * @private
      */
     createInitialBallData() {
-
       this.prepopulatedBalls = new Array( CollisionLabConstants.MAX_BALLS );
       this.prepopulatedBalls[ 0 ] = new Ball( 0.5, new Vector2( 1, 1 ), new Vector2( 1, 0.3 ) );
       this.prepopulatedBalls[ 1 ] = new Ball( 1.5, new Vector2( 2, 0.5 ), new Vector2( -0.5, -0.5 ) );
@@ -112,26 +111,6 @@ define( require => {
         this.balls.push( this.prepopulatedBalls[ i ] );
       }
     }
-
-    /**
-     * Determine the center of mass position and velocity
-     * @public
-     */
-    calculateCenterOfMass() {
-      let totalMass = 0;
-      let totalFirstMoment = new Vector2( 0, 0 );
-      let totalMomentum = new Vector2( 0, 0 );
-
-      this.balls.forEach( ball => {
-        totalMass += ball.mass;
-        totalFirstMoment = totalFirstMoment.plus( ball.firstMoment );
-        totalMomentum = totalMomentum.plus( ball.momentum );
-      } );
-
-      this.centerOfMassPosition = totalFirstMoment.divideScalar( totalMass );
-      this.centerOfMassVelocity = totalMomentum.divideScalar( totalMass );
-    }
-
   }
 
   return collisionLab.register( 'CollisionLabModel', CollisionLabModel );
