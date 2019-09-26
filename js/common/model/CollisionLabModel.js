@@ -30,6 +30,9 @@ define( require => {
       // @public read-only
       this.centerOfMassPosition = new Vector2( 0, 0 );
 
+      // @public read-only
+      this.centerOfMassVelocity = new Vector2( 0, 0 );
+
       // @public
       this.elasticityProperty = new NumberProperty( 1, { range: new Range( 0, 1 ) } );
 
@@ -110,21 +113,25 @@ define( require => {
       }
     }
 
-
     /**
+     * Determine the center of mass position and velocity
      * @public
      */
-    setCenterOfMass() {
+    calculateCenterOfMass() {
       let totalMass = 0;
       let totalFirstMoment = new Vector2( 0, 0 );
+      let totalMomentum = new Vector2( 0, 0 );
 
       this.balls.forEach( ball => {
-        totalMass += ball.getMass();
-        totalFirstMoment = totalFirstMoment.plus( ball.getFirstMoment() );
+        totalMass += ball.mass;
+        totalFirstMoment = totalFirstMoment.plus( ball.firstMoment );
+        totalMomentum = totalMomentum.plus( ball.momentum );
       } );
 
       this.centerOfMassPosition = totalFirstMoment.divideScalar( totalMass );
+      this.centerOfMassVelocity = totalMomentum.divideScalar( totalMass );
     }
+
   }
 
   return collisionLab.register( 'CollisionLabModel', CollisionLabModel );
