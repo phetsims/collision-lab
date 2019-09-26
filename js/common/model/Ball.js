@@ -92,6 +92,13 @@ define( require => {
     }
 
     /**
+     * Gets the first moment of the ball, i.e.  mass* position
+     * @public
+     * @returns {Vector2}  kg * m
+     */
+    get firstMoment() { return this.position.timesScalar( this.mass ); }
+
+    /**
      * Gets the velocity of the ball.
      * @public
      * @returns {Vector2}
