@@ -95,14 +95,14 @@ define( require => {
      * @public
      * @returns {Vector2}  kg * m
      */
-    get firstMoment() { return this.position.timesScalar( this.mass ); }
+    get firstMoment() { return this.position.times( this.mass ); }
 
     /**
      * Gets the velocity of the ball.
      * @public
      * @returns {Vector2}
      */
-    get velocity() { return this.positionProperty.value; }
+    get velocity() { return this.velocityProperty.value; }
 
     /**
      * Sets the velocity of the ball.
@@ -111,7 +111,7 @@ define( require => {
      */
     set velocity( velocity ) {
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-      this.positionProperty.value = velocity;
+      this.velocityProperty.value = velocity;
     }
 
     /**
@@ -129,7 +129,7 @@ define( require => {
      * @public
      */
     get momentum() {
-      return this.velocity.timesScalar( this.mass ); // Momentum = m * v
+      return this.velocity.times( this.mass ); // Momentum = m * v
     }
 
     /**
@@ -150,7 +150,7 @@ define( require => {
     step( dt ) {
       assert && assert( typeof dt === 'number' && dt > 0, `invalid dt: ${dt}` );
 
-      this.positionProperty.value = this.position.plus( this.velocity.timesScalar( dt ) );
+      this.positionProperty.value = this.position.plus( this.velocity.times( dt ) );
     }
   }
 
