@@ -111,11 +111,11 @@ define( require => {
 
     /**
      * Gets the linear momentum of this ball.
-     * @returns {number} - Kg * (m/s)
+     * @returns {Vector2} - kg * (m/s)
      * @public
      */
     get momentum() {
-      return this.mass * this.velocity.magnitude; // Momentum = m * v
+      return this.velocity.timesScalar( this.mass ); // Momentum = m * v
     }
 
     /**
