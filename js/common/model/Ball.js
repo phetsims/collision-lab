@@ -120,13 +120,13 @@ define( require => {
 
     /**
      * Moves this Ball by one time step.
-     * @param {number} dt - time delta, in ps
+     * @param {number} dt - time in seconds
      * @public
      */
     step( dt ) {
       assert && assert( typeof dt === 'number' && dt > 0, `invalid dt: ${dt}` );
 
-      this.position = new Vector2( this.position.x + dt * this.velocity.x, this.position.y + dt * this.velocity.y );
+      this.positionProperty.value = this.position.plus( this.velocity.timesScalar( dt ) );
     }
   }
 
