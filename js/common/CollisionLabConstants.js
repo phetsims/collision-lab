@@ -25,6 +25,9 @@ define( require => {
 
     TABLE_BOUNDS: new Bounds2( -1.6, -0.8, 1.6, 0.8 ),
 
+    MINOR_GRIDLINE_SPACING: 0.08,
+    MINOR_GRIDLINES_PER_MAJOR_GRIDLINE: 5,
+
     ARROW_OPTIONS: {
       headWidth: 11.5,
       headHeight: 8.5,

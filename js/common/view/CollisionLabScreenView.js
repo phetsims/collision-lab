@@ -19,6 +19,7 @@ define( require => {
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
 
   class CollisionLabScreenView extends ScreenView {
 
@@ -64,6 +65,8 @@ define( require => {
 
       model.balls.addItemAddedListener( ballListener );
 
+      const gridNode = new GridNode( modelViewTransform );
+      this.addChild( gridNode );
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
