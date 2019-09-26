@@ -35,8 +35,8 @@ define( require => {
       // @public (read-only) massProperty - Property of the mass of the ball (kg)
       this.massProperty = new NumberProperty( mass );
 
-      // @public (read-only) positionPropety - Property of the center of the ball's position.
-      this.positionPropety = new Vector2Property( position );
+      // @public (read-only) positionProperty - Property of the center of the ball's position.
+      this.positionProperty = new Vector2Property( position );
 
       // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
       this.velocityProperty = new Vector2Property( velocity );
@@ -71,7 +71,7 @@ define( require => {
      * @public
      * @returns {Vector2}
      */
-    get position() { return this.positionPropety.value; }
+    get position() { return this.positionProperty.value; }
 
     /**
      * Sets the position of the ball.
@@ -80,7 +80,7 @@ define( require => {
      */
     set position( position ) {
       assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-      this.positionPropety.value = position;
+      this.positionProperty.value = position;
     }
 
     /**
@@ -88,7 +88,7 @@ define( require => {
      * @public
      * @returns {Vector2}
      */
-    get velocity() { return this.positionPropety.value; }
+    get velocity() { return this.positionProperty.value; }
 
     /**
      * Sets the velocity of the ball.
@@ -97,7 +97,7 @@ define( require => {
      */
     set velocity( velocity ) {
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-      this.positionPropety.value = velocity;
+      this.positionProperty.value = velocity;
     }
 
     /**
