@@ -8,6 +8,7 @@
  *    - The position of the Ball
  *    - The velocity of the Ball
  *    - The linear momentum of the Ball
+ * Depending on if the "More Data" checkbox is checked or not, some of these values may be hidden.
  *
  * This panel exists for the entire sim and is never disposed.
  *
@@ -18,16 +19,23 @@ define( require => {
   'use strict';
 
   // modules
+  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
   const Panel = require( 'SUN/Panel' );
 
   class BallValuesPanel extends Panel {
 
     /**
-     * @param {PlayArea} playArea
+     * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
+     * @param {BooleanProperty} modeDataProperty - Property that indicates if the "More Data" checkbox is checked.
      */
-    constructor( playArea ) {
+    constructor( balls, moreDataProperty ) {
+
+      assert && assert( balls instanceof ObservableArray && _.every( balls.getArray(), ball => ball instanceof Ball ) );
+      assert && assert( moreDataProperty instanceof BooleanProperty, `invalid moreDataProperty: ${moreDataProperty}` );
 
       super( new Node() );
 
