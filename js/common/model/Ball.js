@@ -150,7 +150,7 @@ define( require => {
     step( dt ) {
       assert && assert( typeof dt === 'number' && dt > 0, `invalid dt: ${dt}` );
 
-      this.positionProperty.value = this.position.plus( this.velocity.times( dt ) );
+      this.position = this.position.plus( this.velocity.times( dt ) );
     }
   }
 
