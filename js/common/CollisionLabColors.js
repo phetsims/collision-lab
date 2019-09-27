@@ -17,10 +17,16 @@ define( require => {
 
     //----------------------------------------------------------------------------------------
     // Screen colors
-    SCREEN_BACKGROUND: 'rgb( 255, 250, 227 )',
+    SCREEN_BACKGROUND: 'white',
 
     // play area background
     PLAY_AREA_BACKGROUND_COLOR: 'rgb(255, 204, 153)',
+    //----------------------------------------------------------------------------------------
+
+    // Grid colors
+    GRID_BACKGROUND_COLOR: 'rgb(255, 204, 153)',
+    MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
+    MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
 
     // ball Colors
     BALL_COLORS: [
