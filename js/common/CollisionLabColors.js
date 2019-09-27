@@ -16,19 +16,20 @@ define( require => {
   const CollisionLabColors = {
 
     //----------------------------------------------------------------------------------------
-    // Screen colors
-    SCREEN_BACKGROUND: 'white',
+    // General colors
+    SCREEN_BACKGROUND: Color.WHITE,
 
-    // play area background
-    PLAY_AREA_BACKGROUND_COLOR: 'rgb(255, 204, 153)',
+    // PlayArea background color
+    PLAY_AREA_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
+
     //----------------------------------------------------------------------------------------
-
     // Grid colors
-    GRID_BACKGROUND_COLOR: 'rgb(255, 204, 153)',
+    GRID_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
     MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
     MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
 
-    // ball Colors
+    //----------------------------------------------------------------------------------------
+    // Ball Colors
     BALL_COLORS: [
       'rgb( 255, 0, 0 )',
       'rgb( 0, 155, 255 )',
@@ -38,9 +39,9 @@ define( require => {
     ],
 
     //----------------------------------------------------------------------------------------
-    // Panel-like container default colors
-    COLOR_VELOCITY_ARROW_COLOR: 'rgb( 0, 255, 0 )',
-    COLOR_MOMENTUM_ARROW_COLOR: 'rgb( 255, 255, 0 )',
+    // Vector Colors
+    VELOCITY_VECTOR_COLOR: 'rgb( 0, 255, 0 )',
+    MOMENTUM_VECTOR_COLOR: 'rgb( 255, 255, 0 )',
 
     //----------------------------------------------------------------------------------------
     // Panel-like container default colors
@@ -50,7 +51,7 @@ define( require => {
     },
 
     //----------------------------------------------------------------------------------------
-    // Radio Button Group default colors
+    // RadioButtonGroup default colors
     RADIO_BUTTON_COLORS: {
       baseColor: Color.WHITE,
       selectedStroke: 'rgb( 65, 154, 201 )',
