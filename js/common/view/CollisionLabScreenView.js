@@ -7,19 +7,19 @@ define( require => {
   'use strict';
 
   // modules
-  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  const Vector2 = require( 'DOT/Vector2' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const Node = require( 'SCENERY/nodes/Node' );
   const NumberSpinner = require( 'SUN/NumberSpinner' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   class CollisionLabScreenView extends ScreenView {
 

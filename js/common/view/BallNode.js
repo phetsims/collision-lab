@@ -12,13 +12,13 @@ define( require => {
   // modules
   // const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   // const BooleanProperty = require( 'AXON/BooleanProperty' );
-  const Circle = require( 'SCENERY/nodes/Circle' );
   // const Color = require( 'SCENERY/util/Color' );
-  const DragListener = require( 'SCENERY/listeners/DragListener' );
   // const merge = require( 'PHET_CORE/merge' );
-  const Property = require( 'AXON/Property' );
-  const Node = require( 'SCENERY/nodes/Node' );
+  const Circle = require( 'SCENERY/nodes/Circle' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const DragListener = require( 'SCENERY/listeners/DragListener' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const Property = require( 'AXON/Property' );
 
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
 

@@ -12,10 +12,10 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
-  const DerivedProperty = require( 'AXON/DerivedProperty' );
 
   class Ball {
 

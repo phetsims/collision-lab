@@ -11,11 +11,11 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const Shape = require( 'KITE/Shape' );
-  const Path = require( 'SCENERY/nodes/Path' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const Path = require( 'SCENERY/nodes/Path' );
+  const Shape = require( 'KITE/Shape' );
 
   //constants
   const MINOR_GRIDLINES_PER_MAJOR_GRIDLINE = CollisionLabConstants.MINOR_GRIDLINES_PER_MAJOR_GRIDLINE;
