@@ -145,7 +145,7 @@ define( require => {
     /**
      * Gets the position of the ball.
      * @public
-     * @param {number} dt
+     * @param {number} dt - time step
      * @returns {Vector2}
      */
     getPreviousPosition( dt ) {
@@ -153,7 +153,7 @@ define( require => {
     }
 
     /**
-     * Moves this Ball by one time step.
+     * Moves this Ball by one time step (assuming ballistic motion).
      * @param {number} dt - time in seconds
      * @public
      */
