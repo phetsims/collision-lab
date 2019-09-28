@@ -11,12 +11,16 @@ define( require => {
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
+  const CollisionDetector = require( 'COLLISION_LAB/common/model/CollisionDetector' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const Range = require( 'DOT/Range' );
   const Vector2 = require( 'DOT/Vector2' );
+
+  // constants
+  const TABLE_BOUNDS = CollisionLabConstants.TABLE_BOUNDS;
 
   class CollisionLabModel {
 
@@ -37,12 +41,19 @@ define( require => {
       // @public
       this.balls = new ObservableArray();
 
+      // @public
+      this.collisionDetector = new CollisionDetector( TABLE_BOUNDS, this.balls, this.elasticityProperty );
+
       this.createInitialBallData();
 
       this.initializeBalls();
 
       // @public (read-only)
       this.centerOfMass = new CenterOfMass( this.balls );
+
+
+      // @public (read-only)
+      this.time = 0;
 
       // update the number of balls
       this.numberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
@@ -81,11 +92,15 @@ define( require => {
      */
     step( dt ) {
 
+      this.lastTime = this.time;
+
       // updates the position and velocity of each ball
       this.balls.forEach( ball => {
         ball.step( dt );
       } );
+      this.collisionDetector.detectCollision( this.lastTime, this.time );
 
+      this.time += dt;
       // updates the position and velocity of center of mass
       this.centerOfMass.update();
     }
@@ -95,8 +110,8 @@ define( require => {
      */
     createInitialBallData() {
       this.prepopulatedBalls = new Array( CollisionLabConstants.MAX_BALLS );
-      this.prepopulatedBalls[ 0 ] = new Ball( 0.5, new Vector2( 1, 1 ), new Vector2( 1, 0.3 ) );
-      this.prepopulatedBalls[ 1 ] = new Ball( 1.5, new Vector2( 2, 0.5 ), new Vector2( -0.5, -0.5 ) );
+      this.prepopulatedBalls[ 0 ] = new Ball( 0.5, new Vector2( 1, 0.5 ), new Vector2( -1, -0.3 ) );
+      this.prepopulatedBalls[ 1 ] = new Ball( 1.5, new Vector2( -1, -0.5 ), new Vector2( 0.5, 0.5 ) );
       this.prepopulatedBalls[ 2 ] = new Ball( 1, new Vector2( 1, -0.5 ), new Vector2( -0.5, -0.25 ) );
       this.prepopulatedBalls[ 3 ] = new Ball( 4, new Vector2( 2.2, -1.2 ), new Vector2( 1.1, 0.2 ) );
       this.prepopulatedBalls[ 4 ] = new Ball( 5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );

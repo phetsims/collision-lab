@@ -143,6 +143,16 @@ define( require => {
     }
 
     /**
+     * Gets the position of the ball.
+     * @public
+     * @param {number} dt
+     * @returns {Vector2}
+     */
+    getPreviousPosition( dt ) {
+      return this.position.minus( this.velocity.times( dt ) );
+    }
+
+    /**
      * Moves this Ball by one time step.
      * @param {number} dt - time in seconds
      * @public
