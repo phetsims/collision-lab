@@ -6,7 +6,7 @@
  * rigid bodies. Once a collision is detected, the appropriate ball models are set to update their new velocity
  * and position.
  *
- * The algorithms for particle-particle collisions and particle-container collisions were adapted from the flash
+ * The algorithms for particle-particle collisions were adapted from the flash
  * implementation of Collision Lab. They follow the standard rigid-body collision model as described in (e.g.)
  * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
@@ -50,7 +50,9 @@ define( require => {
     }
 
     /**
-     *
+     * @public
+     * @param {number} lastTime  - time of previous step
+     * @param {number} time - current time
      */
     detectCollision( lastTime, time ) {
       const N = this.balls.length;
@@ -71,121 +73,115 @@ define( require => {
     }
 
     /**
-     *
+     * Process the collision updating the velocities and positions of ball 1 and ball 2
+     * @private
      * @param {Ball} ball1
      * @param {Ball} ball2
-     * @param {number} lastTime
+     * @param {number} lastTime  - time of previous step
      * @param {number} time - current time
      */
     collideBalls( ball1, ball2, lastTime, time ) {
-      //Balls have already overlapped, so currently have incorrect positions
-
       const e = this.elasticityProperty.value;
 
-      const tC = this.getContactTime( ball1, ball2, lastTime, time );
+      // Balls have already overlapped, so currently have incorrect positions
+      // find time of the collision
+      const contactTime = this.getContactTime( ball1, ball2, lastTime, time );
 
-      const delTBefore = tC - lastTime;
-      const delTAfter = time - tC;
+      // time to rewind the positions to
+      const offsetTime = time - contactTime;
 
+      //get positions at time of collision, rewind position time.
+      const r1 = ball1.getPreviousPosition( offsetTime );
+      const r2 = ball2.getPreviousPosition( offsetTime );
 
-      const v1x = ball1.velocity.x;
-      const v2x = ball2.velocity.x;
-      const v1y = ball1.velocity.y;
-      const v2y = ball2.velocity.y;
+      const deltaR = r1.minus( r2 );
+      const d = deltaR.magnitude;
 
-      //get positions at tC:
-      // should be OLD
-
-      const r1 = ball1.getPreviousPosition( time - lastTime );
-      const r2 = ball2.getPreviousPosition( time - lastTime );
-
-      const x1 = r1.x + v1x * delTBefore;
-      const x2 = r2.x + v2x * delTBefore;
-      const y1 = r1.y + v1y * delTBefore;
-      const y2 = r2.y + v2y * delTBefore;
-
-      const delX = x2 - x1;
-      const delY = y2 - y1;
-      const d = Math.sqrt( delX * delX + delY * delY );
-
-      //normal and tangential components of initial velocities
-      const v1n = ( 1 / d ) * ( v1x * delX + v1y * delY );
-      const v2n = ( 1 / d ) * ( v2x * delX + v2y * delY );
-      const v1t = ( 1 / d ) * ( -v1x * delY + v1y * delX );
-      const v2t = ( 1 / d ) * ( -v2x * delY + v2y * delX );
       const m1 = ball1.mass;
       const m2 = ball2.mass;
+      const v1 = ball1.velocity;
+      const v2 = ball2.velocity;
+
+      //normal and tangential components of initial velocities
+      const v1n = ( 1 / d ) * deltaR.dot( v1 );
+      const v2n = ( 1 / d ) * deltaR.dot( v2 );
+      const v1t = ( 1 / d ) * deltaR.crossScalar( v1 );
+      const v2t = ( 1 / d ) * deltaR.crossScalar( v2 );
 
       //normal components of velocities after collision (P for prime = after)
       const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
       const v2nP = ( e + 0.000001 ) * ( v1n - v2n ) + v1nP;  //changed from 0.0000001
-      const v1xP = ( 1 / d ) * ( v1nP * delX - v1t * delY );
-      const v1yP = ( 1 / d ) * ( v1nP * delY + v1t * delX );
-      const v2xP = ( 1 / d ) * ( v2nP * delX - v2t * delY );
-      const v2yP = ( 1 / d ) * ( v2nP * delY + v2t * delX );
+
+      // normal and tangential component of the velocity after collision
+      // const v1NT = new Vector2( v1nP, v1t );
+      // const v2NT = new Vector2( v2nP, v2t );
+
+      // TODO: rewrite in vector form
+      const v1xP = ( 1 / d ) * ( v1nP * deltaR.x - v1t * deltaR.y );
+      const v1yP = ( 1 / d ) * ( v1nP * deltaR.y + v1t * deltaR.x );
+      const v2xP = ( 1 / d ) * ( v2nP * deltaR.x - v2t * deltaR.y );
+      const v2yP = ( 1 / d ) * ( v2nP * deltaR.y + v2t * deltaR.x );
+
       ball1.velocity = new Vector2( v1xP, v1yP );
       ball2.velocity = new Vector2( v2xP, v2yP );
 
       //Don't allow balls to rebound after collision during timestep of collision
       //this seems to improve stability
-      const newX1 = x1 + v1xP * delTAfter;
-      const newY1 = y1 + v1yP * delTAfter;
-      const newX2 = x2 + v2xP * delTAfter;
-      const newY2 = y2 + v2yP * delTAfter;
-
-      ball1.position = new Vector2( newX1, newY1 );
-      ball2.position = new Vector2( newX2, newY2 );
+      ball1.position = r1.plus( ball1.velocity.times( offsetTime ) );
+      ball2.position = r2.plus( ball2.velocity.times( offsetTime ) );
 
     }
 
     /**
      * Gets contact time between balls i and j
+     * @private
      * @param {Ball} ball1
      * @param {Ball} ball2
-     * @param {number} lastTime
+     * @param {number} lastTime - time of previous step
      * @param {number} time - current time
      * @returns {number} contactTime in seconds
      */
     getContactTime( ball1, ball2, lastTime, time ) {
 
-      let tC = 0;  //contact time
+      let contactTime = 0;  //contact time
 
+      // get previous positions
       const r1 = ball1.getPreviousPosition( time - lastTime );
       const r2 = ball2.getPreviousPosition( time - lastTime );
 
+      // velocities
       const v1 = ball1.velocity;
       const v2 = ball2.velocity;
+
       const deltaR = r2.minus( r1 );
       const deltaV = v2.minus( v1 );
-      const R1 = ball1.radius;
-      const R2 = ball2.radius;
 
+      // TODO: some of these steps need more documentation
 
-      const SRSquared = Math.pow( R1 + R2, 2 );		//square of center-to-center separation of balls at contact
+      const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );		//square of center-to-center separation of balls at contact
       const deltaVSquared = deltaV.magnitudeSquared;
       const deltaRDotDeltaV = deltaR.dot( deltaV );
       const deltaRSquared = deltaR.magnitudeSquared;
-
 
       const underSqRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
       //if collision is superslow, then set collision time = half-way point since last time step
       //of if tiny number precision causes number under square root to be negative
 
       if ( deltaVSquared < 0.000000001 || underSqRoot < 0 ) {
-        tC = lastTime + 0.5 * ( time - lastTime );
+        contactTime = lastTime + 0.5 * ( time - lastTime );
       }
       else { //if collision is normal
         let delT;
         if ( this.isReversing ) {
-          delT = ( -deltaRDotDeltaV + Math.sqrt( deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared ) ) ) / deltaVSquared;
+          delT = ( -deltaRDotDeltaV + Math.sqrt( underSqRoot ) ) / deltaVSquared;
         }
         else {
-          delT = ( -deltaRDotDeltaV - Math.sqrt( deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared ) ) ) / deltaVSquared;
+          delT = ( -deltaRDotDeltaV - Math.sqrt( underSqRoot ) ) / deltaVSquared;
         }
-        tC = lastTime + delT;
+        contactTime = lastTime + delT;
       }
 
-      return tC;
+      return contactTime;
     }//end getContactTime()
   }
 
