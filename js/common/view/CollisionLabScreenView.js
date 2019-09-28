@@ -43,6 +43,9 @@ define( require => {
 
       const valuesVisibleProperty = new BooleanProperty( false );
 
+      const gridNode = new GridNode( modelViewTransform );
+      this.addChild( gridNode );
+
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
 
@@ -64,9 +67,6 @@ define( require => {
       model.balls.forEach( ballListener );
 
       model.balls.addItemAddedListener( ballListener );
-
-      const gridNode = new GridNode( modelViewTransform );
-      this.addChild( gridNode );
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
