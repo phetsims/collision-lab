@@ -1,7 +1,6 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- *
  * CollisionDetector handles collision detection and response for all screens. Our collision model involves
  * rigid bodies. Once a collision is detected, the appropriate ball models are set to update their new velocity
  * and position.
@@ -90,7 +89,7 @@ define( require => {
       // time to rewind the positions to
       const offsetTime = time - contactTime;
 
-      //get positions at time of collision, rewind position time.
+      // get positions at time of collision, rewind position time.
       const r1 = ball1.getPreviousPosition( offsetTime );
       const r2 = ball2.getPreviousPosition( offsetTime );
 
@@ -102,13 +101,13 @@ define( require => {
       const v1 = ball1.velocity;
       const v2 = ball2.velocity;
 
-      //normal and tangential components of initial velocities
+      // normal and tangential components of initial velocities
       const v1n = ( 1 / d ) * deltaR.dot( v1 );
       const v2n = ( 1 / d ) * deltaR.dot( v2 );
       const v1t = ( 1 / d ) * deltaR.crossScalar( v1 );
       const v2t = ( 1 / d ) * deltaR.crossScalar( v2 );
 
-      //normal components of velocities after collision (P for prime = after)
+      // normal components of velocities after collision (P for prime = after)
       const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
       const v2nP = ( e + 0.000001 ) * ( v1n - v2n ) + v1nP;  //changed from 0.0000001
 
@@ -125,8 +124,8 @@ define( require => {
       ball1.velocity = new Vector2( v1xP, v1yP );
       ball2.velocity = new Vector2( v2xP, v2yP );
 
-      //Don't allow balls to rebound after collision during timestep of collision
-      //this seems to improve stability
+      // Don't allow balls to rebound after collision during timestep of collision
+      // this seems to improve stability
       ball1.position = r1.plus( ball1.velocity.times( offsetTime ) );
       ball2.position = r2.plus( ball2.velocity.times( offsetTime ) );
 
@@ -158,19 +157,19 @@ define( require => {
 
       // TODO: some of these steps need more documentation
 
-      const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );		//square of center-to-center separation of balls at contact
+      const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );		// square of center-to-center separation of balls at contact
       const deltaVSquared = deltaV.magnitudeSquared;
       const deltaRDotDeltaV = deltaR.dot( deltaV );
       const deltaRSquared = deltaR.magnitudeSquared;
 
       const underSqRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
-      //if collision is superslow, then set collision time = half-way point since last time step
-      //of if tiny number precision causes number under square root to be negative
+      // if collision is superslow, then set collision time = half-way point since last time step
+      // of if tiny number precision causes number under square root to be negative
 
       if ( deltaVSquared < 0.000000001 || underSqRoot < 0 ) {
         contactTime = lastTime + 0.5 * ( time - lastTime );
       }
-      else { //if collision is normal
+      else { // if collision is normal
         let delT;
         if ( this.isReversing ) {
           delT = ( -deltaRDotDeltaV + Math.sqrt( underSqRoot ) ) / deltaVSquared;
@@ -182,7 +181,7 @@ define( require => {
       }
 
       return contactTime;
-    }//end getContactTime()
+    }
   }
 
   return collisionLab.register( 'CollisionDetector', CollisionDetector );
