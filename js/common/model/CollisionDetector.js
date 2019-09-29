@@ -94,7 +94,7 @@ define( require => {
       const r2 = ball2.getPreviousPosition( offsetTime );
 
       const deltaR = r1.minus( r2 );
-      const d = deltaR.magnitude;
+      const normalizedDeltaR = deltaR.normalized();
 
       const m1 = ball1.mass;
       const m2 = ball2.mass;
@@ -102,24 +102,25 @@ define( require => {
       const v2 = ball2.velocity;
 
       // normal and tangential components of initial velocities
-      const v1n = ( 1 / d ) * deltaR.dot( v1 );
-      const v2n = ( 1 / d ) * deltaR.dot( v2 );
-      const v1t = ( 1 / d ) * deltaR.crossScalar( v1 );
-      const v2t = ( 1 / d ) * deltaR.crossScalar( v2 );
+
+      const v1n = normalizedDeltaR.dot( v1 );
+      const v2n = normalizedDeltaR.dot( v2 );
+      const v1t = normalizedDeltaR.crossScalar( v1 );
+      const v2t = normalizedDeltaR.crossScalar( v2 );
 
       // normal components of velocities after collision (P for prime = after)
       const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
-      const v2nP = ( e + 0.000001 ) * ( v1n - v2n ) + v1nP;  //changed from 0.0000001
+      const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
       // normal and tangential component of the velocity after collision
-      // const v1NT = new Vector2( v1nP, v1t );
-      // const v2NT = new Vector2( v2nP, v2t );
+      const v1TN = new Vector2( v1t, v1nP );
+      const v2TN = new Vector2( v2t, v2nP );
 
-      // TODO: rewrite in vector form
-      const v1xP = ( 1 / d ) * ( v1nP * deltaR.x - v1t * deltaR.y );
-      const v1yP = ( 1 / d ) * ( v1nP * deltaR.y + v1t * deltaR.x );
-      const v2xP = ( 1 / d ) * ( v2nP * deltaR.x - v2t * deltaR.y );
-      const v2yP = ( 1 / d ) * ( v2nP * deltaR.y + v2t * deltaR.x );
+      // velocity vectors after the collision in the x - y basis
+      const v1xP = normalizedDeltaR.crossScalar( v1TN );
+      const v1yP = normalizedDeltaR.dot( v1TN );
+      const v2xP = normalizedDeltaR.crossScalar( v2TN );
+      const v2yP = normalizedDeltaR.dot( v2TN );
 
       ball1.velocity = new Vector2( v1xP, v1yP );
       ball2.velocity = new Vector2( v2xP, v2yP );
@@ -132,7 +133,7 @@ define( require => {
     }
 
     /**
-     * Gets contact time between balls i and j
+     * Gets contact time between ball 1 and ball 2
      * @private
      * @param {Ball} ball1
      * @param {Ball} ball2
@@ -157,27 +158,32 @@ define( require => {
 
       // TODO: some of these steps need more documentation
 
-      const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );		// square of center-to-center separation of balls at contact
+      // square of center-to-center separation of balls at contact
+      const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );
+
+
       const deltaVSquared = deltaV.magnitudeSquared;
       const deltaRDotDeltaV = deltaR.dot( deltaV );
       const deltaRSquared = deltaR.magnitudeSquared;
 
-      const underSqRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
+      const underSquareRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
+
       // if collision is superslow, then set collision time = half-way point since last time step
       // of if tiny number precision causes number under square root to be negative
-
-      if ( deltaVSquared < 0.000000001 || underSqRoot < 0 ) {
+      if ( deltaVSquared < 1e-7 || underSquareRoot < 0 ) {
         contactTime = lastTime + 0.5 * ( time - lastTime );
       }
       else { // if collision is normal
-        let delT;
+
+        // the time interval that the collision occurred after lastTime
+        let deltaT;
         if ( this.isReversing ) {
-          delT = ( -deltaRDotDeltaV + Math.sqrt( underSqRoot ) ) / deltaVSquared;
+          deltaT = ( -deltaRDotDeltaV + Math.sqrt( underSquareRoot ) ) / deltaVSquared;
         }
         else {
-          delT = ( -deltaRDotDeltaV - Math.sqrt( underSqRoot ) ) / deltaVSquared;
+          deltaT = ( -deltaRDotDeltaV - Math.sqrt( underSquareRoot ) ) / deltaVSquared;
         }
-        contactTime = lastTime + delT;
+        contactTime = lastTime + deltaT;
       }
 
       return contactTime;
