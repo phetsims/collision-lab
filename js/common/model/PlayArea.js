@@ -8,6 +8,7 @@
  *   - Keeping track of the total kinetic energy of all the Balls in the PlayArea.
  *   - Stepping each Ball at each step call.
  *   - Elasticity of all Balls in the PlayArea.
+ *   - Keep track of center of mass position and velocity
  *
  * @author Brandon Li
  */
@@ -17,11 +18,40 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const NumberProperty = require( 'AXON/NumberProperty' );
 
   class PlayArea {
 
-    constructor() {
+    constructor( balls ) {
 
+      this.kineticEnergyProperty = new NumberProperty( 0 );
+      this.balls = balls;
+    }
+
+    /**
+     * Resets the model
+     * @public
+     */
+    reset() {
+      this.kineticEnergyProperty.reset();
+    }
+
+    /**
+     *
+     * @param {number} dt
+     */
+    step( dt ) {
+      //TODO
+    }
+
+    /**
+     * Updates the total kinetic energy of the system
+     * @public
+     */
+    updateKineticEnergy() {
+      this.kineticEnergyProperty.value = this.balls.reduce( ( accumulator, ball ) => {
+        return accumulator + ball.kineticEnergy;
+      } );
     }
   }
 
