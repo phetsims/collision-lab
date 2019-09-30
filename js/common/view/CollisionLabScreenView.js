@@ -9,6 +9,7 @@ define( require => {
   // modules
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
@@ -19,7 +20,12 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const Vector2 = require( 'DOT/Vector2' );
+
+  // constants
+  const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
+  const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
+  const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
+  const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
   class CollisionLabScreenView extends ScreenView {
 
@@ -31,11 +37,15 @@ define( require => {
 
       super();
 
-      const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-        Vector2.ZERO,
-        this.layoutBounds.center,
-        CollisionLabConstants.VIEW_TO_MODEL_SCALING );
+      const playAreaViewBounds = new Bounds2( SCREEN_VIEW_X_MARGIN,
+        SCREEN_VIEW_Y_MARGIN + MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.height,
+        SCREEN_VIEW_X_MARGIN + MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.width,
+        SCREEN_VIEW_Y_MARGIN );
 
+      const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
+        PLAY_AREA_BOUNDS,
+        playAreaViewBounds
+        );
 
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
       const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );

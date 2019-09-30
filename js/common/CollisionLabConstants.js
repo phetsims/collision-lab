@@ -19,15 +19,13 @@ define( require => {
     //----------------------------------------------------------------------------------------
     // ScreenView constants
     SCREEN_VIEW_X_MARGIN: 20,
-    SCREEN_VIEW_Y_MARGIN: 4,
+    SCREEN_VIEW_Y_MARGIN: 16,
 
 
     MAX_BALLS: 5,
     BORDER_WIDTH: 3.2, // horizontal length of pool table in meters
     BORDER_HEIGHT_1D: 0.8, // vertical height of pool table in meters
     BORDER_HEIGHT_2D: 1.6, // vertical height of pool table in meters
-
-    VIEW_TO_MODEL_SCALING: 200, // meter to view coordinates (1 m = 200 coordinates)
 
     PLAY_AREA_BOUNDS: new Bounds2( -1.6, -0.8, 1.6, 0.8 ),
 
