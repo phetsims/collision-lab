@@ -48,14 +48,6 @@ define( require => {
     PANEL_COLORS: {
       stroke: 'rgb( 190, 190, 190 )',
       fill: 'rgb( 240, 240, 240 )'
-    },
-
-    //----------------------------------------------------------------------------------------
-    // RadioButtonGroup default colors
-    RADIO_BUTTON_COLORS: {
-      baseColor: Color.WHITE,
-      selectedStroke: 'rgb( 65, 154, 201 )',
-      deselectedStroke: 'rgb( 50, 50, 50 )'
     }
   };
 
