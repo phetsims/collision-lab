@@ -38,9 +38,9 @@ define( require => {
       super();
 
       const playAreaViewBounds = new Bounds2( SCREEN_VIEW_X_MARGIN,
-        SCREEN_VIEW_Y_MARGIN + MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.height,
+        SCREEN_VIEW_Y_MARGIN,
         SCREEN_VIEW_X_MARGIN + MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.width,
-        SCREEN_VIEW_Y_MARGIN );
+        SCREEN_VIEW_Y_MARGIN + MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.height );
 
       const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
         PLAY_AREA_BOUNDS,
