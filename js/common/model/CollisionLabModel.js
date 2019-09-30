@@ -117,6 +117,12 @@ define( require => {
       this.prepopulatedBalls[ 2 ] = new Ball( 1, new Vector2( 1, -0.5 ), new Vector2( -0.5, -0.25 ) );
       this.prepopulatedBalls[ 3 ] = new Ball( 4, new Vector2( 2.2, -1.2 ), new Vector2( 1.1, 0.2 ) );
       this.prepopulatedBalls[ 4 ] = new Ball( 5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
+      this.prepopulatedBalls[ 5 ] = new Ball( 0.5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
+
+      // increase the number of balls for debugging/ performance purposes
+      for ( let i = 6; i < CollisionLabConstants.MAX_BALLS; i++ ) {
+        this.prepopulatedBalls[ i ] = new Ball( 0.25, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
+      }
     }
 
     /**
