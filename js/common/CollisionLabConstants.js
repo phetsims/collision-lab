@@ -18,8 +18,8 @@ define( require => {
 
     //----------------------------------------------------------------------------------------
     // ScreenView constants
-    SCREEN_VIEW_X_MARGIN: 20,
-    SCREEN_VIEW_Y_MARGIN: 16,
+    SCREEN_VIEW_X_MARGIN: 24,
+    SCREEN_VIEW_Y_MARGIN: 14,
 
 
     MAX_BALLS: 5,
