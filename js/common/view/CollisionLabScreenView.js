@@ -82,8 +82,8 @@ define( require => {
         listener: () => {
           model.reset();
         },
-        right: this.layoutBounds.maxX - 10,
-        bottom: this.layoutBounds.maxY - 10,
+        right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
+        bottom: this.layoutBounds.maxY - SCREEN_VIEW_Y_MARGIN,
         tandem: tandem.createTandem( 'resetAllButton' )
       } );
       this.addChild( resetAllButton );
