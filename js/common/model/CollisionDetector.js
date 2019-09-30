@@ -39,13 +39,20 @@ define( require => {
       assert && assert( elasticityProperty instanceof NumberProperty, `invalid elasticityProperty: ${elasticityProperty}` );
 
       // @private
+      this.bounds = bounds;
+
+      // @private
       this.balls = balls;
 
+      // @private
       this.nbrCollisionsInThisTimeStep = 0;
 
+      // @private
       this.elasticityProperty = elasticityProperty;
 
+      // @private
       this.isReversing = false;
+
     }
 
     /**
@@ -187,6 +194,39 @@ define( require => {
       }
 
       return contactTime;
+    }
+
+    /**
+     * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
+     * its way to its current location. The appropriate velocity component is then updated  and the
+     * ball is positioned within the bounds.
+     * @public
+     */
+    doBallBorderCollisions() {
+
+      // TODO: the position could be more precise if the timing of the collision was determined.
+      this.balls.forEach( ball => {
+
+        // left and right walls
+        if ( ball.left <= this.bounds.minX ) {
+          ball.flipHorizontalVelocity( this.elasticityProperty.value );
+          ball.left = this.bounds.minX;
+        }
+        else if ( ball.right >= this.bounds.maxX ) {
+          ball.flipHorizontalVelocity( this.elasticityProperty.value );
+          ball.right = this.bounds.maxX;
+        }
+
+        // top and bottom walls
+        if ( ball.top >= this.bounds.maxY ) {
+          ball.flipVerticalVelocity( this.elasticityProperty.value );
+          ball.top = this.bounds.maxY;
+        }
+        else if ( ball.bottom <= this.bounds.minY ) {
+          ball.flipVerticalVelocity( this.elasticityProperty.value );
+          ball.bottom = this.bounds.minY;
+        }
+      } );
     }
   }
 

@@ -91,6 +91,70 @@ define( require => {
     }
 
     /**
+     * Gets the left bound of the ball
+     * @public
+     * @returns {number}
+     */
+    get left() { return this.position.x - this.radius; }
+
+    /**
+     * Sets the left bound of the ball
+     * @public
+     * @param {number} left
+     */
+    set left( left ) {
+      this.position.setX( left + this.radius );
+    }
+
+    /**
+     * Gets the right bound of the ball.
+     * @public
+     * @returns {number}
+     */
+    get right() { return this.position.x + this.radius; }
+
+    /**
+     * Sets the left bound of the ball
+     * @public
+     * @param {number} right
+     */
+    set right( right ) {
+      this.position.setX( right - this.radius );
+    }
+
+    /**
+     * Gets the top bound of the ball
+     * @public
+     * @returns {number}
+     */
+    get top() { return this.position.y + this.radius; }
+
+    /**
+     * Sets the top bound of the ball
+     * @public
+     * @param {number} top
+     */
+    set top( top ) {
+      this.position.setY( top - this.radius );
+    }
+
+    /**
+     * Gets the bottom bound of the ball.
+     * @public
+     * @returns {number}
+     */
+    get bottom() { return this.position.y - this.radius; }
+
+    /**
+     * Sets the bottom bound of the ball
+     * @public
+     * @param {number} bottom
+     */
+    set bottom( bottom ) {
+      this.position.setY( bottom + this.radius );
+    }
+
+    /**
      * Gets the first moment of the ball, i.e.  mass* position
      * @public
      * @returns {Vector2}  kg * m
@@ -143,7 +207,27 @@ define( require => {
     }
 
     /**
-     * Gets the position of the ball.
+     * Flips the horizontal velocity of the ball up to a scaling factor (ranging from 0 to 1)
+     * @public
+     * @param {number} scaling
+     */
+    flipHorizontalVelocity( scaling ) {
+      assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
+      this.velocity.x *= -1 * scaling;
+    }
+
+    /**
+     * Flips the vertical velocity of the ball up to a scaling factor (ranging from 0 to 1)
+     * @public
+     * @param {number} scaling
+     */
+    flipVerticalVelocity( scaling ) {
+      assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
+      this.velocity.y *= -1 * scaling;
+    }
+
+    /**
+     * Gets the position of the ball at some time interval dt (assuming ballistic motion)
      * @public
      * @param {number} dt - time step
      * @returns {Vector2}

@@ -10,7 +10,7 @@
 
 require.config( {
 
-  deps: [ 'collision-lab-main' ],
+  deps: ['collision-lab-main'],
 
   paths: {
 

@@ -99,8 +99,10 @@ define( require => {
         ball.step( dt );
       } );
       this.collisionDetector.detectCollision( this.lastTime, this.time );
+      this.collisionDetector.doBallBorderCollisions();
 
       this.time += dt;
+
       // updates the position and velocity of center of mass
       this.centerOfMass.update();
     }
