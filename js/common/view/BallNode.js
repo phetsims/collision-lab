@@ -36,7 +36,7 @@ define( require => {
       super();
 
       // drag bounds for the ball
-      const dragBoundsProperty = new Property( CollisionLabConstants.TABLE_BOUNDS );
+      const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
       // ball radius in view coordinates
       const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );

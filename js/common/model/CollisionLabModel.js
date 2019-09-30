@@ -20,7 +20,7 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  const TABLE_BOUNDS = CollisionLabConstants.TABLE_BOUNDS;
+  const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
   class CollisionLabModel {
 
@@ -42,7 +42,7 @@ define( require => {
       this.balls = new ObservableArray();
 
       // @public
-      this.collisionDetector = new CollisionDetector( TABLE_BOUNDS, this.balls, this.elasticityProperty );
+      this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS, this.balls, this.elasticityProperty );
 
       this.createInitialBallData();
 

@@ -16,6 +16,12 @@ define( require => {
 
   const CollisionLabConstants = {
 
+    //----------------------------------------------------------------------------------------
+    // ScreenView constants
+    SCREEN_VIEW_X_MARGIN: 20,
+    SCREEN_VIEW_Y_MARGIN: 4,
+
+
     MAX_BALLS: 5,
     BORDER_WIDTH: 3.2, // horizontal length of pool table in meters
     BORDER_HEIGHT_1D: 0.8, // vertical height of pool table in meters
@@ -23,7 +29,7 @@ define( require => {
 
     VIEW_TO_MODEL_SCALING: 200, // meter to view coordinates (1 m = 200 coordinates)
 
-    TABLE_BOUNDS: new Bounds2( -1.6, -0.8, 1.6, 0.8 ),
+    PLAY_AREA_BOUNDS: new Bounds2( -1.6, -0.8, 1.6, 0.8 ),
 
     MAJOR_GRID_LINE_WIDTH: 2,
     MINOR_GRID_LINE_WIDTH: 1,

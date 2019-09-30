@@ -20,7 +20,7 @@ define( require => {
   //constants
   const MINOR_GRIDLINES_PER_MAJOR_GRIDLINE = CollisionLabConstants.MINOR_GRIDLINES_PER_MAJOR_GRIDLINE;
   const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
-  const TABLE_BOUNDS = CollisionLabConstants.TABLE_BOUNDS;
+  const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
   class GridNode extends Node {
 
@@ -32,12 +32,12 @@ define( require => {
       super();
 
 
-      const gridMinX = TABLE_BOUNDS.minX;
-      const gridMaxX = TABLE_BOUNDS.maxX;
-      const gridMinY = TABLE_BOUNDS.minY;
-      const gridMaxY = TABLE_BOUNDS.maxY;
-      const gridWidth = TABLE_BOUNDS.width;
-      const gridHeight = TABLE_BOUNDS.height;
+      const gridMinX = PLAY_AREA_BOUNDS.minX;
+      const gridMaxX = PLAY_AREA_BOUNDS.maxX;
+      const gridMinY = PLAY_AREA_BOUNDS.minY;
+      const gridMaxY = PLAY_AREA_BOUNDS.maxY;
+      const gridWidth = PLAY_AREA_BOUNDS.width;
+      const gridHeight = PLAY_AREA_BOUNDS.height;
 
       const majorGridLinesShape = new Shape();
       const minorGridLinesShape = new Shape();
@@ -82,7 +82,7 @@ define( require => {
       this.addChild( minorGridLinesPath );
 
       // border of the play area
-      const borderShape = Shape.bounds( modelViewTransform.modelToViewBounds( TABLE_BOUNDS ) );
+      const borderShape = Shape.bounds( modelViewTransform.modelToViewBounds( PLAY_AREA_BOUNDS ) );
       const borderPath = new Path( borderShape, {
         lineWidth: 5,
         stroke: 'green'
