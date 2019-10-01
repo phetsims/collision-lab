@@ -50,7 +50,6 @@ define( require => {
       // add input listener to disk
       this.addInputListener( new DragListener( {
         targetNode: diskNode,
-        translateNode: true,
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
         dragBoundsProperty: dragBoundsProperty
@@ -58,7 +57,7 @@ define( require => {
 
 
       ball.positionProperty.link( position => {
-        diskNode.center = modelViewTransform.modelToViewPosition( position );
+        diskNode.translation = modelViewTransform.modelToViewPosition( position );
       } );
 
       ball.radiusProperty.link( radius => {
