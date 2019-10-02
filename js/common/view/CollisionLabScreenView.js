@@ -12,6 +12,7 @@ define( require => {
   const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
@@ -20,6 +21,7 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
+  const Tandem = require( 'TANDEM/Tandem' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -34,6 +36,9 @@ define( require => {
      * @param {Tandem} tandem
      */
     constructor( model, tandem ) {
+
+      assert && assert( model instanceof CollisionLabModel, `invalid model: ${model}` );
+      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
       super();
 
