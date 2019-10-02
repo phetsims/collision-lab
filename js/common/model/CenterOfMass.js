@@ -9,7 +9,9 @@ define( require => {
   'use strict';
 
   // modules
+  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
 
@@ -19,6 +21,11 @@ define( require => {
      * @param {ObservableArray.<Ball>} balls
      */
     constructor( balls ) {
+
+      assert && assert( balls instanceof ObservableArray
+      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
+
+      //----------------------------------------------------------------------------------------
 
       // @public - value will be updated later
       this.positionProperty = new Vector2Property( Vector2.ZERO );
