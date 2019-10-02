@@ -11,6 +11,7 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const Vector2 = require( 'DOT/Vector2' );
+  const Vector2Property = require( 'DOT/Vector2Property' );
 
   class CenterOfMass {
 
@@ -19,11 +20,11 @@ define( require => {
      */
     constructor( balls ) {
 
-      // @public read-only - value will be updated later
-      this.position = new Vector2( 0, 0 );
+      // @public - value will be updated later
+      this.positionProperty = new Vector2Property( Vector2.ZERO );
 
-      // @public read-only - value will be updated later
-      this.velocity = new Vector2( 0, 0 );
+      // @public - value will be updated later
+      this.velocityProperty = new Vector2Property( Vector2.ZERO );
 
       // @private {ObservableArray.<Ball>}
       this.balls = balls;
@@ -33,6 +34,7 @@ define( require => {
     }
 
     /**
+     * Updates the value of the center of mass position and velocity
      * @public
      */
     update() {
@@ -46,8 +48,8 @@ define( require => {
         totalMomentum = totalMomentum.plus( ball.momentum );
       } );
 
-      this.position = totalFirstMoment.divideScalar( totalMass );
-      this.velocity = totalMomentum.divideScalar( totalMass );
+      this.positionProperty.value = totalFirstMoment.divideScalar( totalMass );
+      this.velocityProperty.value = totalMomentum.divideScalar( totalMass );
     }
 
   }
