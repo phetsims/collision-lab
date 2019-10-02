@@ -45,7 +45,7 @@ define( require => {
       const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
         PLAY_AREA_BOUNDS,
         playAreaViewBounds
-        );
+      );
 
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
       const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
@@ -59,7 +59,24 @@ define( require => {
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
 
-      const ballListener = ( addedBall, index ) => {
+      //TODO: the two following listeners are almost identical
+      const addItemAddedBallListener = ( addedBall, balls ) => {
+
+        const index = balls.indexOf( addedBall );
+        const addedBallNode = new BallNode( addedBall, index, valuesVisibleProperty, modelViewTransform );
+        this.ballLayerNode.addChild( addedBallNode );
+
+        // Observe when the ball is removed to unlink listeners
+        const removeBallListener = removedBall => {
+          if ( removedBall === addedBall ) {
+            this.ballLayerNode.removeChild( addedBallNode );
+            model.balls.removeItemRemovedListener( removeBallListener );
+          }
+        };
+        model.balls.addItemRemovedListener( removeBallListener );
+      };
+
+      const forEachBallListener = ( addedBall, index ) => {
 
         const addedBallNode = new BallNode( addedBall, index, valuesVisibleProperty, modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );
@@ -74,9 +91,10 @@ define( require => {
         model.balls.addItemRemovedListener( removeBallListener );
       };
 
-      model.balls.forEach( ballListener );
+      model.balls.forEach( forEachBallListener );
 
-      model.balls.addItemAddedListener( ballListener );
+      model.balls.addItemAddedListener( addItemAddedBallListener );
+
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
