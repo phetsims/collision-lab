@@ -16,6 +16,7 @@ define( require => {
   const IntroScreenView = require( 'COLLISION_LAB/intro/view/IntroScreenView' );
   const Property = require( 'AXON/Property' );
   const Screen = require( 'JOIST/Screen' );
+  const Tandem = require( 'TANDEM/Tandem' );
 
   // strings
   const screenIntroString = require( 'string!COLLISION_LAB/screen.intro' );
@@ -26,6 +27,8 @@ define( require => {
      * @param {Tandem} tandem
      */
     constructor( tandem ) {
+
+      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
       const options = {
         name: screenIntroString,

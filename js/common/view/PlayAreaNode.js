@@ -32,7 +32,7 @@ define( require => {
       assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
       assert && assert( _.every( [ gridVisiblityProperty,
                                    kineticEnergyVisiblityProperty,
-                                   centerOfMassVisiblityProperty ], BooleanProperty ) );
+                                   centerOfMassVisiblityProperty ], property instanceof BooleanProperty ) );
 
       //----------------------------------------------------------------------------------------
 
