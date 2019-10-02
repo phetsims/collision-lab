@@ -114,6 +114,7 @@ define( require => {
 
     // @public
     step( dt ) {
+      assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     }
 
   }
