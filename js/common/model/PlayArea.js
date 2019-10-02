@@ -17,12 +17,18 @@ define( require => {
   'use strict';
 
   // modules
+  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const NumberProperty = require( 'AXON/NumberProperty' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
 
   class PlayArea {
 
     constructor( balls ) {
+
+      assert && assert( balls instanceof ObservableArray
+      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
+
 
       this.kineticEnergyProperty = new NumberProperty( 0 );
       this.balls = balls;
@@ -41,6 +47,8 @@ define( require => {
      * @param {number} dt
      */
     step( dt ) {
+
+      assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
       //TODO
     }
 

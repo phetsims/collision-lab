@@ -17,6 +17,7 @@ define( require => {
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const Range = require( 'DOT/Range' );
+  const Tandem = require( 'TANDEM/Tandem' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -28,6 +29,8 @@ define( require => {
      * @param {Tandem} tandem
      */
     constructor( tandem ) {
+
+      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
       // @public
       this.numberOfBallsProperty = new NumberProperty( 2 );
@@ -91,6 +94,8 @@ define( require => {
      * @param {number} dt
      */
     step( dt ) {
+
+      assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
       this.lastTime = this.time;
 

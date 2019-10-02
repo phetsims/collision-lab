@@ -35,7 +35,8 @@ define( require => {
     constructor( bounds, balls, elasticityProperty, options ) {
 
       // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-      assert && assert( balls instanceof ObservableArray && _.every( balls.getArray(), ball => ball instanceof Ball ) );
+     assert && assert( balls instanceof ObservableArray
+      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
       assert && assert( elasticityProperty instanceof NumberProperty, `invalid elasticityProperty: ${elasticityProperty}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
         `Extra prototype on Options: ${options}` );
