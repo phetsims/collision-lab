@@ -37,6 +37,8 @@ define( require => {
       // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
       assert && assert( balls instanceof ObservableArray && _.every( balls.getArray(), ball => ball instanceof Ball ) );
       assert && assert( elasticityProperty instanceof NumberProperty, `invalid elasticityProperty: ${elasticityProperty}` );
+      assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
+        `Extra prototype on Options: ${options}` );
 
       // @private
       this.bounds = bounds;
@@ -61,6 +63,10 @@ define( require => {
      * @param {number} time - current time
      */
     detectCollision( lastTime, time ) {
+
+      assert && assert( typeof lastTime === 'number', `invalid lastTime: ${lastTime}` );
+      assert && assert( typeof time === 'number', `invalid time: ${time}` );
+
       const N = this.balls.length;
       for ( let i = 0; i < N; i++ ) {
         const ball1 = this.balls.get( i );
@@ -87,6 +93,11 @@ define( require => {
      * @param {number} time - current time
      */
     collideBalls( ball1, ball2, lastTime, time ) {
+
+      assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
+      assert && assert( typeof lastTime === 'number', `invalid lastTime: ${lastTime}` );
+      assert && assert( typeof time === 'number', `invalid time: ${time}` );
+
       const e = this.elasticityProperty.value;
 
       // Balls have already overlapped, so currently have incorrect positions
@@ -149,6 +160,10 @@ define( require => {
      * @returns {number} contactTime in seconds
      */
     getContactTime( ball1, ball2, lastTime, time ) {
+
+      assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
+      assert && assert( typeof lastTime === 'number', `invalid lastTime: ${lastTime}` );
+      assert && assert( typeof time === 'number', `invalid time: ${time}` );
 
       let contactTime = 0;  //contact time
 
