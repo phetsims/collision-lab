@@ -103,6 +103,7 @@ define( require => {
      * @param {number} left
      */
     set left( left ) {
+      assert && assert( typeof left === 'number', `invalid left: ${left}` );
       this.position.setX( left + this.radius );
     }
 
@@ -119,6 +120,7 @@ define( require => {
      * @param {number} right
      */
     set right( right ) {
+      assert && assert( typeof right === 'number', `invalid right: ${right}` );
       this.position.setX( right - this.radius );
     }
 
@@ -135,6 +137,7 @@ define( require => {
      * @param {number} top
      */
     set top( top ) {
+      assert && assert( typeof top === 'number', `invalid top: ${top}` );
       this.position.setY( top - this.radius );
     }
 
@@ -151,6 +154,7 @@ define( require => {
      * @param {number} bottom
      */
     set bottom( bottom ) {
+      assert && assert( typeof bottom === 'number', `invalid bottom: ${bottom}` );
       this.position.setY( bottom + this.radius );
     }
 
@@ -233,6 +237,7 @@ define( require => {
      * @returns {Vector2}
      */
     getPreviousPosition( dt ) {
+      assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
       return this.position.minus( this.velocity.times( dt ) );
     }
 
