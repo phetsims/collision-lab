@@ -19,8 +19,8 @@ define( require => {
   const DragListener = require( 'SCENERY/listeners/DragListener' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Property = require( 'AXON/Property' );
-
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
 
   class BallNode extends Node {
 
@@ -43,7 +43,11 @@ define( require => {
       const ballLocation = modelViewTransform.modelToViewPosition( ball.position );
 
       // add disk to the scene graph
-      const diskNode = new Circle( ballRadius, { center: ballLocation, fill: 'black' } );
+      const diskNode = new Circle( ballRadius, {
+        center: ballLocation,
+        fill: CollisionLabColors.BALL_COLORS[ index ],
+        stroke: 'black'
+      } );
       this.addChild( diskNode );
 
 
