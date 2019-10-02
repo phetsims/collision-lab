@@ -34,7 +34,8 @@ define( require => {
      */
     constructor( balls, moreDataProperty ) {
 
-      assert && assert( balls instanceof ObservableArray && _.every( balls.getArray(), ball => ball instanceof Ball ) );
+      assert && assert( balls instanceof ObservableArray
+      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
       assert && assert( moreDataProperty instanceof BooleanProperty, `invalid moreDataProperty: ${moreDataProperty}` );
 
       super( new Node() );
