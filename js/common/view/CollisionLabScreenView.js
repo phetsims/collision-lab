@@ -21,6 +21,7 @@ define( require => {
   const NumberSpinner = require( 'SUN/NumberSpinner' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
+  const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const HSlider = require( 'SUN/HSlider' );
@@ -82,6 +83,13 @@ define( require => {
 
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
+
+      //  create and add time control buttons (
+      const timeControlBox = new TimeControlBox( model, viewProperties.velocityVisibleProperty, {
+        centerX: gridNode.centerX,
+        top: gridNode.bottom + 10
+      } );
+      this.addChild( timeControlBox );
 
       //TODO: the two following listeners are almost identical
       const addItemAddedBallListener = ( addedBall, balls ) => {
