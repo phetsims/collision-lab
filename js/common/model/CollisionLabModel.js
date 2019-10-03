@@ -8,6 +8,7 @@ define( require => {
   'use strict';
 
   // modules
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const ObservableArray = require( 'AXON/ObservableArray' );
@@ -30,6 +31,9 @@ define( require => {
       // @public
       this.playArea = new PlayArea( this.balls );
 
+      // @public
+      this.playProperty = new BooleanProperty( true );
+
     }
 
     /**
@@ -38,6 +42,7 @@ define( require => {
      */
     reset() {
       this.playArea.reset();
+      this.playProperty.reset();
     }
 
     /**
@@ -49,8 +54,9 @@ define( require => {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-      this.playArea.step( dt );
-
+      if ( this.playProperty.value ) {
+        this.playArea.step( dt );
+      }
     }
 
 

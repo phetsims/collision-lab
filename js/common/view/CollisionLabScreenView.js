@@ -85,7 +85,7 @@ define( require => {
       this.addChild( this.ballLayerNode );
 
       //  create and add time control buttons (
-      const timeControlBox = new TimeControlBox( model, viewProperties.velocityVisibleProperty, {
+      const timeControlBox = new TimeControlBox( model, model.playProperty, {
         centerX: gridNode.centerX,
         top: gridNode.bottom + 10
       } );
