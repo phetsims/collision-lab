@@ -34,9 +34,6 @@ define( require => {
       // @public indicates if the path (trajectory) of each ball is visible
       this.pathVisibleProperty = new BooleanProperty( false );
 
-      // @public indicates if the reflecting border of the play area is present
-      this.reflectingBorderVisibleProperty = new BooleanProperty( false );
-
     }
 
     /**
@@ -50,7 +47,6 @@ define( require => {
       this.kineticEnergyVisibleProperty.reset();
       this.valuesVisibleProperty.reset();
       this.pathVisibleProperty.reset();
-      this.reflectingBorderVisibleProperty.reset();
     }
 
     /**

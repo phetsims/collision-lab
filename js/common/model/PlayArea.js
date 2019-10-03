@@ -49,13 +49,17 @@ define( require => {
       // @public
       this.elasticityProperty = new NumberProperty( 1, { range: new Range( 0, 1 ) } );
 
+      // @public determines if the balls will reflect at the border
+      this.reflectingBorderProperty = new BooleanProperty( true );
+
+      // @public determines if the ball size is constant (i.e. independent of mass)
+      this.constantRadiusProperty = new BooleanProperty( false );
+
       // @public
-      this.isBorderReflecting = new BooleanProperty( true );
+      this.kineticEnergyProperty = new NumberProperty( 0 );
 
       // @public (read-only)
       this.centerOfMass = new CenterOfMass( balls );
-
-      this.kineticEnergyProperty = new NumberProperty( 0 );
 
       // @public
       this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS, balls, this.elasticityProperty );
@@ -89,10 +93,11 @@ define( require => {
      * @public
      */
     reset() {
-      this.kineticEnergyProperty.reset();
       this.numberOfBallsProperty.reset();
-      this.isBorderReflecting.reset();
       this.elasticityProperty.reset();
+      this.reflectingBorderProperty.reset();
+      this.constantRadiusProperty.reset();
+      this.kineticEnergyProperty.reset();
       this.createInitialBallData();
       this.initializeBalls();
     }
