@@ -23,16 +23,16 @@ define( require => {
 
     /**
      * @param {PlayArea} playArea
-     * @param {BooleanProperty} gridVisiblityProperty
-     * @param {BooleanProperty} kineticEnergyVisiblityProperty
-     * @param {BooleanProperty} centerOfMassVisiblityProperty
+     * @param {BooleanProperty} gridVisibilityProperty
+     * @param {BooleanProperty} kineticEnergyVisibilityProperty
+     * @param {BooleanProperty} centerOfMassVisibilityProperty
      */
-    constructor( playArea, gridVisiblityProperty, kineticEnergyVisiblityProperty, centerOfMassVisiblityProperty ) {
+    constructor( playArea, gridVisibilityProperty, kineticEnergyVisibilityProperty, centerOfMassVisibilityProperty ) {
 
       assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-      assert && assert( _.every( [ gridVisiblityProperty,
-                                   kineticEnergyVisiblityProperty,
-                                   centerOfMassVisiblityProperty ], property instanceof BooleanProperty ) );
+      assert && assert( _.every( [gridVisibilityProperty,
+        kineticEnergyVisibilityProperty,
+        centerOfMassVisibilityProperty], property => property instanceof BooleanProperty ) );
 
       //----------------------------------------------------------------------------------------
 
