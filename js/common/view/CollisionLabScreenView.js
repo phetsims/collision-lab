@@ -8,11 +8,11 @@ define( require => {
 
   // modules
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
+  const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const Image = require( 'SCENERY/nodes/Image' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
@@ -65,12 +65,13 @@ define( require => {
       transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
       this.setChildren( [backgroundImage, transparencySlider] );
 
+      // create the view properties for the view
+      const viewProperties = new CollisionLabViewProperties();
+
       // create and add number spinner for number of balls
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
       const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
       this.addChild( numberOfBallsSpinner );
-
-      const valuesVisibleProperty = new BooleanProperty( false );
 
       const gridNode = new GridNode( modelViewTransform );
       this.addChild( gridNode );
@@ -85,7 +86,7 @@ define( require => {
       const addItemAddedBallListener = ( addedBall, balls ) => {
 
         const index = balls.indexOf( addedBall );
-        const addedBallNode = new BallNode( addedBall, index, valuesVisibleProperty, modelViewTransform );
+        const addedBallNode = new BallNode( addedBall, index, viewProperties.valuesVisibleProperty, modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );
 
         // Observe when the ball is removed to unlink listeners
@@ -100,7 +101,7 @@ define( require => {
 
       const forEachBallListener = ( addedBall, index ) => {
 
-        const addedBallNode = new BallNode( addedBall, index, valuesVisibleProperty, modelViewTransform );
+        const addedBallNode = new BallNode( addedBall, index, viewProperties.valuesVisibleProperty, modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );
 
         // Observe when the ball is removed to unlink listeners
@@ -120,6 +121,7 @@ define( require => {
       const resetAllButton = new ResetAllButton( {
         listener: () => {
           model.reset();
+          viewProperties.reset();
         },
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         bottom: this.layoutBounds.maxY - SCREEN_VIEW_Y_MARGIN,
@@ -132,7 +134,6 @@ define( require => {
     step( dt ) {
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     }
-
   }
 
   return collisionLab.register( 'CollisionLabScreenView', CollisionLabScreenView );
