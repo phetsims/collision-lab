@@ -13,6 +13,7 @@ define( require => {
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
+  const GridCheckbox = require( 'SCENERY_PHET/GridCheckbox' );
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const HSlider = require( 'SUN/HSlider' );
   const Image = require( 'SCENERY/nodes/Image' );
@@ -64,7 +65,7 @@ define( require => {
       const backgroundImage = new Image( mockupScreen2DLabImage, { scale: 0.66 } );
       const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
       transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
-      this.setChildren( [backgroundImage, transparencySlider] );
+      this.setChildren( [ backgroundImage, transparencySlider ] );
 
       // create the view properties for the view
       const viewProperties = new CollisionLabViewProperties();
@@ -75,10 +76,10 @@ define( require => {
       this.addChild( numberOfBallsSpinner );
 
       // create the grid and border of the playArea
-      const gridNode = new GridNode( model.playArea.grid, modelViewTransform );
+      const gridNode = new GridNode( model.playArea.grid, viewProperties.gridVisibleProperty, modelViewTransform );
       this.addChild( gridNode );
 
-      numberOfBallsSpinner.left = gridNode.right;
+      numberOfBallsSpinner.left = gridNode.right + 5;
       numberOfBallsSpinner.top = 20;
 
       this.ballLayerNode = new Node();
@@ -137,6 +138,13 @@ define( require => {
         tandem: tandem.createTandem( 'resetAllButton' )
       } );
       this.addChild( resetAllButton );
+
+      const gridCheckbox = new GridCheckbox( viewProperties.gridVisibleProperty, {
+        top: numberOfBallsSpinner.bottom + 5,
+        left: numberOfBallsSpinner.left
+      } );
+      this.addChild( gridCheckbox );
+
     }
 
     // @public

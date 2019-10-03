@@ -17,17 +17,21 @@ define( require => {
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
+  const BooleanProperty = require('AXON/BooleanProperty');
 
   class GridNode extends Node {
 
     /**
      * @param {Grid} grid
+     * @param {BooleanProperty} gridVisibleProperty
      * @param {ModelViewTransform2} modelViewTransform
      */
-    constructor( grid, modelViewTransform ) {
+    constructor( grid, gridVisibleProperty, modelViewTransform ) {
 
       assert && assert( grid instanceof Grid,
         `invalid grid: ${grid}` );
+      assert && assert( gridVisibleProperty instanceof BooleanProperty,
+        `invalid gridVisibleProperty: ${gridVisibleProperty}`);
       assert && assert( modelViewTransform instanceof ModelViewTransform2,
         `invalid modelViewTransform: ${modelViewTransform}` );
 
@@ -56,6 +60,13 @@ define( require => {
       this.addChild( majorGridLinesPath );
       this.addChild( minorGridLinesPath );
       this.addChild( borderPath );
+
+      // link visibility of grid lines to the gridVisibleProperty
+      // present for the lifetime of the simulation
+      gridVisibleProperty.link( visible => {
+        minorGridLinesPath.visible = visible;
+        majorGridLinesPath.visible = visible;
+      } );
 
     }
   }
