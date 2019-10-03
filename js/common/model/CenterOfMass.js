@@ -23,7 +23,7 @@ define( require => {
     constructor( balls ) {
 
       assert && assert( balls instanceof ObservableArray
-      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
+      && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
       //----------------------------------------------------------------------------------------
 

@@ -73,7 +73,8 @@ define( require => {
       const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
       this.addChild( numberOfBallsSpinner );
 
-      const gridNode = new GridNode( modelViewTransform );
+      // create the grid and border of the playArea
+      const gridNode = new GridNode( model.playArea.grid, modelViewTransform );
       this.addChild( gridNode );
 
       numberOfBallsSpinner.left = gridNode.right;

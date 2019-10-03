@@ -45,7 +45,7 @@ define( require => {
       // Handle the changing radius of the Ball based on the mass
 
       // @public (read-only) - Property of the radius (model) of the ball
-      this.radiusProperty = new DerivedProperty( [ this.massProperty ], mass => 0.15 * Math.pow( mass, 1 / 3 ) );
+      this.radiusProperty = new DerivedProperty( [this.massProperty], mass => 0.15 * Math.pow( mass, 1 / 3 ) );
 
     }
 

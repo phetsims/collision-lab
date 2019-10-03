@@ -18,6 +18,7 @@ define( require => {
 
   // modules
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
+  const Grid = require( 'COLLISION_LAB/common/model/Grid' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
@@ -66,6 +67,10 @@ define( require => {
 
       // @public
       this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS, balls, this.elasticityProperty );
+
+
+      // @public (read-only) shape for the grid
+      this.grid = new Grid();
 
       this.balls = balls;
 

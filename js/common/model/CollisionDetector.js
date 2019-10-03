@@ -35,8 +35,8 @@ define( require => {
     constructor( bounds, balls, elasticityProperty, options ) {
 
       // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-     assert && assert( balls instanceof ObservableArray
-      && balls.count( ball => ball instanceof Ball ) === balls.length , `invalid balls: ${balls}` );
+      assert && assert( balls instanceof ObservableArray
+      && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
       assert && assert( elasticityProperty instanceof NumberProperty, `invalid elasticityProperty: ${elasticityProperty}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
         `Extra prototype on Options: ${options}` );
@@ -95,7 +95,7 @@ define( require => {
      */
     collideBalls( ball1, ball2, lastTime, time ) {
 
-      assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
+      assert && assert( _.every( [ball1, ball2], ball => ball instanceof Ball ) );
       assert && assert( typeof lastTime === 'number', `invalid lastTime: ${lastTime}` );
       assert && assert( typeof time === 'number', `invalid time: ${time}` );
 
@@ -162,7 +162,7 @@ define( require => {
      */
     getContactTime( ball1, ball2, lastTime, time ) {
 
-      assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
+      assert && assert( _.every( [ball1, ball2], ball => ball instanceof Ball ) );
       assert && assert( typeof lastTime === 'number', `invalid lastTime: ${lastTime}` );
       assert && assert( typeof time === 'number', `invalid time: ${time}` );
 
