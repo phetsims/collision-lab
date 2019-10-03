@@ -1,3 +1,10 @@
 {
-
+  "mockup2DLab.PNG": {
+    "text": [
+      "Copyright 2002-2019 University of Colorado Boulder"
+    ],
+    "projectURL": "http://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "mockup"
+  }
 }

@@ -14,13 +14,16 @@ define( require => {
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
+  const Image = require( 'SCENERY/nodes/Image' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const NumberProperty = require( 'AXON/NumberProperty' );
   const NumberSpinner = require( 'SUN/NumberSpinner' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
+  const HSlider = require( 'SUN/HSlider' );
   const Tandem = require( 'TANDEM/Tandem' );
 
   // constants
@@ -28,6 +31,9 @@ define( require => {
   const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
   const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
+
+  // images
+  const Mockup2DLabImage = require( 'image!COLLISION_LAB/mockup2DLab.png' );
 
   class CollisionLabScreenView extends ScreenView {
 
@@ -52,6 +58,14 @@ define( require => {
         playAreaViewBounds
       );
 
+      // mockup image and transparency slider
+      const transparencyProperty = new NumberProperty( 0 );
+      const backgroundImage = new Image( Mockup2DLabImage, { scale: 0.66 } );
+      const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
+      transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
+      this.setChildren( [backgroundImage, transparencySlider] );
+
+      // create and add number spinner for number of balls
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
       const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
       this.addChild( numberOfBallsSpinner );
@@ -60,6 +74,9 @@ define( require => {
 
       const gridNode = new GridNode( modelViewTransform );
       this.addChild( gridNode );
+
+      numberOfBallsSpinner.left = gridNode.right;
+      numberOfBallsSpinner.top = 20;
 
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
