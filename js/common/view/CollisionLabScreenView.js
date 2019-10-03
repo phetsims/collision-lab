@@ -53,7 +53,7 @@ define( require => {
       );
 
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
-      const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
+      const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
       this.addChild( numberOfBallsSpinner );
 
       const valuesVisibleProperty = new BooleanProperty( false );
@@ -99,7 +99,6 @@ define( require => {
       model.balls.forEach( forEachBallListener );
 
       model.balls.addItemAddedListener( addItemAddedBallListener );
-
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
