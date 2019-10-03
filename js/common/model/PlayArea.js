@@ -34,6 +34,9 @@ define( require => {
 
   class PlayArea {
 
+    /**
+     * @param {ObservableArray.<Ball>} balls
+     */
     constructor( balls ) {
 
       assert && assert( balls instanceof ObservableArray
