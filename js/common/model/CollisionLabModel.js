@@ -10,8 +10,8 @@ define( require => {
   // modules
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const ObservableArray = require( 'AXON/ObservableArray' );
+  const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Tandem = require( 'TANDEM/Tandem' );
 
 

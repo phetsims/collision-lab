@@ -14,6 +14,7 @@ define( require => {
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
+  const HSlider = require( 'SUN/HSlider' );
   const Image = require( 'SCENERY/nodes/Image' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
@@ -21,11 +22,10 @@ define( require => {
   const NumberSpinner = require( 'SUN/NumberSpinner' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
-  const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const HSlider = require( 'SUN/HSlider' );
   const Tandem = require( 'TANDEM/Tandem' );
+  const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)

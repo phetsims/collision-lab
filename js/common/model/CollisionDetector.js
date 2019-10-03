@@ -17,11 +17,11 @@ define( require => {
   'use strict';
 
   // modules
+  // const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
-  // const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Vector2 = require( 'DOT/Vector2' );
 
   class CollisionDetector {

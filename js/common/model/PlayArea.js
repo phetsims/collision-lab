@@ -18,16 +18,16 @@ define( require => {
 
   // modules
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
-  const Grid = require( 'COLLISION_LAB/common/model/Grid' );
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
+  const CollisionDetector = require( 'COLLISION_LAB/common/model/CollisionDetector' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const Grid = require( 'COLLISION_LAB/common/model/Grid' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
-  const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
-  const CollisionDetector = require( 'COLLISION_LAB/common/model/CollisionDetector' );
   const Range = require( 'DOT/Range' );
   const Vector2 = require( 'DOT/Vector2' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
 
   // constants
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;

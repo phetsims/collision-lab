@@ -10,13 +10,13 @@ define( require => {
   'use strict';
 
   // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' );
   const HBox = require( 'SCENERY/nodes/HBox' );
   const PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   const StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
   const StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
-  const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' );
 
   class TimeControlBox extends HBox {
 
