@@ -33,7 +33,7 @@ define( require => {
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
   // images
-  const Mockup2DLabImage = require( 'image!COLLISION_LAB/mockup2DLab.png' );
+  const mockupScreen2DLabImage = require( 'image!COLLISION_LAB/mockup-screen-2DLab.png' );
 
   class CollisionLabScreenView extends ScreenView {
 
@@ -60,7 +60,7 @@ define( require => {
 
       // mockup image and transparency slider
       const transparencyProperty = new NumberProperty( 0 );
-      const backgroundImage = new Image( Mockup2DLabImage, { scale: 0.66 } );
+      const backgroundImage = new Image( mockupScreen2DLabImage, { scale: 0.66 } );
       const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
       transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
       this.setChildren( [backgroundImage, transparencySlider] );
