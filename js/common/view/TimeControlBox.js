@@ -1,4 +1,4 @@
-// Copyright 2012-2019, University of Colorado Boulder
+// Copyright 2019, University of Colorado Boulder
 
 /**
  * Scenery Box of step forward/backward/play/pause control buttons.
