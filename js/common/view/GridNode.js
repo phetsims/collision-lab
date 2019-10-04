@@ -17,7 +17,7 @@ define( require => {
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
-  const BooleanProperty = require('AXON/BooleanProperty');
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
 
   class GridNode extends Node {
 
@@ -31,7 +31,7 @@ define( require => {
       assert && assert( grid instanceof Grid,
         `invalid grid: ${grid}` );
       assert && assert( gridVisibleProperty instanceof BooleanProperty,
-        `invalid gridVisibleProperty: ${gridVisibleProperty}`);
+        `invalid gridVisibleProperty: ${gridVisibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2,
         `invalid modelViewTransform: ${modelViewTransform}` );
 

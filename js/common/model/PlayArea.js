@@ -113,24 +113,42 @@ define( require => {
     /**
      *
      * @param {number} dt
+     * @param {boolean} isReversing
      */
-    step( dt ) {
+    step( dt, isReversing ) {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-      this.lastTime = this.time;
+      // Go backwards in time if we're reversing
+      if ( isReversing ) {
+        dt *= -1;
+      }
+      else {
+        // else increment time
+        this.lastTime = this.time;
+      }
+
+      // increment the clock time
+      this.time += dt;
 
       // updates the position and velocity of each ball
       this.balls.forEach( ball => {
         ball.step( dt );
       } );
+
+      this.collisionDetector.isReversing = isReversing;
       this.collisionDetector.detectCollision( this.lastTime, this.time );
       this.collisionDetector.doBallBorderCollisions();
 
-      this.time += dt;
-
       // updates the position and velocity of center of mass
       this.centerOfMass.update();
+
+      //
+      if ( isReversing ) {
+        this.lastTime = this.time;
+      }
+
+
     }
 
     /**

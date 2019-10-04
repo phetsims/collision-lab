@@ -65,7 +65,7 @@ define( require => {
       const backgroundImage = new Image( mockupScreen2DLabImage, { scale: 0.66 } );
       const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
       transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
-      this.setChildren( [ backgroundImage, transparencySlider ] );
+      this.setChildren( [backgroundImage, transparencySlider] );
 
       // create the view properties for the view
       const viewProperties = new CollisionLabViewProperties();

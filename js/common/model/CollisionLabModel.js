@@ -13,7 +13,10 @@ define( require => {
   const ObservableArray = require( 'AXON/ObservableArray' );
   const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Tandem = require( 'TANDEM/Tandem' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
 
+  // constants
+  const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
 
   class CollisionLabModel {
 
@@ -33,7 +36,6 @@ define( require => {
 
       // @public
       this.playProperty = new BooleanProperty( true );
-
     }
 
     /**
@@ -55,12 +57,29 @@ define( require => {
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
       if ( this.playProperty.value ) {
-        this.playArea.step( dt );
+        this.playArea.step( dt, false );
       }
     }
 
+    /**
+     * Goes one time step back
+     * @public
+     */
+    stepBackward() {
+      this.playProperty.value = false;
+      this.playArea.step( STEP_DURATION, true );
+    }
 
+    /**
+     * Goes one time step forward
+     * @public
+     */
+    stepForward() {
+      this.playProperty.value = false;
+      this.playArea.step( STEP_DURATION, false );
+    }
   }
+
 
   return collisionLab.register( 'CollisionLabModel', CollisionLabModel );
 } );

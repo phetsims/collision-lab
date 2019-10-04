@@ -33,12 +33,10 @@ define( require => {
       const playPauseButton = new PlayPauseButton( playProperty );
 
       const stepForwardButton = new StepForwardButton( {
-        enabled: false,
         listener: () => model.stepForward()
       } );
 
       const stepBackwardButton = new StepBackwardButton( {
-        enabled: false,
         listener: () => model.stepBackward()
       } );
 
