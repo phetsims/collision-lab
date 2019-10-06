@@ -10,6 +10,7 @@ define( require => {
   'use strict';
 
   // modules
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
@@ -17,7 +18,6 @@ define( require => {
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
 
   class GridNode extends Node {
 

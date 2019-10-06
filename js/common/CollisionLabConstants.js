@@ -18,6 +18,9 @@ define( require => {
 
     STEP_DURATION: 0.01, // Seconds
 
+    NORMAL_SPEED_SCALE: 1, // 100%
+    SLOW_SPEED_SCALE: 0.3, //  30%
+
     //----------------------------------------------------------------------------------------
     // ScreenView constants
     SCREEN_VIEW_X_MARGIN: 24,

@@ -12,9 +12,9 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
   const Shape = require( 'KITE/Shape' );
-  const Node = require( 'SCENERY/nodes/Node' );
 
 
   class XNode extends Node {

@@ -10,10 +10,11 @@ define( require => {
   // modules
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Tandem = require( 'TANDEM/Tandem' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
 
   // constants
   const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
@@ -36,6 +37,9 @@ define( require => {
 
       // @public
       this.playProperty = new BooleanProperty( true );
+
+      // @public
+      this.speedProperty = new NumberProperty( CollisionLabConstants.NORMAL_SPEED_SCALE );
     }
 
     /**
@@ -45,6 +49,7 @@ define( require => {
     reset() {
       this.playArea.reset();
       this.playProperty.reset();
+      this.speedProperty.reset();
     }
 
     /**
@@ -57,7 +62,7 @@ define( require => {
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
       if ( this.playProperty.value ) {
-        this.playArea.step( dt, false );
+        this.playArea.step( dt * this.speedProperty.value, false );
       }
     }
 

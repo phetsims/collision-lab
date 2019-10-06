@@ -4,5 +4,11 @@
   },
   "screen.intro": {
     "value": "Intro"
+  },
+  "slow": {
+    "value": "Slow"
+  },
+  "normal": {
+    "value": "Normal"
   }
 }

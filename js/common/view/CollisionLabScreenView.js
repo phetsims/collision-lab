@@ -25,6 +25,7 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
+  const SpeedRadioButtons = require( 'COLLISION_LAB/common/view/SpeedRadioButtons' );
   const Tandem = require( 'TANDEM/Tandem' );
   const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
 
@@ -91,6 +92,14 @@ define( require => {
         top: gridNode.bottom + 10
       } );
       this.addChild( timeControlBox );
+
+      //  create and add time control buttons (
+      const speedRadioButtons = new SpeedRadioButtons( model.speedProperty, {
+        left: timeControlBox.right + 10,
+        centerY: timeControlBox.centerY
+      } );
+      this.addChild( speedRadioButtons );
+
 
       //TODO: the two following listeners are almost identical
       const addItemAddedBallListener = ( addedBall, balls ) => {

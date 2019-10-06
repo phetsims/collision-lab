@@ -18,6 +18,7 @@ define( require => {
   const StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
   const StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
 
+
   class TimeControlBox extends HBox {
 
     /**
@@ -39,6 +40,7 @@ define( require => {
       const stepBackwardButton = new StepBackwardButton( {
         listener: () => model.stepBackward()
       } );
+
 
       super( _.extend( {
         resize: false,
