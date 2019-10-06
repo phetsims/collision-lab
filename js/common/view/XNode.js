@@ -3,7 +3,6 @@
 /**
  * Node for a square "X" symbol.
  *
- *
  * @author Alex Schor
  */
 
@@ -19,6 +18,9 @@ define( require => {
 
   class XNode extends Node {
 
+    /**
+     * @param {Object} [options]
+     */
     constructor( options ) {
 
       super();
@@ -30,27 +32,25 @@ define( require => {
         thickness: 9 // thickness of the legs of the X
       }, options );
 
-      /*
-      * The calculations for the positions of the various points on the X are based on the following two dimensions:
-      * (All angles are 45deg, X is rotationally symmetrical for 90deg increments. Drawing not to scale.)
-      *
-      *    / \  / \ __
-      *    \  \/  /   |---internalVerticesOffset
-      *     \    /____|
-      *     /    \
-      *    /  /\  \
-      *    \ /  \ /
-      *  |--|
-      *    \_ externalVerticesOffset
-      *
-      * All of the external vertices (on the legs of the X) are externalVerticesOffset away from the corner of
-      * the bounding box in both the X and Y directions.
-      *
-      * All of the internal vertices (where the legs of the X meet) are internalVerticesOffset away from the external
-      * vertices in both the X and Y directions
-      *
-      *
-      * */
+      /**
+       * The calculations for the positions of the various points on the X are based on the following two dimensions:
+       * (All angles are 45deg, X is rotationally symmetrical for 90deg increments. Drawing not to scale.)
+       *
+       *    / \  / \ __
+       *    \  \/  /   |---internalVerticesOffset
+       *     \    /____|
+       *     /    \
+       *    /  /\  \
+       *    \ /  \ /
+       *  |--|
+       *    \_ externalVerticesOffset
+       *
+       * All of the external vertices (on the legs of the X) are externalVerticesOffset away from the corner of
+       * the bounding box in both the X and Y directions.
+       *
+       * All of the internal vertices (where the legs of the X meet) are internalVerticesOffset away from the external
+       * vertices in both the X and Y directions
+       */
 
 
       const size = options.size;
@@ -58,20 +58,19 @@ define( require => {
       const internalVerticesOffset = ( size - ( 2 * externalVerticesOffset ) ) / 2;
 
 
-      /*
-      *  ORDER IN WHICH VERTICES ARE DRAWN:
-      *  (Going around counterclockwise)
-      *
-      *     1    11
-      *  2 / \  / \ 10
-      *    \  \/  /
-      *   3 \ 12 / 9
-      *     / 6  \
-      *  4 /  /\  \ 8
-      *    \ /  \ /
-      *     5    7
-      *
-      * */
+      /**
+       *  ORDER IN WHICH VERTICES ARE DRAWN:
+       *  (Going around counterclockwise)
+       *
+       *     1    11
+       *  2 / \  / \ 10
+       *    \  \/  /
+       *   3 \ 12 / 9
+       *     / 6  \
+       *  4 /  /\  \ 8
+       *    \ /  \ /
+       *     5    7
+       */
 
       // Drawing the 12 vertices of the X shape, starting in top left and moving counter-clockwise
       const xShape = new Shape()
@@ -96,10 +95,7 @@ define( require => {
       } );
 
       this.addChild( xPath );
-
-
     }
-
   }
 
   return collisionLab.register( 'XNode', XNode );
