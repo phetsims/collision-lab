@@ -27,10 +27,10 @@ define( require => {
   const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const Range = require( 'DOT/Range' );
-  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
+  const DEFAULT_BALL_SETTINGS = CollisionLabConstants.DEFAULT_BALL_SETTINGS;
 
 
   class PlayArea {
@@ -68,12 +68,13 @@ define( require => {
       // @public
       this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS, balls, this.elasticityProperty );
 
-
       // @public (read-only) shape for the grid
       this.grid = new Grid();
 
       this.balls = balls;
 
+      // create an array for all possible balls.
+      this.prepopulatedBalls = [];
       this.createInitialBallData();
 
       this.initializeBalls();
@@ -162,21 +163,13 @@ define( require => {
     }
 
     /**
+     * Create
      * @private
      */
     createInitialBallData() {
-      this.prepopulatedBalls = new Array( CollisionLabConstants.MAX_BALLS );
-      this.prepopulatedBalls[ 0 ] = new Ball( 0.5, new Vector2( 1, 0.5 ), new Vector2( -1, -0.3 ) );
-      this.prepopulatedBalls[ 1 ] = new Ball( 1.5, new Vector2( -1, -0.5 ), new Vector2( 0.5, 0.5 ) );
-      this.prepopulatedBalls[ 2 ] = new Ball( 1, new Vector2( 1, -0.5 ), new Vector2( -0.5, -0.25 ) );
-      this.prepopulatedBalls[ 3 ] = new Ball( 4, new Vector2( 2.2, -1.2 ), new Vector2( 1.1, 0.2 ) );
-      this.prepopulatedBalls[ 4 ] = new Ball( 5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
-      this.prepopulatedBalls[ 5 ] = new Ball( 0.5, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
-
-      // increase the number of balls for debugging/ performance purposes
-      for ( let i = 6; i < CollisionLabConstants.MAX_BALLS; i++ ) {
-        this.prepopulatedBalls[ i ] = new Ball( 0.25, new Vector2( 1.2, 0.8 ), new Vector2( -1.1, 0 ) );
-      }
+      DEFAULT_BALL_SETTINGS.forEach( ballSettings => {
+        this.prepopulatedBalls.push( new Ball( ballSettings.mass, ballSettings.position, ballSettings.velocity ) );
+      } );
     }
 
     /**

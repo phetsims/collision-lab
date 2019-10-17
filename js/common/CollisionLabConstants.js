@@ -13,10 +13,14 @@ define( require => {
   const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Range = require( 'DOT/Range' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   const CollisionLabConstants = {
 
-    STEP_DURATION: 0.01, // Seconds
+    STEP_DURATION: 0.01, // seconds, for single time step
+    DEFAULT_DT: 1 / 60, // seconds, for continuous play
+    SLOW_FACTOR: 0.50, // fraction of the normal play speed
 
     NORMAL_SPEED_SCALE: 1, // 100%
     SLOW_SPEED_SCALE: 0.3, //  30%
@@ -26,8 +30,22 @@ define( require => {
     SCREEN_VIEW_X_MARGIN: 24,
     SCREEN_VIEW_Y_MARGIN: 14,
 
-
     MAX_BALLS: 5,
+    MASS_RANGE: new Range( 0.1, 3.0 ),
+    VELOCITY_RANGE: new Range( -10, 10 ),
+
+    DEFAULT_BALL_SETTINGS: [
+      { mass: 0.5, position: new Vector2( -1.0, 0.00 ), velocity: new Vector2( 1.0, 0.3 ) },
+      { mass: 1.5, position: new Vector2( 0.0, 0.50 ), velocity: new Vector2( -0.5, -0.5 ) },
+      { mass: 1.0, position: new Vector2( -1.0, -0.50 ), velocity: new Vector2( -0.5, -0.25 ) },
+      { mass: 1.0, position: new Vector2( 0.2, -0.65 ), velocity: new Vector2( 1.1, 0.2 ) },
+      { mass: 1.0, position: new Vector2( -0.8, 0.65 ), velocity: new Vector2( -1.1, 0 ) }
+    ],
+
+    INTRO_DEFAULT_BALL_SETTINGS: [
+      { mass: 0.5, position: new Vector2( 1.0, 0.00 ), velocity: new Vector2( 1.0, 0 ) },
+      { mass: 1.5, position: new Vector2( 2.0, 0.00 ), velocity: new Vector2( 0, 0 ) }
+    ],
 
     BORDER_WIDTH: 3.2, // horizontal length of pool table in meters
     BORDER_HEIGHT_1D: 0.8, // vertical height of pool table in meters
