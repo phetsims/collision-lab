@@ -12,6 +12,7 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const merge = require( 'PHET_CORE/merge' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Text = require( 'SCENERY/nodes/Text' );
@@ -32,7 +33,7 @@ define( require => {
 
       assert && assert( speedProperty instanceof NumberProperty, `invalid property: ${speedProperty}` );
 
-      options = _.extend( {
+      options = merge( {
         spacing: 1,
         touchAreaXDilation: 5,
         radioButtonOptions: { radius: 8 }

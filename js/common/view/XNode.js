@@ -11,6 +11,7 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
   const Shape = require( 'KITE/Shape' );
@@ -25,7 +26,7 @@ define( require => {
 
       super();
 
-      options = _.extend( {
+      options = merge( {
         stroke: 'black',
         lineWidth: 2,
         size: 30, // the side length of the bounding square of the X

@@ -14,6 +14,7 @@ define( require => {
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' );
   const HBox = require( 'SCENERY/nodes/HBox' );
+  const merge = require( 'PHET_CORE/merge' );
   const PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   const StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
   const StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
@@ -42,7 +43,7 @@ define( require => {
       } );
 
 
-      super( _.extend( {
+      super( merge( {
         resize: false,
         spacing: 10,
         children: [stepBackwardButton, playPauseButton, stepForwardButton]
