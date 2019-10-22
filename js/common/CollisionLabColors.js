@@ -44,6 +44,13 @@ define( require => {
     MOMENTUM_VECTOR_COLOR: 'rgb( 255, 255, 0 )',
 
     //----------------------------------------------------------------------------------------
+    // X Marker Colors
+    X_MARKER_COLORS: {
+      stroke: 'black',
+      fill: 'rgb( 251, 139, 65 )'
+    },
+
+    //----------------------------------------------------------------------------------------
     // Panel-like container default colors
     PANEL_COLORS: {
       stroke: 'rgb( 190, 190, 190 )',
