@@ -28,6 +28,8 @@ define( require => {
   const SpeedRadioButtons = require( 'COLLISION_LAB/common/view/SpeedRadioButtons' );
   const Tandem = require( 'TANDEM/Tandem' );
   const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
+  const CenterOfMassNode = require( 'COLLISION_LAB/common/view/CenterOfMassNode' );
+
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -66,7 +68,7 @@ define( require => {
       const backgroundImage = new Image( mockupScreen2DLabImage, { scale: 0.66 } );
       const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
       transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
-      this.setChildren( [backgroundImage, transparencySlider] );
+      this.setChildren( [ backgroundImage, transparencySlider ] );
 
       // create the view properties for the view
       const viewProperties = new CollisionLabViewProperties();
@@ -153,6 +155,13 @@ define( require => {
         left: numberOfBallsSpinner.left
       } );
       this.addChild( gridCheckbox );
+
+      const centerOfMassNode = new CenterOfMassNode( model.playArea.centerOfMass,
+        viewProperties.centerOfMassVisibleProperty,
+        model.playArea.numberOfBallsProperty,
+        modelViewTransform );
+      this.addChild( centerOfMassNode );
+
 
     }
 
