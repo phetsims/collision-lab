@@ -55,8 +55,10 @@ define( require => {
         totalMomentum = totalMomentum.plus( ball.momentum );
       } );
 
-      this.positionProperty.value = totalFirstMoment.divideScalar( totalMass );
-      this.velocityProperty.value = totalMomentum.divideScalar( totalMass );
+      if ( this.balls.length > 0 ) {
+        this.positionProperty.value = totalFirstMoment.divideScalar( totalMass );
+        this.velocityProperty.value = totalMomentum.divideScalar( totalMass );
+      }
     }
 
   }
