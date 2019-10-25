@@ -14,8 +14,12 @@ define( require => {
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const DerivedProperty = require( 'AXON/DerivedProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
+  const Property = require( 'AXON/Property' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
+
+  // constants
+  const DEFAULT_RADIUS = 0.15; // in meters
 
   class Ball {
 
@@ -23,12 +27,15 @@ define( require => {
      * @param {number} mass - initial mass of the ball (kg)
      * @param {Vector2} position - initial position of the center of the ball
      * @param {Vector2} velocity - initial velocity of the center of mass of the ball
+     * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
      */
-    constructor( mass, position, velocity ) {
+    constructor( mass, position, velocity, constantRadiusProperty ) {
 
       assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
       assert && assert( position instanceof Vector2, `invalid position: ${position}` );
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+      assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean',
+        `invalid velocity: ${constantRadiusProperty}` );
 
       //----------------------------------------------------------------------------------------
 
@@ -44,8 +51,10 @@ define( require => {
       //----------------------------------------------------------------------------------------
       // Handle the changing radius of the Ball based on the mass
 
-      // @public (read-only) - Property of the radius (model) of the ball
-      this.radiusProperty = new DerivedProperty( [this.massProperty], mass => 0.15 * Math.pow( mass, 1 / 3 ) );
+      // @public (read-only) - Property of the radius of the ball in meters
+      this.radiusProperty = new DerivedProperty( [this.massProperty, constantRadiusProperty],
+        ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 )
+      );
 
     }
 
@@ -254,4 +263,5 @@ define( require => {
   }
 
   return collisionLab.register( 'Ball', Ball );
-} );
+} )
+;

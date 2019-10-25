@@ -57,7 +57,7 @@ define( require => {
       this.reflectingBorderProperty = new BooleanProperty( true );
 
       // @public determines if the ball size is constant (i.e. independent of mass)
-      this.constantRadiusProperty = new BooleanProperty( false );
+      this.constantRadiusProperty = new BooleanProperty( true );
 
       // @public
       this.kineticEnergyProperty = new NumberProperty( 0 );
@@ -168,7 +168,10 @@ define( require => {
      */
     createInitialBallData() {
       DEFAULT_BALL_SETTINGS.forEach( ballSettings => {
-        this.prepopulatedBalls.push( new Ball( ballSettings.mass, ballSettings.position, ballSettings.velocity ) );
+        this.prepopulatedBalls.push( new Ball( ballSettings.mass,
+          ballSettings.position,
+          ballSettings.velocity,
+          this.constantRadiusProperty ) );
       } );
     }
 
