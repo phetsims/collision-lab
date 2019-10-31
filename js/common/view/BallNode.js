@@ -47,7 +47,7 @@ define( require => {
 
       //----------------------------------------------------------------------------------------
 
-      super( options );
+      super();
 
       // drag bounds for the ball
       const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
