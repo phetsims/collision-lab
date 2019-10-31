@@ -51,7 +51,7 @@ define( require => {
       // Link the visibility of the marker to the visibility property and the number of balls (the marker is only
       // present if number of balls >= 2)
       // The link is present for the lifetime of the simulation
-      Property.multilink( [ centerOfMassVisibleProperty, numberOfBallsProperty ],
+      Property.multilink( [centerOfMassVisibleProperty, numberOfBallsProperty],
         ( centerOfMassVisible, numberOfBalls ) => {
           this.visible = ( numberOfBalls > 1 ) && centerOfMassVisible;
         } );

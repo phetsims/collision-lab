@@ -11,7 +11,7 @@ define( require => {
 
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require('COLLISION_LAB/common/CollisionLabColors');
+  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const merge = require( 'PHET_CORE/merge' );
   const Path = require( 'SCENERY/nodes/Path' );
   const Shape = require( 'KITE/Shape' );
@@ -71,21 +71,21 @@ define( require => {
        *     5    7
        */
 
-      // Drawing the 12 vertices of the X shape, starting in top left and moving counter-clockwise
+        // Drawing the 12 vertices of the X shape, starting in top left and moving counter-clockwise
       const xShape = new Shape()
-        .moveTo( externalVerticesOffset, 0 )                                                             // 1
-        .lineTo( 0, externalVerticesOffset )                                                             // 2
-        .lineTo( internalVerticesOffset, externalVerticesOffset + internalVerticesOffset )               // 3
-        .lineTo( 0, sideLength - externalVerticesOffset )                                                // 4
-        .lineTo( externalVerticesOffset, sideLength )                                                    // 5
-        .lineTo( internalVerticesOffset + externalVerticesOffset, sideLength - internalVerticesOffset )  // 6
-        .lineTo( sideLength - externalVerticesOffset, sideLength )                                       // 7
-        .lineTo( sideLength, sideLength - externalVerticesOffset )                                       // 8
-        .lineTo( sideLength - internalVerticesOffset, externalVerticesOffset + internalVerticesOffset )  // 9
-        .lineTo( sideLength, externalVerticesOffset )                                                    // 10
-        .lineTo( sideLength - externalVerticesOffset, 0 )                                                // 11
-        .lineTo( internalVerticesOffset + externalVerticesOffset, internalVerticesOffset )               // 12
-        .close();
+          .moveTo( externalVerticesOffset, 0 )                                                             // 1
+          .lineTo( 0, externalVerticesOffset )                                                             // 2
+          .lineTo( internalVerticesOffset, externalVerticesOffset + internalVerticesOffset )               // 3
+          .lineTo( 0, sideLength - externalVerticesOffset )                                                // 4
+          .lineTo( externalVerticesOffset, sideLength )                                                    // 5
+          .lineTo( internalVerticesOffset + externalVerticesOffset, sideLength - internalVerticesOffset )  // 6
+          .lineTo( sideLength - externalVerticesOffset, sideLength )                                       // 7
+          .lineTo( sideLength, sideLength - externalVerticesOffset )                                       // 8
+          .lineTo( sideLength - internalVerticesOffset, externalVerticesOffset + internalVerticesOffset )  // 9
+          .lineTo( sideLength, externalVerticesOffset )                                                    // 10
+          .lineTo( sideLength - externalVerticesOffset, 0 )                                                // 11
+          .lineTo( internalVerticesOffset + externalVerticesOffset, internalVerticesOffset )               // 12
+          .close();
 
       super( xShape, options );
 
