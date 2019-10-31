@@ -9,6 +9,7 @@ define( require => {
   // modules
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
   const Bounds2 = require( 'DOT/Bounds2' );
+  const CenterOfMassNode = require( 'COLLISION_LAB/common/view/CenterOfMassNode' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
@@ -28,7 +29,6 @@ define( require => {
   const SpeedRadioButtons = require( 'COLLISION_LAB/common/view/SpeedRadioButtons' );
   const Tandem = require( 'TANDEM/Tandem' );
   const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
-  const CenterOfMassNode = require( 'COLLISION_LAB/common/view/CenterOfMassNode' );
 
 
   // constants

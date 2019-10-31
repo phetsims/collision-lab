@@ -10,13 +10,13 @@ define( require => {
   'use strict';
 
   // modules
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
-  const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
-  const Property = require( 'AXON/Property' );
   const NumberProperty = require( 'AXON/NumberProperty' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const Property = require( 'AXON/Property' );
   const XPath = require( 'COLLISION_LAB/common/view/XPath' );
 
   class CenterOfMassNode extends Node {
