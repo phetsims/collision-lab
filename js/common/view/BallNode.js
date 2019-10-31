@@ -10,7 +10,7 @@ define( require => {
   'use strict';
 
   // modules
-  // const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   // const Color = require( 'SCENERY/util/Color' );
   // const merge = require( 'PHET_CORE/merge' );
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
@@ -23,6 +23,9 @@ define( require => {
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Property = require( 'AXON/Property' );
+  const Vector2 = require( 'DOT/Vector2' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   class BallNode extends Node {
 
@@ -44,23 +47,35 @@ define( require => {
 
       //----------------------------------------------------------------------------------------
 
-      super();
+      super( options );
 
       // drag bounds for the ball
       const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
+      // ball position in view coordinates
+      const ballLocation = modelViewTransform.modelToViewPosition( ball.position );
+
+      // translate the location of this node
+      this.translation = ballLocation;
+
       // ball radius in view coordinates
       const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );
-      const ballLocation = modelViewTransform.modelToViewPosition( ball.position );
 
       // add disk to the scene graph
       const diskNode = new Circle( ballRadius, {
-        center: ballLocation,
         fill: CollisionLabColors.BALL_COLORS[ index ],
         stroke: 'black'
       } );
       this.addChild( diskNode );
 
+      // create and add label node of the ball
+      const labelNode = new Text( index, {
+        font: new PhetFont( 20 ),
+        center: Vector2.ZERO,
+        stroke: 'black',
+        fill: 'white'
+      } );
+      this.addChild( labelNode );
 
       // add input listener to disk
       this.addInputListener( new DragListener( {
@@ -71,10 +86,12 @@ define( require => {
       } ) );
 
 
+      // translate this node upon a change opf the position of the ball
       ball.positionProperty.link( position => {
-        diskNode.translation = modelViewTransform.modelToViewPosition( position );
+        this.translation = modelViewTransform.modelToViewPosition( position );
       } );
 
+      // updates the radius of the ball
       ball.radiusProperty.link( radius => {
         diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
       } );

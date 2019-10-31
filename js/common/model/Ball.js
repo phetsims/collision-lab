@@ -48,6 +48,9 @@ define( require => {
       // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
       this.velocityProperty = new Vector2Property( velocity );
 
+      // @public (read-only)  momentumProperty - Property of the momentum of the ball.
+      this.momentumProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
+        ( mass, velocity ) => velocity.timesScalar( mass ) );
       //----------------------------------------------------------------------------------------
       // Handle the changing radius of the Ball based on the mass
 
@@ -206,7 +209,7 @@ define( require => {
      * @public
      */
     get momentum() {
-      return this.velocity.times( this.mass ); // Momentum = m * v
+      return this.momentumProperty.value; // Momentum = m * v
     }
 
     /**
@@ -226,7 +229,7 @@ define( require => {
      */
     flipHorizontalVelocity( scaling ) {
       assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
-      this.velocity.x *= -1 * scaling;
+      this.velocity = new Vector2( -this.velocity.x * scaling, this.velocity.y );
     }
 
     /**
@@ -236,7 +239,7 @@ define( require => {
      */
     flipVerticalVelocity( scaling ) {
       assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
-      this.velocity.y *= -1 * scaling;
+      this.velocity = new Vector2( this.velocity.x, -this.velocity.y * scaling );
     }
 
     /**
@@ -263,5 +266,4 @@ define( require => {
   }
 
   return collisionLab.register( 'Ball', Ball );
-} )
-;
+} );
