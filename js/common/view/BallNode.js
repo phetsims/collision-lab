@@ -10,7 +10,7 @@ define( require => {
   'use strict';
 
   // modules
-  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  // const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   // const Color = require( 'SCENERY/util/Color' );
   // const merge = require( 'PHET_CORE/merge' );
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
