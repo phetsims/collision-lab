@@ -79,7 +79,7 @@ define( require => {
 
       // add input listener to disk
       this.addInputListener( new DragListener( {
-        targetNode: diskNode,
+        targetNode: this,
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
         dragBoundsProperty: dragBoundsProperty
