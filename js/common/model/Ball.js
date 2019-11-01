@@ -13,6 +13,7 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const DerivedProperty = require( 'AXON/DerivedProperty' );
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Property = require( 'AXON/Property' );
   const Vector2 = require( 'DOT/Vector2' );
@@ -47,6 +48,9 @@ define( require => {
 
       // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
       this.velocityProperty = new Vector2Property( velocity );
+
+      // @public isUserControlledProperty - Property of the velocity of the center of mass of the ball.
+      this.isUserControlledProperty = new BooleanProperty( false );
 
       // @public (read-only)  momentumProperty - Property of the momentum of the ball.
       this.momentumProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],

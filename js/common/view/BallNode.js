@@ -118,9 +118,10 @@ define( require => {
         targetNode: this,
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
-        dragBoundsProperty: dragBoundsProperty
+        dragBoundsProperty: dragBoundsProperty,
+        start: () => { ball.isUserControlledProperty.value = true;},
+        end: () => { ball.isUserControlledProperty.value = false;}
       } ) );
-
 
       // translate this node upon a change opf the position of the ball
       ball.positionProperty.link( position => {
@@ -129,7 +130,12 @@ define( require => {
 
       // updates the radius of the ball
       ball.radiusProperty.link( radius => {
+
+        // update the radius of the ball
         diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
+
+        // shrink the dragBounds (in model coordinates) by the radius of the ball
+        dragBoundsProperty.value = dragBoundsProperty.value.eroded( radius );
       } );
 
 
