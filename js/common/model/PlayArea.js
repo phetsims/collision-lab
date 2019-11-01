@@ -57,7 +57,7 @@ define( require => {
       this.reflectingBorderProperty = new BooleanProperty( true );
 
       // @public determines if the ball size is constant (i.e. independent of mass)
-      this.constantRadiusProperty = new BooleanProperty( true );
+      this.constantRadiusProperty = new BooleanProperty( false );
 
       // @public
       this.kineticEnergyProperty = new NumberProperty( 0 );

@@ -10,10 +10,12 @@ define( require => {
   'use strict';
 
   // modules
-  // const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+
   // const Color = require( 'SCENERY/util/Color' );
-  // const merge = require( 'PHET_CORE/merge' );
+  const merge = require( 'PHET_CORE/merge' );
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
+  const BallVelocityVectorNode = require( 'COLLISION_LAB/common/view/BallVelocityVectorNode' );
+  const BallMomentumVectorNode = require( 'COLLISION_LAB/common/view/BallMomentumVectorNode' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const Circle = require( 'SCENERY/nodes/Circle' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
@@ -27,16 +29,34 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
 
+  // constants
+  const BALL_VELOCITY_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
+    CollisionLabColors.VELOCITY_VECTOR_COLORS
+  );
+  const BALL_MOMENTUM_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
+    CollisionLabColors.MOMENTUM_VECTOR_COLORS
+  );
+
   class BallNode extends Node {
 
     /**
      * @param {Ball} ball - the ball model
      * @param {number} index
      * @param {BooleanProperty} valuesVisibleProperty
+     * @param {BooleanProperty} velocityVisibleProperty
+     * @param {BooleanProperty} momentumVisibleProperty
+     * @param {BooleanProperty} playProperty
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */
-    constructor( ball, index, valuesVisibleProperty, modelViewTransform, options ) {
+    constructor( ball,
+                 index,
+                 valuesVisibleProperty,
+                 velocityVisibleProperty,
+                 momentumVisibleProperty,
+                 playProperty,
+                 modelViewTransform,
+                 options ) {
 
       assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
       assert && assert( typeof index === 'number', `invalid index: ${index}` );
@@ -61,21 +81,37 @@ define( require => {
       // ball radius in view coordinates
       const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );
 
-      // add disk to the scene graph
+      // create and add disk to the scene graph
       const diskNode = new Circle( ballRadius, {
         fill: CollisionLabColors.BALL_COLORS[ index ],
         stroke: 'black'
       } );
       this.addChild( diskNode );
 
-      // create and add label node of the ball
-      const labelNode = new Text( index, {
+      // create and add labelNode of the ball
+      const labelNode = new Text( index + 1, {
         font: new PhetFont( 20 ),
         center: Vector2.ZERO,
         stroke: 'black',
         fill: 'white'
       } );
       this.addChild( labelNode );
+
+      // create and add the velocityVector and momentumVector nodes
+      const ballVelocityVectorNode = new BallVelocityVectorNode(
+        ball.velocityProperty,
+        velocityVisibleProperty,
+        playProperty,
+        modelViewTransform,
+        BALL_VELOCITY_VECTOR_OPTIONS );
+      const ballMomentumVectorNode = new BallMomentumVectorNode(
+        ball.momentumProperty,
+        momentumVisibleProperty,
+        modelViewTransform,
+        BALL_MOMENTUM_VECTOR_OPTIONS );
+
+      this.addChild( ballMomentumVectorNode );
+      this.addChild( ballVelocityVectorNode );
 
       // add input listener to disk
       this.addInputListener( new DragListener( {
@@ -101,4 +137,5 @@ define( require => {
   }
 
   return collisionLab.register( 'BallNode', BallNode );
-} );
+} )
+;

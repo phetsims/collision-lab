@@ -1,28 +1,26 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * View for the vectors of Balls. See https://github.com/phetsims/collision-lab/issues/24 for
- * an overview of the BallVector view hierarchy.
+ * View for the Momentum Vector of Ball
  *
  * Responsible for:
  *  - Keeping the tail of the ArrowNode at the center of the Ball
  *  - Creating an API to update the direction and magnitude of the ArrowNode
  *
- * @author Brandon Li
+ * @author Martin Veillette
  */
 
 define( require => {
   'use strict';
 
   // modules
-  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  const Node = require( 'SCENERY/nodes/Node' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
 
-  class BallVectorNode extends Node {
+  class BallMomentumVectorNode extends BallVectorNode {
 
     /**
      * @param {Property.<Vector2>} vectorProperty
@@ -39,28 +37,17 @@ define( require => {
         `Extra prototype on Options: ${options}` );
 
       //----------------------------------------------------------------------------------------
+
       options = merge( {
 
         arrowOptions: {} // TODO
       }, options );
 
-      const viewVector = modelViewTransform.modelToViewDelta( vectorProperty.value );
-
-      super();
-
-      this.arrowNode = new ArrowNode( 0, 0, viewVector.x, viewVector.y, options );
-      this.addChild( this.arrowNode );
-
-      vectorProperty.link( vector => {
-        const viewVector = modelViewTransform.modelToViewDelta( vector );
-        this.arrowNode.setTip( viewVector.x, viewVector.y );
-      } );
-
-      visibleProperty.linkAttribute( this, 'visible' );
+      super( vectorProperty, visibleProperty, modelViewTransform, options );
 
     }
 
   }
 
-  return collisionLab.register( 'BallVectorNode', BallVectorNode );
+  return collisionLab.register( 'BallMomentumVectorNode', BallMomentumVectorNode );
 } );

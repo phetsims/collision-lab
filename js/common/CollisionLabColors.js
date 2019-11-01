@@ -40,8 +40,14 @@ define( require => {
 
     //----------------------------------------------------------------------------------------
     // Vector Colors
-    VELOCITY_VECTOR_COLOR: 'rgb( 0, 255, 0 )',
-    MOMENTUM_VECTOR_COLOR: 'rgb( 255, 255, 0 )',
+    VELOCITY_VECTOR_COLORS: {
+      fill: 'rgb( 0, 255, 0 )',
+      stroke: 'black'
+    },
+    MOMENTUM_VECTOR_COLORS: {
+      fill: 'rgb( 255, 255, 0 )',
+      stroke: 'black'
+    },
 
     //----------------------------------------------------------------------------------------
     // X Marker Colors

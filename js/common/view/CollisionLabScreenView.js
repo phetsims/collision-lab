@@ -107,7 +107,13 @@ define( require => {
       const addItemAddedBallListener = ( addedBall, balls ) => {
 
         const index = balls.indexOf( addedBall );
-        const addedBallNode = new BallNode( addedBall, index, viewProperties.valuesVisibleProperty, modelViewTransform );
+        const addedBallNode = new BallNode( addedBall,
+          index,
+          viewProperties.valuesVisibleProperty,
+          viewProperties.velocityVisibleProperty,
+          viewProperties.momentumVisibleProperty,
+          model.playProperty,
+          modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );
 
         // Observe when the ball is removed to unlink listeners
@@ -122,7 +128,13 @@ define( require => {
 
       const forEachBallListener = ( addedBall, index ) => {
 
-        const addedBallNode = new BallNode( addedBall, index, viewProperties.valuesVisibleProperty, modelViewTransform );
+        const addedBallNode = new BallNode( addedBall,
+          index,
+          viewProperties.valuesVisibleProperty,
+          viewProperties.velocityVisibleProperty,
+          viewProperties.momentumVisibleProperty,
+          model.playProperty,
+          modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );
 
         // Observe when the ball is removed to unlink listeners

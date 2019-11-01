@@ -59,10 +59,10 @@ define( require => {
     MINOR_GRIDLINES_PER_MAJOR_GRIDLINE: 5,
 
     ARROW_OPTIONS: {
-      headWidth: 11.5,
-      headHeight: 8.5,
+      headWidth: 11,
+      headHeight: 8,
       tailWidth: 4,
-      lineWidth: 0
+      lineWidth: 1
     },
 
     //----------------------------------------------------------------------------------------
