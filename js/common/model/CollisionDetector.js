@@ -29,7 +29,7 @@ define( require => {
     /**
      * @param {Bounds2} bounds - the PlayArea inside which collision occur
      * @param {ObservableArray.<Ball>} balls - collections of balls
-     * @param {NumberProperty} elasticityProperty
+     * @param {Property.<number>} elasticityProperty
      * @param {Object} [options]
      */
     constructor( bounds, balls, elasticityProperty, options ) {

@@ -42,10 +42,10 @@ define( require => {
     /**
      * @param {Ball} ball - the ball model
      * @param {number} index
-     * @param {BooleanProperty} valuesVisibleProperty
-     * @param {BooleanProperty} velocityVisibleProperty
-     * @param {BooleanProperty} momentumVisibleProperty
-     * @param {BooleanProperty} playProperty
+     * @param {Property.<boolean>} valuesVisibleProperty
+     * @param {Property.<boolean>} velocityVisibleProperty
+     * @param {Property.<boolean>} momentumVisibleProperty
+     * @param {Property.<boolean>} playProperty
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */

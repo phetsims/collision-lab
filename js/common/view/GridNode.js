@@ -23,7 +23,7 @@ define( require => {
 
     /**
      * @param {Grid} grid
-     * @param {BooleanProperty} gridVisibleProperty
+     * @param {Property.<boolean>} gridVisibleProperty
      * @param {ModelViewTransform2} modelViewTransform
      */
     constructor( grid, gridVisibleProperty, modelViewTransform ) {

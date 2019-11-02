@@ -23,9 +23,9 @@ define( require => {
 
     /**
      * @param {PlayArea} playArea
-     * @param {BooleanProperty} gridVisibleProperty
-     * @param {BooleanProperty} kineticEnergyVisibleProperty
-     * @param {BooleanProperty} centerOfMassVisibleProperty
+     * @param {Property.<boolean>} gridVisibleProperty
+     * @param {Property.<boolean>} kineticEnergyVisibleProperty
+     * @param {Property.<boolean>} centerOfMassVisibleProperty
      */
     constructor( playArea, gridVisibleProperty, kineticEnergyVisibleProperty, centerOfMassVisibleProperty ) {
 

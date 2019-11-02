@@ -25,7 +25,7 @@ define( require => {
   class SpeedRadioButtons extends VerticalAquaRadioButtonGroup {
 
     /**
-     * @param {NumberProperty} speedProperty - The rate of flow of time.
+     * @param {Property.<number>} speedProperty - The rate of flow of time.
      * @param {Object} [options]
      * @constructor
      */

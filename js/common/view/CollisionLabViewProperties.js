@@ -40,7 +40,7 @@ define( require => {
       // @public indicates if the momenta diagram is expanded.
       this.momentaDiagramExpandedProperty = new BooleanProperty( false );
 
-      // @public indicates if the moenta are rraned tip to tail in the momenta diagram
+      // @public indicates if the momenta are arranged tip to tail in the momenta diagram
       this.tipToTailProperty = new BooleanProperty( false );
 
     }

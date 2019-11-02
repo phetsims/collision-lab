@@ -32,8 +32,8 @@ define( require => {
 
     /**
      * @param {Property.<Vector2>} vectorProperty
-     * @param {BooleanProperty} visibleProperty - Property that indicates if this node is visible
-     * @param {BooleanProperty} playProperty
+     * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
+     * @param {Property.<boolean>} playProperty
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */

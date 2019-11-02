@@ -30,7 +30,7 @@ define( require => {
 
     /**
      * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
-     * @param {BooleanProperty} modeDataProperty - Property that indicates if the "More Data" checkbox is checked.
+     * @param {Property.<boolean>} modeDataProperty - Property that indicates if the "More Data" checkbox is checked.
      */
     constructor( balls, moreDataProperty ) {
 

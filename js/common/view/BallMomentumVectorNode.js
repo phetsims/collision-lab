@@ -24,7 +24,7 @@ define( require => {
 
     /**
      * @param {Property.<Vector2>} vectorProperty
-     * @param {BooleanProperty} visibleProperty - Property that indicates if this node is visible
+     * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */

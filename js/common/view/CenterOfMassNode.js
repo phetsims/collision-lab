@@ -23,8 +23,8 @@ define( require => {
     /**
      *
      * @param {CenterOfMass} centerOfMass
-     * @param {BooleanProperty} centerOfMassVisibleProperty
-     * @param {NumberProperty} numberOfBallsProperty
+     * @param {Property.<boolean>} centerOfMassVisibleProperty
+     * @param {Property.<number>} numberOfBallsProperty
      * @param {ModelViewTransform2} modelViewTransform
      */
     constructor( centerOfMass, centerOfMassVisibleProperty, numberOfBallsProperty, modelViewTransform ) {
