@@ -32,6 +32,29 @@ define( require => {
       // @public {ObservableArray.<Ball>}
       this.balls = new ObservableArray();
 
+      // @private - is the any of the balls in the play areas are user controlled
+      this.playAreaUserControlledProperty = new BooleanProperty( false );
+
+      const addItemAddedBallListener = ( addedBall, balls ) => {
+
+        // determine if any of the balls are userControlled
+        const isUserControlledFunction = () => {
+          this.playAreaUserControlledProperty.value = balls.some( ball => ball.isUserControlledProperty.value );
+        };
+        addedBall.isUserControlledProperty.link( isUserControlledFunction );
+
+        // Observe when the ball is removed to unlink listeners
+        const removeBallListener = removedBall => {
+          if ( removedBall === addedBall ) {
+            addedBall.isUserControlledProperty.unlink( isUserControlledFunction );
+            balls.removeItemRemovedListener( removeBallListener );
+          }
+        };
+        balls.addItemRemovedListener( removeBallListener );
+      };
+
+      this.balls.addItemAddedListener( addItemAddedBallListener );
+
       // @public
       this.playArea = new PlayArea( this.balls );
 
@@ -40,6 +63,8 @@ define( require => {
 
       // @public
       this.speedProperty = new NumberProperty( CollisionLabConstants.NORMAL_SPEED_SCALE );
+
+
     }
 
     /**
@@ -61,7 +86,7 @@ define( require => {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-      if ( this.playProperty.value ) {
+      if ( this.playProperty.value && !this.playAreaUserControlledProperty.value ) {
         this.playArea.step( dt * this.speedProperty.value, false );
       }
     }
