@@ -15,18 +15,18 @@ define( require => {
   'use strict';
 
   // modules
+  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const Circle = require( 'SCENERY/nodes/Circle' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const DragListener = require( 'SCENERY/listeners/DragListener' );
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
-  const DragListener = require( 'SCENERY/listeners/DragListener' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Circle = require( 'SCENERY/nodes/Circle' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
-  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   class BallVelocityVectorNode extends BallVectorNode {
 

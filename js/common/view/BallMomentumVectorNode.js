@@ -14,11 +14,11 @@ define( require => {
   'use strict';
 
   // modules
+  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
 
   class BallMomentumVectorNode extends BallVectorNode {
 

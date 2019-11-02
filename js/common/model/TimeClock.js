@@ -11,9 +11,9 @@ define( require => {
   'use strict';
 
   // modules
-  const EventTimer = require( 'PHET_CORE/EventTimer' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const EventTimer = require( 'PHET_CORE/EventTimer' );
   const Property = require( 'AXON/Property' );
 
   // constants
