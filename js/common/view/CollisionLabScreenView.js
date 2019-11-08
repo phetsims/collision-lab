@@ -178,7 +178,11 @@ define( require => {
       const playAreaControlPanel = new PlayAreaControlPanel(viewProperties,
         model.playArea.reflectingBorderProperty,
         model.playArea.elasticityProperty,
-        model.playArea.constantRadiusProperty);
+        model.playArea.constantRadiusProperty,
+        {
+          right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
+          top: numberOfBallsSpinner.top
+        });
       this.addChild(playAreaControlPanel);
 
 

@@ -24,7 +24,7 @@ define( require => {
 
   class PlayAreaControlPanel extends Panel {
 
-    constructor( viewProperties, reflectingBorderProperty, elasticityProperty, constantRadiusProperty ) {
+    constructor( viewProperties, reflectingBorderProperty, elasticityProperty, constantRadiusProperty, options ) {
 
       const panelContent = new VBox( {
         align: 'left',
@@ -61,7 +61,7 @@ define( require => {
 
       panelContent.addChild( centerOfMassCheckbox );
 
-      super( panelContent );
+      super( panelContent, options );
 
 
     }
