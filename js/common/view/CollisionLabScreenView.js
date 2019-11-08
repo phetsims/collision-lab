@@ -14,6 +14,7 @@ define( require => {
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
+  const PlayAreaControlPanel = require( 'COLLISION_LAB/common/view/PlayAreaControlPanel' );
   const GridCheckbox = require( 'SCENERY_PHET/GridCheckbox' );
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const HSlider = require( 'SUN/HSlider' );
@@ -173,6 +174,12 @@ define( require => {
         model.playArea.numberOfBallsProperty,
         modelViewTransform );
       this.addChild( centerOfMassNode );
+
+      const playAreaControlPanel = new PlayAreaControlPanel(viewProperties,
+        model.playArea.reflectingBorderProperty,
+        model.playArea.elasticityProperty,
+        model.playArea.constantRadiusProperty);
+      this.addChild(playAreaControlPanel);
 
 
     }

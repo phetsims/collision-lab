@@ -10,5 +10,14 @@
   },
   "normal": {
     "value": "Normal"
+  },
+  "velocity" : {
+    "value" : "Velocity"
+  },
+  "momentum" : {
+    "value" : "Momentum"
+  },
+  "centerOfMass" : {
+    "value" : "Center of Mass"
   }
 }
