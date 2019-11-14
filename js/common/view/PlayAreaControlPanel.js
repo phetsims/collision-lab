@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * View for the center of mass marker, appears on the play area
+ * View for the control panel of the play area
  *
  * @author Alex Schor
  */
