@@ -16,19 +16,20 @@ define( require => {
   const Panel = require( 'SUN/Panel' );
   const VBox = require( 'SCENERY/nodes/VBox' );
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  const merge = require( 'PHET_CORE/merge' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
 
   // strings
   const velocityString = require( 'string!COLLISION_LAB/velocity' );
   const momentumString = require( 'string!COLLISION_LAB/momentum' );
   const centerOfMassString = require( 'string!COLLISION_LAB/centerOfMass' );
-  const merge = require( 'PHET_CORE/merge' );
 
   class PlayAreaControlPanel extends Panel {
 
     constructor( viewProperties, reflectingBorderProperty, elasticityProperty, constantRadiusProperty, options ) {
 
       options = merge( CollisionLabColors.PANEL_COLORS, options );
+
 
       const panelContent = new VBox( {
         align: 'left',
@@ -64,6 +65,9 @@ define( require => {
       );
 
       panelContent.addChild( centerOfMassCheckbox );
+
+
+
 
       super( panelContent, options );
 
