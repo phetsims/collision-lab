@@ -181,7 +181,7 @@ define( require => {
         model.playArea.constantRadiusProperty,
         {
           right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
-          top: numberOfBallsSpinner.top
+          top: SCREEN_VIEW_Y_MARGIN
         });
       this.addChild(playAreaControlPanel);
 

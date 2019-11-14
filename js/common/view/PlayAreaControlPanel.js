@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * View for the center of mass marker, appears on the play area
+ * View for the control panel of the play area
  *
  * @author Alex Schor
  */
@@ -16,6 +16,8 @@ define( require => {
   const Panel = require( 'SUN/Panel' );
   const VBox = require( 'SCENERY/nodes/VBox' );
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  const merge = require( 'PHET_CORE/merge' );
+  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
 
   // strings
   const velocityString = require( 'string!COLLISION_LAB/velocity' );
@@ -26,6 +28,9 @@ define( require => {
 
     constructor( viewProperties, reflectingBorderProperty, elasticityProperty, constantRadiusProperty, options ) {
 
+      options = merge( CollisionLabColors.PANEL_COLORS, options );
+
+
       const panelContent = new VBox( {
         align: 'left',
         spacing: 10
@@ -34,7 +39,7 @@ define( require => {
       const velocityCheckbox = new ControlPanelCheckbox(
         velocityString,
         viewProperties.velocityVisibleProperty,
-        { rightIcon: new ArrowNode( 0, 0, 40, 0 ) }
+        { rightIcon: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
       );
 
       panelContent.addChild( velocityCheckbox );
@@ -42,7 +47,7 @@ define( require => {
       const momentumCheckbox = new ControlPanelCheckbox(
         momentumString,
         viewProperties.momentumVisibleProperty,
-        { rightIcon: new ArrowNode( 0, 0, 40, 0 ) }
+        { rightIcon: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
       );
 
       panelContent.addChild( momentumCheckbox );
@@ -60,6 +65,9 @@ define( require => {
       );
 
       panelContent.addChild( centerOfMassCheckbox );
+
+
+
 
       super( panelContent, options );
 

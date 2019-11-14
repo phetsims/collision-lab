@@ -35,12 +35,13 @@ define( require => {
       assert && assert( typeof labelString === 'string', `invalid labelString: ${labelString}` );
       assert && assert( checkboxProperty instanceof BooleanProperty, `invalid checkboxProperty: ${checkboxProperty}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-        `Extra prototype on Options: ${options}` );
+        `Extra prototype on options: ${options}` );
 
       options = merge( {
-        font: new PhetFont( 20 ),
+        font: new PhetFont( 18 ),
         rightIcon: null,
-        width: 200
+        width: 180,
+        boxWidth: 18
       }, options );
 
       const checkboxContent = new Node();
