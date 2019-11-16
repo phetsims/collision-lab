@@ -55,7 +55,7 @@ define( require => {
         checkboxContent.addChild( new HBox( {
           align: 'center',
           spacing: options.width - checkboxText.width - options.rightIcon.width,
-          children: [ checkboxText, options.rightIcon ]
+          children: [checkboxText, options.rightIcon]
         } ) );
       }
       else {

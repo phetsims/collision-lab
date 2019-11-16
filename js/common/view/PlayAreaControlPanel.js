@@ -67,8 +67,6 @@ define( require => {
       panelContent.addChild( centerOfMassCheckbox );
 
 
-
-
       super( panelContent, options );
 
 
