@@ -11,13 +11,19 @@
   "normal": {
     "value": "Normal"
   },
-  "velocity" : {
-    "value" : "Velocity"
+  "velocity": {
+    "value": "Velocity"
   },
-  "momentum" : {
-    "value" : "Momentum"
+  "momentum": {
+    "value": "Momentum"
   },
-  "centerOfMass" : {
-    "value" : "Center of Mass"
+  "centerOfMass": {
+    "value": "Center of Mass"
+  },
+  "kineticEnergyJ": {
+    "value": "Kinetic Energy = {{value}} J"
+  },
+  "kineticEnergy": {
+    "value": "T<sub>avg</sub> = {{value}}"
   }
 }

@@ -52,9 +52,14 @@ define( require => {
       // @public isUserControlledProperty - Property of the velocity of the center of mass of the ball.
       this.isUserControlledProperty = new BooleanProperty( false );
 
-      // @public (read-only)  momentumProperty - Property of the momentum of the ball.
+      // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
       this.momentumProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
         ( mass, velocity ) => velocity.timesScalar( mass ) );
+
+      // @public (read-only)  kineticEnergyProperty - Property of the kinetic energy of the ball in Joule
+      this.kineticEnergyProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
+        ( mass, velocity ) => 0.5 * mass * velocity.magnitudeSquared );
+
       //----------------------------------------------------------------------------------------
       // Handle the changing radius of the Ball based on the mass
 
@@ -204,7 +209,7 @@ define( require => {
      * @public
      */
     get kineticEnergy() {
-      return 0.5 * this.mass * this.velocity.magnitudeSquared; // KE = (1/2) * m * |v|^2
+      return this.kineticEnergyProperty.value; // KE = (1/2) * m * |v|^2
     }
 
     /**

@@ -20,6 +20,7 @@ define( require => {
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const CenterOfMass = require( 'COLLISION_LAB/common/model/CenterOfMass' );
+  const KineticEnergySumProperty = require( 'COLLISION_LAB/common/model/KineticEnergySumProperty' );
   const CollisionDetector = require( 'COLLISION_LAB/common/model/CollisionDetector' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
@@ -32,7 +33,6 @@ define( require => {
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
   const DEFAULT_BALL_SETTINGS = CollisionLabConstants.DEFAULT_BALL_SETTINGS;
 
-
   class PlayArea {
 
     /**
@@ -42,7 +42,6 @@ define( require => {
 
       assert && assert( balls instanceof ObservableArray
       && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-
 
       // @public (read-only)
       this.time = 0;
@@ -60,7 +59,7 @@ define( require => {
       this.constantRadiusProperty = new BooleanProperty( false );
 
       // @public
-      this.kineticEnergyProperty = new NumberProperty( 0 );
+      this.kineticEnergySumProperty = new KineticEnergySumProperty( balls );
 
       // @public (read-only)
       this.centerOfMass = new CenterOfMass( balls );
@@ -95,6 +94,8 @@ define( require => {
           }
         }
       } );
+
+
     }
 
     /**
@@ -106,7 +107,7 @@ define( require => {
       this.elasticityProperty.reset();
       this.reflectingBorderProperty.reset();
       this.constantRadiusProperty.reset();
-      this.kineticEnergyProperty.reset();
+      this.totalKineticEnergyProperty.reset();
       this.createInitialBallData();
       this.initializeBalls();
     }
@@ -153,16 +154,6 @@ define( require => {
     }
 
     /**
-     * Updates the total kinetic energy of the system
-     * @public
-     */
-    updateKineticEnergy() {
-      this.kineticEnergyProperty.value = this.balls.reduce( ( accumulator, ball ) => {
-        return accumulator + ball.kineticEnergy;
-      } );
-    }
-
-    /**
      * Create
      * @private
      */
@@ -184,6 +175,8 @@ define( require => {
         this.balls.push( this.prepopulatedBalls[ i ] );
       }
     }
+
+
   }
 
   return collisionLab.register( 'PlayArea', PlayArea );

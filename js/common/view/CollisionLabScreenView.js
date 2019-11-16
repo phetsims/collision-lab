@@ -19,6 +19,7 @@ define( require => {
   const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const HSlider = require( 'SUN/HSlider' );
   const Image = require( 'SCENERY/nodes/Image' );
+  const KineticEnergyDisplay = require( 'COLLISION_LAB/common/view/KineticEnergyDisplay' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const NumberProperty = require( 'AXON/NumberProperty' );
@@ -82,6 +83,13 @@ define( require => {
       // create the grid and border of the playArea
       const gridNode = new GridNode( model.playArea.grid, viewProperties.gridVisibleProperty, modelViewTransform );
       this.addChild( gridNode );
+
+      // create the grid and border of the playArea
+      const kineticEnergyDisplay = new KineticEnergyDisplay( model.playArea.kineticEnergySumProperty,
+        viewProperties.kineticEnergyVisibleProperty );
+      this.addChild( kineticEnergyDisplay );
+      kineticEnergyDisplay.left = gridNode.left + 5;
+      kineticEnergyDisplay.bottom = gridNode.bottom - 5;
 
       numberOfBallsSpinner.left = gridNode.right + 5;
       numberOfBallsSpinner.top = 20;
@@ -175,15 +183,15 @@ define( require => {
         modelViewTransform );
       this.addChild( centerOfMassNode );
 
-      const playAreaControlPanel = new PlayAreaControlPanel(viewProperties,
+      const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
         model.playArea.reflectingBorderProperty,
         model.playArea.elasticityProperty,
         model.playArea.constantRadiusProperty,
         {
           right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
           top: SCREEN_VIEW_Y_MARGIN
-        });
-      this.addChild(playAreaControlPanel);
+        } );
+      this.addChild( playAreaControlPanel );
 
 
     }

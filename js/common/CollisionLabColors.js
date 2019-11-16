@@ -49,6 +49,11 @@ define( require => {
       stroke: 'black'
     },
 
+    KINETIC_ENERGY_DISPLAY_COLORS: {
+      backgroundFill: 'rgb( 255, 255, 255 )',
+      opacity: 0.60
+    },
+
     //----------------------------------------------------------------------------------------
     // X Marker Colors
     X_MARKER_COLORS: {
