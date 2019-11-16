@@ -114,7 +114,7 @@ define( require => {
       this.addChild( ballVelocityVectorNode );
 
       // add input listener to disk
-      this.addInputListener( new DragListener( {
+      diskNode.addInputListener( new DragListener( {
         targetNode: this,
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
