@@ -107,7 +107,7 @@ define( require => {
       this.elasticityProperty.reset();
       this.reflectingBorderProperty.reset();
       this.constantRadiusProperty.reset();
-      this.totalKineticEnergyProperty.reset();
+      this.kineticEnergySumProperty.reset();
       this.createInitialBallData();
       this.initializeBalls();
     }
