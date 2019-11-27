@@ -23,12 +23,12 @@ define( require => {
   class BallMomentumVectorNode extends BallVectorNode {
 
     /**
-     * @param {Property.<Vector2>} vectorProperty
+     * @param {Property.<Vector2>} momentumProperty
      * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */
-    constructor( vectorProperty, visibleProperty, modelViewTransform, options ) {
+    constructor( momentumProperty, visibleProperty, modelViewTransform, options ) {
 
       assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -43,7 +43,7 @@ define( require => {
         arrowOptions: {} // TODO
       }, options );
 
-      super( vectorProperty, visibleProperty, modelViewTransform, options );
+      super( momentumProperty, visibleProperty, modelViewTransform, options );
 
     }
 
