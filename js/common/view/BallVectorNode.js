@@ -25,12 +25,12 @@ define( require => {
   class BallVectorNode extends Node {
 
     /**
-     * @param {Property.<Vector2>} vectorProperty
+     * @param {Property.<Vector2>} tipPositionProperty
      * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */
-    constructor( vectorProperty, visibleProperty, modelViewTransform, options ) {
+    constructor( tipPositionProperty, visibleProperty, modelViewTransform, options ) {
 
       assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -44,14 +44,14 @@ define( require => {
         arrowOptions: {} // TODO
       }, options );
 
-      const viewVector = modelViewTransform.modelToViewDelta( vectorProperty.value );
+      const viewVector = modelViewTransform.modelToViewDelta( tipPositionProperty.value );
 
       super();
 
       this.arrowNode = new ArrowNode( 0, 0, viewVector.x, viewVector.y, options );
       this.addChild( this.arrowNode );
 
-      vectorProperty.link( vector => {
+      tipPositionProperty.link( vector => {
         const viewVector = modelViewTransform.modelToViewDelta( vector );
         this.arrowNode.setTip( viewVector.x, viewVector.y );
       } );
