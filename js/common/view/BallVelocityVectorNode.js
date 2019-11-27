@@ -31,13 +31,13 @@ define( require => {
   class BallVelocityVectorNode extends BallVectorNode {
 
     /**
-     * @param {Property.<Vector2>} vectorProperty
+     * @param {Property.<Vector2>} velocityProperty
      * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
      * @param {Property.<boolean>} playProperty
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */
-    constructor( vectorProperty, visibleProperty, playProperty, modelViewTransform, options ) {
+    constructor( velocityProperty, visibleProperty, playProperty, modelViewTransform, options ) {
 
       assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -69,7 +69,7 @@ define( require => {
 
       tipTargetNode.moveToBack();
 
-      const tipPositionProperty = new Vector2Property( modelViewTransform.modelToViewDelta( vectorProperty.value ) );
+      const tipPositionProperty = new Vector2Property( modelViewTransform.modelToViewDelta( velocityProperty.value ) );
 
       // add input listener to tip of the velocity vector
       tipTargetNode.addInputListener( new DragListener( {
@@ -77,13 +77,13 @@ define( require => {
       } ) );
 
 
-      vectorProperty.link( vector => {
+      velocityProperty.link( vector => {
         tipTargetNode.center = modelViewTransform.modelToViewDelta( vector );
       } );
 
       // update the velocity vector upon change of the tip position
       tipPositionProperty.link( velocity => {
-        vectorProperty.value = modelViewTransform.viewToModelDelta( velocity );
+        velocityProperty.value = modelViewTransform.viewToModelDelta( velocity );
       } );
 
       //  make the tip invisible if the simulation is running
@@ -91,7 +91,7 @@ define( require => {
         tipTargetNode.visible = !play;
       } );
 
-      super( vectorProperty, visibleProperty, modelViewTransform, options );
+      super( velocityProperty, visibleProperty, modelViewTransform, options );
 
       this.addChild( tipTargetNode );
       this.arrowNode.moveToFront();
