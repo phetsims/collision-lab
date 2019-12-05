@@ -142,9 +142,6 @@ define( require => {
       this.collisionDetector.detectCollision( this.lastTime, this.time );
       this.collisionDetector.doBallBorderCollisions();
 
-      // updates the position and velocity of center of mass
-      this.centerOfMass.update();
-
       //
       if ( isReversing ) {
         this.lastTime = this.time;
