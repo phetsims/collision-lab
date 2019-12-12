@@ -119,7 +119,10 @@ define( require => {
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
         dragBoundsProperty: dragBoundsProperty,
-        start: () => { ball.isUserControlledProperty.value = true;},
+        start: () => {
+          ball.isUserControlledProperty.value = true;
+          this.moveToFront();
+        },
         end: () => { ball.isUserControlledProperty.value = false;}
       } ) );
 
