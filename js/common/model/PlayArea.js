@@ -43,8 +43,11 @@ define( require => {
       assert && assert( balls instanceof ObservableArray
       && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
-      // @public (read-only)
+      // @public (read-only) running time
       this.time = 0;
+
+      // @public (read-only) running time at the previous step - value will be updated later
+      this.lastTime = 0;
 
       // @public
       this.numberOfBallsProperty = new NumberProperty( 2 );
