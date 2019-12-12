@@ -12,10 +12,10 @@ define( require => {
   // modules
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const merge = require( 'PHET_CORE/merge' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const Range = require( 'DOT/Range' );
+  const merge = require( 'PHET_CORE/merge' );
   const NumberDisplay = require( 'SCENERY_PHET/NumberDisplay' );
+  const Range = require( 'DOT/Range' );
 
   // constant
   const SUM_RANGE = new Range( 0, 10 ); // range for the kinetic energy values

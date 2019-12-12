@@ -10,19 +10,19 @@ define( require => {
   'use strict';
 
   // modules
+  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const XPath = require( 'COLLISION_LAB/common/view/XPath' );
+  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const ControlPanelCheckbox = require( 'COLLISION_LAB/common/view/ControlPanelCheckbox' );
+  const merge = require( 'PHET_CORE/merge' );
   const Panel = require( 'SUN/Panel' );
   const VBox = require( 'SCENERY/nodes/VBox' );
-  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  const merge = require( 'PHET_CORE/merge' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
+  const XPath = require( 'COLLISION_LAB/common/view/XPath' );
 
   // strings
-  const velocityString = require( 'string!COLLISION_LAB/velocity' );
-  const momentumString = require( 'string!COLLISION_LAB/momentum' );
   const centerOfMassString = require( 'string!COLLISION_LAB/centerOfMass' );
+  const momentumString = require( 'string!COLLISION_LAB/momentum' );
+  const velocityString = require( 'string!COLLISION_LAB/velocity' );
 
   class PlayAreaControlPanel extends Panel {
 

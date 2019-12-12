@@ -11,10 +11,10 @@ define( require => {
   // modules
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
-  const DerivedProperty = require( 'AXON/DerivedProperty' );
 
   class CenterOfMass {
 

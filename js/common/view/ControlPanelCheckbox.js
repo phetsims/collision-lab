@@ -10,14 +10,14 @@ define( require => {
   'use strict';
 
   // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const Text = require( 'SCENERY/nodes/Text' );
   const BooleanProperty = require( 'AXON/BooleanProperty' );
+  const Checkbox = require( 'SUN/Checkbox' );
+  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const HBox = require( 'SCENERY/nodes/HBox' );
   const merge = require( 'PHET_CORE/merge' );
-  const Checkbox = require( 'SUN/Checkbox' );
+  const Node = require( 'SCENERY/nodes/Node' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Text = require( 'SCENERY/nodes/Text' );
 
   // strings
 
