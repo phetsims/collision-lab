@@ -158,6 +158,11 @@ define( require => {
      * @private
      */
     createInitialBallData() {
+
+      // empty the prepopulated ball array
+      this.prepopulatedBalls = [];
+
+      // create initial data for balls
       DEFAULT_BALL_SETTINGS.forEach( ballSettings => {
         this.prepopulatedBalls.push( new Ball( ballSettings.mass,
           ballSettings.position,
