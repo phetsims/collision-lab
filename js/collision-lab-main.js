@@ -34,7 +34,7 @@ define( require => {
   // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
   SimLauncher.launch( () => {
     const sim = new Sim( collisionLabTitleString, [
-      new IntroScreen( Tandem.rootTandem.createTandem( 'introScreen' ) )
+      new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) )
     ], simOptions );
     sim.start();
   } );
