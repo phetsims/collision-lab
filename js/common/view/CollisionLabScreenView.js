@@ -30,8 +30,7 @@ define( require => {
   const ScreenView = require( 'JOIST/ScreenView' );
   const SpeedRadioButtons = require( 'COLLISION_LAB/common/view/SpeedRadioButtons' );
   const Tandem = require( 'TANDEM/Tandem' );
-  const TimeControlBox = require( 'COLLISION_LAB/common/view/TimeControlBox' );
-
+  const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -98,16 +97,25 @@ define( require => {
       this.addChild( this.ballLayerNode );
 
       //  create and add time control buttons (
-      const timeControlBox = new TimeControlBox( model, model.playProperty, {
+      const timeControlNode = new TimeControlNode( model.playProperty, {
+
+        includeStepBackwardButton: true,
+        stepBackwardOptions: {
+          listener: () => model.stepBackward()
+        },
+        stepForwardOptions: {
+          listener: () => model.stepForward()
+        },
         centerX: gridNode.centerX,
         top: gridNode.bottom + 10
       } );
-      this.addChild( timeControlBox );
+
+      this.addChild( timeControlNode );
 
       //  create and add time control buttons (
       const speedRadioButtons = new SpeedRadioButtons( model.speedProperty, {
-        left: timeControlBox.right + 10,
-        centerY: timeControlBox.centerY
+        left: timeControlNode.right + 10,
+        centerY: timeControlNode.centerY
       } );
       this.addChild( speedRadioButtons );
 
