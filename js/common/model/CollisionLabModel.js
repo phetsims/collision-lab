@@ -11,7 +11,6 @@ define( require => {
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const PlayArea = require( 'COLLISION_LAB/common/model/PlayArea' );
   const Tandem = require( 'TANDEM/Tandem' );
@@ -58,12 +57,19 @@ define( require => {
       // @public
       this.playArea = new PlayArea( this.balls );
 
-      // @public
+      // @public - controls the play/pause state of the play area
       this.playProperty = new BooleanProperty( true );
 
-      // @public
-      this.speedProperty = new NumberProperty( CollisionLabConstants.NORMAL_SPEED_SCALE );
+      // @public - controls the speed rate of the simulation: slow/normal
+      this.isSlowMotionProperty = new BooleanProperty( false );
 
+
+      this.isSlowMotionProperty.link( isSlowMotion => {
+
+        // @private {number} determine the speedFactor of the simulation based on the status of isSlowMotion
+        this.speedFactor = isSlowMotion ?
+                           CollisionLabConstants.SLOW_SPEED_SCALE : CollisionLabConstants.NORMAL_SPEED_SCALE;
+      } );
 
     }
 
@@ -74,7 +80,7 @@ define( require => {
     reset() {
       this.playArea.reset();
       this.playProperty.reset();
-      this.speedProperty.reset();
+      this.isSlowMotionProperty.reset();
     }
 
     /**
@@ -87,7 +93,7 @@ define( require => {
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
       if ( this.playProperty.value && !this.playAreaUserControlledProperty.value ) {
-        this.playArea.step( dt * this.speedProperty.value, false );
+        this.playArea.step( dt * this.speedFactor, false );
       }
     }
 

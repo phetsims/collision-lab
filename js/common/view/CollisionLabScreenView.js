@@ -23,12 +23,12 @@ define( require => {
   const Node = require( 'SCENERY/nodes/Node' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const NumberSpinner = require( 'SUN/NumberSpinner' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const PlayAreaControlPanel = require( 'COLLISION_LAB/common/view/PlayAreaControlPanel' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const SpeedRadioButtons = require( 'COLLISION_LAB/common/view/SpeedRadioButtons' );
   const Tandem = require( 'TANDEM/Tandem' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
 
@@ -98,27 +98,45 @@ define( require => {
 
       //  create and add time control buttons (
       const timeControlNode = new TimeControlNode( model.playProperty, {
-
         includeStepBackwardButton: true,
+
+        // property associated with the slow/normal radio buttons
+        isSlowMotionProperty: model.isSlowMotionProperty,
+
+        // Spacing options
+        playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
+        buttonsXSpacing: 20, // horizontal space between push buttons and radio buttons
+
+        // Options for the Normal/Slow text labels
+        labelOptions: {
+          font: new PhetFont( 16 ),
+          maxWidth: 200
+        },
+
+        // Options for radio buttons
+        radioButtonOptions: { radius: 7 },
+
+        // Options for the radio button group
+        radioButtonGroupOptions: { spacing: 1 },
+
+        // Options for the play pause buttons
+        playPauseOptions: {
+          radius: 30
+        },
+
         stepBackwardOptions: {
-          listener: () => model.stepBackward()
+          listener: () => model.stepBackward(),
+          radius: 20
         },
         stepForwardOptions: {
-          listener: () => model.stepForward()
+          listener: () => model.stepForward(),
+          radius: 20
         },
-        centerX: gridNode.centerX,
+        centerX: gridNode.centerX + 50,
         top: gridNode.bottom + 10
       } );
 
       this.addChild( timeControlNode );
-
-      //  create and add time control buttons (
-      const speedRadioButtons = new SpeedRadioButtons( model.speedProperty, {
-        left: timeControlNode.right + 10,
-        centerY: timeControlNode.centerY
-      } );
-      this.addChild( speedRadioButtons );
-
 
       //TODO: the two following listeners are almost identical
       const addItemAddedBallListener = ( addedBall, balls ) => {
