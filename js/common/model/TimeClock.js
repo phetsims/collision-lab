@@ -2,8 +2,6 @@
 
 /**
  * The clock for this simulation.
- * The simulation time change (dt) on each clock tick is constant,
- * regardless of when (in wall time) the ticks actually happen.
  *
  * @author Martin Veillette
  */
@@ -11,136 +9,88 @@ define( require => {
   'use strict';
 
   // modules
+  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const EventTimer = require( 'PHET_CORE/EventTimer' );
-  const Property = require( 'AXON/Property' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
+  const NumberProperty = require( 'AXON/NumberProperty' );
 
   // constants
-  const DEFAULT_DT = CollisionLabConstants.DEFAULT_DT;
   const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
 
   class TimeClock {
     /**
-     *
-     * @param {number} baseDTValue (multiplied by scale to obtain true dt)
-     * @param {Property.<boolean>} playProperty
-     * @param {Property.<boolean>} timeSpeedScaleProperty
+     * @param {Property.<boolean>} isSlowMotionProperty
      */
-    constructor( baseDTValue, playProperty, timeSpeedScaleProperty ) {
+    constructor( isSlowMotionProperty ) {
 
-      // @private
-      this.baseDTValue = baseDTValue;
-      this.steppingWhilePausedDT = baseDTValue * CollisionLabConstants.STARTING_SPEED_SCALE;
+      // @public {Property.<number>} elapsed time (in seconds)
+      this.elapsedTimeProperty = new NumberProperty( 0 );
 
-      // @public
-      this.runningProperty = new Property( false );
-      this.simulationTimeProperty = new Property( 0 );
-      this.dt = baseDTValue * timeSpeedScaleProperty.get();
-      this.playProperty = playProperty;
+      // @public {Property.<boolean>} timeStep is reversing
+      this.isReversingProperty = new BooleanProperty( false );
 
-      timeSpeedScaleProperty.link( timeSpeedScale => {
-        this.dt = baseDTValue * timeSpeedScale;
-      } );
+      // @public {Property.<number>} speedFactor of the simulation: ranging from 1 (normal) to less than one (slow)
+      this.speedFactorProperty = new DerivedProperty( [isSlowMotionProperty],
+        isSlowMotion => isSlowMotion ?
+                        CollisionLabConstants.SLOW_SPEED_SCALE : CollisionLabConstants.NORMAL_SPEED_SCALE );
+
     }
 
     /**
-     * Step the clock while paused, ignoring the current play speed and stepping by DEFAULT_DT.
-     *
-     * @returns {number}
+     * Resets the timeClock
+     * @public
      */
-    stepClockWhilePaused() {
-
-      // See RewindableProperty which has to know whether the clock is running, paused, stepping, rewinding for
-      // application specific logic
-      this.playProperty.set( true );
-
-      // dt should be scaled by the initial speed when manually stepping
-      const clockDT = this.dt; // store to revert after manual step
-      this.dt = this.steppingWhilePausedDT;
-
-      this.step( STEP_DURATION );
-      this.playProperty.set( false );
-
-      // revert dt to match the play speed
-      this.dt = clockDT;
+    reset() {
+      this.elapsedTimeProperty.reset();
+      this.isReversingProperty.reset();
     }
 
     /**
-     * Step the clock while paused, ignoring the current play speed and stepping by 1 / CLOCK_FRAME_RATE.
-     *
-     * @returns {number}
+     * Goes one time step back
+     * @public
      */
-    stepClockBackWhilePaused() {
-      this.playProperty.set( true );
-
-      // dt should be scaled by the initial speed when manually stepping
-      const clockDT = this.dt; // store to revert after manual step
-      this.dt = this.steppingWhilePausedDT;
-
-      this.step( STEP_DURATION );
-      this.playProperty.set( false );
-
-
-      // revert dt
-      this.dt = clockDT;
+    stepBackward() {
+      this.isReversingProperty.value = true;
+      this.step( -1 * STEP_DURATION * this.speedFactorProperty.value );
     }
 
     /**
-     * Set whether or not the model should be running.
-     *
-     * @param  {boolean} running
+     * Goes one time step forward
+     * @public
      */
-    setRunning( running ) {
-      this.runningProperty.set( running );
+    stepForward() {
+      this.isReversingProperty.value = false;
+      this.step( STEP_DURATION * this.speedFactorProperty.value );
     }
 
     /**
-     * Set the clock time.
-     *
-     * @param  {number} time description
-     */
-    setSimulationTime( time ) {
-      this.simulationTimeProperty.set( time );
-    }
-
-    // @public
-    getSimulationTime() {
-      return this.simulationTimeProperty.get();
-    }
-
-    // @public
-    resetSimulationTime() {
-      this.simulationTimeProperty.reset();
-    }
-
-    /**
-     * Add an event callback to the event timer, called every time the animation frame changes.
-     *
-     * @param  {number} stepFunction
-     */
-    addEventTimer( stepFunction ) {
-      this.eventTimer = new EventTimer( new EventTimer.ConstantEventModel( 1 / DEFAULT_DT ), stepFunction );
-    }
-
-    /**
-     * Step the simulation by dt
-     *
+     * Steps the simulation by dt
+     * @public
      * @param  {number} dt
-     * @returns {type} description
+     */
+    playStep( dt ) {
+      this.isReversingProperty.value = false;
+      this.step( dt );
+    }
+
+    /**
+     * Steps the simulation by dt
+     * @public
+     * @param  {number} dt
      */
     step( dt ) {
-      this.eventTimer.step( dt );
+      this.elapsedTimeProperty.value += dt;
+      this.stepFunction( dt, this.elapsedTimeProperty.value, this.isReversingProperty.value );
     }
 
     /**
-     * Get the time step for the slowest speed of this clock.  Useful for
-     * normalizing time step in the model.
-     *
-     * @returns {number}
+     * Adds a time stepper for the simulation
+     * @public
+     * @param {function} stepFunction(dt,time,isReversing)
      */
-    getSmallestTimeStep() {
-      return this.baseDTValue * CollisionLabConstants.SLOW_SPEED_SCALE;
+    addTimeStepper( stepFunction ) {
+      this.stepFunction = stepFunction;
     }
   }
 

@@ -31,6 +31,7 @@ define( require => {
   const ScreenView = require( 'JOIST/ScreenView' );
   const Tandem = require( 'TANDEM/Tandem' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
+  const TimeDisplay = require( 'COLLISION_LAB/common/view/TimeDisplay' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -90,6 +91,13 @@ define( require => {
       kineticEnergyDisplay.left = gridNode.left + 5;
       kineticEnergyDisplay.bottom = gridNode.bottom - 5;
 
+      // create the grid and border of the playArea
+      const timeDisplay = new TimeDisplay( model.timeClock.elapsedTimeProperty );
+      this.addChild( timeDisplay );
+      timeDisplay.left = gridNode.left + 5;
+      timeDisplay.top = gridNode.bottom + 5;
+
+
       numberOfBallsSpinner.left = gridNode.right + 5;
       numberOfBallsSpinner.top = 20;
 
@@ -102,6 +110,8 @@ define( require => {
 
         // property associated with the slow/normal radio buttons
         isSlowMotionProperty: model.isSlowMotionProperty,
+
+        enabledProperty: model.playAreaFreeProperty,
 
         // Spacing options
         playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
@@ -125,11 +135,11 @@ define( require => {
         },
 
         stepBackwardOptions: {
-          listener: () => model.stepBackward(),
+          listener: () => model.timeClock.stepBackward(),
           radius: 20
         },
         stepForwardOptions: {
-          listener: () => model.stepForward(),
+          listener: () => model.timeClock.stepForward(),
           radius: 20
         },
         centerX: gridNode.centerX + 50,

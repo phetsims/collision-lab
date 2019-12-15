@@ -18,9 +18,7 @@ define( require => {
 
   const CollisionLabConstants = {
 
-    STEP_DURATION: 0.01, // seconds, for single time step
-    DEFAULT_DT: 1 / 60, // seconds, for continuous play
-    SLOW_FACTOR: 0.50, // fraction of the normal play speed
+    STEP_DURATION: 1 / 60, // seconds, for a single manual time step
 
     NORMAL_SPEED_SCALE: 1, // 100%
     SLOW_SPEED_SCALE: 0.3, //  30%

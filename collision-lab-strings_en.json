@@ -5,12 +5,6 @@
   "screen.intro": {
     "value": "Intro"
   },
-  "slow": {
-    "value": "Slow"
-  },
-  "normal": {
-    "value": "Normal"
-  },
   "velocity": {
     "value": "Velocity"
   },
@@ -23,7 +17,7 @@
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
   },
-  "kineticEnergy": {
-    "value": "T<sub>avg</sub> = {{value}}"
+  "s": {
+    "value": "{{value}} s"
   }
 }

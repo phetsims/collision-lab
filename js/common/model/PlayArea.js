@@ -43,12 +43,6 @@ define( require => {
       assert && assert( balls instanceof ObservableArray
       && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
-      // @public (read-only) running time
-      this.time = 0;
-
-      // @public (read-only) running time at the previous step - value will be updated later
-      this.lastTime = 0;
-
       // @public
       this.numberOfBallsProperty = new NumberProperty( 2 );
 
@@ -118,23 +112,12 @@ define( require => {
     /**
      *
      * @param {number} dt
-     * @param {boolean} isReversing
+     * @param {number} time - currentTime
+     * @param {boolean} isReversing - is simulation step in reverse
      */
-    step( dt, isReversing ) {
+    step( dt, time, isReversing ) {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
-      // Go backwards in time if we're reversing
-      if ( isReversing ) {
-        dt *= -1;
-      }
-      else {
-        // else increment time
-        this.lastTime = this.time;
-      }
-
-      // increment the clock time
-      this.time += dt;
 
       // updates the position and velocity of each ball
       this.balls.forEach( ball => {
@@ -142,14 +125,8 @@ define( require => {
       } );
 
       this.collisionDetector.isReversing = isReversing;
-      this.collisionDetector.detectCollision( this.lastTime, this.time );
+      this.collisionDetector.detectCollision( time, dt );
       this.collisionDetector.doBallBorderCollisions();
-
-      //
-      if ( isReversing ) {
-        this.lastTime = this.time;
-      }
-
 
     }
 
