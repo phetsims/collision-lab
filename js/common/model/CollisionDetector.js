@@ -59,12 +59,10 @@ define( require => {
 
     /**
      * @public
-     * @param {number} time - current time
      * @param {number} deltaTime  - time interval since last step
      */
-    detectCollision( time, deltaTime ) {
+    detectCollision( deltaTime ) {
 
-      assert && assert( typeof time === 'number', `invalid time: ${time}` );
       assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
 
       const N = this.balls.length;
@@ -77,7 +75,7 @@ define( require => {
           const minimumSeparation = ball1.radius + ball2.radius;
           if ( distance < minimumSeparation ) {
             this.nbrCollisionsInThisTimeStep += 1;
-            this.collideBalls( ball1, ball2, time, deltaTime );
+            this.collideBalls( ball1, ball2, deltaTime );
             this.colliding = true;
           }
         }
@@ -89,23 +87,18 @@ define( require => {
      * @private
      * @param {Ball} ball1
      * @param {Ball} ball2
-     * @param {number} time - current time
      * @param {number} deltaTime  - time interval since last step
      */
-    collideBalls( ball1, ball2, time, deltaTime ) {
+    collideBalls( ball1, ball2, deltaTime ) {
 
       assert && assert( _.every( [ball1, ball2], ball => ball instanceof Ball ) );
-      assert && assert( typeof time === 'number', `invalid time: ${time}` );
       assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
 
       const e = this.elasticityProperty.value;
 
       // Balls have already overlapped, so currently have incorrect positions
-      // find time of the collision
-      const contactTime = this.getContactTime( ball1, ball2, time, deltaTime );
-
-      // time to rewind the positions to
-      const offsetTime = time - contactTime;
+      // find time of the collision such that we can rewind the positions to this time
+      const offsetTime = -this.getContactTime( ball1, ball2, deltaTime );
 
       // get positions at time of collision, rewind position time.
       const r1 = ball1.getPreviousPosition( offsetTime );
@@ -151,18 +144,21 @@ define( require => {
     }
 
     /**
-     * Gets contact time between ball 1 and ball 2
+     * Gets the contact time between ball 1 and ball 2
+     * At t=0, (now) the ball1 and ball2 are overlapping whereas they were not at t=-deltaTime beforehand
+     * This algorithm reconstruct the ballistic motion to determines the contact
+     * time (measured from present time t=0) where the two balls started to make contact with one another
+     * The contact time is negative if the contact time occurred in the past and positive if the contact time is on the future
+     * (which may happened if the simulation is ran in reversed)
      * @private
      * @param {Ball} ball1
      * @param {Ball} ball2
-     * @param {number} time - current time
      * @param {number} deltaTime  - time interval since last step
-     * @returns {number} contactTime in seconds
+     * @returns {number} contactTime - in seconds
      */
-    getContactTime( ball1, ball2, time, deltaTime ) {
+    getContactTime( ball1, ball2, deltaTime ) {
 
       assert && assert( _.every( [ball1, ball2], ball => ball instanceof Ball ) );
-      assert && assert( typeof time === 'number', `invalid time: ${time}` );
       assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
 
       let contactTime;  // contact time (in seconds) of the collision,
@@ -178,11 +174,8 @@ define( require => {
       const deltaR = r2.minus( r1 );
       const deltaV = v2.minus( v1 );
 
-      // TODO: some of these steps need more documentation
-
       // square of center-to-center separation of balls at contact
       const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );
-
 
       const deltaVSquared = deltaV.magnitudeSquared;
       const deltaRDotDeltaV = deltaR.dot( deltaV );
@@ -193,19 +186,20 @@ define( require => {
       // if collision is superslow, then set collision time = half-way point since last time step
       // of if tiny number precision causes number under square root to be negative
       if ( deltaVSquared < 1e-7 || underSquareRoot < 0 ) {
-        contactTime = time - 0.5 * ( deltaTime );
+        contactTime = -0.5 * ( deltaTime );
       }
       else { // if collision is normal
 
         // the time interval that the collision occurred after the previous time step
         let deltaTimeCorrection;
+
         if ( this.isReversing ) {
           deltaTimeCorrection = ( -deltaRDotDeltaV + Math.sqrt( underSquareRoot ) ) / deltaVSquared;
         }
         else {
           deltaTimeCorrection = ( -deltaRDotDeltaV - Math.sqrt( underSquareRoot ) ) / deltaVSquared;
         }
-        contactTime = time - deltaTime + deltaTimeCorrection;
+        contactTime = -deltaTime + deltaTimeCorrection;
       }
 
       return contactTime;

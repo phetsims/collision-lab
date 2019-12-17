@@ -115,7 +115,7 @@ define( require => {
      * @param {number} time - currentTime
      * @param {boolean} isReversing - is simulation step in reverse
      */
-    step( dt, time, isReversing ) {
+    step( dt, isReversing ) {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
@@ -125,7 +125,7 @@ define( require => {
       } );
 
       this.collisionDetector.isReversing = isReversing;
-      this.collisionDetector.detectCollision( time, dt );
+      this.collisionDetector.detectCollision( dt );
       this.collisionDetector.doBallBorderCollisions();
 
     }

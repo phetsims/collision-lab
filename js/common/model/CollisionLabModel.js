@@ -70,7 +70,7 @@ define( require => {
       this.playArea = new PlayArea( this.balls );
 
       // add a time stepping function to the timeClock
-      this.timeClock.addTimeStepper( ( dt, time, isReversing ) => this.playArea.step( dt, time, isReversing ) );
+      this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
     }
 
     /**

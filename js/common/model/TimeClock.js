@@ -81,7 +81,7 @@ define( require => {
      */
     step( dt ) {
       this.elapsedTimeProperty.value += dt;
-      this.stepFunction( dt, this.elapsedTimeProperty.value, this.isReversingProperty.value );
+      this.stepFunction( dt, this.isReversingProperty.value );
     }
 
     /**
