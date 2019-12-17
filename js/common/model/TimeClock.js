@@ -80,14 +80,16 @@ define( require => {
      * @param  {number} dt
      */
     step( dt ) {
+
       this.elapsedTimeProperty.value += dt;
+
       this.stepFunction( dt, this.isReversingProperty.value );
     }
 
     /**
-     * Adds a time stepper for the simulation
+     * Adds a model time stepper for the simulation
      * @public
-     * @param {function} stepFunction(dt,time,isReversing)
+     * @param {function} stepFunction(dt,isReversing)
      */
     addTimeStepper( stepFunction ) {
       this.stepFunction = stepFunction;

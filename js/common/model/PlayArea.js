@@ -91,8 +91,6 @@ define( require => {
           }
         }
       } );
-
-
     }
 
     /**
@@ -110,9 +108,12 @@ define( require => {
     }
 
     /**
-     *
+     * Steps the position of the balls
+     * The position of the balls is
+     * (1) updated based on the ballistic motion of individual balls
+     * (2) corrected through collisionDetector, to take into account collisions between balls and walls
+     * @public
      * @param {number} dt
-     * @param {number} time - currentTime
      * @param {boolean} isReversing - is simulation step in reverse
      */
     step( dt, isReversing ) {
@@ -131,7 +132,7 @@ define( require => {
     }
 
     /**
-     * Create
+     * Create an an array containing all possible balls with initial conditions
      * @private
      */
     createInitialBallData() {
@@ -157,8 +158,6 @@ define( require => {
         this.balls.push( this.prepopulatedBalls[ i ] );
       }
     }
-
-
   }
 
   return collisionLab.register( 'PlayArea', PlayArea );
