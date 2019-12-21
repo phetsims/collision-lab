@@ -74,12 +74,50 @@ define( require => {
           const distance = ball1.position.distance( ball2.position );
           const minimumSeparation = ball1.radius + ball2.radius;
           if ( distance < minimumSeparation ) {
-            this.nbrCollisionsInThisTimeStep += 1;
             this.collideBalls( ball1, ball2, deltaTime );
-            this.colliding = true;
           }
         }
       }
+
+    }
+
+    /**
+     * Determines the number of collisions that need to be processed within time interval
+     * Used for debugging purposes.
+     * @public
+     */
+    collisionLogger() {
+
+      const N = this.balls.length;
+
+      // array of balls tha need processing in this time interval, initialize to zero
+      const collidingBallArray = Array( N - 1 ).fill( 0 );
+
+      for ( let i = 0; i < N; i++ ) {
+        const ball1 = this.balls.get( i );
+
+        // determine if ball1 is outside the playArea
+        if ( !( this.bounds.eroded( ball1.radius ).containsPoint( ball1.position ) ) ) {
+          collidingBallArray[ i ]++;
+        }
+
+        for ( let j = i + 1; j < N; j++ ) {
+          const ball2 = this.balls.get( j );
+          const distance = ball1.position.distance( ball2.position );
+          const minimumSeparation = ball1.radius + ball2.radius;
+
+          // determine if ball1 and ball2 are overlapping
+          if ( distance < minimumSeparation ) {
+            collidingBallArray[ i ]++;
+            collidingBallArray[ j ]++;
+          }
+        }
+      }
+      // report if some balls are undergoing multiple collision processes in time interval.
+      if ( collidingBallArray.some( value => value > 1 ) ) {
+        console.log( collidingBallArray );
+      }
+
     }
 
     /**
@@ -219,6 +257,7 @@ define( require => {
         // left and right walls
         if ( ball.left <= this.bounds.minX ) {
           ball.flipHorizontalVelocity( this.elasticityProperty.value );
+
           ball.left = this.bounds.minX;
         }
         else if ( ball.right >= this.bounds.maxX ) {
@@ -237,6 +276,7 @@ define( require => {
         }
       } );
     }
+
   }
 
   return collisionLab.register( 'CollisionDetector', CollisionDetector );
