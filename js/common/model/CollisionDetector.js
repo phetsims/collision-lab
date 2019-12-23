@@ -78,7 +78,6 @@ define( require => {
           }
         }
       }
-
     }
 
     /**
@@ -251,13 +250,11 @@ define( require => {
      */
     doBallBorderCollisions() {
 
-      // TODO: the position could be more precise if the timing of the collision was determined.
       this.balls.forEach( ball => {
 
         // left and right walls
         if ( ball.left <= this.bounds.minX ) {
           ball.flipHorizontalVelocity( this.elasticityProperty.value );
-
           ball.left = this.bounds.minX;
         }
         else if ( ball.right >= this.bounds.maxX ) {
@@ -275,6 +272,78 @@ define( require => {
           ball.bottom = this.bounds.minY;
         }
       } );
+    }
+
+    /**
+     * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
+     * its way to its current location. The appropriate velocity component is then updated  and the
+     * ball is positioned within the bounds.
+     * @param {number} deltaTime  - time interval since last step
+     * @public
+     */
+    doBallBorderCollisionsImproved( deltaTime ) {
+
+      this.balls.forEach( ball => {
+
+        // left and right walls
+        if ( ball.left <= this.bounds.minX || ball.right >= this.bounds.maxX ) {
+
+          const offsetTime = -this.getWallContactTime( ball, deltaTime );
+
+          // get positions at time of collision, rewind position time.
+          const contactPosition = ball.getPreviousPosition( offsetTime );
+
+          ball.flipHorizontalVelocity( this.elasticityProperty.value );
+
+          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
+
+        }
+
+        // top and bottom walls
+        if ( ball.top >= this.bounds.maxY || ball.bottom <= this.bounds.minY ) {
+
+          const offsetTime = -this.getWallContactTime( ball, deltaTime );
+
+          // get positions at time of collision, rewind position time.
+          const contactPosition = ball.getPreviousPosition( offsetTime );
+
+          ball.flipVerticalVelocity( this.elasticityProperty.value );
+
+          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
+
+        }
+      } );
+    }
+
+    /**
+     * Gets the contact time between ball and wall
+     * @private
+     * @param {Ball} ball
+     * @param {number} deltaTime  - time interval since last step
+     * @returns {number} contactTime - in seconds
+     */
+    getWallContactTime( ball, deltaTime ) {
+
+      assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
+      assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
+
+      // get position difference between current and previous position
+      const deltaR = ball.velocity.timesScalar( deltaTime );
+
+      const erodedBounds = this.bounds.eroded( ball.radius );
+
+      const closestPoint = erodedBounds.closestPointTo( ball.position );
+
+      const offsetPoint = closestPoint.minus( ball.position );
+
+      let contactTime;
+      if ( offsetPoint.equals( Vector2.ZERO ) ) {
+        contactTime = 0;
+      }
+      else {
+        contactTime = offsetPoint.magnitudeSquared / deltaR.dot( offsetPoint ) * deltaTime;
+      }
+      return contactTime;
     }
 
   }

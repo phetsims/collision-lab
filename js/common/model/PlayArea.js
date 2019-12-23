@@ -120,6 +120,7 @@ define( require => {
 
       assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
+
       // updates the position and velocity of each ball
       this.balls.forEach( ball => {
         ball.step( dt );
@@ -127,7 +128,7 @@ define( require => {
 
       this.collisionDetector.isReversing = isReversing;
       this.collisionDetector.detectCollision( dt );
-      this.collisionDetector.doBallBorderCollisions();
+      this.collisionDetector.doBallBorderCollisionsImproved( dt );
 
     }
 
