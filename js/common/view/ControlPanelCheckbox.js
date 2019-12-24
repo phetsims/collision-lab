@@ -28,7 +28,7 @@ define( require => {
      *
      * @param {String} labelString
      * @param {BooleanProperty} checkboxProperty
-     * @param {Object} options
+     * @param {Object} [options]
      */
     constructor( labelString, checkboxProperty, options ) {
 
@@ -39,7 +39,7 @@ define( require => {
 
       options = merge( {
         font: new PhetFont( 18 ),
-        rightIcon: null,
+        rightIconNode: null,
         width: 180,
         boxWidth: 18
       }, options );
@@ -50,12 +50,11 @@ define( require => {
         font: options.font
       } );
 
-
-      if ( options.rightIcon !== null ) {
+      if ( options.rightIconNode !== null ) {
         checkboxContent.addChild( new HBox( {
           align: 'center',
-          spacing: options.width - checkboxText.width - options.rightIcon.width,
-          children: [checkboxText, options.rightIcon]
+          spacing: options.width - checkboxText.width - options.rightIconNode.width,
+          children: [checkboxText, options.rightIconNode]
         } ) );
       }
       else {

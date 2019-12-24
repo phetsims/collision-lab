@@ -15,13 +15,19 @@ define( require => {
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const ControlPanelCheckbox = require( 'COLLISION_LAB/common/view/ControlPanelCheckbox' );
   const merge = require( 'PHET_CORE/merge' );
+  const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
   const VBox = require( 'SCENERY/nodes/VBox' );
   const XPath = require( 'COLLISION_LAB/common/view/XPath' );
 
   // strings
   const centerOfMassString = require( 'string!COLLISION_LAB/centerOfMass' );
+  const constantRadiusString = require( 'string!COLLISION_LAB/constantRadius' );
+  const kineticEnergyString = require( 'string!COLLISION_LAB/kineticEnergy' );
   const momentumString = require( 'string!COLLISION_LAB/momentum' );
+  const pathString = require( 'string!COLLISION_LAB/path' );
+  const reflectingBorderString = require( 'string!COLLISION_LAB/reflectingBorder' );
+  const valuesString = require( 'string!COLLISION_LAB/values' );
   const velocityString = require( 'string!COLLISION_LAB/velocity' );
 
   class PlayAreaControlPanel extends Panel {
@@ -30,44 +36,63 @@ define( require => {
 
       options = merge( CollisionLabColors.PANEL_COLORS, options );
 
-
-      const panelContent = new VBox( {
-        align: 'left',
-        spacing: 10
-      } );
-
       const velocityCheckbox = new ControlPanelCheckbox(
         velocityString,
         viewProperties.velocityVisibleProperty,
-        { rightIcon: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
+        { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
       );
-
-      panelContent.addChild( velocityCheckbox );
 
       const momentumCheckbox = new ControlPanelCheckbox(
         momentumString,
         viewProperties.momentumVisibleProperty,
-        { rightIcon: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
+        { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
       );
-
-      panelContent.addChild( momentumCheckbox );
 
       const centerOfMassCheckbox = new ControlPanelCheckbox(
         centerOfMassString,
         viewProperties.centerOfMassVisibleProperty,
-        {
-          rightIcon: new XPath( {
-            lineWidth: 1,
-            sideLength: 15,
-            legThickness: 4
-          } )
-        }
+        { rightIconNode: new XPath( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
       );
 
-      panelContent.addChild( centerOfMassCheckbox );
+      const kineticEnergyCheckbox = new ControlPanelCheckbox(
+        kineticEnergyString,
+        viewProperties.kineticEnergyVisibleProperty
+      );
 
+      const valuesCheckbox = new ControlPanelCheckbox(
+        valuesString,
+        viewProperties.valuesVisibleProperty
+      );
 
-      super( panelContent, options );
+      const pathCheckbox = new ControlPanelCheckbox(
+        pathString,
+        viewProperties.pathVisibleProperty
+      );
+
+      const reflectingBorderCheckbox = new ControlPanelCheckbox(
+        reflectingBorderString,
+        reflectingBorderProperty
+      );
+
+      const upperCheckboxes = new VBox( {
+        children:
+          [velocityCheckbox, momentumCheckbox, centerOfMassCheckbox,
+            kineticEnergyCheckbox, valuesCheckbox, pathCheckbox, reflectingBorderCheckbox],
+        align: 'left',
+        spacing: 10
+      } );
+
+      const constantRadiusCheckbox = new ControlPanelCheckbox(
+        constantRadiusString,
+        constantRadiusProperty
+      );
+
+      const panelcontent = new Node();
+      panelcontent.addChild( upperCheckboxes );
+      panelcontent.addChild( constantRadiusCheckbox );
+      constantRadiusCheckbox.top = upperCheckboxes.bottom;
+
+      super( panelcontent, options );
 
 
     }

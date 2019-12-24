@@ -11,8 +11,23 @@
   "momentum": {
     "value": "Momentum"
   },
+  "path": {
+    "value": "Path"
+  },
+  "values": {
+    "value": "Values"
+  },
+  "reflectingBorder": {
+    "value": "Reflecting Border"
+  },
+  "kineticEnergy": {
+    "value": "Kinetic Energy"
+  },
   "centerOfMass": {
     "value": "Center of Mass"
+  },
+  "constantRadius": {
+    "value": "Constant Radius"
   },
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
