@@ -30,6 +30,7 @@ define( require => {
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const Tandem = require( 'TANDEM/Tandem' );
+  const Text = require( 'SCENERY/nodes/Text' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
   const TimeDisplay = require( 'COLLISION_LAB/common/view/TimeDisplay' );
 
@@ -38,6 +39,9 @@ define( require => {
   const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
   const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
   const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
+
+  // strings
+  const ballsString = require( 'string!COLLISION_LAB/balls' );
 
   // images
   const mockupScreen2DLabImage = require( 'image!COLLISION_LAB/mockup-screen-2DLab.png' );
@@ -75,6 +79,9 @@ define( require => {
       // create the view properties for the view
       const viewProperties = new CollisionLabViewProperties();
 
+      const ballsText = new Text( ballsString, { font: new PhetFont( 18 ) } );
+      this.addChild( ballsText );
+
       // create and add number spinner for number of balls
       const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
       const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
@@ -99,7 +106,9 @@ define( require => {
 
 
       numberOfBallsSpinner.left = gridNode.right + 5;
-      numberOfBallsSpinner.top = 20;
+      ballsText.center = numberOfBallsSpinner.center;
+      ballsText.top = 20;
+      numberOfBallsSpinner.top = ballsText.bottom + 5;
 
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
