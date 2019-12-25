@@ -23,6 +23,7 @@ define( require => {
   const CollisionDetector = require( 'COLLISION_LAB/common/model/CollisionDetector' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
   const Grid = require( 'COLLISION_LAB/common/model/Grid' );
   const KineticEnergySumProperty = require( 'COLLISION_LAB/common/model/KineticEnergySumProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
@@ -47,7 +48,11 @@ define( require => {
       this.numberOfBallsProperty = new NumberProperty( 2 );
 
       // @public
-      this.elasticityProperty = new NumberProperty( 1, { range: new Range( 0, 1 ) } );
+      this.elasticityPercentProperty = new NumberProperty( 100, { range: new Range( 0, 100 ) } );
+
+      // @public
+      this.elasticityProperty = new DerivedProperty( [this.elasticityPercentProperty],
+        elasticity => elasticity / 100 );
 
       // @public determines if the balls will reflect at the border
       this.reflectingBorderProperty = new BooleanProperty( true );
@@ -99,7 +104,7 @@ define( require => {
      */
     reset() {
       this.numberOfBallsProperty.reset();
-      this.elasticityProperty.reset();
+      this.elasticityPercentProperty.reset();
       this.reflectingBorderProperty.reset();
       this.constantRadiusProperty.reset();
       this.kineticEnergySumProperty.reset();

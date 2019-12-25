@@ -14,6 +14,15 @@
   "path": {
     "value": "Path"
   },
+  "elasticity": {
+    "value": "Elasticity"
+  },
+  "inelastic": {
+    "value": "Inelastic"
+  },
+  "elastic": {
+    "value": "Elastic"
+  },
   "values": {
     "value": "Values"
   },
@@ -26,11 +35,14 @@
   "centerOfMass": {
     "value": "Center of Mass"
   },
-  "constantRadius": {
-    "value": "Constant Radius"
+  "constantSize": {
+    "value": "Constant Size"
   },
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
+  },
+  "elasticityPercent": {
+    "value": "{{value}} %"
   },
   "s": {
     "value": "{{value}} s"

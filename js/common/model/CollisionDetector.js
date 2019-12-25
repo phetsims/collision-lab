@@ -19,8 +19,8 @@ define( require => {
   // modules
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const NumberProperty = require( 'AXON/NumberProperty' );
   const ObservableArray = require( 'AXON/ObservableArray' );
+  const Property = require( 'AXON/Property' );
   const Vector2 = require( 'DOT/Vector2' );
 
   class CollisionDetector {
@@ -36,7 +36,7 @@ define( require => {
       // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
       assert && assert( balls instanceof ObservableArray
       && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-      assert && assert( elasticityProperty instanceof NumberProperty, `invalid elasticityProperty: ${elasticityProperty}` );
+      assert && assert( elasticityProperty instanceof Property, `invalid elasticityProperty: ${elasticityProperty}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
         `Extra prototype on Options: ${options}` );
 
