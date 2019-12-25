@@ -114,9 +114,7 @@ define( require => {
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
 
-      const playAreaShape = Shape.rectangle( PLAY_AREA_BOUNDS.x, PLAY_AREA_BOUNDS.y, PLAY_AREA_BOUNDS.width,
-        PLAY_AREA_BOUNDS.height );
-      this.ballLayerNode.clipArea = modelViewTransform.modelToViewShape( playAreaShape );
+      this.ballLayerNode.clipArea = modelViewTransform.modelToViewShape( Shape.bounds( PLAY_AREA_BOUNDS ) );
 
       //  create and add time control buttons (
       const timeControlNode = new TimeControlNode( model.playProperty, {
