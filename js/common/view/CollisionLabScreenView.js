@@ -33,6 +33,7 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
   const TimeDisplay = require( 'COLLISION_LAB/common/view/TimeDisplay' );
+  const Shape = require( 'KITE/Shape' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -112,6 +113,10 @@ define( require => {
 
       this.ballLayerNode = new Node();
       this.addChild( this.ballLayerNode );
+
+      const playAreaShape = Shape.rectangle( PLAY_AREA_BOUNDS.x, PLAY_AREA_BOUNDS.y, PLAY_AREA_BOUNDS.width,
+        PLAY_AREA_BOUNDS.height );
+      this.ballLayerNode.clipArea = modelViewTransform.modelToViewShape( playAreaShape );
 
       //  create and add time control buttons (
       const timeControlNode = new TimeControlNode( model.playProperty, {

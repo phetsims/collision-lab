@@ -88,6 +88,7 @@ define( require => {
       } );
       this.addChild( diskNode );
 
+
       // create and add labelNode of the ball
       const labelNode = new Text( index + 1, {
         font: new PhetFont( 20 ),
