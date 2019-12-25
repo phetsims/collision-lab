@@ -246,32 +246,35 @@ define( require => {
      * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
      * its way to its current location. The appropriate velocity component is then updated  and the
      * ball is positioned within the bounds.
+     * @param {Property.<boolean>} reflectingBorderProperty
      * @public
      */
-    doBallBorderCollisions() {
+    doBallBorderCollisions( reflectingBorderProperty ) {
 
-      this.balls.forEach( ball => {
+      if ( reflectingBorderProperty.value ) {
+        this.balls.forEach( ball => {
 
-        // left and right walls
-        if ( ball.left <= this.bounds.minX ) {
-          ball.flipHorizontalVelocity( this.elasticityProperty.value );
-          ball.left = this.bounds.minX;
-        }
-        else if ( ball.right >= this.bounds.maxX ) {
-          ball.flipHorizontalVelocity( this.elasticityProperty.value );
-          ball.right = this.bounds.maxX;
-        }
+          // left and right walls
+          if ( ball.left <= this.bounds.minX ) {
+            ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.left = this.bounds.minX;
+          }
+          else if ( ball.right >= this.bounds.maxX ) {
+            ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.right = this.bounds.maxX;
+          }
 
-        // top and bottom walls
-        if ( ball.top >= this.bounds.maxY ) {
-          ball.flipVerticalVelocity( this.elasticityProperty.value );
-          ball.top = this.bounds.maxY;
-        }
-        else if ( ball.bottom <= this.bounds.minY ) {
-          ball.flipVerticalVelocity( this.elasticityProperty.value );
-          ball.bottom = this.bounds.minY;
-        }
-      } );
+          // top and bottom walls
+          if ( ball.top >= this.bounds.maxY ) {
+            ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.top = this.bounds.maxY;
+          }
+          else if ( ball.bottom <= this.bounds.minY ) {
+            ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.bottom = this.bounds.minY;
+          }
+        } );
+      }
     }
 
     /**
@@ -279,40 +282,43 @@ define( require => {
      * its way to its current location. The appropriate velocity component is then updated  and the
      * ball is positioned within the bounds.
      * @param {number} deltaTime  - time interval since last step
+     * @param {Property.<boolean>} reflectingBorderProperty
      * @public
      */
-    doBallBorderCollisionsImproved( deltaTime ) {
+    doBallBorderCollisionsImproved( deltaTime, reflectingBorderProperty ) {
 
-      this.balls.forEach( ball => {
+      if ( reflectingBorderProperty.value ) {
+        this.balls.forEach( ball => {
 
-        // left and right walls
-        if ( ball.left <= this.bounds.minX || ball.right >= this.bounds.maxX ) {
+          // left and right walls
+          if ( ball.left <= this.bounds.minX || ball.right >= this.bounds.maxX ) {
 
-          const offsetTime = -this.getWallContactTime( ball, deltaTime );
+            const offsetTime = -this.getWallContactTime( ball, deltaTime );
 
-          // get positions at time of collision, rewind position time.
-          const contactPosition = ball.getPreviousPosition( offsetTime );
+            // get positions at time of collision, rewind position time.
+            const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.flipHorizontalVelocity( this.elasticityProperty.value );
 
-          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
+            ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 
-        }
+          }
 
-        // top and bottom walls
-        if ( ball.top >= this.bounds.maxY || ball.bottom <= this.bounds.minY ) {
+          // top and bottom walls
+          if ( ball.top >= this.bounds.maxY || ball.bottom <= this.bounds.minY ) {
 
-          const offsetTime = -this.getWallContactTime( ball, deltaTime );
+            const offsetTime = -this.getWallContactTime( ball, deltaTime );
 
-          // get positions at time of collision, rewind position time.
-          const contactPosition = ball.getPreviousPosition( offsetTime );
+            // get positions at time of collision, rewind position time.
+            const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.flipVerticalVelocity( this.elasticityProperty.value );
 
-          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
+            ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 
-        }
-      } );
+          }
+        } );
+      }
     }
 
     /**

@@ -133,7 +133,7 @@ define( require => {
 
       this.collisionDetector.isReversing = isReversing;
       this.collisionDetector.detectCollision( dt );
-      this.collisionDetector.doBallBorderCollisionsImproved( dt );
+      this.collisionDetector.doBallBorderCollisionsImproved( dt, this.reflectingBorderProperty );
 
     }
 
