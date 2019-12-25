@@ -45,7 +45,18 @@ define( require => {
 
   class PlayAreaControlPanel extends Panel {
 
-    constructor( viewProperties, reflectingBorderProperty, elasticityPercentProperty, constantRadiusProperty, options ) {
+    /**
+     * @param {CollisionLabViewProperties} viewProperties
+     * @param {Property.<boolean>} reflectingBorderProperty
+     * @param {Property.<number>} elasticityPercentProperty
+     * @param {Property.<boolean>} constantRadiusProperty
+     * @param {Object} [options]
+     */
+    constructor( viewProperties,
+                 reflectingBorderProperty,
+                 elasticityPercentProperty,
+                 constantRadiusProperty,
+                 options ) {
 
       options = merge( CollisionLabColors.PANEL_COLORS, options );
 
