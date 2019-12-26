@@ -29,11 +29,11 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
+  const Shape = require( 'KITE/Shape' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
   const TimeDisplay = require( 'COLLISION_LAB/common/view/TimeDisplay' );
-  const Shape = require( 'KITE/Shape' );
 
   // constants
   const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
