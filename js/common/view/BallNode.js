@@ -44,6 +44,7 @@ define( require => {
      * @param {Property.<boolean>} valuesVisibleProperty
      * @param {Property.<boolean>} velocityVisibleProperty
      * @param {Property.<boolean>} momentumVisibleProperty
+     * @param {Property.<boolean>} gridVisibleProperty
      * @param {Property.<boolean>} playProperty
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
@@ -53,6 +54,7 @@ define( require => {
                  valuesVisibleProperty,
                  velocityVisibleProperty,
                  momentumVisibleProperty,
+                 gridVisibleProperty,
                  playProperty,
                  modelViewTransform,
                  options ) {
@@ -143,6 +145,9 @@ define( require => {
         },
         end: () => {
           ball.isUserControlledProperty.value = false;
+          if ( gridVisibleProperty.value ) {
+            ball.snapPosition();
+          }
         }
       } ) );
 

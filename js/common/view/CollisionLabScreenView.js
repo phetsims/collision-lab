@@ -191,6 +191,7 @@ define( require => {
           viewProperties.valuesVisibleProperty,
           viewProperties.velocityVisibleProperty,
           viewProperties.momentumVisibleProperty,
+          viewProperties.gridVisibleProperty,
           model.playProperty,
           modelViewTransform );
         this.ballLayerNode.addChild( addedBallNode );

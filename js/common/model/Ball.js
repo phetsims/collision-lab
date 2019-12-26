@@ -13,16 +13,27 @@ define( require => {
   // modules
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const DerivedProperty = require( 'AXON/DerivedProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Property = require( 'AXON/Property' );
+  const Util = require( 'DOT/Util' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
 
   // constants
-  const DEFAULT_RADIUS = 0.15; // in meters
+  const DEFAULT_RADIUS = CollisionLabConstants.DEFAULT_RADIUS; // in meters
+  const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 
   class Ball {
+
+
+    /**
+     * Gets the mass.
+     * @public
+     * @returns {number}
+     */
+    get mass() { return this.massProperty.value; }
 
     /**
      * @param {number} mass - initial mass of the ball (kg)
@@ -69,13 +80,6 @@ define( require => {
       );
 
     }
-
-    /**
-     * Gets the mass.
-     * @public
-     * @returns {number}
-     */
-    get mass() { return this.massProperty.value; }
 
     /**
      * Sets the mass of the ball.
@@ -230,6 +234,20 @@ define( require => {
       this.positionProperty.reset();
       this.velocityProperty.reset();
     }
+
+    /**
+     * snap position to the minor gridlines
+     * @public
+     */
+    snapPosition() {
+
+      // rounding function to minor grid line tick values
+      const round = ( number ) => Util.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+
+      // set new rounded position
+      this.position = new Vector2( round( this.position.x ), round( this.position.y ) );
+    }
+
 
     /**
      * Flips the horizontal velocity of the ball up to a scaling factor (ranging from 0 to 1)

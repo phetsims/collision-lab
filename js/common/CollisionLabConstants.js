@@ -29,6 +29,7 @@ define( require => {
     SCREEN_VIEW_Y_MARGIN: 14,
 
     MAX_BALLS: 5,
+    DEFAULT_RADIUS: 0.15, // in meters
     MASS_RANGE: new Range( 0.1, 3.0 ),
     VELOCITY_RANGE: new Range( -10, 10 ),
 
