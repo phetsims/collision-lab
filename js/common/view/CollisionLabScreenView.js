@@ -160,10 +160,9 @@ define( require => {
 
       this.addChild( timeControlNode );
 
-      //TODO: the two following listeners are almost identical
-      const addItemAddedBallListener = ( addedBall, balls ) => {
+      const addItemAddedBallListener = addedBall => {
 
-        const index = balls.indexOf( addedBall );
+        const index = model.balls.indexOf( addedBall );
         const addedBallNode = new BallNode( addedBall,
           index,
           viewProperties.valuesVisibleProperty,
@@ -183,29 +182,7 @@ define( require => {
         model.balls.addItemRemovedListener( removeBallListener );
       };
 
-      const forEachBallListener = ( addedBall, index ) => {
-
-        const addedBallNode = new BallNode( addedBall,
-          index,
-          viewProperties.valuesVisibleProperty,
-          viewProperties.velocityVisibleProperty,
-          viewProperties.momentumVisibleProperty,
-          model.playProperty,
-          modelViewTransform );
-        this.ballLayerNode.addChild( addedBallNode );
-
-        // Observe when the ball is removed to unlink listeners
-        const removeBallListener = removedBall => {
-          if ( removedBall === addedBall ) {
-            this.ballLayerNode.removeChild( addedBallNode );
-            model.balls.removeItemRemovedListener( removeBallListener );
-          }
-        };
-        model.balls.addItemRemovedListener( removeBallListener );
-      };
-
-      model.balls.forEach( forEachBallListener );
-
+      model.balls.forEach( addItemAddedBallListener );
       model.balls.addItemAddedListener( addItemAddedBallListener );
 
       const resetAllButton = new ResetAllButton( {
