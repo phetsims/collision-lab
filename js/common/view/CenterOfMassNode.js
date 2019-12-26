@@ -17,7 +17,7 @@ define( require => {
   const Node = require( 'SCENERY/nodes/Node' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Property = require( 'AXON/Property' );
-  const XPath = require( 'COLLISION_LAB/common/view/XPath' );
+  const XNode = require( 'COLLISION_LAB/common/view/XNode' );
 
   class CenterOfMassNode extends Node {
     /**
@@ -38,8 +38,8 @@ define( require => {
       //----------------------------------------------------------------------------------------
       super();
 
-      const xPath = new XPath();
-      this.addChild( xPath );
+      const xNode = new XNode();
+      this.addChild( xNode );
 
       // Link the position of the marker to the center of mass property
       // This link is present for the lifetime of the simulation

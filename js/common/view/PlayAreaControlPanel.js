@@ -24,7 +24,7 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const Text = require( 'SCENERY/nodes/Text' );
   const VBox = require( 'SCENERY/nodes/VBox' );
-  const XPath = require( 'COLLISION_LAB/common/view/XPath' );
+  const XNode = require( 'COLLISION_LAB/common/view/XNode' );
 
   // constants
   const ELASTICITY_PERCENT_RANGE = new Range( 0, 100 );
@@ -75,7 +75,7 @@ define( require => {
       const centerOfMassCheckbox = new ControlPanelCheckbox(
         centerOfMassString,
         viewProperties.centerOfMassVisibleProperty,
-        { rightIconNode: new XPath( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
+        { rightIconNode: new XNode( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
       );
 
       const kineticEnergyCheckbox = new ControlPanelCheckbox(
