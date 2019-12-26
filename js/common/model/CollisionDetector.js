@@ -47,9 +47,6 @@ define( require => {
       this.balls = balls;
 
       // @private
-      this.nbrCollisionsInThisTimeStep = 0;
-
-      // @private
       this.elasticityProperty = elasticityProperty;
 
       // @private
