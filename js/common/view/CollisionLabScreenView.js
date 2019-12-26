@@ -170,12 +170,6 @@ define( require => {
       } );
       this.addChild( gridCheckbox );
 
-      const centerOfMassNode = new CenterOfMassNode( model.playArea.centerOfMass,
-        viewProperties.centerOfMassVisibleProperty,
-        model.playArea.numberOfBallsProperty,
-        modelViewTransform );
-      this.addChild( centerOfMassNode );
-
       const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
         model.playArea.reflectingBorderProperty,
         model.playArea.elasticityPercentProperty,
@@ -213,6 +207,13 @@ define( require => {
 
       model.balls.forEach( addItemAddedBallListener );
       model.balls.addItemAddedListener( addItemAddedBallListener );
+
+      const centerOfMassNode = new CenterOfMassNode( model.playArea.centerOfMass,
+        viewProperties.centerOfMassVisibleProperty,
+        model.playArea.numberOfBallsProperty,
+        modelViewTransform );
+      this.addChild( centerOfMassNode );
+
 
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();
