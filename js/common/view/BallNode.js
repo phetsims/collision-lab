@@ -163,7 +163,7 @@ define( require => {
         vectorLayer.translation = location;
         setGraticuleLocation( location );
 
-        vectorLayer.visible = dragBoundsProperty.value.containsPoint( position );
+        vectorLayer.visible = viewPlayAreaBounds.containsPoint( location );
 
       } );
 
