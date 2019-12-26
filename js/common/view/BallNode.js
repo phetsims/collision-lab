@@ -10,13 +10,11 @@ define( require => {
   'use strict';
 
   // modules
-
-  // const Color = require( 'SCENERY/util/Color' );
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const BallMomentumVectorNode = require( 'COLLISION_LAB/common/view/BallMomentumVectorNode' );
   const BallVelocityVectorNode = require( 'COLLISION_LAB/common/view/BallVelocityVectorNode' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
   const Circle = require( 'SCENERY/nodes/Circle' );
+  const Line = require( 'SCENERY/nodes/Line' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
@@ -28,6 +26,7 @@ define( require => {
   const Property = require( 'AXON/Property' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
+  const Shape = require( 'KITE/Shape' );
 
   // constants
   const BALL_VELOCITY_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
@@ -60,7 +59,7 @@ define( require => {
 
       assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
       assert && assert( typeof index === 'number', `invalid index: ${index}` );
-      assert && assert( valuesVisibleProperty instanceof BooleanProperty, `invalid valuesVisibleProperty: ${valuesVisibleProperty}` );
+      assert && assert( valuesVisibleProperty instanceof Property, `invalid valuesVisibleProperty: ${valuesVisibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
         `Extra prototype on Options: ${options}` );
@@ -72,11 +71,8 @@ define( require => {
       // drag bounds for the ball
       const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
-      // ball position in view coordinates
-      const ballLocation = modelViewTransform.modelToViewPosition( ball.position );
-
-      // translate the location of this node
-      this.translation = ballLocation;
+      // bounds of the play area in view coordinates
+      const viewBounds = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
       // ball radius in view coordinates
       const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );
@@ -88,7 +84,6 @@ define( require => {
       } );
       this.addChild( diskNode );
 
-
       // create and add labelNode of the ball
       const labelNode = new Text( index + 1, {
         font: new PhetFont( 20 ),
@@ -98,7 +93,28 @@ define( require => {
       } );
       this.addChild( labelNode );
 
-      // create and add the velocityVector and momentumVector nodes
+      // TODO: find out a better way to handle clipArea
+      // create and add a layer for the disk and label
+      const diskLayer = new Node().setChildren( [diskNode, labelNode] );
+      const immovableDiskLayer = new Node();
+      immovableDiskLayer.clipArea = Shape.bounds( viewBounds );
+      immovableDiskLayer.addChild( diskLayer );
+      this.addChild( immovableDiskLayer );
+
+      // create and add a dashed crosshair on the ball spanning the playArea
+      const graticuleOptions = { stroke: 'black', lineDash: [10, 2] };
+      const horizontalLine = new Line( 0, 0, 0, 1, graticuleOptions );
+      const verticalLine = new Line( 0, 0, 0, 1, graticuleOptions );
+      const graticule = new Node().setChildren( [verticalLine, horizontalLine] );
+
+      // function to set location of crosshair
+      const setGraticuleLocation = location => {
+        horizontalLine.setLine( viewBounds.minX, location.y, viewBounds.maxX, location.y );
+        verticalLine.setLine( location.x, viewBounds.minY, location.x, viewBounds.maxY );
+      };
+      this.addChild( graticule );
+
+      // create the velocityVector and momentumVector nodes
       const ballVelocityVectorNode = new BallVelocityVectorNode(
         ball.velocityProperty,
         velocityVisibleProperty,
@@ -111,12 +127,13 @@ define( require => {
         modelViewTransform,
         BALL_MOMENTUM_VECTOR_OPTIONS );
 
-      this.addChild( ballMomentumVectorNode );
-      this.addChild( ballVelocityVectorNode );
+      // create and add a layer for the velocity and momentum vectors
+      const vectorLayer = new Node().setChildren( [ballVelocityVectorNode, ballMomentumVectorNode] );
+      this.addChild( vectorLayer );
 
       // add input listener to disk
-      diskNode.addInputListener( new DragListener( {
-        targetNode: this,
+      diskLayer.addInputListener( new DragListener( {
+        targetNode: diskLayer,
         transform: modelViewTransform,
         locationProperty: ball.positionProperty,
         dragBoundsProperty: dragBoundsProperty,
@@ -124,12 +141,27 @@ define( require => {
           ball.isUserControlledProperty.value = true;
           this.moveToFront();
         },
-        end: () => { ball.isUserControlledProperty.value = false;}
+        end: () => {
+          ball.isUserControlledProperty.value = false;
+        }
       } ) );
 
-      // translate this node upon a change opf the position of the ball
+      // translate the vectors, crosshair and disk upon a change of the position of the ball
       ball.positionProperty.link( position => {
-        this.translation = modelViewTransform.modelToViewPosition( position );
+
+        const location = modelViewTransform.modelToViewPosition( position );
+
+        diskLayer.translation = location;
+        vectorLayer.translation = location;
+        setGraticuleLocation( location );
+
+        vectorLayer.visible = dragBoundsProperty.value.containsPoint( position );
+
+      } );
+
+      // make the crosshair visible if ball is userControlled
+      ball.isUserControlledProperty.link( isUserControlled => {
+        graticule.visible = isUserControlled;
       } );
 
       // updates the radius of the ball
@@ -141,8 +173,6 @@ define( require => {
         // shrink the dragBounds (in model coordinates) by the radius of the ball
         dragBoundsProperty.value = dragBoundsProperty.value.eroded( radius );
       } );
-
-
     }
   }
 

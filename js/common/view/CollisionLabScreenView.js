@@ -29,7 +29,6 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
-  const Shape = require( 'KITE/Shape' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
@@ -105,16 +104,10 @@ define( require => {
       timeDisplay.left = gridNode.left + 5;
       timeDisplay.top = gridNode.bottom + 5;
 
-
       numberOfBallsSpinner.left = gridNode.right + 5;
       ballsText.center = numberOfBallsSpinner.center;
       ballsText.top = 20;
       numberOfBallsSpinner.top = ballsText.bottom + 5;
-
-      this.ballLayerNode = new Node();
-      this.addChild( this.ballLayerNode );
-
-      this.ballLayerNode.clipArea = modelViewTransform.modelToViewShape( Shape.bounds( PLAY_AREA_BOUNDS ) );
 
       //  create and add time control buttons (
       const timeControlNode = new TimeControlNode( model.playProperty, {
@@ -160,31 +153,6 @@ define( require => {
 
       this.addChild( timeControlNode );
 
-      const addItemAddedBallListener = addedBall => {
-
-        const index = model.balls.indexOf( addedBall );
-        const addedBallNode = new BallNode( addedBall,
-          index,
-          viewProperties.valuesVisibleProperty,
-          viewProperties.velocityVisibleProperty,
-          viewProperties.momentumVisibleProperty,
-          model.playProperty,
-          modelViewTransform );
-        this.ballLayerNode.addChild( addedBallNode );
-
-        // Observe when the ball is removed to unlink listeners
-        const removeBallListener = removedBall => {
-          if ( removedBall === addedBall ) {
-            this.ballLayerNode.removeChild( addedBallNode );
-            model.balls.removeItemRemovedListener( removeBallListener );
-          }
-        };
-        model.balls.addItemRemovedListener( removeBallListener );
-      };
-
-      model.balls.forEach( addItemAddedBallListener );
-      model.balls.addItemAddedListener( addItemAddedBallListener );
-
       const resetAllButton = new ResetAllButton( {
         listener: () => {
           model.reset();
@@ -217,6 +185,34 @@ define( require => {
           top: SCREEN_VIEW_Y_MARGIN
         } );
       this.addChild( playAreaControlPanel );
+
+      this.ballLayerNode = new Node();
+      this.addChild( this.ballLayerNode );
+
+      const addItemAddedBallListener = addedBall => {
+
+        const index = model.balls.indexOf( addedBall );
+        const addedBallNode = new BallNode( addedBall,
+          index,
+          viewProperties.valuesVisibleProperty,
+          viewProperties.velocityVisibleProperty,
+          viewProperties.momentumVisibleProperty,
+          model.playProperty,
+          modelViewTransform );
+        this.ballLayerNode.addChild( addedBallNode );
+
+        // Observe when the ball is removed to unlink listeners
+        const removeBallListener = removedBall => {
+          if ( removedBall === addedBall ) {
+            this.ballLayerNode.removeChild( addedBallNode );
+            model.balls.removeItemRemovedListener( removeBallListener );
+          }
+        };
+        model.balls.addItemRemovedListener( removeBallListener );
+      };
+
+      model.balls.forEach( addItemAddedBallListener );
+      model.balls.addItemAddedListener( addItemAddedBallListener );
 
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();
