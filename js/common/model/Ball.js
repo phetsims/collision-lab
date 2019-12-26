@@ -112,6 +112,9 @@ define( require => {
      */
     set position( position ) {
       assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+      assert && assert( Number.isFinite( position.x ), `invalid x-position: ${position.x}` );
+      assert && assert( Number.isFinite( position.y ), `invalid y-position: ${position.y}` );
+
       this.positionProperty.value = position;
     }
 

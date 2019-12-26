@@ -14,19 +14,19 @@ define( require => {
   const BallMomentumVectorNode = require( 'COLLISION_LAB/common/view/BallMomentumVectorNode' );
   const BallVelocityVectorNode = require( 'COLLISION_LAB/common/view/BallVelocityVectorNode' );
   const Circle = require( 'SCENERY/nodes/Circle' );
-  const Line = require( 'SCENERY/nodes/Line' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const DragListener = require( 'SCENERY/listeners/DragListener' );
+  const Line = require( 'SCENERY/nodes/Line' );
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
+  const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
-  const Shape = require( 'KITE/Shape' );
 
   // constants
   const BALL_VELOCITY_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
@@ -179,7 +179,7 @@ define( require => {
         diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
 
         // shrink the dragBounds (in model coordinates) by the radius of the ball
-        dragBoundsProperty.value = dragBoundsProperty.value.eroded( radius );
+        dragBoundsProperty.value = CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( radius );
       } );
     }
   }

@@ -142,7 +142,7 @@ define( require => {
       const r2 = ball2.getPreviousPosition( offsetTime );
 
       const deltaR = r1.minus( r2 );
-      const normalizedDeltaR = deltaR.normalized();
+      const normalizedDeltaR = deltaR.equals( Vector2.ZERO ) ? Vector2.X_UNIT : deltaR.normalized();
 
       const m1 = ball1.mass;
       const m2 = ball2.mass;
@@ -239,6 +239,7 @@ define( require => {
         contactTime = -deltaTime + deltaTimeCorrection;
       }
 
+      assert && assert( Number.isFinite( contactTime ), `contact Time is note finite: ${contactTime}` );
       return contactTime;
     }
 
@@ -343,12 +344,13 @@ define( require => {
       const offsetPoint = closestPoint.minus( ball.position );
 
       let contactTime;
-      if ( offsetPoint.equals( Vector2.ZERO ) ) {
+      if ( deltaR.dot( offsetPoint ) === 0 ) {
         contactTime = 0;
       }
       else {
         contactTime = offsetPoint.magnitudeSquared / deltaR.dot( offsetPoint ) * deltaTime;
       }
+      assert && assert( Number.isFinite( contactTime ), `contact Time is note finite: ${contactTime}` );
       return contactTime;
     }
 
