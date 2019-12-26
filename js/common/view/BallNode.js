@@ -74,17 +74,19 @@ define( require => {
       const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
       // bounds of the play area in view coordinates
-      const viewBounds = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS );
+      const viewPlayAreaBounds = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
       // ball radius in view coordinates
       const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );
+
+      // ball location in view coordinates
+      const location = modelViewTransform.modelToViewPosition( ball.position );
 
       // create and add disk to the scene graph
       const diskNode = new Circle( ballRadius, {
         fill: CollisionLabColors.BALL_COLORS[ index ],
         stroke: 'black'
       } );
-      this.addChild( diskNode );
 
       // create and add labelNode of the ball
       const labelNode = new Text( index + 1, {
@@ -93,27 +95,28 @@ define( require => {
         stroke: 'black',
         fill: 'white'
       } );
-      this.addChild( labelNode );
 
       // TODO: find out a better way to handle clipArea
       // create and add a layer for the disk and label
       const diskLayer = new Node().setChildren( [diskNode, labelNode] );
-      const immovableDiskLayer = new Node();
-      immovableDiskLayer.clipArea = Shape.bounds( viewBounds );
-      immovableDiskLayer.addChild( diskLayer );
+      const immovableDiskLayer = new Node().setChildren( [diskLayer] );
+      immovableDiskLayer.clipArea = Shape.bounds( viewPlayAreaBounds );
       this.addChild( immovableDiskLayer );
 
       // create and add a dashed crosshair on the ball spanning the playArea
       const graticuleOptions = { stroke: 'black', lineDash: [10, 2] };
-      const horizontalLine = new Line( 0, 0, 0, 1, graticuleOptions );
+      const horizontalLine = new Line( 0, 0, 0, 1, graticuleOptions ); //
       const verticalLine = new Line( 0, 0, 0, 1, graticuleOptions );
       const graticule = new Node().setChildren( [verticalLine, horizontalLine] );
 
       // function to set location of crosshair
       const setGraticuleLocation = location => {
-        horizontalLine.setLine( viewBounds.minX, location.y, viewBounds.maxX, location.y );
-        verticalLine.setLine( location.x, viewBounds.minY, location.x, viewBounds.maxY );
+        horizontalLine.setLine( viewPlayAreaBounds.minX, location.y, viewPlayAreaBounds.maxX, location.y );
+        verticalLine.setLine( location.x, viewPlayAreaBounds.minY, location.x, viewPlayAreaBounds.maxY );
       };
+
+      // set location of crosshair at ball position
+      setGraticuleLocation( location );
       this.addChild( graticule );
 
       // create the velocityVector and momentumVector nodes
