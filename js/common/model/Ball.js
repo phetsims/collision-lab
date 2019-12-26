@@ -242,7 +242,7 @@ define( require => {
     snapPosition() {
 
       // rounding function to minor grid line tick values
-      const round = ( number ) => Util.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+      const round = number => Util.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
 
       // set new rounded position
       this.position = new Vector2( round( this.position.x ), round( this.position.y ) );
