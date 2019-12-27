@@ -162,8 +162,7 @@ define( require => {
           model.timeClock.reset();
         },
         right: gridNode.right,
-        top: gridNode.bottom + 5,
-        fill: 'blue'
+        top: gridNode.bottom + 5
       } );
       this.addChild( restartButton );
 

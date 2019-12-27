@@ -10,13 +10,13 @@ define( require => {
   'use strict';
 
   // modules
-  const ColorConstants = require( 'SUN/ColorConstants' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
+  const ColorConstants = require( 'SUN/ColorConstants' );
   const Matrix3 = require( 'DOT/Matrix3' );
   const merge = require( 'PHET_CORE/merge' );
   const Path = require( 'SCENERY/nodes/Path' );
-  const RestartShape = require( 'COLLISION_LAB/common/view/RestartShape' );
   const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
+  const RestartShape = require( 'COLLISION_LAB/common/view/RestartShape' );
 
   class RestartButton extends RectangularPushButton {
 
