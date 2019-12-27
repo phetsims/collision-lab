@@ -28,6 +28,7 @@ define( require => {
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  const RestartButton = require( 'COLLISION_LAB/common/view/RestartButton' );
   const ScreenView = require( 'JOIST/ScreenView' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
@@ -152,6 +153,19 @@ define( require => {
       } );
 
       this.addChild( timeControlNode );
+
+      // create and add restart button
+      const restartButton = new RestartButton( {
+        listener: () => {
+          model.balls.forEach( ball =>
+            ball.reset() );
+          model.timeClock.reset();
+        },
+        right: gridNode.right,
+        top: gridNode.bottom + 5,
+        fill: 'blue'
+      } );
+      this.addChild( restartButton );
 
       const resetAllButton = new ResetAllButton( {
         listener: () => {
