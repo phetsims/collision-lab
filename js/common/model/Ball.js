@@ -236,6 +236,7 @@ define( require => {
       this.massProperty.reset();
       this.positionProperty.reset();
       this.velocityProperty.reset();
+      this.isUserControlledProperty.reset();
     }
 
     /**
@@ -253,22 +254,22 @@ define( require => {
 
 
     /**
-     * Flips the horizontal velocity of the ball up to a scaling factor (ranging from 0 to 1)
+     * Flips the horizontal velocity of the ball up to a scaling factor
      * @public
      * @param {number} scaling
      */
     flipHorizontalVelocity( scaling ) {
-      assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
+      assert && assert( typeof scaling === 'number' && scaling >= 0, `invalid dt: ${scaling}` );
       this.velocity = new Vector2( -this.velocity.x * scaling, this.velocity.y );
     }
 
     /**
-     * Flips the vertical velocity of the ball up to a scaling factor (ranging from 0 to 1)
+     * Flips the vertical velocity of the ball up to a scaling factor
      * @public
      * @param {number} scaling
      */
     flipVerticalVelocity( scaling ) {
-      assert && assert( typeof scaling === 'number' && scaling >= 0 && scaling <= 1, `invalid dt: ${scaling}` );
+      assert && assert( typeof scaling === 'number' && scaling >= 0, `invalid dt: ${scaling}` );
       this.velocity = new Vector2( this.velocity.x, -this.velocity.y * scaling );
     }
 
