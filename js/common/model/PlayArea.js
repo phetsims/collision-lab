@@ -50,9 +50,13 @@ define( require => {
       // @public
       this.elasticityPercentProperty = new NumberProperty( 100, { range: new Range( 0, 100 ) } );
 
-      // @public
+      // @public {Property.<number>}
       this.elasticityProperty = new DerivedProperty( [this.elasticityPercentProperty],
         elasticity => elasticity / 100 );
+
+      // @public {Property.<boolean>}
+      this.stepBackwardButtonEnabledProperty = new DerivedProperty( [this.elasticityPercentProperty],
+        elasticity => elasticity > 0 );
 
       // @public determines if the balls will reflect at the border
       this.reflectingBorderProperty = new BooleanProperty( true );

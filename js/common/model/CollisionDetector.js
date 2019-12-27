@@ -128,8 +128,6 @@ define( require => {
       assert && assert( _.every( [ball1, ball2], ball => ball instanceof Ball ) );
       assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
 
-      const e = this.elasticityProperty.value;
-
       // Balls have already overlapped, so currently have incorrect positions
       // find time of the collision such that we can rewind the positions to this time
       const offsetTime = -this.getContactTime( ball1, ball2, deltaTime );
@@ -152,6 +150,11 @@ define( require => {
       const v2n = normalizedDeltaR.dot( v2 );
       const v1t = normalizedDeltaR.crossScalar( v1 );
       const v2t = normalizedDeltaR.crossScalar( v2 );
+
+      let e = this.elasticityProperty.value;
+      if ( this.isReversing && this.elasticityProperty.value > 0 ) {
+        e = 1 / this.elasticityProperty.value;
+      }
 
       // normal components of velocities after collision (P for prime = after)
       const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
@@ -249,26 +252,32 @@ define( require => {
      */
     doBallBorderCollisions( reflectingBorderProperty ) {
 
+
       if ( reflectingBorderProperty.value ) {
         this.balls.forEach( ball => {
 
+          let elasticity = this.elasticityProperty.value;
+          if ( this.isReversing && this.elasticityProperty.value > 0 ) {
+            elasticity = 1 / this.elasticityProperty.value;
+          }
+
           // left and right walls
           if ( ball.left <= this.bounds.minX ) {
-            ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.flipHorizontalVelocity( elasticity );
             ball.left = this.bounds.minX;
           }
           else if ( ball.right >= this.bounds.maxX ) {
-            ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.flipHorizontalVelocity( elasticity );
             ball.right = this.bounds.maxX;
           }
 
           // top and bottom walls
           if ( ball.top >= this.bounds.maxY ) {
-            ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.flipVerticalVelocity( elasticity );
             ball.top = this.bounds.maxY;
           }
           else if ( ball.bottom <= this.bounds.minY ) {
-            ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.flipVerticalVelocity( elasticity );
             ball.bottom = this.bounds.minY;
           }
         } );
@@ -286,6 +295,12 @@ define( require => {
     doBallBorderCollisionsImproved( deltaTime, reflectingBorderProperty ) {
 
       if ( reflectingBorderProperty.value ) {
+
+        let elasticity = this.elasticityProperty.value;
+        if ( this.isReversing && this.elasticityProperty.value > 0 ) {
+          elasticity = 1 / this.elasticityProperty.value;
+        }
+
         this.balls.forEach( ball => {
 
           // left and right walls
@@ -296,7 +311,7 @@ define( require => {
             // get positions at time of collision, rewind position time.
             const contactPosition = ball.getPreviousPosition( offsetTime );
 
-            ball.flipHorizontalVelocity( this.elasticityProperty.value );
+            ball.flipHorizontalVelocity( elasticity );
 
             ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 
@@ -310,7 +325,7 @@ define( require => {
             // get positions at time of collision, rewind position time.
             const contactPosition = ball.getPreviousPosition( offsetTime );
 
-            ball.flipVerticalVelocity( this.elasticityProperty.value );
+            ball.flipVerticalVelocity( elasticity );
 
             ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 
