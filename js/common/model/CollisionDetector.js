@@ -239,7 +239,7 @@ define( require => {
         contactTime = -deltaTime + deltaTimeCorrection;
       }
 
-      assert && assert( Number.isFinite( contactTime ), `contact Time is note finite: ${contactTime}` );
+      assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
       return contactTime;
     }
 
@@ -362,7 +362,7 @@ define( require => {
       else {
         contactTime = offsetPoint.magnitudeSquared / deltaR.dot( offsetPoint ) * deltaTime;
       }
-      assert && assert( Number.isFinite( contactTime ), `contact Time is note finite: ${contactTime}` );
+      assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
       return contactTime;
     }
 
