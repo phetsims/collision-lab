@@ -21,7 +21,7 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
-  const Vector2 = require( 'DOT/Vector2/' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   class BallVectorNode extends Node {
 
