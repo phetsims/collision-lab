@@ -21,6 +21,7 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const Vector2 = require( 'DOT/Vector2/' );
 
   class BallVectorNode extends Node {
 
@@ -53,7 +54,13 @@ define( require => {
 
       tipPositionProperty.link( vector => {
         const viewVector = modelViewTransform.modelToViewDelta( vector );
+
+        // prevent setting the tip to zero length
+        if ( vector.equals( Vector2.ZERO ) ) {
+          this.arrowNode.visible = false;
+        }
         this.arrowNode.setTip( viewVector.x, viewVector.y );
+        this.arrowNode.visible = visibleProperty.value;
       } );
 
       visibleProperty.linkAttribute( this, 'visible' );
