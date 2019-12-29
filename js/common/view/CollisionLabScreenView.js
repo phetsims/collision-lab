@@ -186,6 +186,7 @@ define( require => {
       const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
         model.playArea.reflectingBorderProperty,
         model.playArea.elasticityPercentProperty,
+        model.playArea.isStickyProperty,
         model.playArea.constantRadiusProperty,
         {
           right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,

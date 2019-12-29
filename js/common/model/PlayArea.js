@@ -61,6 +61,13 @@ define( require => {
       // @public determines if the balls will reflect at the border
       this.reflectingBorderProperty = new BooleanProperty( true );
 
+      // @public determines if the balls are sticky
+      this.isStickyProperty = new BooleanProperty( true );
+
+      // @public {Property.<boolean>}
+      this.isComplettelyInelasticAndStickyProperty = new DerivedProperty( [this.elasticityPercentProperty, this.isStickyProperty],
+        ( elasticity, isSticky ) => elasticity === 0 && isSticky );
+
       // @public determines if the ball size is constant (i.e. independent of mass)
       this.constantRadiusProperty = new BooleanProperty( false );
 
@@ -71,7 +78,11 @@ define( require => {
       this.centerOfMass = new CenterOfMass( balls );
 
       // @public
-      this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS, balls, this.elasticityProperty );
+      this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
+        balls,
+        this.elasticityProperty,
+        this.isComplettelyInelasticAndStickyProperty,
+        this.reflectingBorderProperty );
 
       // @public (read-only) shape for the grid
       this.grid = new Grid();
@@ -137,7 +148,7 @@ define( require => {
 
       this.collisionDetector.isReversing = isReversing;
       this.collisionDetector.detectCollision( dt );
-      this.collisionDetector.doBallBorderCollisionsImproved( dt, this.reflectingBorderProperty );
+      this.collisionDetector.doBallBorderCollisionsImproved( dt );
 
     }
 

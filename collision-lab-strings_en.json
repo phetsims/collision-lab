@@ -38,6 +38,12 @@
   "constantSize": {
     "value": "Constant Size"
   },
+  "stick": {
+    "value": "Stick"
+  },
+  "slip": {
+    "value": "Slip"
+  },
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
   },

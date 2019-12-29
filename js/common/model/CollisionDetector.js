@@ -29,16 +29,16 @@ define( require => {
      * @param {Bounds2} bounds - the PlayArea inside which collision occur
      * @param {ObservableArray.<Ball>} balls - collections of balls
      * @param {Property.<number>} elasticityProperty
-     * @param {Object} [options]
+     * @param {Property.<boolean>} isCompletelyInelasticAndStickyProperty,
+     * @param {Property.<boolean>} reflectingBorderProperty
      */
-    constructor( bounds, balls, elasticityProperty, options ) {
+    constructor( bounds, balls, elasticityProperty,
+                 isCompletelyInelasticAndStickyProperty, reflectingBorderProperty ) {
 
       // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
       assert && assert( balls instanceof ObservableArray
       && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
       assert && assert( elasticityProperty instanceof Property, `invalid elasticityProperty: ${elasticityProperty}` );
-      assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-        `Extra prototype on Options: ${options}` );
 
       // @private
       this.bounds = bounds;
@@ -49,9 +49,14 @@ define( require => {
       // @private
       this.elasticityProperty = elasticityProperty;
 
-      // @private
+      // @public
       this.isReversing = false;
 
+      // @public
+      this.isCompletelyInelasticAndStickyProperty = isCompletelyInelasticAndStickyProperty;
+
+      // @public
+      this.reflectingBorderProperty = reflectingBorderProperty;
     }
 
     /**
@@ -160,9 +165,13 @@ define( require => {
       const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
       const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
+      const isSticky = this.isCompletelyInelasticAndStickyProperty.value;
+      const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
+      const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
+
       // normal and tangential component of the velocity after collision
-      const v1TN = new Vector2( v1t, v1nP );
-      const v2TN = new Vector2( v2t, v2nP );
+      const v1TN = new Vector2( v1tP, v1nP );
+      const v2TN = new Vector2( v2tP, v2nP );
 
       // velocity vectors after the collision in the x - y basis
       const v1xP = normalizedDeltaR.crossScalar( v1TN );
@@ -247,13 +256,12 @@ define( require => {
      * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
      * its way to its current location. The appropriate velocity component is then updated  and the
      * ball is positioned within the bounds.
-     * @param {Property.<boolean>} reflectingBorderProperty
      * @public
      */
-    doBallBorderCollisions( reflectingBorderProperty ) {
+    doBallBorderCollisions() {
 
 
-      if ( reflectingBorderProperty.value ) {
+      if ( this.reflectingBorderProperty.value ) {
         this.balls.forEach( ball => {
 
           let elasticity = this.elasticityProperty.value;
@@ -289,12 +297,11 @@ define( require => {
      * its way to its current location. The appropriate velocity component is then updated  and the
      * ball is positioned within the bounds.
      * @param {number} deltaTime  - time interval since last step
-     * @param {Property.<boolean>} reflectingBorderProperty
      * @public
      */
-    doBallBorderCollisionsImproved( deltaTime, reflectingBorderProperty ) {
+    doBallBorderCollisionsImproved( deltaTime ) {
 
-      if ( reflectingBorderProperty.value ) {
+      if ( this.reflectingBorderProperty.value ) {
 
         let elasticity = this.elasticityProperty.value;
         if ( this.isReversing && this.elasticityProperty.value > 0 ) {
@@ -303,6 +310,7 @@ define( require => {
 
         this.balls.forEach( ball => {
 
+          //TODO: consolidate  the if statements
           // left and right walls
           if ( ball.left <= this.bounds.minX || ball.right >= this.bounds.maxX ) {
 
@@ -311,7 +319,12 @@ define( require => {
             // get positions at time of collision, rewind position time.
             const contactPosition = ball.getPreviousPosition( offsetTime );
 
-            ball.flipHorizontalVelocity( elasticity );
+            if ( this.isCompletelyInelasticAndStickyProperty.value ) {
+              ball.velocity = Vector2.ZERO;
+            }
+            else {
+              ball.flipHorizontalVelocity( elasticity );
+            }
 
             ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 
@@ -325,7 +338,12 @@ define( require => {
             // get positions at time of collision, rewind position time.
             const contactPosition = ball.getPreviousPosition( offsetTime );
 
-            ball.flipVerticalVelocity( elasticity );
+            if ( this.isCompletelyInelasticAndStickyProperty.value ) {
+              ball.velocity = Vector2.ZERO;
+            }
+            else {
+              ball.flipVerticalVelocity( elasticity );
+            }
 
             ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
 

@@ -11,6 +11,7 @@ define( require => {
 
   // modules
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  const ABSwitch = require( 'SUN/ABSwitch' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
   const ControlPanelCheckbox = require( 'COLLISION_LAB/common/view/ControlPanelCheckbox' );
@@ -43,18 +44,24 @@ define( require => {
   const valuesString = require( 'string!COLLISION_LAB/values' );
   const velocityString = require( 'string!COLLISION_LAB/velocity' );
 
+  // strings
+  const stickString = require( 'string!COLLISION_LAB/stick' );
+  const slipString = require( 'string!COLLISION_LAB/slip' );
+
   class PlayAreaControlPanel extends Panel {
 
     /**
      * @param {CollisionLabViewProperties} viewProperties
      * @param {Property.<boolean>} reflectingBorderProperty
      * @param {Property.<number>} elasticityPercentProperty
+     * @param {Property.<boolean>} isStickyProperty
      * @param {Property.<boolean>} constantRadiusProperty
      * @param {Object} [options]
      */
     constructor( viewProperties,
                  reflectingBorderProperty,
                  elasticityPercentProperty,
+                 isStickyProperty,
                  constantRadiusProperty,
                  options ) {
 
@@ -130,6 +137,20 @@ define( require => {
         }
       } );
 
+      const stickText = new Text( stickString, { font: new PhetFont( 16 ) } );
+      const slipText = new Text( slipString, { font: new PhetFont( 16 ) } );
+
+      const stickSlipSwitch = new ABSwitch( isStickyProperty, true, stickText, false, slipText, {
+        switchSize: new Dimension2( 30, 15 )
+      } );
+
+      elasticityPercentProperty.link( elasticity => {
+        const enabled = ( elasticity === 0 );
+        stickSlipSwitch.opacity = enabled ? 1 : 0.5;
+        stickSlipSwitch.pickable = enabled;
+      } );
+
+
       const constantRadiusCheckbox = new ControlPanelCheckbox(
         constantSizeString,
         constantRadiusProperty
@@ -139,11 +160,14 @@ define( require => {
 
       const panelContent = new Node();
       panelContent.setChildren( [upperCheckboxes, separatingLine, constantRadiusCheckbox,
-        elasticityNumberControl] );
+        elasticityNumberControl, stickSlipSwitch] );
 
       separatingLine.top = upperCheckboxes.bottom + 5;
       elasticityNumberControl.top = separatingLine.bottom + 5;
-      constantRadiusCheckbox.top = elasticityNumberControl.bottom + 5;
+      stickSlipSwitch.top = elasticityNumberControl.bottom + 5;
+      constantRadiusCheckbox.top = stickSlipSwitch.bottom + 5;
+      stickSlipSwitch.centerX = elasticityNumberControl.centerX;
+
 
       super( panelContent, options );
     }
