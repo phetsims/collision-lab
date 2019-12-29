@@ -21,6 +21,7 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  // const Vector2 = require( 'DOT/Vector2' );
 
   class BallVectorNode extends Node {
 
@@ -48,6 +49,7 @@ define( require => {
 
       super();
 
+      // TODO: why not simply extend ArrowNode?
       this.arrowNode = new ArrowNode( 0, 0, viewVector.x, viewVector.y, options );
       this.addChild( this.arrowNode );
 
