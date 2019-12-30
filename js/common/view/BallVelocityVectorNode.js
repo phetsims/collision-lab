@@ -73,10 +73,13 @@ define( require => {
 
       const tipPositionProperty = new Vector2Property( modelViewTransform.modelToViewDelta( velocityProperty.value ) );
 
-      // add input listener to tip of the velocity vector
-      tipTargetNode.addInputListener( new DragListener( {
+      // create dragListener for the tip
+      const tipDragListener = new DragListener( {
         locationProperty: tipPositionProperty
-      } ) );
+      } );
+
+      // add input listener to tip of the velocity vector
+      tipTargetNode.addInputListener( tipDragListener );
 
       const velocityListener = vector => {
         tipTargetNode.center = modelViewTransform.modelToViewDelta( vector );
@@ -101,6 +104,8 @@ define( require => {
         playProperty.unlink( playListener );
         velocityProperty.unlink( velocityListener );
         tipPositionProperty.unlink( tipPositionListener );
+        tipTargetNode.removeInputListener( tipDragListener );
+        tipDragListener.dispose();
       };
 
     }

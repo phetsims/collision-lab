@@ -95,7 +95,6 @@ define( require => {
         addedBall.positionProperty.link( updatePosition );
         addedBall.velocityProperty.link( updateVelocity );
 
-
         // Observe when the ball is removed to unlink listeners
         const removeBallListener = removedBall => {
 

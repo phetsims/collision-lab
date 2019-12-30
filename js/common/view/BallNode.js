@@ -137,22 +137,26 @@ define( require => {
       this.addChild( vectorLayer );
 
       // add input listener to disk
-      diskLayer.addInputListener( new DragListener( {
-        targetNode: diskLayer,
-        transform: modelViewTransform,
-        locationProperty: ball.positionProperty,
-        dragBoundsProperty: dragBoundsProperty,
-        start: () => {
-          ball.isUserControlledProperty.value = true;
-          this.moveToFront();
-        },
-        end: () => {
-          ball.isUserControlledProperty.value = false;
-          if ( gridVisibleProperty.value ) {
-            ball.snapPosition();
+
+      const diskLayerDragListener =
+        new DragListener( {
+          targetNode: diskLayer,
+          transform: modelViewTransform,
+          locationProperty: ball.positionProperty,
+          dragBoundsProperty: dragBoundsProperty,
+          start: () => {
+            ball.isUserControlledProperty.value = true;
+            this.moveToFront();
+          },
+          end: () => {
+            ball.isUserControlledProperty.value = false;
+            if ( gridVisibleProperty.value ) {
+              ball.snapPosition();
+            }
           }
-        }
-      } ) );
+        } );
+
+      diskLayer.addInputListener( diskLayerDragListener );
 
       const ballPositionListener = position => {
 
@@ -192,7 +196,10 @@ define( require => {
         ball.positionProperty.unlink( ballPositionListener );
         ball.isUserControlledProperty.unlink( isUserControlledListener );
         ball.radiusProperty.unlink( ballRadiusListener );
+        diskLayer.removeInputListener( diskLayerDragListener );
+        diskLayerDragListener.dispose();
         ballVelocityVectorNode.dispose();
+        ballMomentumVectorNode.dispose();
       };
 
     }
