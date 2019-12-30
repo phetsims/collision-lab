@@ -12,6 +12,7 @@ define( require => {
   const CenterOfMassNode = require( 'COLLISION_LAB/common/view/CenterOfMassNode' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const CollisionLabTimeControlNode = require( 'COLLISION_LAB/common/view/CollisionLabTimeControlNode' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
   const GridCheckbox = require( 'SCENERY_PHET/GridCheckbox' );
@@ -32,7 +33,6 @@ define( require => {
   const ScreenView = require( 'JOIST/ScreenView' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
   const TimeDisplay = require( 'COLLISION_LAB/common/view/TimeDisplay' );
 
   // constants
@@ -110,49 +110,16 @@ define( require => {
       ballsText.top = 20;
       numberOfBallsSpinner.top = ballsText.bottom + 5;
 
-      //  create and add time control buttons (
-      const timeControlNode = new TimeControlNode( model.playProperty, {
-        includeStepBackwardButton: true,
-
-        // property associated with the slow/normal radio buttons
-        isSlowMotionProperty: model.isSlowMotionProperty,
-
-        enabledProperty: model.playAreaFreeProperty,
-
-        // Spacing options
-        playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
-        buttonsXSpacing: 20, // horizontal space between push buttons and radio buttons
-
-        // Options for the Normal/Slow text labels
-        labelOptions: {
-          font: new PhetFont( 16 ),
-          maxWidth: 200
-        },
-
-        // Options for radio buttons
-        radioButtonOptions: { radius: 7 },
-
-        // Options for the radio button group
-        radioButtonGroupOptions: { spacing: 1 },
-
-        // Options for the play pause buttons
-        playPauseOptions: {
-          radius: 30
-        },
-
-        stepBackwardOptions: {
-          listener: () => model.timeClock.stepBackward(),
-          radius: 20
-        },
-        stepForwardOptions: {
-          listener: () => model.timeClock.stepForward(),
-          radius: 20
-        },
-        centerX: gridNode.centerX + 50,
-        top: gridNode.bottom + 10
-      } );
-
-      this.addChild( timeControlNode );
+      const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
+        model.playProperty,
+        model.isSlowMotionProperty,
+        model.playAreaFreeProperty,
+        model.timeClock.stepBackward.bind( model.timeClock ),
+        model.timeClock.stepForward.bind( model.timeClock ), {
+          centerX: gridNode.centerX + 50,
+          top: gridNode.bottom + 10
+        } );
+      this.addChild( collisionLabTimeControlNode );
 
       // create and add restart button
       const restartButton = new RestartButton( {
@@ -230,10 +197,8 @@ define( require => {
         modelViewTransform );
       this.addChild( centerOfMassNode );
 
-
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();
-
     }
 
     // @public
