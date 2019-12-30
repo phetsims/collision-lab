@@ -38,8 +38,8 @@ define( require => {
           backgroundLineWidth: 0,
           valuePattern: kineticEnergyJString,
           maxWidth: 300, // determined empirically,
-          font: CollisionLabConstants.CHECKBOX_FONT,
-          decimalPlaces: 2
+          font: CollisionLabConstants.DISPLAY_FONT,
+          decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
         } ) );
 
       // link visibility of this display to the visibleProperty

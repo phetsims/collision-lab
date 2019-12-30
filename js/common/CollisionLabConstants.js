@@ -69,11 +69,12 @@ define( require => {
     NUMBER_DISPLAY_ROUNDING: 3, // rounding for all number display instances
     MASS_VALUE_ROUNDING: 1, // rounding for the mass 'values' in decimal points
 
+    NUMBER_DISPLAY_DECIMAL_PLACES: 2,
     //----------------------------------------------------------------------------------------
     // Fonts
     PANEL_LABEL_FONT: new PhetFont( 18 ),
     CHECKBOX_FONT: new PhetFont( 16 ),
-    TITLE_FONT: new PhetFont( 16 )
+    DISPLAY_FONT: new PhetFont( 16 )
   };
 
   return collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );

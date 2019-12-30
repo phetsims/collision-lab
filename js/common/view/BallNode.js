@@ -13,6 +13,7 @@ define( require => {
   const Ball = require( 'COLLISION_LAB/common/model/Ball' );
   const BallMomentumVectorNode = require( 'COLLISION_LAB/common/view/BallMomentumVectorNode' );
   const BallVelocityVectorNode = require( 'COLLISION_LAB/common/view/BallVelocityVectorNode' );
+  const BallValuesDisplay = require( 'COLLISION_LAB/common/view/BallValuesDisplay' );
   const Circle = require( 'SCENERY/nodes/Circle' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
@@ -22,10 +23,8 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
-  const NumberDisplay = require( 'SCENERY_PHET/NumberDisplay' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
-  const Range = require( 'DOT/Range' );
   const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
@@ -38,20 +37,16 @@ define( require => {
     CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
   );
 
-  // strings
-  const speedPatternString = require( 'string!COLLISION_LAB/speedPattern' );
-  const momentumPatternString = require( 'string!COLLISION_LAB/momentumPattern' );
-
   class BallNode extends Node {
 
     /**
      * @param {Ball} ball - the ball model
-     * @param {number} index
-     * @param {Property.<boolean>} valuesVisibleProperty
-     * @param {Property.<boolean>} velocityVisibleProperty
-     * @param {Property.<boolean>} momentumVisibleProperty
-     * @param {Property.<boolean>} gridVisibleProperty
-     * @param {Property.<boolean>} playProperty
+     * @param {number} index - number associated with the ball
+     * @param {Property.<boolean>} valuesVisibleProperty - are the speed and momentum label visible
+     * @param {Property.<boolean>} velocityVisibleProperty - is the velocity vector visible
+     * @param {Property.<boolean>} momentumVisibleProperty - is the momemtum vector visible
+     * @param {Property.<boolean>} gridVisibleProperty - is the grid on the playArea visible
+     * @param {Property.<boolean>} playProperty - is simulation of the playArea on
      * @param {ModelViewTransform2} modelViewTransform
      * @param {Object} [options]
      */
@@ -163,41 +158,17 @@ define( require => {
 
       diskLayer.addInputListener( diskLayerDragListener );
 
-      const speedNumberDisplay = new NumberDisplay(
-        ball.speedProperty,
-        new Range( 0, 100 ),
-        merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
-          align: 'left',
-          backgroundLineWidth: 0,
-          valuePattern: speedPatternString,
-          maxWidth: 300, // determined empirically,
-          font: CollisionLabConstants.CHECKBOX_FONT,
-          decimalPlaces: 2
-        } )
-      );
-      const momentumNumberDisplay = new NumberDisplay(
-        ball.momentumMagnitudeProperty,
-        new Range( 0, 100 ),
-        merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
-          align: 'left',
-          backgroundLineWidth: 0,
-          valuePattern: momentumPatternString,
-          maxWidth: 300, // determined empirically,
-          font: CollisionLabConstants.CHECKBOX_FONT,
-          decimalPlaces: 2
-        } )
-      );
-      const numberDisplayLayer = new Node().setChildren( [speedNumberDisplay, momentumNumberDisplay] );
-      this.addChild( numberDisplayLayer );
-
-      const valuesVisibleHandle = valuesVisibleProperty.linkAttribute( numberDisplayLayer, 'visible' );
+      // create and add the speed and momentum display
+      const ballValuesDisplay = new BallValuesDisplay( ball.speedProperty, ball.momentumMagnitudeProperty, valuesVisibleProperty, {
+        verticalOffset: ballRadius + 10
+      } );
+      this.addChild( ballValuesDisplay );
 
       const ballPositionListener = position => {
 
         const location = modelViewTransform.modelToViewPosition( position );
 
-        momentumNumberDisplay.center = location.plusXY( 0, ballRadius + 10 );
-        speedNumberDisplay.center = location.plusXY( 0, -ballRadius - 10 );
+        ballValuesDisplay.translation = location;
         diskLayer.translation = location;
         vectorLayer.translation = location;
         setGraticuleLocation( location );
@@ -228,7 +199,6 @@ define( require => {
         ball.positionProperty.unlink( ballPositionListener );
         ball.isUserControlledProperty.unlinkAttribute( isUserControlledHandle );
         ball.radiusProperty.unlink( ballRadiusListener );
-        valuesVisibleProperty.unlinkAttribute( valuesVisibleHandle );
         diskLayer.removeInputListener( diskLayerDragListener );
         diskLayerDragListener.dispose();
         ballVelocityVectorNode.dispose();

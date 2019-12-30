@@ -54,6 +54,11 @@ define( require => {
       opacity: 0.60
     },
 
+    BALL_DISPLAY_COLORS: {
+      backgroundFill: 'rgb( 255, 255, 255 )',
+      opacity: 0.60
+    },
+
     TIME_DISPLAY_COLORS: {
       backgroundFill: 'rgb( 255, 255, 255 )',
       stroke: 'black'
