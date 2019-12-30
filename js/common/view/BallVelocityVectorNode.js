@@ -97,8 +97,6 @@ define( require => {
       //  make the tip invisible if the simulation is running
       playProperty.link( playListener );
 
-      this.arrowNode.moveToFront();
-
       // @private {function} disposeVelocityVectorNode - function to unlink listeners, called in dispose()
       this.disposeVelocityVectorNode = () => {
         playProperty.unlink( playListener );
