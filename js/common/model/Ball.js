@@ -17,7 +17,7 @@ define( require => {
   const DerivedProperty = require( 'AXON/DerivedProperty' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Property = require( 'AXON/Property' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
   const Vector2Property = require( 'DOT/Vector2Property' );
 
@@ -245,7 +245,7 @@ define( require => {
     snapPosition() {
 
       // rounding function to minor grid line tick values
-      const round = number => Util.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+      const round = number => Utils.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
 
       // set new rounded position
       this.position = new Vector2( round( this.position.x ), round( this.position.y ) );
