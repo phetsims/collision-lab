@@ -9,17 +9,15 @@ define( require => {
   // modules
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
   const Bounds2 = require( 'DOT/Bounds2' );
-  const CenterOfMassNode = require( 'COLLISION_LAB/common/view/CenterOfMassNode' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
   const CollisionLabTimeControlNode = require( 'COLLISION_LAB/common/view/CollisionLabTimeControlNode' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
   const GridCheckbox = require( 'SCENERY_PHET/GridCheckbox' );
-  const GridNode = require( 'COLLISION_LAB/common/view/GridNode' );
   const HSlider = require( 'SUN/HSlider' );
   const Image = require( 'SCENERY/nodes/Image' );
-  const KineticEnergyDisplay = require( 'COLLISION_LAB/common/view/KineticEnergyDisplay' );
+  const PlayAreaNode = require( 'COLLISION_LAB/common/view/PlayAreaNode' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const NumberProperty = require( 'AXON/NumberProperty' );
@@ -89,23 +87,21 @@ define( require => {
       this.addChild( numberOfBallsSpinner );
 
       // create the grid and border of the playArea
-      const gridNode = new GridNode( model.playArea.grid, viewProperties.gridVisibleProperty, modelViewTransform );
-      this.addChild( gridNode );
+      const playAreaNode = new PlayAreaNode(
+        model.playArea,
+        viewProperties.gridVisibleProperty,
+        viewProperties.kineticEnergyVisibleProperty,
+        viewProperties.centerOfMassVisibleProperty,
+        modelViewTransform
+      );
+      this.addChild( playAreaNode );
 
-      // create the grid and border of the playArea
-      const kineticEnergyDisplay = new KineticEnergyDisplay( model.playArea.kineticEnergySumProperty,
-        viewProperties.kineticEnergyVisibleProperty );
-      this.addChild( kineticEnergyDisplay );
-      kineticEnergyDisplay.left = gridNode.left + 5;
-      kineticEnergyDisplay.bottom = gridNode.bottom - 5;
-
-      // create the grid and border of the playArea
       const timeDisplay = new TimeDisplay( model.timeClock.elapsedTimeProperty );
       this.addChild( timeDisplay );
-      timeDisplay.left = gridNode.left + 5;
-      timeDisplay.top = gridNode.bottom + 5;
+      timeDisplay.left = playAreaNode.left + 5;
+      timeDisplay.top = playAreaNode.bottom + 5;
 
-      numberOfBallsSpinner.left = gridNode.right + 5;
+      numberOfBallsSpinner.left = playAreaNode.right + 5;
       ballsText.center = numberOfBallsSpinner.center;
       ballsText.top = 20;
       numberOfBallsSpinner.top = ballsText.bottom + 5;
@@ -116,8 +112,8 @@ define( require => {
         model.playAreaFreeProperty,
         model.timeClock.stepBackward.bind( model.timeClock ),
         model.timeClock.stepForward.bind( model.timeClock ), {
-          centerX: gridNode.centerX + 50,
-          top: gridNode.bottom + 10
+          centerX: playAreaNode.centerX + 50,
+          top: playAreaNode.bottom + 10
         } );
       this.addChild( collisionLabTimeControlNode );
 
@@ -128,8 +124,8 @@ define( require => {
             ball.reset() );
           model.timeClock.reset();
         },
-        right: gridNode.right,
-        top: gridNode.bottom + 5
+        right: playAreaNode.right,
+        top: playAreaNode.bottom + 5
       } );
       this.addChild( restartButton );
 
@@ -191,11 +187,6 @@ define( require => {
       model.balls.forEach( addItemAddedBallListener );
       model.balls.addItemAddedListener( addItemAddedBallListener );
 
-      const centerOfMassNode = new CenterOfMassNode( model.playArea.centerOfMass,
-        viewProperties.centerOfMassVisibleProperty,
-        model.playArea.numberOfBallsProperty,
-        modelViewTransform );
-      this.addChild( centerOfMassNode );
 
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();
