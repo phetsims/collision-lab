@@ -29,13 +29,6 @@ define( require => {
 
 
     /**
-     * Gets the mass.
-     * @public
-     * @returns {number}
-     */
-    get mass() { return this.massProperty.value; }
-
-    /**
      * @param {number} mass - initial mass of the ball (kg)
      * @param {Vector2} position - initial position of the center of the ball
      * @param {Vector2} velocity - initial velocity of the center of mass of the ball
@@ -80,6 +73,13 @@ define( require => {
       );
 
     }
+
+    /**
+     * Gets the mass.
+     * @public
+     * @returns {number}
+     */
+    get mass() { return this.massProperty.value; }
 
     /**
      * Sets the mass of the ball.
