@@ -133,7 +133,7 @@ define( require => {
         BALL_MOMENTUM_VECTOR_OPTIONS );
 
       // create and add a layer for the velocity and momentum vectors
-      const vectorLayer = new Node().setChildren( [ballVelocityVectorNode, ballMomentumVectorNode] );
+      const vectorLayer = new Node().setChildren( [ballMomentumVectorNode, ballVelocityVectorNode] );
       this.addChild( vectorLayer );
 
       // add input listener to disk
