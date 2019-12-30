@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * View a checkbox in the control panel
+ * View a checkbox in the control panel with an optional icon flushed to the right
  *
  * @author Alex Schor
  */
@@ -13,21 +13,16 @@ define( require => {
   const BooleanProperty = require( 'AXON/BooleanProperty' );
   const Checkbox = require( 'SUN/Checkbox' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const HBox = require( 'SCENERY/nodes/HBox' );
   const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Text = require( 'SCENERY/nodes/Text' );
 
-  // strings
-
-
   class ControlPanelCheckbox extends Checkbox {
 
     /**
-     *
      * @param {String} labelString
-     * @param {BooleanProperty} checkboxProperty
+     * @param {Property.<boolean>} checkboxProperty
      * @param {Object} [options]
      */
     constructor( labelString, checkboxProperty, options ) {
@@ -39,34 +34,31 @@ define( require => {
 
       options = merge( {
         font: new PhetFont( 18 ),
-        rightIconNode: null,
-        width: 180,
-        boxWidth: 18
+        rightIconNode: null, // {null||Node} optional icon to the right of the checkbox
+        width: 180, // width of the checkbox
+        boxWidth: 18, // size of the box
+        textMaxWidth: 140
       }, options );
 
+      assert && assert( options.width > options.textMaxWidth, 'checkbox text may overflow' );
+
+      // content for the checkbox
       const checkboxContent = new Node();
 
-      const checkboxText = new Text( labelString, {
-        font: options.font
-      } );
+      // create and add checkbox text
+      const checkboxText = new Text( labelString, { font: options.font, maxWidth: options.textMaxWidth } );
+      checkboxContent.addChild( checkboxText );
 
-      if ( options.rightIconNode !== null ) {
-        checkboxContent.addChild( new HBox( {
-          align: 'center',
-          spacing: options.width - checkboxText.width - options.rightIconNode.width,
-          children: [checkboxText, options.rightIconNode]
-        } ) );
-      }
-      else {
-        checkboxContent.addChild( checkboxText );
+      // (optionally) create and add icon flushed to the right of the checkbox
+      if ( options.rightIconNode instanceof Node ) {
+        checkboxContent.addChild( options.rightIconNode );
+        options.rightIconNode.right = options.width;
+        options.rightIconNode.centerY = checkboxText.centerY;
       }
 
       super( checkboxContent, checkboxProperty, options );
-
     }
-
   }
 
   return collisionLab.register( 'ControlPanelCheckbox', ControlPanelCheckbox );
 } );
-
