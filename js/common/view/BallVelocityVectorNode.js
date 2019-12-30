@@ -52,6 +52,8 @@ define( require => {
         arrowOptions: {} // TODO
       }, options );
 
+      super( velocityProperty, visibleProperty, modelViewTransform, options );
+
       // create label for the tip of velocity vector
       const tipLabelText = new Text( 'V', {
         font: new PhetFont( 16 ),
@@ -66,8 +68,8 @@ define( require => {
       const tipTargetNode = new Node();
       tipTargetNode.addChild( tipCircle );
       tipTargetNode.addChild( tipLabelText );
-
       tipTargetNode.moveToBack();
+      this.addChild( tipTargetNode );
 
       const tipPositionProperty = new Vector2Property( modelViewTransform.modelToViewDelta( velocityProperty.value ) );
 
@@ -76,27 +78,40 @@ define( require => {
         locationProperty: tipPositionProperty
       } ) );
 
-
-      velocityProperty.link( vector => {
+      const velocityListener = vector => {
         tipTargetNode.center = modelViewTransform.modelToViewDelta( vector );
-      } );
+      };
+      velocityProperty.link( velocityListener );
 
-      // update the velocity vector upon change of the tip position
-      tipPositionProperty.link( velocity => {
+      const tipPositionListener = velocity => {
         velocityProperty.value = modelViewTransform.viewToModelDelta( velocity );
-      } );
+      };
+      // update the velocity vector upon change of the tip position
+      tipPositionProperty.link( tipPositionListener );
+
+      const playListener = play => {tipTargetNode.visible = !play;};
 
       //  make the tip invisible if the simulation is running
-      playProperty.link( play => {
-        tipTargetNode.visible = !play;
-      } );
+      playProperty.link( playListener );
 
-      super( velocityProperty, visibleProperty, modelViewTransform, options );
-
-      this.addChild( tipTargetNode );
       this.arrowNode.moveToFront();
 
+      // @private {function} disposeVelocityVectorNode - function to unlink listeners, called in dispose()
+      this.disposeVelocityVectorNode = () => {
+        playProperty.unlink( playListener );
+        velocityProperty.unlink( velocityListener );
+        tipPositionProperty.unlink( tipPositionListener );
+      };
 
+    }
+
+    /**
+     * @public
+     * @override
+     */
+    dispose() {
+      this.disposeVelocityVectorNode();
+      super.dispose();
     }
 
   }

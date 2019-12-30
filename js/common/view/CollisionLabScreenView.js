@@ -214,6 +214,7 @@ define( require => {
         const removeBallListener = removedBall => {
           if ( removedBall === addedBall ) {
             this.ballLayerNode.removeChild( addedBallNode );
+            addedBallNode.dispose();
             model.balls.removeItemRemovedListener( removeBallListener );
           }
         };

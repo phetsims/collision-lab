@@ -55,9 +55,8 @@ define( require => {
         ( centerOfMassVisible, numberOfBalls, isDefined ) => {
           this.visible = ( numberOfBalls > 1 ) && centerOfMassVisible && isDefined;
         } );
-
-
     }
+
   }
 
   return collisionLab.register( 'CenterOfMassNode', CenterOfMassNode );

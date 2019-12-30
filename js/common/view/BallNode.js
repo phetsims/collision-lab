@@ -154,8 +154,7 @@ define( require => {
         }
       } ) );
 
-      // translate the vectors, crosshair and disk upon a change of the position of the ball
-      ball.positionProperty.link( position => {
+      const ballPositionListener = position => {
 
         const location = modelViewTransform.modelToViewPosition( position );
 
@@ -164,23 +163,47 @@ define( require => {
         setGraticuleLocation( location );
 
         vectorLayer.visible = viewPlayAreaBounds.containsPoint( location );
+      };
 
-      } );
+      // translate the vectors, crosshair and disk upon a change of the position of the ball
+      ball.positionProperty.link( ballPositionListener );
+
+      const isUserControlledListener = isUserControlled => {
+        graticule.visible = isUserControlled;
+      };
 
       // make the crosshair visible if ball is userControlled
-      ball.isUserControlledProperty.link( isUserControlled => {
-        graticule.visible = isUserControlled;
-      } );
+      ball.isUserControlledProperty.link( isUserControlledListener );
 
-      // updates the radius of the ball
-      ball.radiusProperty.link( radius => {
+      const ballRadiusListener = radius => {
 
         // update the radius of the ball
         diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
 
         // shrink the dragBounds (in model coordinates) by the radius of the ball
         dragBoundsProperty.value = CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( radius );
-      } );
+      };
+
+      // updates the radius of the ball
+      ball.radiusProperty.link( ballRadiusListener );
+
+      // @private {function} disposeBallNode - function to unlink listeners, called in dispose()
+      this.disposeBallNode = () => {
+        ball.positionProperty.unlink( ballPositionListener );
+        ball.isUserControlledProperty.unlink( isUserControlledListener );
+        ball.radiusProperty.unlink( ballRadiusListener );
+        ballVelocityVectorNode.dispose();
+      };
+
+    }
+
+    /**
+     * @public
+     * @override
+     */
+    dispose() {
+      this.disposeBallNode();
+      super.dispose();
     }
   }
 
