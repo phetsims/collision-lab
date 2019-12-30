@@ -20,7 +20,6 @@ define( require => {
   const Circle = require( 'SCENERY/nodes/Circle' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const DragListener = require( 'SCENERY/listeners/DragListener' );
-  const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -46,11 +45,6 @@ define( require => {
         `Extra prototype on Options: ${options}` );
 
       //----------------------------------------------------------------------------------------
-
-      options = merge( {
-
-        arrowOptions: {} // TODO
-      }, options );
 
       super( velocityProperty, visibleProperty, modelViewTransform, options );
 
