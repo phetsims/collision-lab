@@ -29,11 +29,11 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  const BALL_VELOCITY_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
-    CollisionLabColors.VELOCITY_VECTOR_COLORS
+  const BALL_VELOCITY_VECTOR_OPTIONS = merge(
+    CollisionLabColors.VELOCITY_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
   );
-  const BALL_MOMENTUM_VECTOR_OPTIONS = merge( CollisionLabConstants.ARROW_OPTIONS,
-    CollisionLabColors.MOMENTUM_VECTOR_COLORS
+  const BALL_MOMENTUM_VECTOR_OPTIONS = merge(
+    CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
   );
 
   class BallNode extends Node {
