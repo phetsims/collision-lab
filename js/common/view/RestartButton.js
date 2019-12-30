@@ -1,8 +1,7 @@
 // Copyright 2016-2019, University of Colorado Boulder
 
 /**
- * A rectangular push  button, typically used to restart something.
- * Drawn programmatically, does not use any image files.
+ * A rectangular push button, used to restart the playArea of the simulation.
  *
  * @author Martin Veillette
  */
@@ -32,11 +31,18 @@ define( require => {
         lineWidth: 0
       }, options );
 
-      // icon, with bounds adjusted so that center of circle appears to be centered on button
-      const restartIcon = new Path( new RestartShape(), { fill: options.arrowColor } );
+      // {Shape} shape of the restart icon
+      const restartShape = new RestartShape();
 
-      const reflectedIcon = new Path( restartIcon.shape.transformed( Matrix3.scaling( -1, -1 ) ) );
-      restartIcon.localBounds = restartIcon.localBounds.union( reflectedIcon.localBounds );
+      // restart icon
+      const restartIcon = new Path( restartShape, { fill: options.arrowColor } );
+
+      // inverted shape of the restart shape
+      const invertedShape = restartShape.transformed( Matrix3.scaling( -1, -1 ) );
+
+      // bounds of the restart icon is union of this icon and invertedShape to ensure
+      // that the center of the icon is at the center of the button
+      restartIcon.localBounds = restartShape.bounds.union( invertedShape.bounds );
 
       assert && assert( !options.content, 'content is not customizable' );
 
