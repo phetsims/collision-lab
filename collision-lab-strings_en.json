@@ -47,6 +47,12 @@
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
   },
+  "speedPattern": {
+    "value": "|v| = {{value}} m/s"
+  },
+  "momentumPattern": {
+    "value": "|p| = {{value}} kg m/s"
+  },
   "elasticityPercent": {
     "value": "{{value}} %"
   },

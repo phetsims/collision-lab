@@ -22,8 +22,10 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const NumberDisplay = require( 'SCENERY_PHET/NumberDisplay' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
+  const Range = require( 'DOT/Range' );
   const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
@@ -35,6 +37,10 @@ define( require => {
   const BALL_MOMENTUM_VECTOR_OPTIONS = merge(
     CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
   );
+
+  // strings
+  const speedPatternString = require( 'string!COLLISION_LAB/speedPattern' );
+  const momentumPatternString = require( 'string!COLLISION_LAB/momentumPattern' );
 
   class BallNode extends Node {
 
@@ -137,7 +143,6 @@ define( require => {
       this.addChild( vectorLayer );
 
       // add input listener to disk
-
       const diskLayerDragListener =
         new DragListener( {
           targetNode: diskLayer,
@@ -158,10 +163,41 @@ define( require => {
 
       diskLayer.addInputListener( diskLayerDragListener );
 
+      const speedNumberDisplay = new NumberDisplay(
+        ball.speedProperty,
+        new Range( 0, 100 ),
+        merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
+          align: 'left',
+          backgroundLineWidth: 0,
+          valuePattern: speedPatternString,
+          maxWidth: 300, // determined empirically,
+          font: CollisionLabConstants.CHECKBOX_FONT,
+          decimalPlaces: 2
+        } )
+      );
+      const momentumNumberDisplay = new NumberDisplay(
+        ball.momentumMagnitudeProperty,
+        new Range( 0, 100 ),
+        merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
+          align: 'left',
+          backgroundLineWidth: 0,
+          valuePattern: momentumPatternString,
+          maxWidth: 300, // determined empirically,
+          font: CollisionLabConstants.CHECKBOX_FONT,
+          decimalPlaces: 2
+        } )
+      );
+      const numberDisplayLayer = new Node().setChildren( [speedNumberDisplay, momentumNumberDisplay] );
+      this.addChild( numberDisplayLayer );
+
+      const valuesVisibleHandle = valuesVisibleProperty.linkAttribute( numberDisplayLayer, 'visible' );
+
       const ballPositionListener = position => {
 
         const location = modelViewTransform.modelToViewPosition( position );
 
+        momentumNumberDisplay.center = location.plusXY( 0, ballRadius + 10 );
+        speedNumberDisplay.center = location.plusXY( 0, -ballRadius - 10 );
         diskLayer.translation = location;
         vectorLayer.translation = location;
         setGraticuleLocation( location );
@@ -172,12 +208,8 @@ define( require => {
       // translate the vectors, crosshair and disk upon a change of the position of the ball
       ball.positionProperty.link( ballPositionListener );
 
-      const isUserControlledListener = isUserControlled => {
-        graticule.visible = isUserControlled;
-      };
-
       // make the crosshair visible if ball is userControlled
-      ball.isUserControlledProperty.link( isUserControlledListener );
+      const isUserControlledHandle = ball.isUserControlledProperty.linkAttribute( graticule, 'visible' );
 
       const ballRadiusListener = radius => {
 
@@ -194,8 +226,9 @@ define( require => {
       // @private {function} disposeBallNode - function to unlink listeners, called in dispose()
       this.disposeBallNode = () => {
         ball.positionProperty.unlink( ballPositionListener );
-        ball.isUserControlledProperty.unlink( isUserControlledListener );
+        ball.isUserControlledProperty.unlinkAttribute( isUserControlledHandle );
         ball.radiusProperty.unlink( ballRadiusListener );
+        valuesVisibleProperty.unlinkAttribute( valuesVisibleHandle );
         diskLayer.removeInputListener( diskLayerDragListener );
         diskLayerDragListener.dispose();
         ballVelocityVectorNode.dispose();

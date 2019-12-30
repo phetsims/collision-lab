@@ -57,7 +57,6 @@ define( require => {
       const tipPositionListener = vector => {
         const viewVector = modelViewTransform.modelToViewDelta( vector );
         this.arrowNode.setTip( viewVector.x, viewVector.y );
-        this.arrowNode.visible = visibleProperty.value;
       };
 
       tipPositionProperty.link( tipPositionListener );
