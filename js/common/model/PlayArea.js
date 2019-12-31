@@ -162,8 +162,8 @@ define( require => {
       this.prepopulatedBalls = [];
 
       // create initial data for balls
-      DEFAULT_BALL_SETTINGS.forEach( ballSettings => {
-        this.prepopulatedBalls.push( new Ball( ballSettings.mass,
+      DEFAULT_BALL_SETTINGS.forEach( ( ballSettings, index ) => {
+        this.prepopulatedBalls.push( new Ball( index + 1, ballSettings.mass,
           ballSettings.position,
           ballSettings.velocity,
           this.constantRadiusProperty ) );

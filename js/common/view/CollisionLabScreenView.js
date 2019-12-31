@@ -163,9 +163,7 @@ define( require => {
 
       const addItemAddedBallListener = addedBall => {
 
-        const index = model.balls.indexOf( addedBall );
         const addedBallNode = new BallNode( addedBall,
-          index,
           viewProperties.valuesVisibleProperty,
           viewProperties.velocityVisibleProperty,
           viewProperties.momentumVisibleProperty,

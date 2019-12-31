@@ -27,15 +27,16 @@ define( require => {
 
   class Ball {
 
-
     /**
+     * @param {number} index - index of the ball
      * @param {number} mass - initial mass of the ball (kg)
      * @param {Vector2} position - initial position of the center of the ball
      * @param {Vector2} velocity - initial velocity of the center of mass of the ball
      * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
      */
-    constructor( mass, position, velocity, constantRadiusProperty ) {
+    constructor( index, mass, position, velocity, constantRadiusProperty ) {
 
+      assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
       assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
       assert && assert( position instanceof Vector2, `invalid position: ${position}` );
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
@@ -43,6 +44,9 @@ define( require => {
         `invalid velocity: ${constantRadiusProperty}` );
 
       //----------------------------------------------------------------------------------------
+
+      // @public (read-only)
+      this.index = index;
 
       // @public (read-only) massProperty - Property of the mass of the ball (kg)
       this.massProperty = new NumberProperty( mass );

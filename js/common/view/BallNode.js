@@ -41,7 +41,6 @@ define( require => {
 
     /**
      * @param {Ball} ball - the ball model
-     * @param {number} index - number associated with the ball
      * @param {Property.<boolean>} valuesVisibleProperty - are the speed and momentum label visible
      * @param {Property.<boolean>} velocityVisibleProperty - is the velocity vector visible
      * @param {Property.<boolean>} momentumVisibleProperty - is the momemtum vector visible
@@ -51,7 +50,6 @@ define( require => {
      * @param {Object} [options]
      */
     constructor( ball,
-                 index,
                  valuesVisibleProperty,
                  velocityVisibleProperty,
                  momentumVisibleProperty,
@@ -61,7 +59,6 @@ define( require => {
                  options ) {
 
       assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-      assert && assert( typeof index === 'number', `invalid index: ${index}` );
       assert && assert( valuesVisibleProperty instanceof Property, `invalid valuesVisibleProperty: ${valuesVisibleProperty}` );
       assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
       assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
@@ -85,12 +82,12 @@ define( require => {
 
       // create and add disk to the scene graph
       const diskNode = new Circle( ballRadius, {
-        fill: CollisionLabColors.BALL_COLORS[ index ],
+        fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
         stroke: 'black'
       } );
 
       // create and add labelNode of the ball
-      const labelNode = new Text( index + 1, {
+      const labelNode = new Text( ball.index, {
         font: new PhetFont( 20 ),
         center: Vector2.ZERO,
         stroke: 'black',
