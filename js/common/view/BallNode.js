@@ -100,8 +100,10 @@ define( require => {
       // TODO: find out a better way to handle clipArea
       // create and add a layer for the disk and label
       const diskLayer = new Node( { children: [diskNode, labelNode] } );
-      const immovableDiskLayer = new Node( { children: [diskLayer] } );
-      immovableDiskLayer.clipArea = Shape.bounds( viewPlayAreaBounds );
+      const immovableDiskLayer = new Node( {
+        children: [diskLayer],
+        clipArea: Shape.bounds( viewPlayAreaBounds )
+      } );
       this.addChild( immovableDiskLayer );
 
       // create and add a dashed crosshair on the ball spanning the playArea
