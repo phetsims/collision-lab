@@ -68,9 +68,7 @@ define( require => {
       this.valueProperty = null;
       this.onEndEdit = null; // {function} called by endEdit
 
-      const valueNode = new Text( '', {
-        font: options.valueFont
-      } );
+      const valueNode = new Text( '', { font: options.valueFont } );
 
       const valueBackgroundNode = new Rectangle( 0, 0, options.valueBoxWidth, valueNode.height + ( 2 * options.valueYMargin ), {
         cornerRadius: 3,
@@ -78,9 +76,7 @@ define( require => {
         stroke: 'black'
       } );
 
-      const valueParent = new Node( {
-        children: [valueBackgroundNode, valueNode]
-      } );
+      const valueParent = new Node( { children: [valueBackgroundNode, valueNode] } );
 
       this.keypadNode = new Keypad( Keypad.PositiveFloatingPointLayout, {
         maxDigits: options.maxDigits,
@@ -119,25 +115,8 @@ define( require => {
         children: [valueAndRangeMessage, this.keypadNode, enterButton]
       } );
 
-      // @private
-      this.saidHello = false;
-      const helloText = new Text( 'Hello!', { font: TEXT_FONT } );
 
       // @private
-
-      this.addHelloText = () => {
-        if ( !contentNode.hasChild( helloText ) && !this.saidHello ) {
-          contentNode.addChild( helloText );
-          this.saidHello = true;
-        }
-      };
-
-      this.removeHelloText = () => {
-        if ( contentNode.hasChild( helloText ) ) {
-          contentNode.removeChild( helloText );
-        }
-      };
-
       this.keypadPanel = new Panel( contentNode, {
         fill: 'rgb( 230, 230, 230 )', // {Color|string} the keypad's background color
         backgroundPickable: true, // {boolean} so that clicking in the keypad's background doesn't close the keypad
@@ -224,7 +203,6 @@ define( require => {
       // remove reference to valueProperty that was passed to beginEdit
       this.valueProperty = null;
 
-      this.removeHelloText();
       this.valueNode.fill = TEXT_FILL_DEFAULT;
     }
 
@@ -247,31 +225,20 @@ define( require => {
       const valueRange = this.valueRange;
 
       // get the value from the keypad
-      const value = this.keypadNode.valueProperty.get();
+      const value = this.keypadNode.valueProperty.value;
 
       // not entering a value in the keypad is a cancel
-      if ( this.keypadNode.stringProperty.get() === '' ) {
+      if ( this.keypadNode.stringProperty.value === '' ) {
         this.cancelEdit();
         return;
       }
 
       // if the keypad contains a valid value ...
       if ( valueRange.contains( value ) ) {
-        this.valueProperty.set( Util.toFixedNumber( value, 2 ) );
+        this.valueProperty.value = Util.toFixedNumber( value, 2 );
         this.endEdit();
       }
-      else if ( value === 43110 ) {
-        if ( !this.saidHello ) {
-          this.sayHi();
-        }
-        else {
-          this.removeHelloText();
-          this.warnOutOfRange();
-        }
-      } // out of range
-      else {
-        this.warnOutOfRange();
-      }
+      this.warnOutOfRange();
     }
 
     /**
@@ -280,10 +247,6 @@ define( require => {
      */
     cancelEdit() {
       this.endEdit();
-    }
-
-    sayHi() {
-      this.addHelloText();
     }
   }
 

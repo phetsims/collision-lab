@@ -11,6 +11,7 @@ define( require => {
   const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
+  const CollisionLabKeypad = require( 'COLLISION_LAB/common/view/CollisionLabKeypad' );
   const CollisionLabTimeControlNode = require( 'COLLISION_LAB/common/view/CollisionLabTimeControlNode' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
@@ -187,9 +188,11 @@ define( require => {
       model.balls.forEach( addItemAddedBallListener );
       model.balls.addItemAddedListener( addItemAddedBallListener );
 
-
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();
+
+      const keypad = new CollisionLabKeypad();
+      this.addChild( keypad );
     }
 
     // @public
