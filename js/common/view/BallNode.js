@@ -99,8 +99,8 @@ define( require => {
 
       // TODO: find out a better way to handle clipArea
       // create and add a layer for the disk and label
-      const diskLayer = new Node().setChildren( [diskNode, labelNode] );
-      const immovableDiskLayer = new Node().setChildren( [diskLayer] );
+      const diskLayer = new Node( { children: [diskNode, labelNode] } );
+      const immovableDiskLayer = new Node( { children: [diskLayer] } );
       immovableDiskLayer.clipArea = Shape.bounds( viewPlayAreaBounds );
       this.addChild( immovableDiskLayer );
 
@@ -108,7 +108,7 @@ define( require => {
       const graticuleOptions = { stroke: 'black', lineDash: [10, 2] };
       const horizontalLine = new Line( 0, 0, 0, 1, graticuleOptions ); //
       const verticalLine = new Line( 0, 0, 0, 1, graticuleOptions );
-      const graticule = new Node().setChildren( [verticalLine, horizontalLine] );
+      const graticule = new Node( { children: [verticalLine, horizontalLine] } );
 
       // function to set location of crosshair
       const setGraticuleLocation = location => {
@@ -134,7 +134,7 @@ define( require => {
         BALL_MOMENTUM_VECTOR_OPTIONS );
 
       // create and add a layer for the velocity and momentum vectors
-      const vectorLayer = new Node().setChildren( [ballMomentumVectorNode, ballVelocityVectorNode] );
+      const vectorLayer = new Node( { children: [ballMomentumVectorNode, ballVelocityVectorNode] } );
       this.addChild( vectorLayer );
 
       // add input listener to disk
