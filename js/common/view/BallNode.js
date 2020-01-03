@@ -43,7 +43,7 @@ define( require => {
      * @param {Ball} ball - the ball model
      * @param {Property.<boolean>} valuesVisibleProperty - are the speed and momentum label visible
      * @param {Property.<boolean>} velocityVisibleProperty - is the velocity vector visible
-     * @param {Property.<boolean>} momentumVisibleProperty - is the momemtum vector visible
+     * @param {Property.<boolean>} momentumVisibleProperty - is the momentum vector visible
      * @param {Property.<boolean>} gridVisibleProperty - is the grid on the playArea visible
      * @param {Property.<boolean>} playProperty - is simulation of the playArea on
      * @param {ModelViewTransform2} modelViewTransform

@@ -23,7 +23,7 @@ define( require => {
   const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const VBox = require( 'SCENERY/nodes/VBox' );
 
   // strings
@@ -47,7 +47,7 @@ define( require => {
         valueYMargin: 3, // {number} vertical margin inside the value box
         valueFont: TEXT_FONT,
         maxDigits: 8, // {number} maximum number of digits that can be entered on the keypad
-        maxDecimals: 2, // {number} maximum number of decimal places that can be entered on the keypd
+        maxDecimals: 2, // {number} maximum number of decimal places that can be entered on the keypad
 
         // supertype options
         visible: false,
@@ -235,7 +235,7 @@ define( require => {
 
       // if the keypad contains a valid value ...
       if ( valueRange.contains( value ) ) {
-        this.valueProperty.value = Util.toFixedNumber( value, 2 );
+        this.valueProperty.value = Utils.toFixedNumber( value, 2 );
         this.endEdit();
       }
       this.warnOutOfRange();

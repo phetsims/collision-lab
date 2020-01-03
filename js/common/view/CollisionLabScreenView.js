@@ -8,6 +8,7 @@ define( require => {
 
   // modules
   const BallNode = require( 'COLLISION_LAB/common/view/BallNode' );
+  const BallValuesPanel = require( 'COLLISION_LAB/common/view/BallValuesPanel' );
   const Bounds2 = require( 'DOT/Bounds2' );
   const collisionLab = require( 'COLLISION_LAB/collisionLab' );
   const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
@@ -15,6 +16,7 @@ define( require => {
   const CollisionLabTimeControlNode = require( 'COLLISION_LAB/common/view/CollisionLabTimeControlNode' );
   const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
   const CollisionLabViewProperties = require( 'COLLISION_LAB/common/view/CollisionLabViewProperties' );
+  const ControlPanelCheckbox = require( 'COLLISION_LAB/common/view/ControlPanelCheckbox' );
   const GridCheckbox = require( 'SCENERY_PHET/GridCheckbox' );
   const HSlider = require( 'SUN/HSlider' );
   const Image = require( 'SCENERY/nodes/Image' );
@@ -42,6 +44,7 @@ define( require => {
 
   // strings
   const ballsString = require( 'string!COLLISION_LAB/balls' );
+  const moreDataString = require( 'string!COLLISION_LAB/moreData' );
 
   // images
   const mockupScreen2DLabImage = require( 'image!COLLISION_LAB/mockup-screen-2DLab.png' );
@@ -185,6 +188,15 @@ define( require => {
 
       model.balls.forEach( addItemAddedBallListener );
       model.balls.addItemAddedListener( addItemAddedBallListener );
+
+      const moreDataCheckbox = new ControlPanelCheckbox( moreDataString, viewProperties.moreDataVisibleProperty );
+      this.addChild( moreDataCheckbox );
+      moreDataCheckbox.top = playAreaNode.bottom + 30;
+
+      const ballValuesDisplay = new BallValuesPanel( model.balls, viewProperties.moreDataVisibleProperty );
+      this.addChild( ballValuesDisplay );
+      ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
+      ballValuesDisplay.left = 40;
 
       backgroundImage.moveToFront();
       transparencySlider.moveToFront();

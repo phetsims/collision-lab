@@ -52,33 +52,67 @@ define( require => {
       this.massProperty = new NumberProperty( mass );
 
       // @public (read-only) positionProperty - Property of the center of the ball's position.
-      this.positionProperty = new Vector2Property( position );
+      this.positionXProperty = new NumberProperty( position.x );
+      this.positionYProperty = new NumberProperty( position.y );
 
       // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
-      this.velocityProperty = new Vector2Property( velocity );
+      this.velocityXProperty = new NumberProperty( velocity.x );
+      this.velocityYProperty = new NumberProperty( velocity.y );
 
       // @public isUserControlledProperty - Property of the velocity of the center of mass of the ball.
       this.isUserControlledProperty = new BooleanProperty( false );
 
-      // @public (read-only) {Property.<number>}  speedProperty - Property of the speed in m/s
-      this.speedProperty = new DerivedProperty( [this.velocityProperty],
-        velocity => velocity.magnitude );
+      // since ball.positionProperty is a derived property, we cannot use in the dragListener
+      this.positionProperty = new Vector2Property( position );
+
+      // this.positionProperty.link( position => {
+      //   this.positionXProperty.value = position.x;
+      //   this.positionYProperty.value = position.y;
+      // } );
+
+      this.positionXProperty.link( positionX => {
+        this.positionProperty.value = new Vector2( positionX, this.positionProperty.value.y );
+      } );
+
+      // since ball.positionProperty is a derived property, we cannot use in the dragListener
+      this.velocityProperty = new Vector2Property( velocity );
+
+      // this.velocityProperty.link( velocity => {
+      //   this.velocityXProperty.value = velocity.x;
+      //   this.velocityYProperty.value = velocity.y;
+      // } );
+
+      // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
+      this.momentumXProperty = new DerivedProperty( [this.massProperty, this.velocityXProperty],
+        ( mass, velocityX ) => velocityX * mass );
+      this.momentumYProperty = new DerivedProperty( [this.massProperty, this.velocityYProperty],
+        ( mass, velocityY ) => velocityY * mass );
 
       // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
-      this.momentumProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
-        ( mass, velocity ) => velocity.timesScalar( mass ) );
+      this.velocityDerivedProperty = new DerivedProperty( [this.velocityXProperty, this.velocityYProperty],
+        ( velocityX, velocityY ) => new Vector2( velocityX, velocityY ) );
 
-      // @public (read-only) {Property.<number>} momentumMagnitudeProperty - Property of the momentumm in kg m/s
-      this.momentumMagnitudeProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
-        ( mass, velocity ) => velocity.magnitude * mass );
+      // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
+      this.positionDerivedProperty = new DerivedProperty( [this.positionXProperty, this.positionYProperty],
+        ( positionX, positionY ) => new Vector2( positionX, positionY ) );
+
+      // @public (read-only) {Property.<number>}  speedProperty - Property of the speed in m/s
+      this.speedProperty = new DerivedProperty( [this.velocityXProperty, this.velocityYProperty],
+        ( velocityX, velocityY ) => Math.sqrt( velocityX * velocityX + velocityY * velocityY ) );
+
+      // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
+      this.momentumProperty = new DerivedProperty( [this.massProperty, this.velocityXProperty, this.velocityYProperty],
+        ( mass, velocityX, velocityY ) => new Vector2( mass * velocityX, mass * velocityY ) );
+
+      // @public (read-only) {Property.<number>} momentumMagnitudeProperty - Property of the momentum in kg m/s
+      this.momentumMagnitudeProperty = new DerivedProperty( [this.massProperty, this.velocityXProperty, this.velocityYProperty],
+        ( mass, velocityX, velocityY ) => mass * Math.sqrt( velocityX * velocityX + velocityY * velocityY ) );
 
       // @public (read-only)  kineticEnergyProperty - Property of the kinetic energy of the ball in Joule
-      this.kineticEnergyProperty = new DerivedProperty( [this.massProperty, this.velocityProperty],
-        ( mass, velocity ) => 0.5 * mass * velocity.magnitudeSquared );
+      this.kineticEnergyProperty = new DerivedProperty( [this.massProperty, this.velocityXProperty, this.velocityYProperty],
+        ( mass, velocityX, velocityY ) => 1 / 2 * mass * ( velocityX * velocityX + velocityY * velocityY ) );
 
-      //----------------------------------------------------------------------------------------
       // Handle the changing radius of the Ball based on the mass
-
       // @public (read-only) - Property of the radius of the ball in meters
       this.radiusProperty = new DerivedProperty( [this.massProperty, constantRadiusProperty],
         ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 )
@@ -111,11 +145,45 @@ define( require => {
     get radius() { return this.radiusProperty.value; }
 
     /**
+     * Gets the horizontal position of the ball.
+     * @public
+     * @returns {number} positionX
+     */
+    get positionX() { return this.positionXProperty.value;}
+
+    /**
+     * Sets the horizontal position of the ball.
+     * @public
+     * @param {number} positionX
+     */
+    set positionX( positionX ) {
+      assert && assert( Number.isFinite( positionX ), `invalid x-position: ${positionX}` );
+      this.positionXProperty.value = positionX;
+    }
+
+    /**
+     * Gets the vertical position of the ball.
+     * @public
+     * @returns {number} positionY
+     */
+    get positionY() { return this.positionYProperty.value;}
+
+    /**
+     * Sets the vertical position of the ball.
+     * @public
+     * @param {number} positionY
+     */
+    set positionY( positionY ) {
+      assert && assert( Number.isFinite( positionY ), `invalid x-position: ${positionY}` );
+      this.positionYProperty.value = positionY;
+    }
+
+    /**
      * Gets the position of the ball.
      * @public
      * @returns {Vector2}
      */
-    get position() { return this.positionProperty.value; }
+    get position() { return this.positionDerivedProperty.value; }
 
     /**
      * Sets the position of the ball.
@@ -127,6 +195,9 @@ define( require => {
       assert && assert( Number.isFinite( position.x ), `invalid x-position: ${position.x}` );
       assert && assert( Number.isFinite( position.y ), `invalid y-position: ${position.y}` );
 
+      // this.positionProperty.value = position;
+      // this.positionXProperty.value = position.x;
+      // this.positionYProperty.value = position.y;
       this.positionProperty.value = position;
     }
 
@@ -144,7 +215,7 @@ define( require => {
      */
     set left( left ) {
       assert && assert( typeof left === 'number', `invalid left: ${left}` );
-      this.position.setX( left + this.radius );
+      this.positionX = left + this.radius;
     }
 
     /**
@@ -152,7 +223,7 @@ define( require => {
      * @public
      * @returns {number}
      */
-    get right() { return this.position.x + this.radius; }
+    get right() { return this.positionX + this.radius; }
 
     /**
      * Sets the left bound of the ball
@@ -161,7 +232,7 @@ define( require => {
      */
     set right( right ) {
       assert && assert( typeof right === 'number', `invalid right: ${right}` );
-      this.position.setX( right - this.radius );
+      this.positionX = right - this.radius;
     }
 
     /**
@@ -169,7 +240,7 @@ define( require => {
      * @public
      * @returns {number}
      */
-    get top() { return this.position.y + this.radius; }
+    get top() { return this.positionY + this.radius; }
 
     /**
      * Sets the top bound of the ball
@@ -178,7 +249,7 @@ define( require => {
      */
     set top( top ) {
       assert && assert( typeof top === 'number', `invalid top: ${top}` );
-      this.position.setY( top - this.radius );
+      this.positionY = top - this.radius;
     }
 
     /**
@@ -186,7 +257,7 @@ define( require => {
      * @public
      * @returns {number}
      */
-    get bottom() { return this.position.y - this.radius; }
+    get bottom() { return this.positionY - this.radius; }
 
     /**
      * Sets the bottom bound of the ball
@@ -195,7 +266,7 @@ define( require => {
      */
     set bottom( bottom ) {
       assert && assert( typeof bottom === 'number', `invalid bottom: ${bottom}` );
-      this.position.setY( bottom + this.radius );
+      this.positionY = bottom + this.radius;
     }
 
     /**
@@ -205,12 +276,47 @@ define( require => {
      */
     get firstMoment() { return this.position.times( this.mass ); }
 
+
+    /**
+     * Gets the horizontal velocity of the ball.
+     * @public
+     * @returns {number} velocityX
+     */
+    get velocityX() { return this.velocityXProperty.value;}
+
+    /**
+     * Sets the horizontal velocity of the ball.
+     * @public
+     * @param {number} velocityX
+     */
+    set velocityX( velocityX ) {
+      assert && assert( Number.isFinite( velocityX ), `invalid x-velocity: ${velocityX}` );
+      this.velocityXProperty.value = velocityX;
+    }
+
+    /**
+     * Gets the vertical velocity of the ball.
+     * @public
+     * @returns {number} velocityY
+     */
+    get velocityY() { return this.velocityYProperty.value;}
+
+    /**
+     * Sets the vertical velocity of the ball.
+     * @public
+     * @param {number} velocityY
+     */
+    set velocityY( velocityY ) {
+      assert && assert( Number.isFinite( velocityY ), `invalid y-velocity: ${velocityY}` );
+      this.velocityYProperty.value = velocityY;
+    }
+
     /**
      * Gets the velocity of the ball.
      * @public
      * @returns {Vector2}
      */
-    get velocity() { return this.velocityProperty.value; }
+    get velocity() { return this.velocityDerivedProperty.value; }
 
     /**
      * Sets the velocity of the ball.
@@ -219,6 +325,8 @@ define( require => {
      */
     set velocity( velocity ) {
       assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+      // this.velocityX = velocity.x;
+      // this.velocityY = velocity.y;
       this.velocityProperty.value = velocity;
     }
 
@@ -246,8 +354,10 @@ define( require => {
      */
     reset() {
       this.massProperty.reset();
-      this.positionProperty.reset();
-      this.velocityProperty.reset();
+      this.positionXProperty.reset();
+      this.positionYProperty.reset();
+      this.velocityXProperty.reset();
+      this.velocityYProperty.reset();
       this.isUserControlledProperty.reset();
     }
 
@@ -261,9 +371,9 @@ define( require => {
       const round = number => Utils.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
 
       // set new rounded position
-      this.position = new Vector2( round( this.position.x ), round( this.position.y ) );
+      this.positionX = round( this.positionX );
+      this.positionY = round( this.positionY );
     }
-
 
     /**
      * Flips the horizontal velocity of the ball up to a scaling factor
@@ -309,4 +419,5 @@ define( require => {
   }
 
   return collisionLab.register( 'Ball', Ball );
-} );
+} )
+;

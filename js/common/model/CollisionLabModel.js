@@ -23,7 +23,6 @@ define( require => {
      */
     constructor( tandem ) {
 
-
       assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
       // @public {ObservableArray.<Ball>}

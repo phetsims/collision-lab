@@ -81,7 +81,7 @@ define( require => {
       velocityProperty.link( velocityListener );
 
       const tipPositionListener = velocity => {
-        velocityProperty.value = modelViewTransform.viewToModelDelta( velocity );
+        velocity = modelViewTransform.viewToModelDelta( velocity );
       };
       // update the velocity vector upon change of the tip position
       tipPositionProperty.link( tipPositionListener );

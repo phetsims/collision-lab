@@ -44,6 +44,21 @@
   "slip": {
     "value": "Slip"
   },
+  "moreData": {
+    "value": "More Data"
+  },
+  "massUnit": {
+    "value": "Mass (kg)"
+  },
+  "positionUnit": {
+    "value": "Position (m)"
+  },
+  "velocityUnit": {
+    "value": "Velocity (m/s)"
+  },
+  "momentumUnit": {
+    "value": "Momentum (kg m/s)"
+  },
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
   },

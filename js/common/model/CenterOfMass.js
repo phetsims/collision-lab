@@ -88,12 +88,13 @@ define( require => {
 
       };
 
+
       // create a listener that will listen to the addition of a new ball
       const addItemAddedBallListener = addedBall => {
 
         // update the position and velocity of the center of mass
-        addedBall.positionProperty.link( updatePosition );
-        addedBall.velocityProperty.link( updateVelocity );
+        addedBall.positionDerivedProperty.link( updatePosition );
+        addedBall.velocityDerivedProperty.link( updateVelocity );
 
         // Observe when the ball is removed to unlink listeners
         const removeBallListener = removedBall => {
@@ -106,8 +107,8 @@ define( require => {
           if ( removedBall === addedBall ) {
 
             // unlink the listener attached to the removedBall.
-            removedBall.positionProperty.unlink( updatePosition );
-            removedBall.velocityProperty.unlink( updateVelocity );
+            removedBall.positionDerivedProperty.unlink( updatePosition );
+            removedBall.velocityDerivedProperty.unlink( updateVelocity );
 
             balls.removeItemRemovedListener( removeBallListener );
           }

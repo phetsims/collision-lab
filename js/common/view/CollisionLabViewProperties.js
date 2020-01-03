@@ -43,6 +43,8 @@ define( require => {
       // @public indicates if the momenta are arranged tip to tail in the momenta diagram
       this.tipToTailProperty = new BooleanProperty( false );
 
+      // @public indicates if the more Data panel is visible
+      this.moreDataVisibleProperty = new BooleanProperty( false );
     }
 
     /**
