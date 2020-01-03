@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * Number Displays for the speed and momentum of a  ball. The Number Display for speed is above the ball

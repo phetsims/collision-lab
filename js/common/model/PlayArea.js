@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * PlayArea is the model for the PlayArea of different Ball objects, intended to be sub-classed.

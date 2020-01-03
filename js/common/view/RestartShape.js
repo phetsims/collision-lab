@@ -1,4 +1,4 @@
-// Copyright 2016-2019, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * Shape used to indicate the arc of a circle with an arrow (anticlockwise), used on RestartButton.

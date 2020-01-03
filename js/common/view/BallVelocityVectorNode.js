@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * View for the vectors of Balls. See https://github.com/phetsims/collision-lab/issues/24 for
