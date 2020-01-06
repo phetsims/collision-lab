@@ -51,48 +51,34 @@ define( require => {
       // @public (read-only) massProperty - Property of the mass of the ball (kg)
       this.massProperty = new NumberProperty( mass );
 
-      // @public (read-only) positionProperty - Property of the center of the ball's position.
+      // @public (read-only) Property of the center of the ball's coordinates (m).
       this.positionXProperty = new NumberProperty( position.x );
       this.positionYProperty = new NumberProperty( position.y );
 
-      // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
+      // @public (read-only) velocityProperty - Property of the velocity's coordinate of the ball (m/s).
       this.velocityXProperty = new NumberProperty( velocity.x );
       this.velocityYProperty = new NumberProperty( velocity.y );
 
-      // @public isUserControlledProperty - Property of the velocity of the center of mass of the ball.
+      // @public isUserControlledProperty - Is the ball controlled by the user.
       this.isUserControlledProperty = new BooleanProperty( false );
 
-      // since ball.positionProperty is a derived property, we cannot use in the dragListener
+      // @public position of the ball for DragListener
       this.positionProperty = new Vector2Property( position );
 
-      // this.positionProperty.link( position => {
-      //   this.positionXProperty.value = position.x;
-      //   this.positionYProperty.value = position.y;
-      // } );
-
-      this.positionXProperty.link( positionX => {
-        this.positionProperty.value = new Vector2( positionX, this.positionProperty.value.y );
-      } );
-
-      // since ball.positionProperty is a derived property, we cannot use in the dragListener
+      // @public velocity of the ball for DragListener
       this.velocityProperty = new Vector2Property( velocity );
 
-      // this.velocityProperty.link( velocity => {
-      //   this.velocityXProperty.value = velocity.x;
-      //   this.velocityYProperty.value = velocity.y;
-      // } );
-
-      // @public (read-only) velocityProperty - Property of the velocity of the center of mass of the ball.
+      // @public (read-only) Property of the momentum components of the center of mass of the ball.
       this.momentumXProperty = new DerivedProperty( [this.massProperty, this.velocityXProperty],
         ( mass, velocityX ) => velocityX * mass );
       this.momentumYProperty = new DerivedProperty( [this.massProperty, this.velocityYProperty],
         ( mass, velocityY ) => velocityY * mass );
 
-      // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
+      // @public (read-only) - {Property.<Vector2>} Property of the velocity of the ball m/s
       this.velocityDerivedProperty = new DerivedProperty( [this.velocityXProperty, this.velocityYProperty],
         ( velocityX, velocityY ) => new Vector2( velocityX, velocityY ) );
 
-      // @public (read-only)  momentumProperty - Property of the momentum of the ball in kg m/s
+      // @public (read-only)  momentumProperty - Property of the position of the ball in m
       this.positionDerivedProperty = new DerivedProperty( [this.positionXProperty, this.positionYProperty],
         ( positionX, positionY ) => new Vector2( positionX, positionY ) );
 
@@ -195,7 +181,6 @@ define( require => {
       assert && assert( Number.isFinite( position.x ), `invalid x-position: ${position.x}` );
       assert && assert( Number.isFinite( position.y ), `invalid y-position: ${position.y}` );
 
-      // this.positionProperty.value = position;
       // this.positionXProperty.value = position.x;
       // this.positionYProperty.value = position.y;
       this.positionProperty.value = position;
