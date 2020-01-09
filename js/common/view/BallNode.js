@@ -141,7 +141,7 @@ define( require => {
         new DragListener( {
           targetNode: diskLayer,
           transform: modelViewTransform,
-          locationProperty: ball.positionProperty,
+          positionProperty: ball.positionProperty,
           dragBoundsProperty: dragBoundsProperty,
           start: () => {
             ball.isUserControlledProperty.value = true;

@@ -69,7 +69,7 @@ define( require => {
 
       // create dragListener for the tip
       const tipDragListener = new DragListener( {
-        locationProperty: tipPositionProperty
+        positionProperty: tipPositionProperty
       } );
 
       // add input listener to tip of the velocity vector
