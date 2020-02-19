@@ -141,7 +141,7 @@ define( require => {
       const slipText = new Text( slipString, { font: new PhetFont( 16 ) } );
 
       const stickSlipSwitch = new ABSwitch( isStickyProperty, true, stickText, false, slipText, {
-        switchSize: new Dimension2( 30, 15 )
+        toggleSwitchOptions: { size: new Dimension2( 30, 15 ) }
       } );
 
       elasticityPercentProperty.link( elasticity => {
