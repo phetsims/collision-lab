@@ -6,26 +6,22 @@
  * @author Brandon Li
  */
 
-define( require => {
-  'use strict';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
-  // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabModel = require( 'COLLISION_LAB/common/model/CollisionLabModel' ); // TODO: #13
-  const Tandem = require( 'TANDEM/Tandem' );
+class IntroModel extends CollisionLabModel {
 
-  class IntroModel extends CollisionLabModel {
+  /**
+   * @param {Tandem} tandem
+   */
+  constructor( tandem ) {
 
-    /**
-     * @param {Tandem} tandem
-     */
-    constructor( tandem ) {
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-      super( tandem );
-    }
+    super( tandem );
   }
+}
 
-  return collisionLab.register( 'IntroModel', IntroModel );
-} );
+collisionLab.register( 'IntroModel', IntroModel );
+export default IntroModel;

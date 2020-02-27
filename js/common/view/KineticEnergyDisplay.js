@@ -6,48 +6,44 @@
  * @author Martin Veillette
  */
 
-define( require => {
-  'use strict';
+import Range from '../../../../dot/js/Range.js';
+import merge from '../../../../phet-core/js/merge.js';
+import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import collisionLabStrings from '../../collision-lab-strings.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 
-  // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const merge = require( 'PHET_CORE/merge' );
-  const NumberDisplay = require( 'SCENERY_PHET/NumberDisplay' );
-  const Range = require( 'DOT/Range' );
+// constant
+const SUM_RANGE = new Range( 0, 10 ); // range for the kinetic energy values
 
-  // constant
-  const SUM_RANGE = new Range( 0, 10 ); // range for the kinetic energy values
+const kineticEnergyJString = collisionLabStrings.kineticEnergyJ;
 
-  // strings
-  const kineticEnergyJString = require( 'string!COLLISION_LAB/kineticEnergyJ' );
+class KineticEnergyDisplay extends NumberDisplay {
 
-  class KineticEnergyDisplay extends NumberDisplay {
+  /**
+   * @param {Property.<number>} kineticEnergySumProperty
+   * @param {Property.<boolean>} visibleProperty
+   */
+  constructor( kineticEnergySumProperty, visibleProperty ) {
 
-    /**
-     * @param {Property.<number>} kineticEnergySumProperty
-     * @param {Property.<boolean>} visibleProperty
-     */
-    constructor( kineticEnergySumProperty, visibleProperty ) {
+    super( kineticEnergySumProperty,
+      SUM_RANGE,
+      merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
+        align: 'left',
+        backgroundLineWidth: 0,
+        valuePattern: kineticEnergyJString,
+        maxWidth: 300, // determined empirically,
+        font: CollisionLabConstants.DISPLAY_FONT,
+        decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
+      } ) );
 
-      super( kineticEnergySumProperty,
-        SUM_RANGE,
-        merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
-          align: 'left',
-          backgroundLineWidth: 0,
-          valuePattern: kineticEnergyJString,
-          maxWidth: 300, // determined empirically,
-          font: CollisionLabConstants.DISPLAY_FONT,
-          decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
-        } ) );
+    // link visibility of this display to the visibleProperty
+    // present for the lifetime of the simulation
+    visibleProperty.linkAttribute( this, 'visible' );
 
-      // link visibility of this display to the visibleProperty
-      // present for the lifetime of the simulation
-      visibleProperty.linkAttribute( this, 'visible' );
-
-    }
   }
+}
 
-  return collisionLab.register( 'KineticEnergyDisplay', KineticEnergyDisplay );
-} );
+collisionLab.register( 'KineticEnergyDisplay', KineticEnergyDisplay );
+export default KineticEnergyDisplay;

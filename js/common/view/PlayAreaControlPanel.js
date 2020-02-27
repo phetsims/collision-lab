@@ -6,172 +6,168 @@
  * @author Alex Schor
  */
 
-define( require => {
-  'use strict';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Range from '../../../../dot/js/Range.js';
+import merge from '../../../../phet-core/js/merge.js';
+import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
+import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import Line from '../../../../scenery/js/nodes/Line.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
+import Text from '../../../../scenery/js/nodes/Text.js';
+import VBox from '../../../../scenery/js/nodes/VBox.js';
+import ABSwitch from '../../../../sun/js/ABSwitch.js';
+import Panel from '../../../../sun/js/Panel.js';
+import collisionLabStrings from '../../collision-lab-strings.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import ControlPanelCheckbox from './ControlPanelCheckbox.js';
+import XNode from './XNode.js';
 
-  // modules
-  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  const ABSwitch = require( 'SUN/ABSwitch' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const ControlPanelCheckbox = require( 'COLLISION_LAB/common/view/ControlPanelCheckbox' );
-  const Dimension2 = require( 'DOT/Dimension2' );
-  const Line = require( 'SCENERY/nodes/Line' );
-  const merge = require( 'PHET_CORE/merge' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const NumberControl = require( 'SCENERY_PHET/NumberControl' );
-  const Panel = require( 'SUN/Panel' );
-  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  const Range = require( 'DOT/Range' );
-  const Text = require( 'SCENERY/nodes/Text' );
-  const VBox = require( 'SCENERY/nodes/VBox' );
-  const XNode = require( 'COLLISION_LAB/common/view/XNode' );
+// constants
+const ELASTICITY_PERCENT_RANGE = new Range( 0, 100 );
 
-  // constants
-  const ELASTICITY_PERCENT_RANGE = new Range( 0, 100 );
+const centerOfMassString = collisionLabStrings.centerOfMass;
+const constantSizeString = collisionLabStrings.constantSize;
+const elasticityPercentString = collisionLabStrings.elasticityPercent;
+const elasticityString = collisionLabStrings.elasticity;
+const elasticString = collisionLabStrings.elastic;
+const inelasticString = collisionLabStrings.inelastic;
+const kineticEnergyString = collisionLabStrings.kineticEnergy;
+const momentumString = collisionLabStrings.momentum;
+const pathString = collisionLabStrings.path;
+const reflectingBorderString = collisionLabStrings.reflectingBorder;
+const valuesString = collisionLabStrings.values;
+const velocityString = collisionLabStrings.velocity;
 
-  // strings
-  const centerOfMassString = require( 'string!COLLISION_LAB/centerOfMass' );
-  const constantSizeString = require( 'string!COLLISION_LAB/constantSize' );
-  const elasticityPercentString = require( 'string!COLLISION_LAB/elasticityPercent' );
-  const elasticityString = require( 'string!COLLISION_LAB/elasticity' );
-  const elasticString = require( 'string!COLLISION_LAB/elastic' );
-  const inelasticString = require( 'string!COLLISION_LAB/inelastic' );
-  const kineticEnergyString = require( 'string!COLLISION_LAB/kineticEnergy' );
-  const momentumString = require( 'string!COLLISION_LAB/momentum' );
-  const pathString = require( 'string!COLLISION_LAB/path' );
-  const reflectingBorderString = require( 'string!COLLISION_LAB/reflectingBorder' );
-  const valuesString = require( 'string!COLLISION_LAB/values' );
-  const velocityString = require( 'string!COLLISION_LAB/velocity' );
+// strings
+const stickString = collisionLabStrings.stick;
+const slipString = collisionLabStrings.slip;
 
-  // strings
-  const stickString = require( 'string!COLLISION_LAB/stick' );
-  const slipString = require( 'string!COLLISION_LAB/slip' );
+class PlayAreaControlPanel extends Panel {
 
-  class PlayAreaControlPanel extends Panel {
+  /**
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {Property.<boolean>} reflectingBorderProperty
+   * @param {Property.<number>} elasticityPercentProperty
+   * @param {Property.<boolean>} isStickyProperty
+   * @param {Property.<boolean>} constantRadiusProperty
+   * @param {Object} [options]
+   */
+  constructor( viewProperties,
+               reflectingBorderProperty,
+               elasticityPercentProperty,
+               isStickyProperty,
+               constantRadiusProperty,
+               options ) {
 
-    /**
-     * @param {CollisionLabViewProperties} viewProperties
-     * @param {Property.<boolean>} reflectingBorderProperty
-     * @param {Property.<number>} elasticityPercentProperty
-     * @param {Property.<boolean>} isStickyProperty
-     * @param {Property.<boolean>} constantRadiusProperty
-     * @param {Object} [options]
-     */
-    constructor( viewProperties,
-                 reflectingBorderProperty,
-                 elasticityPercentProperty,
-                 isStickyProperty,
-                 constantRadiusProperty,
-                 options ) {
+    options = merge( CollisionLabColors.PANEL_COLORS, options );
 
-      options = merge( CollisionLabColors.PANEL_COLORS, options );
+    const velocityCheckbox = new ControlPanelCheckbox(
+      velocityString,
+      viewProperties.velocityVisibleProperty,
+      { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
+    );
 
-      const velocityCheckbox = new ControlPanelCheckbox(
-        velocityString,
-        viewProperties.velocityVisibleProperty,
-        { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
-      );
+    const momentumCheckbox = new ControlPanelCheckbox(
+      momentumString,
+      viewProperties.momentumVisibleProperty,
+      { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
+    );
 
-      const momentumCheckbox = new ControlPanelCheckbox(
-        momentumString,
-        viewProperties.momentumVisibleProperty,
-        { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
-      );
+    const centerOfMassCheckbox = new ControlPanelCheckbox(
+      centerOfMassString,
+      viewProperties.centerOfMassVisibleProperty,
+      { rightIconNode: new XNode( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
+    );
 
-      const centerOfMassCheckbox = new ControlPanelCheckbox(
-        centerOfMassString,
-        viewProperties.centerOfMassVisibleProperty,
-        { rightIconNode: new XNode( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
-      );
+    const kineticEnergyCheckbox = new ControlPanelCheckbox(
+      kineticEnergyString,
+      viewProperties.kineticEnergyVisibleProperty
+    );
 
-      const kineticEnergyCheckbox = new ControlPanelCheckbox(
-        kineticEnergyString,
-        viewProperties.kineticEnergyVisibleProperty
-      );
+    const valuesCheckbox = new ControlPanelCheckbox(
+      valuesString,
+      viewProperties.valuesVisibleProperty
+    );
 
-      const valuesCheckbox = new ControlPanelCheckbox(
-        valuesString,
-        viewProperties.valuesVisibleProperty
-      );
+    const pathCheckbox = new ControlPanelCheckbox(
+      pathString,
+      viewProperties.pathVisibleProperty
+    );
 
-      const pathCheckbox = new ControlPanelCheckbox(
-        pathString,
-        viewProperties.pathVisibleProperty
-      );
+    const reflectingBorderCheckbox = new ControlPanelCheckbox(
+      reflectingBorderString,
+      reflectingBorderProperty
+    );
 
-      const reflectingBorderCheckbox = new ControlPanelCheckbox(
-        reflectingBorderString,
-        reflectingBorderProperty
-      );
+    const upperCheckboxes = new VBox( {
+      children:
+        [ velocityCheckbox, momentumCheckbox, centerOfMassCheckbox,
+          kineticEnergyCheckbox, valuesCheckbox, pathCheckbox, reflectingBorderCheckbox ],
+      align: 'left',
+      spacing: 10
+    } );
 
-      const upperCheckboxes = new VBox( {
-        children:
-          [velocityCheckbox, momentumCheckbox, centerOfMassCheckbox,
-            kineticEnergyCheckbox, valuesCheckbox, pathCheckbox, reflectingBorderCheckbox],
-        align: 'left',
-        spacing: 10
-      } );
-
-      const elasticityNumberControl = new NumberControl( elasticityString, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, {
-        layoutFunction: NumberControl.createLayoutFunction4(),
-        includeArrowButtons: false,
-        sliderOptions: {
-          majorTicks: [{
-            value: ELASTICITY_PERCENT_RANGE.min, label: new Text( inelasticString, { font: new PhetFont( 12 ) } )
-          },
-            {
-              value: ELASTICITY_PERCENT_RANGE.max, label: new Text( elasticString, { font: new PhetFont( 12 ) } )
-            }],
-          majorTickLength: 5,
-          trackSize: new Dimension2( upperCheckboxes.width - 30, 1 ),
-          thumbSize: new Dimension2( 10, 20 )
+    const elasticityNumberControl = new NumberControl( elasticityString, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, {
+      layoutFunction: NumberControl.createLayoutFunction4(),
+      includeArrowButtons: false,
+      sliderOptions: {
+        majorTicks: [ {
+          value: ELASTICITY_PERCENT_RANGE.min, label: new Text( inelasticString, { font: new PhetFont( 12 ) } )
         },
-        numberDisplayOptions: {
-          valuePattern: elasticityPercentString,
-          font: new PhetFont( 14 )
-        },
-        titleNodeOptions: {
-          font: new PhetFont( 16 ),
-          maxWidth: 120
-        }
-      } );
+          {
+            value: ELASTICITY_PERCENT_RANGE.max, label: new Text( elasticString, { font: new PhetFont( 12 ) } )
+          } ],
+        majorTickLength: 5,
+        trackSize: new Dimension2( upperCheckboxes.width - 30, 1 ),
+        thumbSize: new Dimension2( 10, 20 )
+      },
+      numberDisplayOptions: {
+        valuePattern: elasticityPercentString,
+        font: new PhetFont( 14 )
+      },
+      titleNodeOptions: {
+        font: new PhetFont( 16 ),
+        maxWidth: 120
+      }
+    } );
 
-      const stickText = new Text( stickString, { font: new PhetFont( 16 ) } );
-      const slipText = new Text( slipString, { font: new PhetFont( 16 ) } );
+    const stickText = new Text( stickString, { font: new PhetFont( 16 ) } );
+    const slipText = new Text( slipString, { font: new PhetFont( 16 ) } );
 
-      const stickSlipSwitch = new ABSwitch( isStickyProperty, true, stickText, false, slipText, {
-        toggleSwitchOptions: { size: new Dimension2( 30, 15 ) }
-      } );
+    const stickSlipSwitch = new ABSwitch( isStickyProperty, true, stickText, false, slipText, {
+      toggleSwitchOptions: { size: new Dimension2( 30, 15 ) }
+    } );
 
-      elasticityPercentProperty.link( elasticity => {
-        const enabled = ( elasticity === 0 );
-        stickSlipSwitch.opacity = enabled ? 1 : 0.5;
-        stickSlipSwitch.pickable = enabled;
-      } );
-
-
-      const constantRadiusCheckbox = new ControlPanelCheckbox(
-        constantSizeString,
-        constantRadiusProperty
-      );
-
-      const separatingLine = new Line( 0, 0, upperCheckboxes.width, 0, { stroke: 'black' } );
-
-      const panelContent = new Node();
-      panelContent.setChildren( [upperCheckboxes, separatingLine, constantRadiusCheckbox,
-        elasticityNumberControl, stickSlipSwitch] );
-
-      separatingLine.top = upperCheckboxes.bottom + 5;
-      elasticityNumberControl.top = separatingLine.bottom + 5;
-      stickSlipSwitch.top = elasticityNumberControl.bottom + 5;
-      constantRadiusCheckbox.top = stickSlipSwitch.bottom + 5;
-      stickSlipSwitch.centerX = elasticityNumberControl.centerX;
+    elasticityPercentProperty.link( elasticity => {
+      const enabled = ( elasticity === 0 );
+      stickSlipSwitch.opacity = enabled ? 1 : 0.5;
+      stickSlipSwitch.pickable = enabled;
+    } );
 
 
-      super( panelContent, options );
-    }
+    const constantRadiusCheckbox = new ControlPanelCheckbox(
+      constantSizeString,
+      constantRadiusProperty
+    );
+
+    const separatingLine = new Line( 0, 0, upperCheckboxes.width, 0, { stroke: 'black' } );
+
+    const panelContent = new Node();
+    panelContent.setChildren( [ upperCheckboxes, separatingLine, constantRadiusCheckbox,
+      elasticityNumberControl, stickSlipSwitch ] );
+
+    separatingLine.top = upperCheckboxes.bottom + 5;
+    elasticityNumberControl.top = separatingLine.bottom + 5;
+    stickSlipSwitch.top = elasticityNumberControl.bottom + 5;
+    constantRadiusCheckbox.top = stickSlipSwitch.bottom + 5;
+    stickSlipSwitch.centerX = elasticityNumberControl.centerX;
+
+
+    super( panelContent, options );
   }
+}
 
-  return collisionLab.register( 'PlayAreaControlPanel', PlayAreaControlPanel );
-} );
+collisionLab.register( 'PlayAreaControlPanel', PlayAreaControlPanel );
+export default PlayAreaControlPanel;

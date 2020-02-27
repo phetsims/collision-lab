@@ -6,70 +6,66 @@
  * @author Alex Schor
  */
 
-define( require => {
-  'use strict';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
+import Path from '../../../../scenery/js/nodes/Path.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
+import Grid from '../model/Grid.js';
 
-  // modules
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const Grid = require( 'COLLISION_LAB/common/model/Grid' );
-  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const Path = require( 'SCENERY/nodes/Path' );
+class GridNode extends Node {
 
-  class GridNode extends Node {
+  /**
+   * @param {Grid} grid
+   * @param {Property.<boolean>} gridVisibleProperty
+   * @param {ModelViewTransform2} modelViewTransform
+   */
+  constructor( grid, gridVisibleProperty, modelViewTransform ) {
 
-    /**
-     * @param {Grid} grid
-     * @param {Property.<boolean>} gridVisibleProperty
-     * @param {ModelViewTransform2} modelViewTransform
-     */
-    constructor( grid, gridVisibleProperty, modelViewTransform ) {
+    assert && assert( grid instanceof Grid,
+      `invalid grid: ${grid}` );
+    assert && assert( gridVisibleProperty instanceof BooleanProperty,
+      `invalid gridVisibleProperty: ${gridVisibleProperty}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2,
+      `invalid modelViewTransform: ${modelViewTransform}` );
 
-      assert && assert( grid instanceof Grid,
-        `invalid grid: ${grid}` );
-      assert && assert( gridVisibleProperty instanceof BooleanProperty,
-        `invalid gridVisibleProperty: ${gridVisibleProperty}` );
-      assert && assert( modelViewTransform instanceof ModelViewTransform2,
-        `invalid modelViewTransform: ${modelViewTransform}` );
+    //----------------------------------------------------------------------------------------
 
-      //----------------------------------------------------------------------------------------
+    super();
 
-      super();
+    // create major grid lines
+    const majorGridLinesPath = new Path( modelViewTransform.modelToViewShape( grid.majorGridLinesShape ), {
+      lineWidth: CollisionLabConstants.MAJOR_GRID_LINE_WIDTH,
+      stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+    } );
 
-      // create major grid lines
-      const majorGridLinesPath = new Path( modelViewTransform.modelToViewShape( grid.majorGridLinesShape ), {
-        lineWidth: CollisionLabConstants.MAJOR_GRID_LINE_WIDTH,
-        stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
-      } );
+    // create minor grid lines
+    const minorGridLinesPath = new Path( modelViewTransform.modelToViewShape( grid.minorGridLinesShape ), {
+      lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
+      stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+    } );
 
-      // create minor grid lines
-      const minorGridLinesPath = new Path( modelViewTransform.modelToViewShape( grid.minorGridLinesShape ), {
-        lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
-        stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
-      } );
+    // create border of the play area
+    const borderPath = new Path( modelViewTransform.modelToViewShape( grid.borderShape ), {
+      lineWidth: 5,
+      stroke: 'green'
+    } );
 
-      // create border of the play area
-      const borderPath = new Path( modelViewTransform.modelToViewShape( grid.borderShape ), {
-        lineWidth: 5,
-        stroke: 'green'
-      } );
+    this.addChild( majorGridLinesPath );
+    this.addChild( minorGridLinesPath );
+    this.addChild( borderPath );
 
-      this.addChild( majorGridLinesPath );
-      this.addChild( minorGridLinesPath );
-      this.addChild( borderPath );
+    // link visibility of grid lines to the gridVisibleProperty
+    // present for the lifetime of the simulation
+    gridVisibleProperty.link( visible => {
+      minorGridLinesPath.visible = visible;
+      majorGridLinesPath.visible = visible;
+    } );
 
-      // link visibility of grid lines to the gridVisibleProperty
-      // present for the lifetime of the simulation
-      gridVisibleProperty.link( visible => {
-        minorGridLinesPath.visible = visible;
-        majorGridLinesPath.visible = visible;
-      } );
-
-    }
   }
+}
 
-  return collisionLab.register( 'GridNode', GridNode );
-} );
+collisionLab.register( 'GridNode', GridNode );
+export default GridNode;

@@ -5,37 +5,33 @@
  *
  * @author Martin Veillette
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const IntroScreen = require( 'COLLISION_LAB/intro/IntroScreen' );
-  const Sim = require( 'JOIST/Sim' );
-  const SimLauncher = require( 'JOIST/SimLauncher' );
-  const Tandem = require( 'TANDEM/Tandem' );
+import Sim from '../../joist/js/Sim.js';
+import SimLauncher from '../../joist/js/SimLauncher.js';
+import Tandem from '../../tandem/js/Tandem.js';
+import collisionLabStrings from './collision-lab-strings.js';
+import IntroScreen from './intro/IntroScreen.js';
 
-  // strings
-  const collisionLabTitleString = require( 'string!COLLISION_LAB/collision-lab.title' );
+const collisionLabTitleString = collisionLabStrings[ 'collision-lab' ].title;
 
-  const simOptions = {
-    credits: {
-      //TODO fill in credits, all of these fields are optional, see joist.CreditsNode
-      leadDesign: '',
-      softwareDevelopment: '',
-      team: '',
-      qualityAssurance: '',
-      graphicArts: '',
-      soundDesign: '',
-      thanks: ''
-    }
-  };
+const simOptions = {
+  credits: {
+    //TODO fill in credits, all of these fields are optional, see joist.CreditsNode
+    leadDesign: '',
+    softwareDevelopment: '',
+    team: '',
+    qualityAssurance: '',
+    graphicArts: '',
+    soundDesign: '',
+    thanks: ''
+  }
+};
 
-  // launch the sim - beware that scenery Image nodes created outside of SimLauncher.launch() will have zero bounds
-  // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
-  SimLauncher.launch( () => {
-    const sim = new Sim( collisionLabTitleString, [
-      new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) )
-    ], simOptions );
-    sim.start();
-  } );
+// launch the sim - beware that scenery Image nodes created outside of SimLauncher.launch() will have zero bounds
+// until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
+SimLauncher.launch( () => {
+  const sim = new Sim( collisionLabTitleString, [
+    new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) )
+  ], simOptions );
+  sim.start();
 } );

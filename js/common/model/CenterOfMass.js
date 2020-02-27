@@ -5,121 +5,117 @@
  * @author Martin Veillette
  */
 
-define( require => {
-  'use strict';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector2Property from '../../../../dot/js/Vector2Property.js';
+import collisionLab from '../../collisionLab.js';
+import Ball from './Ball.js';
 
-  // modules
-  const Ball = require( 'COLLISION_LAB/common/model/Ball' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const DerivedProperty = require( 'AXON/DerivedProperty' );
-  const ObservableArray = require( 'AXON/ObservableArray' );
-  const Vector2 = require( 'DOT/Vector2' );
-  const Vector2Property = require( 'DOT/Vector2Property' );
+class CenterOfMass {
 
-  class CenterOfMass {
+  /**
+   * @param {ObservableArray.<Ball>} balls
+   */
+  constructor( balls ) {
 
-    /**
-     * @param {ObservableArray.<Ball>} balls
-     */
-    constructor( balls ) {
+    assert && assert( balls instanceof ObservableArray
+    && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
-      assert && assert( balls instanceof ObservableArray
-      && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    //----------------------------------------------------------------------------------------
 
-      //----------------------------------------------------------------------------------------
+    // @public Center of Mass position - value will be updated later
+    this.positionProperty = new Vector2Property( Vector2.ZERO );
 
-      // @public Center of Mass position - value will be updated later
-      this.positionProperty = new Vector2Property( Vector2.ZERO );
+    // @public Center Of Mass Velocity - value will be updated later
+    this.velocityProperty = new Vector2Property( Vector2.ZERO );
 
-      // @public Center Of Mass Velocity - value will be updated later
-      this.velocityProperty = new Vector2Property( Vector2.ZERO );
+    // @public {Property.<boolean>} - are the position and velocity of the center of mass mathematically well defined
+    // center of mass is not defined when there are no balls
+    this.isDefinedProperty = new DerivedProperty( [ balls.lengthProperty ], length => {
+        return length > 0;
+      }
+    );
 
-      // @public {Property.<boolean>} - are the position and velocity of the center of mass mathematically well defined
-      // center of mass is not defined when there are no balls
-      this.isDefinedProperty = new DerivedProperty( [balls.lengthProperty], length => {
-          return length > 0;
-        }
-      );
+    // function that determines the total mass of all the balls
+    const getTotalMass = () => {
+      return balls.reduce( 0, ( accumulator, ball ) => {
+        return accumulator + ball.mass;
+      } );
+    };
 
-      // function that determines the total mass of all the balls
-      const getTotalMass = () => {
-        return balls.reduce( 0, ( accumulator, ball ) => {
-          return accumulator + ball.mass;
+    // define a function to update the position of the center of mass
+    const updatePosition = () => {
+      if ( balls.length === 0 ) {
+
+        // set the position to zero if there are no balls
+        // slight abuse of Vector2 since technically the center of mass does not exist, but we will handle this
+        // case through isDefinedProperty
+        this.positionProperty.value = Vector2.ZERO;
+      }
+      else {
+
+        // {Vector2} determine the total first moment (Mass*position) of the system
+        const totalFirstMoment = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
+          return accumulator.plus( ball.firstMoment );
         } );
-      };
 
-      // define a function to update the position of the center of mass
-      const updatePosition = () => {
-        if ( balls.length === 0 ) {
+        this.positionProperty.value = totalFirstMoment.dividedScalar( getTotalMass() );
+      }
+    };
 
-          // set the position to zero if there are no balls
-          // slight abuse of Vector2 since technically the center of mass does not exist, but we will handle this
-          // case through isDefinedProperty
-          this.positionProperty.value = Vector2.ZERO;
-        }
-        else {
+    // define a function to update the velocity of the center of mass
+    const updateVelocity = () => {
 
-          // {Vector2} determine the total first moment (Mass*position) of the system
-          const totalFirstMoment = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
-            return accumulator.plus( ball.firstMoment );
-          } );
+      if ( balls.length === 0 ) {
 
-          this.positionProperty.value = totalFirstMoment.dividedScalar( getTotalMass() );
-        }
-      };
+        // assign a velocity of zero when there are no balls present.
+        this.velocityProperty.value = Vector2.ZERO;
+      }
+      else {
 
-      // define a function to update the velocity of the center of mass
-      const updateVelocity = () => {
+        // {Vector2} determine the total momentum of the system
+        const totalMomentum = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
+          return accumulator.plus( ball.momentum );
+        } );
 
-        if ( balls.length === 0 ) {
+        this.velocityProperty.value = totalMomentum.dividedScalar( getTotalMass() );
+      }
 
-          // assign a velocity of zero when there are no balls present.
-          this.velocityProperty.value = Vector2.ZERO;
-        }
-        else {
-
-          // {Vector2} determine the total momentum of the system
-          const totalMomentum = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
-            return accumulator.plus( ball.momentum );
-          } );
-
-          this.velocityProperty.value = totalMomentum.dividedScalar( getTotalMass() );
-        }
-
-      };
+    };
 
 
-      // create a listener that will listen to the addition of a new ball
-      const addItemAddedBallListener = addedBall => {
+    // create a listener that will listen to the addition of a new ball
+    const addItemAddedBallListener = addedBall => {
+
+      // update the position and velocity of the center of mass
+      addedBall.positionDerivedProperty.link( updatePosition );
+      addedBall.velocityDerivedProperty.link( updateVelocity );
+
+      // Observe when the ball is removed to unlink listeners
+      const removeBallListener = removedBall => {
 
         // update the position and velocity of the center of mass
-        addedBall.positionDerivedProperty.link( updatePosition );
-        addedBall.velocityDerivedProperty.link( updateVelocity );
+        // since it will change when removing a ball
+        updatePosition();
+        updateVelocity();
 
-        // Observe when the ball is removed to unlink listeners
-        const removeBallListener = removedBall => {
+        if ( removedBall === addedBall ) {
 
-          // update the position and velocity of the center of mass
-          // since it will change when removing a ball
-          updatePosition();
-          updateVelocity();
+          // unlink the listener attached to the removedBall.
+          removedBall.positionDerivedProperty.unlink( updatePosition );
+          removedBall.velocityDerivedProperty.unlink( updateVelocity );
 
-          if ( removedBall === addedBall ) {
-
-            // unlink the listener attached to the removedBall.
-            removedBall.positionDerivedProperty.unlink( updatePosition );
-            removedBall.velocityDerivedProperty.unlink( updateVelocity );
-
-            balls.removeItemRemovedListener( removeBallListener );
-          }
-        };
-        balls.addItemRemovedListener( removeBallListener );
+          balls.removeItemRemovedListener( removeBallListener );
+        }
       };
+      balls.addItemRemovedListener( removeBallListener );
+    };
 
-      balls.addItemAddedListener( addItemAddedBallListener );
-    }
-
+    balls.addItemAddedListener( addItemAddedBallListener );
   }
 
-  return collisionLab.register( 'CenterOfMass', CenterOfMass );
-} );
+}
+
+collisionLab.register( 'CenterOfMass', CenterOfMass );
+export default CenterOfMass;

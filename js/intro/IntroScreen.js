@@ -6,43 +6,39 @@
  * @author Brandon Li
  */
 
-define( require => {
-  'use strict';
+import Property from '../../../axon/js/Property.js';
+import Screen from '../../../joist/js/Screen.js';
+import Tandem from '../../../tandem/js/Tandem.js';
+import collisionLabStrings from '../collision-lab-strings.js';
+import collisionLab from '../collisionLab.js';
+import CollisionLabColors from '../common/CollisionLabColors.js';
+import IntroModel from './model/IntroModel.js';
+import IntroScreenView from './view/IntroScreenView.js';
 
-  // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const IntroModel = require( 'COLLISION_LAB/intro/model/IntroModel' );
-  const IntroScreenView = require( 'COLLISION_LAB/intro/view/IntroScreenView' );
-  const Property = require( 'AXON/Property' );
-  const Screen = require( 'JOIST/Screen' );
-  const Tandem = require( 'TANDEM/Tandem' );
+const screenIntroString = collisionLabStrings.screen.intro;
 
-  // strings
-  const screenIntroString = require( 'string!COLLISION_LAB/screen.intro' );
+class IntroScreen extends Screen {
 
-  class IntroScreen extends Screen {
+  /**
+   * @param {Tandem} tandem
+   */
+  constructor( tandem ) {
 
-    /**
-     * @param {Tandem} tandem
-     */
-    constructor( tandem ) {
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+    const options = {
+      name: screenIntroString,
+      backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
+      tandem: tandem
+    };
 
-      const options = {
-        name: screenIntroString,
-        backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
-        tandem: tandem
-      };
-
-      super(
-        () => new IntroModel( tandem.createTandem( 'model' ) ),
-        model => new IntroScreenView( model, tandem.createTandem( 'view' ) ),
-        options
-      );
-    }
+    super(
+      () => new IntroModel( tandem.createTandem( 'model' ) ),
+      model => new IntroScreenView( model, tandem.createTandem( 'view' ) ),
+      options
+    );
   }
+}
 
-  return collisionLab.register( 'IntroScreen', IntroScreen );
-} );
+collisionLab.register( 'IntroScreen', IntroScreen );
+export default IntroScreen;

@@ -6,27 +6,23 @@
  * @author BrandonLi
  */
 
-define( require => {
-  'use strict';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 
-  // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabScreenView = require( 'COLLISION_LAB/common/view/CollisionLabScreenView' );
-  const Tandem = require( 'TANDEM/Tandem' );
+class IntroScreenView extends CollisionLabScreenView {
 
-  class IntroScreenView extends CollisionLabScreenView {
+  /**
+   * @param {IntroModel} model
+   * @param {Tandem} tandem
+   */
+  constructor( model, tandem ) {
 
-    /**
-     * @param {IntroModel} model
-     * @param {Tandem} tandem
-     */
-    constructor( model, tandem ) {
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-      assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-      super( model, tandem );
-    }
+    super( model, tandem );
   }
+}
 
-  return collisionLab.register( 'IntroScreenView', IntroScreenView );
-} );
+collisionLab.register( 'IntroScreenView', IntroScreenView );
+export default IntroScreenView;

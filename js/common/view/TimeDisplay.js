@@ -6,41 +6,37 @@
  * @author Martin Veillette
  */
 
-define( require => {
-  'use strict';
+import Range from '../../../../dot/js/Range.js';
+import merge from '../../../../phet-core/js/merge.js';
+import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import collisionLabStrings from '../../collision-lab-strings.js';
+import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 
-  // modules
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const CollisionLabColors = require( 'COLLISION_LAB/common/CollisionLabColors' );
-  const CollisionLabConstants = require( 'COLLISION_LAB/common/CollisionLabConstants' );
-  const merge = require( 'PHET_CORE/merge' );
-  const NumberDisplay = require( 'SCENERY_PHET/NumberDisplay' );
-  const Range = require( 'DOT/Range' );
+// constant
+const TIME_RANGE = new Range( 0, 999 ); // range for the time to determine size of display box
 
-  // constant
-  const TIME_RANGE = new Range( 0, 999 ); // range for the time to determine size of display box
+const sString = collisionLabStrings.s;
 
-  // strings
-  const sString = require( 'string!COLLISION_LAB/s' );
+class TimeDisplay extends NumberDisplay {
 
-  class TimeDisplay extends NumberDisplay {
+  /**
+   * @param {Property.<number>} timeProperty
+   */
+  constructor( timeProperty ) {
 
-    /**
-     * @param {Property.<number>} timeProperty
-     */
-    constructor( timeProperty ) {
+    super( timeProperty,
+      TIME_RANGE,
+      merge( CollisionLabColors.TIME_DISPLAY_COLORS, {
+        valuePattern: sString,
+        maxWidth: 100, // determined empirically,
+        font: CollisionLabConstants.CHECKBOX_FONT,
+        decimalPlaces: 2
+      } ) );
 
-      super( timeProperty,
-        TIME_RANGE,
-        merge( CollisionLabColors.TIME_DISPLAY_COLORS, {
-          valuePattern: sString,
-          maxWidth: 100, // determined empirically,
-          font: CollisionLabConstants.CHECKBOX_FONT,
-          decimalPlaces: 2
-        } ) );
-
-    }
   }
+}
 
-  return collisionLab.register( 'TimeDisplay', TimeDisplay );
-} );
+collisionLab.register( 'TimeDisplay', TimeDisplay );
+export default TimeDisplay;

@@ -10,44 +10,40 @@
  * @author Martin Veillette
  */
 
-define( require => {
-  'use strict';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import merge from '../../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import collisionLab from '../../collisionLab.js';
+import BallVectorNode from './BallVectorNode.js';
 
-  // modules
-  const BallVectorNode = require( 'COLLISION_LAB/common/view/BallVectorNode' );
-  const BooleanProperty = require( 'AXON/BooleanProperty' );
-  const collisionLab = require( 'COLLISION_LAB/collisionLab' );
-  const merge = require( 'PHET_CORE/merge' );
-  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+class BallMomentumVectorNode extends BallVectorNode {
 
-  class BallMomentumVectorNode extends BallVectorNode {
+  /**
+   * @param {Property.<Vector2>} momentumProperty
+   * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Object} [options]
+   */
+  constructor( momentumProperty, visibleProperty, modelViewTransform, options ) {
 
-    /**
-     * @param {Property.<Vector2>} momentumProperty
-     * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
-     * @param {ModelViewTransform2} modelViewTransform
-     * @param {Object} [options]
-     */
-    constructor( momentumProperty, visibleProperty, modelViewTransform, options ) {
+    assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2,
+      `invalid modelViewTransform: ${modelViewTransform}` );
+    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
+      `Extra prototype on Options: ${options}` );
 
-      assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
-      assert && assert( modelViewTransform instanceof ModelViewTransform2,
-        `invalid modelViewTransform: ${modelViewTransform}` );
-      assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-        `Extra prototype on Options: ${options}` );
+    //----------------------------------------------------------------------------------------
 
-      //----------------------------------------------------------------------------------------
+    options = merge( {
 
-      options = merge( {
+      arrowOptions: {} // TODO
+    }, options );
 
-        arrowOptions: {} // TODO
-      }, options );
-
-      super( momentumProperty, visibleProperty, modelViewTransform, options );
-
-    }
+    super( momentumProperty, visibleProperty, modelViewTransform, options );
 
   }
 
-  return collisionLab.register( 'BallMomentumVectorNode', BallMomentumVectorNode );
-} );
+}
+
+collisionLab.register( 'BallMomentumVectorNode', BallMomentumVectorNode );
+export default BallMomentumVectorNode;
