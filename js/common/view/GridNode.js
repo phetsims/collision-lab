@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * Creates the scenery view for the grid lines and border of the playArea
