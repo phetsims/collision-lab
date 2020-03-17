@@ -56,9 +56,6 @@ class CollisionLabTimeControlNode extends TimeControlNode {
           maxWidth: 200
         },
 
-        // Options for individual radio buttons
-        radioButtonOptions: { radius: 7 },
-
         // Options for the radio button group
         radioButtonGroupOptions: { spacing: 1 }
       },
