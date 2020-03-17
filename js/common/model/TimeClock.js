@@ -9,6 +9,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -17,9 +18,9 @@ const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
 
 class TimeClock {
   /**
-   * @param {Property.<boolean>} isSlowMotionProperty
+   * @param {EnumerationProperty.<TimeControlSpeed>} timeControlSpeedProperty
    */
-  constructor( isSlowMotionProperty ) {
+  constructor( timeControlSpeedProperty ) {
 
     // @public {Property.<number>} elapsed time (in seconds)
     this.elapsedTimeProperty = new NumberProperty( 0 );
@@ -28,10 +29,9 @@ class TimeClock {
     this.isReversingProperty = new BooleanProperty( false );
 
     // @public {Property.<number>} speedFactor of the simulation: ranging from 1 (normal) to less than one (slow)
-    this.speedFactorProperty = new DerivedProperty( [ isSlowMotionProperty ],
-      isSlowMotion => isSlowMotion ?
-                      CollisionLabConstants.SLOW_SPEED_SCALE : CollisionLabConstants.NORMAL_SPEED_SCALE );
-
+    this.speedFactorProperty = new DerivedProperty( [ timeControlSpeedProperty ], speed => {
+      return speed === TimeControlSpeed.SLOW ? CollisionLabConstants.SLOW_SPEED_SCALE : CollisionLabConstants.NORMAL_SPEED_SCALE;
+    } );
   }
 
   /**
@@ -77,7 +77,6 @@ class TimeClock {
    * @param  {number} dt
    */
   step( dt ) {
-
     this.elapsedTimeProperty.value += dt;
 
     this.stepFunction( dt, this.isReversingProperty.value );

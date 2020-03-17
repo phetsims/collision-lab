@@ -15,53 +15,58 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
    * @param {Property.<boolean>} playProperty
-   * @param {Property.<boolean>} isSlowMotionProperty
+   * @param {EnumerationProperty.<TimeControlSpeed>} timeControlSpeedProperty
    * @param {Property.<boolean>} playAreaFreeProperty
    * @param {Function} stepBackward
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, isSlowMotionProperty, playAreaFreeProperty,
+  constructor( playProperty, timeControlSpeedProperty, playAreaFreeProperty,
                stepBackward, stepForward, options ) {
 
 
     super( playProperty, merge( {
-      includeStepBackwardButton: true,
 
       // property associated with the slow/normal radio buttons
-      isSlowMotionProperty: isSlowMotionProperty,
+      timeControlSpeedProperty: timeControlSpeedProperty,
+
+      playPauseStepButtonOptions: {
+        includeStepBackwardButton: true,
+        playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
+
+        // Options for the play pause buttons
+        playPauseButtonOptions: {
+          radius: 30
+        },
+
+        stepBackwardButtonOptions: {
+          listener: () => stepBackward(),
+          radius: 20
+        },
+        stepForwardButtonOptions: {
+          listener: () => stepForward(),
+          radius: 20
+        }
+      },
+
+      speedRadioButtonGroupOptions: {
+        // Options for the Normal/Slow text labels
+        labelOptions: {
+          font: new PhetFont( 16 ),
+          maxWidth: 200
+        },
+
+        // Options for individual radio buttons
+        radioButtonOptions: { radius: 7 },
+
+        // Options for the radio button group
+        radioButtonGroupOptions: { spacing: 1 }
+      },
 
       enabledProperty: playAreaFreeProperty,
 
       // Spacing options
-      playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
-      buttonsXSpacing: 20, // horizontal space between push buttons and radio buttons
-
-      // Options for the Normal/Slow text labels
-      labelOptions: {
-        font: new PhetFont( 16 ),
-        maxWidth: 200
-      },
-
-      // Options for radio buttons
-      radioButtonOptions: { radius: 7 },
-
-      // Options for the radio button group
-      radioButtonGroupOptions: { spacing: 1 },
-
-      // Options for the play pause buttons
-      playPauseOptions: {
-        radius: 30
-      },
-
-      stepBackwardOptions: {
-        listener: () => stepBackward(),
-        radius: 20
-      },
-      stepForwardOptions: {
-        listener: () => stepForward(),
-        radius: 20
-      }
+      buttonGroupXSpacing: 20 // horizontal space between push buttons and radio buttons
     }, options ) );
   }
 }
