@@ -34,7 +34,9 @@ class KineticEnergyDisplay extends NumberDisplay {
         backgroundLineWidth: 0,
         valuePattern: kineticEnergyJString,
         maxWidth: 300, // determined empirically,
-        font: CollisionLabConstants.DISPLAY_FONT,
+        textOptions: {
+          font: CollisionLabConstants.DISPLAY_FONT
+        },
         decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
       } ) );
 

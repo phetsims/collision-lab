@@ -47,26 +47,26 @@ class BallValuesDisplay extends Node {
             align: 'left',
             backgroundLineWidth: 0,
             maxWidth: 150, // determined empirically,
-            font: CollisionLabConstants.DISPLAY_FONT,
-            decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
+            decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES,
+            textOptions: {
+              font: CollisionLabConstants.DISPLAY_FONT
+            }
           }, options.numberDisplayOptions )
       }, options );
 
     // create number display for speed, located above the ball
     const speedNumberDisplay = new NumberDisplay( speedProperty, SPEED_RANGE,
-      merge( options.numberDisplayOptions,
-        {
-          valuePattern: speedPatternString
-        } ) );
+      merge( options.numberDisplayOptions, {
+        valuePattern: speedPatternString
+      } ) );
     speedNumberDisplay.bottom = -options.verticalOffset;
     speedNumberDisplay.centerX = 0;
 
     // create number display for momentum, located below the ball
     const momentumNumberDisplay = new NumberDisplay( momentumMagnitudeProperty, MOMENTUM_RANGE,
-      merge( options.numberDisplayOptions,
-        {
-          valuePattern: momentumPatternString
-        } ) );
+      merge( options.numberDisplayOptions, {
+        valuePattern: momentumPatternString
+      } ) );
     momentumNumberDisplay.top = options.verticalOffset;
     momentumNumberDisplay.centerX = 0;
 

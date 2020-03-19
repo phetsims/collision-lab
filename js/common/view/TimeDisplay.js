@@ -31,7 +31,9 @@ class TimeDisplay extends NumberDisplay {
       merge( CollisionLabColors.TIME_DISPLAY_COLORS, {
         valuePattern: sString,
         maxWidth: 100, // determined empirically,
-        font: CollisionLabConstants.CHECKBOX_FONT,
+        textOptions: {
+          font: CollisionLabConstants.CHECKBOX_FONT
+        },
         decimalPlaces: 2
       } ) );
 

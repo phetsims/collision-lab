@@ -44,7 +44,9 @@ class MoreDataBallEntry extends Node {
         CollisionLabColors.BALL_DISPLAY_COLORS, {
           align: 'right',
           maxWidth: 80, // determined empirically,
-          font: CollisionLabConstants.DISPLAY_FONT,
+          textOptions: {
+            font: CollisionLabConstants.DISPLAY_FONT
+          },
           backgroundStroke: 'black',
           backgroundLineWidth: 1,
           decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES

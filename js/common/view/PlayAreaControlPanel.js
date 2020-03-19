@@ -125,7 +125,9 @@ class PlayAreaControlPanel extends Panel {
       },
       numberDisplayOptions: {
         valuePattern: elasticityPercentString,
-        font: new PhetFont( 14 )
+        textOptions: {
+          font: new PhetFont( 14 )
+        }
       },
       titleNodeOptions: {
         font: new PhetFont( 16 ),
