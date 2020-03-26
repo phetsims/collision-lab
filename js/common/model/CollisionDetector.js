@@ -250,7 +250,7 @@ class CollisionDetector {
 
   /**
    * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
-   * its way to its current location. The appropriate velocity component is then updated  and the
+   * its way to its current position. The appropriate velocity component is then updated  and the
    * ball is positioned within the bounds.
    * @public
    */
@@ -290,7 +290,7 @@ class CollisionDetector {
 
   /**
    * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
-   * its way to its current location. The appropriate velocity component is then updated  and the
+   * its way to its current position. The appropriate velocity component is then updated  and the
    * ball is positioned within the bounds.
    * @param {number} deltaTime  - time interval since last step
    * @public

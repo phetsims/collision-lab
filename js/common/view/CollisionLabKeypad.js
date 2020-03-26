@@ -138,10 +138,10 @@ class CollisionLabKeypad extends Plane {
 
   /**
    * Positions keypad
-   * @param {function:KeypadPanel} setKeypadLocation - function that lays out keypad, no return
+   * @param {function:KeypadPanel} setKeyPadPosition - function that lays out keypad, no return
    */
-  positionKeypad( setKeypadLocation ) {
-    this.keypadPanel && setKeypadLocation( this.keypadPanel );
+  positionKeypad( setKeyPadPosition ) {
+    this.keypadPanel && setKeyPadPosition( this.keypadPanel );
   }
 
   /**

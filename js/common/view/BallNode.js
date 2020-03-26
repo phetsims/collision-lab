@@ -73,8 +73,8 @@ class BallNode extends Node {
     // ball radius in view coordinates
     const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );
 
-    // ball location in view coordinates
-    const location = modelViewTransform.modelToViewPosition( ball.position );
+    // ball position in view coordinates
+    const position = modelViewTransform.modelToViewPosition( ball.position );
 
     // create and add disk to the scene graph
     const diskNode = new Circle( ballRadius, {
@@ -105,14 +105,14 @@ class BallNode extends Node {
     const verticalLine = new Line( 0, 0, 0, 1, graticuleOptions );
     const graticule = new Node( { children: [ verticalLine, horizontalLine ] } );
 
-    // function to set location of crosshair
-    const setGraticuleLocation = location => {
-      horizontalLine.setLine( viewPlayAreaBounds.minX, location.y, viewPlayAreaBounds.maxX, location.y );
-      verticalLine.setLine( location.x, viewPlayAreaBounds.minY, location.x, viewPlayAreaBounds.maxY );
+    // function to set position of crosshair
+    const setGraticulePosition = position => {
+      horizontalLine.setLine( viewPlayAreaBounds.minX, position.y, viewPlayAreaBounds.maxX, position.y );
+      verticalLine.setLine( position.x, viewPlayAreaBounds.minY, position.x, viewPlayAreaBounds.maxY );
     };
 
-    // set location of crosshair at ball position
-    setGraticuleLocation( location );
+    // set position of crosshair at ball position
+    setGraticulePosition( position );
     this.addChild( graticule );
 
     // create the velocityVector and momentumVector nodes
@@ -161,14 +161,14 @@ class BallNode extends Node {
 
     const ballPositionListener = position => {
 
-      const location = modelViewTransform.modelToViewPosition( position );
+      const viewPosition = modelViewTransform.modelToViewPosition( position );
 
-      ballValuesDisplay.translation = location;
-      diskLayer.translation = location;
-      vectorLayer.translation = location;
-      setGraticuleLocation( location );
+      ballValuesDisplay.translation = viewPosition;
+      diskLayer.translation = viewPosition;
+      vectorLayer.translation = viewPosition;
+      setGraticulePosition( viewPosition );
 
-      vectorLayer.visible = viewPlayAreaBounds.containsPoint( location );
+      vectorLayer.visible = viewPlayAreaBounds.containsPoint( viewPosition );
     };
 
     // translate the vectors, crosshair and disk upon a change of the position of the ball
