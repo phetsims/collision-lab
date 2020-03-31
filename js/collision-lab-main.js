@@ -9,7 +9,7 @@
 import Sim from '../../joist/js/Sim.js';
 import SimLauncher from '../../joist/js/SimLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import collisionLabStrings from './collision-lab-strings.js';
+import collisionLabStrings from './collisionLabStrings.js';
 import IntroScreen from './intro/IntroScreen.js';
 
 const collisionLabTitleString = collisionLabStrings[ 'collision-lab' ].title;

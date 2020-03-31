@@ -18,7 +18,7 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import Panel from '../../../../sun/js/Panel.js';
-import collisionLabStrings from '../../collision-lab-strings.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';

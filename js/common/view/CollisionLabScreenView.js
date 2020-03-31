@@ -20,7 +20,7 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import mockupScreen2DLabImage from '../../../images/mockup-screen-2DLab_png.js';
-import collisionLabStrings from '../../collision-lab-strings.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js'; // TODO: #13
