@@ -15,20 +15,20 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
    * @param {Property.<boolean>} playProperty
-   * @param {EnumerationProperty.<TimeControlSpeed>} timeControlSpeedProperty
+   * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
    * @param {Property.<boolean>} playAreaFreeProperty
    * @param {Function} stepBackward
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, timeControlSpeedProperty, playAreaFreeProperty,
+  constructor( playProperty, timeSpeedProperty, playAreaFreeProperty,
                stepBackward, stepForward, options ) {
 
 
     super( playProperty, merge( {
 
       // property associated with the slow/normal radio buttons
-      timeControlSpeedProperty: timeControlSpeedProperty,
+      timeSpeedProperty: timeSpeedProperty,
 
       playPauseStepButtonOptions: {
         includeStepBackwardButton: true,

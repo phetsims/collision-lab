@@ -9,7 +9,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
-import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
+import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import PlayArea from './PlayArea.js';
@@ -58,11 +58,11 @@ class CollisionLabModel {
     // @public - controls the play/pause state of the play area
     this.playProperty = new BooleanProperty( true );
 
-    // @public {EnumerationProperty.<TimeControlSpeed>} - controls the speed rate of the simulation, slow/normal
-    this.timeControlSpeedProperty = new EnumerationProperty( TimeControlSpeed, TimeControlSpeed.NORMAL );
+    // @public {EnumerationProperty.<TimeSpeed>} - controls the speed rate of the simulation, slow/normal
+    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
     // @public - timeClock for the simulation
-    this.timeClock = new TimeClock( this.timeControlSpeedProperty );
+    this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
     this.playArea = new PlayArea( this.balls );
@@ -77,7 +77,7 @@ class CollisionLabModel {
    */
   reset() {
     this.playProperty.reset();
-    this.timeControlSpeedProperty.reset();
+    this.timeSpeedProperty.reset();
     this.playArea.reset();
     this.timeClock.reset();
   }

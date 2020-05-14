@@ -20,8 +20,8 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import mockupScreen2DLabImage from '../../../images/mockup-screen-2DLab_png.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js'; // TODO: #13
 import BallNode from './BallNode.js';
@@ -108,7 +108,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.playProperty,
-      model.timeControlSpeedProperty,
+      model.timeSpeedProperty,
       model.playAreaFreeProperty,
       model.timeClock.stepBackward.bind( model.timeClock ),
       model.timeClock.stepForward.bind( model.timeClock ), {
