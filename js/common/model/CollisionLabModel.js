@@ -42,6 +42,8 @@ class CollisionLabModel {
     this.reflectingBorderProperty = new BooleanProperty( true );
 
     // @public (read-only) {BooleanProperty} - determines if the balls are sticky or if they slide on inelastic collisions.
+    // TODO: this should be an EnumerationProperty of a Enum (stick vs slide).
+    // TODO: what is the state of the design of this feature.
     this.isStickyProperty = new BooleanProperty( true );
 
     // @public - controls the play/pause state of the play area
