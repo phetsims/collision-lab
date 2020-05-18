@@ -7,7 +7,6 @@
  */
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
@@ -18,14 +17,15 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import Panel from '../../../../sun/js/Panel.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
 import XNode from './XNode.js';
 
 // constants
-const ELASTICITY_PERCENT_RANGE = new Range( 0, 100 );
+const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 
 const centerOfMassString = collisionLabStrings.centerOfMass;
 const constantSizeString = collisionLabStrings.constantSize;

@@ -8,10 +8,12 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from './PlayArea.js';
 import TimeClock from './TimeClock.js';
 
@@ -21,8 +23,11 @@ class CollisionLabModel {
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
+    //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
+    this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
     // @public {ObservableArray.<Ball>}
     this.balls = new ObservableArray();
@@ -65,7 +70,7 @@ class CollisionLabModel {
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
-    this.playArea = new PlayArea( this.balls );
+    this.playArea = new PlayArea( this.balls, this.elasticityPercentProperty );
 
     // add a time stepping function to the timeClock
     this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
@@ -80,6 +85,7 @@ class CollisionLabModel {
     this.timeSpeedProperty.reset();
     this.playArea.reset();
     this.timeClock.reset();
+    this.elasticityPercentProperty.reset();
   }
 
   /**

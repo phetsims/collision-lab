@@ -3,14 +3,13 @@
 /**
  * PlayArea is the model for the PlayArea system of different Ball objects, intended to be sub-classed.
  *
- * PlayAreas are responsible for:
+ * PlayArea is mainly responsible for:
  *   - Keeping track of the number of Balls within the PlayArea system.
  *   - Keeping track of the total kinetic energy of all the Balls in the PlayArea.
  *   - Stepping each Ball at each step call.
- *   - Elasticity of all Balls in the PlayArea.
  *   - CenterOfMass model instantiation for the system of Balls
  *
- * PlayAreas are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * PlayArea is created at the start of the sim and is never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -19,7 +18,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
-import Range from '../../../../dot/js/Range.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
@@ -37,22 +35,14 @@ class PlayArea {
   /**
    * @param {ObservableArray.<Ball>} balls
    */
-  constructor( balls ) {
-
+  constructor( balls, elasticityPercentProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
     // @public
     this.numberOfBallsProperty = new NumberProperty( 2 );
 
-    // @public
-    this.elasticityPercentProperty = new NumberProperty( 100, { range: new Range( 0, 100 ) } );
-
-    // @public {Property.<number>}
-    this.elasticityProperty = new DerivedProperty( [ this.elasticityPercentProperty ],
-      elasticity => elasticity / 100 );
-
     // @public {Property.<boolean>}
-    this.stepBackwardButtonEnabledProperty = new DerivedProperty( [ this.elasticityPercentProperty ],
+    this.stepBackwardButtonEnabledProperty = new DerivedProperty( [ elasticityPercentProperty ],
       elasticity => elasticity > 0 );
 
     // @public determines if the balls will reflect at the border
@@ -62,7 +52,7 @@ class PlayArea {
     this.isStickyProperty = new BooleanProperty( true );
 
     // @public {Property.<boolean>}
-    this.isComplettelyInelasticAndStickyProperty = new DerivedProperty( [ this.elasticityPercentProperty, this.isStickyProperty ],
+    this.isComplettelyInelasticAndStickyProperty = new DerivedProperty( [ elasticityPercentProperty, this.isStickyProperty ],
       ( elasticity, isSticky ) => elasticity === 0 && isSticky );
 
     // @public determines if the ball size is constant (i.e. independent of mass)
@@ -77,7 +67,7 @@ class PlayArea {
     // @public
     this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
       balls,
-      this.elasticityProperty,
+      new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
       this.isComplettelyInelasticAndStickyProperty,
       this.reflectingBorderProperty );
 
@@ -116,7 +106,6 @@ class PlayArea {
    */
   reset() {
     this.numberOfBallsProperty.reset();
-    this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.kineticEnergySumProperty.reset();

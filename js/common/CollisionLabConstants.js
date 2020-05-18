@@ -28,6 +28,8 @@ const CollisionLabConstants = {
   DEFAULT_RADIUS: 0.15, // in meters
   MASS_RANGE: new Range( 0.1, 3.0 ),
   VELOCITY_RANGE: new Range( -10, 10 ),
+  ELASTICITY_PERCENT_RANGE: new Range( 0, 100 ),
+
 
   DEFAULT_BALL_SETTINGS: [
     { mass: 0.5, position: new Vector2( -1.0, 0.00 ), velocity: new Vector2( 1.0, 0.3 ) },
