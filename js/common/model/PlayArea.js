@@ -1,14 +1,16 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * PlayArea is the model for the PlayArea of different Ball objects, intended to be sub-classed.
+ * PlayArea is the model for the PlayArea system of different Ball objects, intended to be sub-classed.
  *
  * PlayAreas are responsible for:
- *   - Keeping track of the number of Balls in the PlayArea.
+ *   - Keeping track of the number of Balls within the PlayArea system.
  *   - Keeping track of the total kinetic energy of all the Balls in the PlayArea.
  *   - Stepping each Ball at each step call.
  *   - Elasticity of all Balls in the PlayArea.
- *   - Keep track of center of mass position and velocity
+ *   - CenterOfMass model instantiation for the system of Balls
+ *
+ * PlayAreas are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -37,8 +39,7 @@ class PlayArea {
    */
   constructor( balls ) {
 
-    assert && assert( balls instanceof ObservableArray
-    && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
     // @public
     this.numberOfBallsProperty = new NumberProperty( 2 );
