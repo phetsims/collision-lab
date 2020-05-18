@@ -35,7 +35,9 @@ class Ball {
    * @param {Vector2} initialVelocity - initial velocity of the center of mass of the ball
    * @param {number} initialMass - starting mass of the ball, in kg
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
-   * @param {number} index - which Ball in a system is this?
+   * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
+   *                         number is displayed on the Ball, and each Ball within the system has a unique index.
+   *                         Indices start from 1 within the system (i.e. 1, 2, 3, ...).
    */
   constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, index ) {
     assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
@@ -46,7 +48,7 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only)
+    // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
     // @public (read-only) massProperty - Property of the mass of the ball, in kg.
