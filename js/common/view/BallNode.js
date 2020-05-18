@@ -8,6 +8,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -65,7 +66,7 @@ class BallNode extends Node {
     super();
 
     // drag bounds for the ball
-    const dragBoundsProperty = new Property( CollisionLabConstants.PLAY_AREA_BOUNDS );
+    const dragBoundsProperty = new Property( modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS ) );
 
     // bounds of the play area in view coordinates
     const viewPlayAreaBounds = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS );
@@ -132,24 +133,25 @@ class BallNode extends Node {
     const vectorLayer = new Node( { children: [ ballMomentumVectorNode, ballVelocityVectorNode ] } );
     this.addChild( vectorLayer );
 
+    // Create a Property of to track the ball's center position in view coordinates
+    const centerPositionProperty = new Vector2Property( position );
+
     // add input listener to disk
-    const diskLayerDragListener =
-      new DragListener( {
-        targetNode: diskLayer,
-        transform: modelViewTransform,
-        positionProperty: ball.positionProperty,
-        dragBoundsProperty: dragBoundsProperty,
-        start: () => {
-          ball.isUserControlledProperty.value = true;
-          this.moveToFront();
-        },
-        end: () => {
-          ball.isUserControlledProperty.value = false;
-          if ( gridVisibleProperty.value ) {
-            ball.snapPosition();
-          }
-        }
-      } );
+    const diskLayerDragListener = new DragListener( {
+      positionProperty: centerPositionProperty,
+      dragBoundsProperty: dragBoundsProperty,
+      start: () => {
+        ball.isUserControlledProperty.value = true;
+        this.moveToFront();
+      },
+      end: () => {
+        ball.isUserControlledProperty.value = false;
+        gridVisibleProperty.value && ball.snapPosition();
+      }
+    } );
+    centerPositionProperty.link( centerPosition => {
+      ball.position = modelViewTransform.viewToModelPosition( centerPosition );
+    } );
 
     diskLayer.addInputListener( diskLayerDragListener );
 
@@ -160,7 +162,6 @@ class BallNode extends Node {
     this.addChild( ballValuesDisplay );
 
     const ballPositionListener = position => {
-
       const viewPosition = modelViewTransform.modelToViewPosition( position );
 
       ballValuesDisplay.translation = viewPosition;
@@ -183,7 +184,7 @@ class BallNode extends Node {
       diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
 
       // shrink the dragBounds (in model coordinates) by the radius of the ball
-      dragBoundsProperty.value = CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( radius );
+      dragBoundsProperty.value = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( radius ) );
     };
 
     // updates the radius of the ball
