@@ -85,7 +85,7 @@ class PlayArea {
       if ( difference < 0 ) {
 
         // remove ball(s) from observableArray
-        this.balls.splice( oldValue - 1, Math.abs( difference ) );
+        this.balls.splice( oldValue + difference, Math.abs( difference ) );
       }
       else {
         // add balls to observableArray
