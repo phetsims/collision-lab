@@ -3,8 +3,14 @@
 /**
  * A Ball is the model for all types of balls.
  *
- * @author Martin Veillette
+ * Primary responsibilities are:
+ *  1. center position Property
+ *  2. velocity and momentum vector Properties
+ *  3. radius Property to track the inner radius of the Ball
+ *  4. track the kinetic energy of the Ball
+ *
  * @author Brandon Li
+ * @author Martin Veillette
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
