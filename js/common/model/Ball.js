@@ -102,7 +102,7 @@ class Ball {
     // Handle the changing radius of the Ball based on the mass
     // @public (read-only) - Property of the radius of the ball in meters
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
-      ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 )
+      ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 ) // TODO: where does this calculation come from?
     );
 
     // @public (read-only) kineticEnergyProperty - Property of the kinetic energy of the ball, in J.
@@ -128,7 +128,7 @@ class Ball {
   }
 
   /**
-   * snap position to the minor gridlines.
+   * snap position to the minor grid-lines. // TODO: should there be a general "drag ball to" method that handles the functionality of grid visible snapping vs non-snapping in the model?
    * @public
    */
   snapPosition() {
