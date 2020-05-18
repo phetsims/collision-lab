@@ -32,15 +32,15 @@ class Ball {
   /**
    * @param {number} index - index of the ball
    * @param {number} initialMass - initial mass of the ball, in kg
-   * @param {Vector2} position - initial position of the center of the ball
+   * @param {Vector2} initialPosition - initial position of the center of the ball
    * @param {Vector2} velocity - initial velocity of the center of mass of the ball
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
    */
-  constructor( index, initialMass, position, velocity, constantRadiusProperty ) {
+  constructor( index, initialMass, initialPosition, velocity, constantRadiusProperty ) {
 
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
     assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
-    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+    assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean',
       `invalid velocity: ${constantRadiusProperty}` );
@@ -54,8 +54,8 @@ class Ball {
     this.massProperty = new NumberProperty( initialMass );
 
     // @public (read-only) Property of the center of the ball's coordinates, in meters.
-    this.positionXProperty = new NumberProperty( position.x );
-    this.positionYProperty = new NumberProperty( position.y );
+    this.positionXProperty = new NumberProperty( initialPosition.x );
+    this.positionYProperty = new NumberProperty( initialPosition.y );
 
     // @public (read-only) velocityProperty - Property of the velocity's coordinate of the ball, in m/s.
     this.velocityXProperty = new NumberProperty( velocity.x );
@@ -65,7 +65,7 @@ class Ball {
     this.isUserControlledProperty = new BooleanProperty( false );
 
     // @public position of the ball for DragListener
-    this.positionProperty = new Vector2Property( position );
+    this.positionProperty = new Vector2Property( initialPosition );
 
     // @public velocity of the ball for DragListener
     this.velocityProperty = new Vector2Property( velocity );
