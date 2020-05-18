@@ -31,15 +31,15 @@ class Ball {
 
   /**
    * @param {number} index - index of the ball
-   * @param {number} mass - initial mass of the ball (kg)
+   * @param {number} initialMass - initial mass of the ball, in kg
    * @param {Vector2} position - initial position of the center of the ball
    * @param {Vector2} velocity - initial velocity of the center of mass of the ball
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
    */
-  constructor( index, mass, position, velocity, constantRadiusProperty ) {
+  constructor( index, initialMass, position, velocity, constantRadiusProperty ) {
 
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
-    assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
+    assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean',
@@ -50,14 +50,14 @@ class Ball {
     // @public (read-only)
     this.index = index;
 
-    // @public (read-only) massProperty - Property of the mass of the ball (kg)
-    this.massProperty = new NumberProperty( mass );
+    // @public (read-only) massProperty - Property of the mass of the ball, in kg.
+    this.massProperty = new NumberProperty( initialMass );
 
-    // @public (read-only) Property of the center of the ball's coordinates (m).
+    // @public (read-only) Property of the center of the ball's coordinates, in meters.
     this.positionXProperty = new NumberProperty( position.x );
     this.positionYProperty = new NumberProperty( position.y );
 
-    // @public (read-only) velocityProperty - Property of the velocity's coordinate of the ball (m/s).
+    // @public (read-only) velocityProperty - Property of the velocity's coordinate of the ball, in m/s.
     this.velocityXProperty = new NumberProperty( velocity.x );
     this.velocityYProperty = new NumberProperty( velocity.y );
 
