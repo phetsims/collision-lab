@@ -16,7 +16,6 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -35,11 +34,8 @@ class PlayArea {
   /**
    * @param {ObservableArray.<Ball>} balls
    */
-  constructor( balls, elasticityPercentProperty ) {
+  constructor( balls, elasticityPercentProperty, numberOfBallsProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-
-    // @public
-    this.numberOfBallsProperty = new NumberProperty( 2 );
 
     // @public {Property.<boolean>}
     this.stepBackwardButtonEnabledProperty = new DerivedProperty( [ elasticityPercentProperty ],
@@ -80,10 +76,10 @@ class PlayArea {
     this.prepopulatedBalls = [];
     this.createInitialBallData();
 
-    this.initializeBalls();
+    this.initializeBalls( numberOfBallsProperty.value );
 
     // update the number of balls
-    this.numberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
+    numberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
       const difference = newValue - oldValue;
 
       if ( difference < 0 ) {
@@ -105,12 +101,9 @@ class PlayArea {
    * @public
    */
   reset() {
-    this.numberOfBallsProperty.reset();
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.kineticEnergySumProperty.reset();
-    this.createInitialBallData();
-    this.initializeBalls();
   }
 
   /**
@@ -162,9 +155,9 @@ class PlayArea {
   /**
    * @private
    */
-  initializeBalls() {
+  initializeBalls( numberOfBalls ) {
     this.balls.clear();
-    for ( let i = 0; i < this.numberOfBallsProperty.value; i++ ) {
+    for ( let i = 0; i < numberOfBalls; i++ ) {
       this.balls.push( this.prepopulatedBalls[ i ] );
     }
   }

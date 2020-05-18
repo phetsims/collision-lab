@@ -84,7 +84,7 @@ class CollisionLabScreenView extends ScreenView {
 
     // create and add number spinner for number of balls
     const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
-    const numberOfBallsSpinner = new NumberSpinner( model.playArea.numberOfBallsProperty, new Property( numberOfBallsRange ) );
+    const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
     this.addChild( numberOfBallsSpinner );
 
     // create the grid and border of the playArea
@@ -93,6 +93,7 @@ class CollisionLabScreenView extends ScreenView {
       viewProperties.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
       viewProperties.centerOfMassVisibleProperty,
+      model.numberOfBallsProperty,
       modelViewTransform
     );
     this.addChild( playAreaNode );

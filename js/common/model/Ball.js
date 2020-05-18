@@ -11,6 +11,8 @@
  *  4. radius Property to track the inner radius of the Ball
  *  5. track the kinetic energy of the Ball
  *
+ * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ *
  * @author Brandon Li
  * @author Martin Veillette
  */

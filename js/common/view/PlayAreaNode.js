@@ -31,6 +31,7 @@ class PlayAreaNode extends Node {
                gridVisibleProperty,
                kineticEnergyVisibleProperty,
                centerOfMassVisibleProperty,
+               numberOfBallsProperty,
                modelViewTransform,
                options ) {
 
@@ -53,7 +54,7 @@ class PlayAreaNode extends Node {
     // create the center of mass
     const centerOfMassNode = new CenterOfMassNode( playArea.centerOfMass,
       centerOfMassVisibleProperty,
-      playArea.numberOfBallsProperty,
+      numberOfBallsProperty,
       modelViewTransform );
 
     this.addChild( gridNode );

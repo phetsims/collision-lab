@@ -29,6 +29,12 @@ class CollisionLabModel {
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
+    // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
+    //                                        outside of the PlayArea in a Spinner.
+    this.numberOfBallsProperty = new NumberProperty( 2 );
+
+
+
     // @public {ObservableArray.<Ball>}
     this.balls = new ObservableArray();
 
@@ -70,7 +76,7 @@ class CollisionLabModel {
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
-    this.playArea = new PlayArea( this.balls, this.elasticityPercentProperty );
+    this.playArea = new PlayArea( this.balls, this.elasticityPercentProperty, this.numberOfBallsProperty );
 
     // add a time stepping function to the timeClock
     this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
@@ -86,6 +92,7 @@ class CollisionLabModel {
     this.playArea.reset();
     this.timeClock.reset();
     this.elasticityPercentProperty.reset();
+    this.numberOfBallsProperty.reset();
   }
 
   /**
