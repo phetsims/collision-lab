@@ -174,8 +174,8 @@ class Ball {
 
   /**
    * Moves this Ball by one time step (assuming ballistic motion).
-   * @param {number} dt - time in seconds
    * @public
+   * @param {number} dt - time in seconds
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
