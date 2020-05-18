@@ -37,23 +37,38 @@ class PlayArea {
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
    * @param {Property.<number>} elasticityPercentProperty - the elasticity of all collisions, as a percentage.
    * @param {Property.<boolean>} reflectingBorderProperty - indicates if Balls should reflect off the borders.
+   * @param {Property.<boolean>} constantRadiusProperty - indicates if Ball radii should be constant.
    * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    */
-  constructor( numberOfBallsProperty, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty ) {
+  constructor(
+    numberOfBallsProperty,
+    elasticityPercentProperty,
+    reflectingBorderProperty,
+    constantRadiusProperty,
+    isStickyProperty
+  ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
+    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
     assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
 
-    // @public determines if the ball size is constant (i.e. independent of mass)
-    this.constantRadiusProperty = new BooleanProperty( false );
-
+    //----------------------------------------------------------------------------------------
     // @private {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation and are
     //                      never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                      PlayArea system. That is determined by the `this.balls` declaration below. This is just used
     //                      so that the same Ball instances are added with the same number of balls.
     this.prepopulatedBalls = [];
-    this.createInitialBallData();
+    DEFAULT_BALL_SETTINGS.forEach( ( ballSettings, index ) => {
+      this.prepopulatedBalls.push( new Ball(
+        ballSettings.position,
+        ballSettings.velocity,
+        ballSettings.mass,
+        constantRadiusProperty,
+        index + 1
+      ) );
+    } );
+
 
     // @public (read-only) {ObservableArray.<Ball>} - an array of the system of Balls within the PlayArea. Balls
     //                                                **must** be from `this.prepopulatedBalls`.
@@ -120,7 +135,6 @@ class PlayArea {
    * @public
    */
   reset() {
-    this.constantRadiusProperty.reset();
     this.kineticEnergySumProperty.reset();
   }
 
@@ -147,27 +161,6 @@ class PlayArea {
     this.collisionDetector.detectCollision( dt );
     this.collisionDetector.doBallBorderCollisionsImproved( dt );
 
-  }
-
-  /**
-   * Create an an array containing all possible balls with initial conditions
-   * @private
-   */
-  createInitialBallData() {
-
-    // empty the prepopulated ball array
-    this.prepopulatedBalls = [];
-
-    // create initial data for balls
-    DEFAULT_BALL_SETTINGS.forEach( ( ballSettings, index ) => {
-      this.prepopulatedBalls.push( new Ball(
-        ballSettings.position,
-        ballSettings.velocity,
-        ballSettings.mass,
-        this.constantRadiusProperty,
-        index + 1
-      ) );
-    } );
   }
 }
 

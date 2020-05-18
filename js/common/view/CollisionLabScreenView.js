@@ -150,7 +150,7 @@ class CollisionLabScreenView extends ScreenView {
       model.reflectingBorderProperty,
       model.elasticityPercentProperty,
       model.isStickyProperty,
-      model.playArea.constantRadiusProperty,
+      model.constantRadiusProperty,
       {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         top: SCREEN_VIEW_Y_MARGIN

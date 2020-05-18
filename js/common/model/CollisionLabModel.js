@@ -52,9 +52,13 @@ class CollisionLabModel {
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
-    // @public (read-only) {NumberProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
-    //                                        This Property is manipulated outside of the PlayArea.
+    // @public (read-only) {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
+    //                                         This Property is manipulated outside of the PlayArea.
     this.reflectingBorderProperty = new BooleanProperty( true );
+
+    // @public (read-only) {BooleanProperty} - indicates if Ball radii are constant (i.e. independent of mass).
+    //                                         This Property is manipulated outside of the PlayArea.
+    this.constantRadiusProperty = new BooleanProperty( false );
 
     // @public (read-only) {BooleanProperty} - determines if the balls are sticky or if they slide on inelastic collisions.
     // TODO: this should be an EnumerationProperty of a Enum (stick vs slide).
@@ -63,11 +67,12 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // @public - handle the playArea (ballistic motion and collision of balls)
+    // @public (read-only) {PlayArea} - create the PlayArea of the screen.
     this.playArea = new PlayArea(
       this.numberOfBallsProperty,
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
+      this.constantRadiusProperty,
       this.isStickyProperty
     );
   }
@@ -79,12 +84,13 @@ class CollisionLabModel {
   reset() {
     this.playProperty.reset();
     this.timeSpeedProperty.reset();
-    this.playArea.reset();
     this.timeClock.reset();
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
+    this.constantRadiusProperty.reset();
     this.isStickyProperty.reset();
+    this.playArea.reset();
   }
 
   /**
