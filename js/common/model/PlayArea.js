@@ -90,9 +90,9 @@ class PlayArea {
     this.prepopulatedBalls.forEach( prepopulatedBall => {
 
       // Observe when the user is controlling the Ball. Link is never disposed as PlayAreas nor Balls are ever disposed.
-      prepopulatedBall.isUserControlledProperty.link( () => {
+      prepopulatedBall.userControlledProperty.link( () => {
         // Determine if any of the balls, within the system, are being controlled by the user.
-        this.playAreaUserControlledProperty.value = this.balls.some( ball => ball.isUserControlledProperty.value );
+        this.playAreaUserControlledProperty.value = this.balls.some( ball => ball.userControlledProperty.value );
       } );
     } );
 

@@ -10,18 +10,19 @@ import merge from '../../../../phet-core/js/merge.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import collisionLab from '../../collisionLab.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
    * @param {Property.<boolean>} playProperty
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
-   * @param {Property.<boolean>} playAreaFreeProperty
+   * @param {Property.<boolean>} playAreaUserControlledProperty
    * @param {Function} stepBackward
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, timeSpeedProperty, playAreaFreeProperty,
+  constructor( playProperty, timeSpeedProperty, playAreaUserControlledProperty,
                stepBackward, stepForward, options ) {
 
 
@@ -60,7 +61,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
         radioButtonGroupOptions: { spacing: 1 }
       },
 
-      enabledProperty: playAreaFreeProperty,
+      enabledProperty: new DerivedProperty( [ playAreaUserControlledProperty ], playAreaUserControlled => !playAreaUserControlled ),
 
       // Spacing options
       buttonGroupXSpacing: 20 // horizontal space between push buttons and radio buttons

@@ -11,7 +11,6 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
@@ -28,6 +27,20 @@ class CollisionLabModel {
    */
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    // @public (read-only) {BooleanProperty} - indicates the play/pause state of the simulation.
+    this.playProperty = new BooleanProperty( false );
+
+    // @public (read-only) {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation.
+    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
+
+    // @public (read-only) {TimeClock} - stopwatch for the simulation.
+    this.timeClock = new TimeClock( this.timeSpeedProperty );
+
+    // add a time stepping function to the timeClock
+    this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
+
+    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
     //                                        outside of the PlayArea in a Spinner.
@@ -46,14 +59,7 @@ class CollisionLabModel {
     // TODO: what is the state of the design of this feature.
     this.isStickyProperty = new BooleanProperty( true );
 
-    // @public - controls the play/pause state of the play area
-    this.playProperty = new BooleanProperty( false );
-
-    // @public {EnumerationProperty.<TimeSpeed>} - controls the speed rate of the simulation, slow/normal
-    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
-
-    // @public - timeClock for the simulation
-    this.timeClock = new TimeClock( this.timeSpeedProperty );
+    //----------------------------------------------------------------------------------------
 
     // @public - handle the playArea (ballistic motion and collision of balls)
     this.playArea = new PlayArea(
@@ -62,15 +68,6 @@ class CollisionLabModel {
       this.reflectingBorderProperty,
       this.isStickyProperty
     );
-
-
-    // @public - is the any of the balls in the play areas not user controlled
-    this.playAreaFreeProperty = new DerivedProperty( [ this.playArea.playAreaUserControlledProperty ],
-      playAreaIsUserControlled => !playAreaIsUserControlled );
-
-
-    // add a time stepping function to the timeClock
-    this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
   }
 
   /**
@@ -94,16 +91,13 @@ class CollisionLabModel {
    * @param {number} dt
    */
   step( dt ) {
-
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    if ( this.playProperty.value && this.playAreaFreeProperty.value ) {
+    if ( this.playProperty.value && !this.playArea.playAreaUserControlledProperty.value ) {
       this.timeClock.playStep( dt * this.timeClock.speedFactorProperty.value );
     }
   }
-
 }
-
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );
 export default CollisionLabModel;

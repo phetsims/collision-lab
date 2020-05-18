@@ -110,8 +110,9 @@ class Ball {
       ( mass, speed ) => 1 / 2 * mass * Math.pow( speed, 2 ),
       { valueType: 'number' } );
 
-    // @public isUserControlledProperty - indicates if the ball is currently being controlled by the user.
-    this.isUserControlledProperty = new BooleanProperty( false );
+    // @public userControlledProperty - indicates if the ball is currently being controlled (dragged) by the user.
+    //                                  This is set externally in the view.
+    this.userControlledProperty = new BooleanProperty( false );
   }
 
   /**
@@ -124,7 +125,7 @@ class Ball {
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
     this.massProperty.reset();
-    this.isUserControlledProperty.reset();
+    this.userControlledProperty.reset();
   }
 
   /**

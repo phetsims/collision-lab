@@ -110,7 +110,7 @@ class CollisionLabScreenView extends ScreenView {
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.playProperty,
       model.timeSpeedProperty,
-      model.playAreaFreeProperty,
+      model.playArea.playAreaUserControlledProperty,
       model.timeClock.stepBackward.bind( model.timeClock ),
       model.timeClock.stepForward.bind( model.timeClock )
     );

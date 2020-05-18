@@ -142,11 +142,11 @@ class BallNode extends Node {
       positionProperty: centerPositionProperty,
       dragBoundsProperty: dragBoundsProperty,
       start: () => {
-        ball.isUserControlledProperty.value = true;
+        ball.userControlledProperty.value = true;
         this.moveToFront();
       },
       end: () => {
-        ball.isUserControlledProperty.value = false;
+        ball.userControlledProperty.value = false;
         gridVisibleProperty.value && ball.snapToGrid();
       }
     } );
@@ -177,7 +177,7 @@ class BallNode extends Node {
     ball.positionProperty.link( ballPositionListener );
 
     // make the crosshair visible if ball is userControlled
-    const isUserControlledHandle = ball.isUserControlledProperty.linkAttribute( graticule, 'visible' );
+    const isUserControlledHandle = ball.userControlledProperty.linkAttribute( graticule, 'visible' );
 
     const ballRadiusListener = radius => {
 
@@ -194,7 +194,7 @@ class BallNode extends Node {
     // @private {function} disposeBallNode - function to unlink listeners, called in dispose()
     this.disposeBallNode = () => {
       ball.positionProperty.unlink( ballPositionListener );
-      ball.isUserControlledProperty.unlinkAttribute( isUserControlledHandle );
+      ball.userControlledProperty.unlinkAttribute( isUserControlledHandle );
       ball.radiusProperty.unlink( ballRadiusListener );
       diskLayer.removeInputListener( diskLayerDragListener );
       diskLayerDragListener.dispose();
