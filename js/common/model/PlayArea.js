@@ -130,6 +130,7 @@ class PlayArea {
    * @public
    */
   reset() {
+    this.prepopulatedBalls.forEach( ball => ball.reset() ); // Reset All Possible Balls.
     this.kineticEnergySumProperty.reset();
   }
 
