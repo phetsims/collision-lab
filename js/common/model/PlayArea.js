@@ -29,7 +29,6 @@ import KineticEnergySumProperty from './KineticEnergySumProperty.js';
 
 // constants
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
-const DEFAULT_BALL_SETTINGS = CollisionLabConstants.DEFAULT_BALL_SETTINGS;
 
 class PlayArea {
 
@@ -58,17 +57,13 @@ class PlayArea {
     //                      never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                      PlayArea system. That is determined by the `this.balls` declaration below. This is just used
     //                      so that the same Ball instances are added with the same number of balls.
-    this.prepopulatedBalls = [];
-    DEFAULT_BALL_SETTINGS.forEach( ( ballSettings, index ) => {
-      this.prepopulatedBalls.push( new Ball(
-        ballSettings.position,
-        ballSettings.velocity,
-        ballSettings.mass,
-        constantRadiusProperty,
-        index + 1
-      ) );
-    } );
-
+    this.prepopulatedBalls = CollisionLabConstants.DEFAULT_BALL_SETTINGS.map( ( ballSettings, index ) => new Ball(
+      ballSettings.position,
+      ballSettings.velocity,
+      ballSettings.mass,
+      constantRadiusProperty,
+      index + 1
+    ) );
 
     // @public (read-only) {ObservableArray.<Ball>} - an array of the system of Balls within the PlayArea. Balls
     //                                                **must** be from `this.prepopulatedBalls`.
