@@ -1,7 +1,8 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A Ball is the model for all types of balls.
+ * A Ball is the model for all Balls in all screens. A single Ball is a apart of a isolated system of multiple Balls
+ * inside a PlayArea.
  *
  * Primary responsibilities are:
  *  1. center position Property
@@ -30,20 +31,18 @@ const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 class Ball {
 
   /**
-   * @param {number} index - index of the ball
-   * @param {number} initialMass - initial mass of the ball, in kg
-   * @param {Vector2} initialPosition - initial position of the center of the ball
+   * @param {Vector2} initialPosition - starting position of the center of the ball
    * @param {Vector2} initialVelocity - initial velocity of the center of mass of the ball
+   * @param {number} initialMass - starting mass of the ball, in kg
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
+   * @param {number} index - which Ball in a system is this?
    */
-  constructor( index, initialMass, initialPosition, initialVelocity, constantRadiusProperty ) {
-
-    assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
-    assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
+  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, index ) {
     assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
     assert && assert( initialVelocity instanceof Vector2, `invalid initialVelocity: ${initialVelocity}` );
-    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean',
-      `invalid initialVelocity: ${constantRadiusProperty}` );
+    assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
+    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
+    assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
 
     //----------------------------------------------------------------------------------------
 

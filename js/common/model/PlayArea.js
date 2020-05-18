@@ -159,10 +159,13 @@ class PlayArea {
 
     // create initial data for balls
     DEFAULT_BALL_SETTINGS.forEach( ( ballSettings, index ) => {
-      this.prepopulatedBalls.push( new Ball( index + 1, ballSettings.mass,
+      this.prepopulatedBalls.push( new Ball(
         ballSettings.position,
         ballSettings.velocity,
-        this.constantRadiusProperty ) );
+        ballSettings.mass,
+        this.constantRadiusProperty,
+        index + 1
+      ) );
     } );
   }
 
