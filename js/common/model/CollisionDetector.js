@@ -25,11 +25,10 @@ class CollisionDetector {
    * @param {Bounds2} bounds - the PlayArea inside which collision occur
    * @param {ObservableArray.<Ball>} balls - collections of balls
    * @param {Property.<number>} elasticityProperty
-   * @param {Property.<boolean>} isCompletelyInelasticAndStickyProperty,
+   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    * @param {Property.<boolean>} reflectingBorderProperty
    */
-  constructor( bounds, balls, elasticityProperty,
-               isCompletelyInelasticAndStickyProperty, reflectingBorderProperty ) {
+  constructor( bounds, balls, elasticityProperty, isStickyProperty, reflectingBorderProperty ) {
 
     // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( balls instanceof ObservableArray
@@ -49,7 +48,7 @@ class CollisionDetector {
     this.isReversing = false;
 
     // @public
-    this.isCompletelyInelasticAndStickyProperty = isCompletelyInelasticAndStickyProperty;
+    this.isStickyProperty = isStickyProperty;
 
     // @public
     this.reflectingBorderProperty = reflectingBorderProperty;
@@ -161,7 +160,7 @@ class CollisionDetector {
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = this.isCompletelyInelasticAndStickyProperty.value;
+    const isSticky = this.elasticityProperty.value === 0 && this.isStickyProperty.value;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
@@ -315,7 +314,7 @@ class CollisionDetector {
           // get positions at time of collision, rewind position time.
           const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          if ( this.isCompletelyInelasticAndStickyProperty.value ) {
+          if ( this.elasticityProperty.value === 0 && this.isStickyProperty.value ) {
             ball.velocity = Vector2.ZERO;
           }
           else {
@@ -334,7 +333,7 @@ class CollisionDetector {
           // get positions at time of collision, rewind position time.
           const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          if ( this.isCompletelyInelasticAndStickyProperty.value ) {
+          if ( this.elasticityProperty.value === 0 && this.isStickyProperty.value ) {
             ball.velocity = Vector2.ZERO;
           }
           else {

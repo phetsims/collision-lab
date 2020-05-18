@@ -149,7 +149,7 @@ class CollisionLabScreenView extends ScreenView {
     const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
       model.reflectingBorderProperty,
       model.elasticityPercentProperty,
-      model.playArea.isStickyProperty,
+      model.isStickyProperty,
       model.playArea.constantRadiusProperty,
       {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,

@@ -41,6 +41,8 @@ class CollisionLabModel {
     //                                        This Property is manipulated outside of the PlayArea.
     this.reflectingBorderProperty = new BooleanProperty( true );
 
+    // @public (read-only) {BooleanProperty} - determines if the balls are sticky or if they slide on inelastic collisions.
+    this.isStickyProperty = new BooleanProperty( true );
 
     // @public - controls the play/pause state of the play area
     this.playProperty = new BooleanProperty( false );
@@ -52,7 +54,12 @@ class CollisionLabModel {
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
-    this.playArea = new PlayArea( this.numberOfBallsProperty, this.elasticityPercentProperty, this.reflectingBorderProperty );
+    this.playArea = new PlayArea(
+      this.numberOfBallsProperty,
+      this.elasticityPercentProperty,
+      this.reflectingBorderProperty,
+      this.isStickyProperty
+    );
 
 
     // @public - is the any of the balls in the play areas not user controlled
@@ -76,6 +83,7 @@ class CollisionLabModel {
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
+    this.isStickyProperty.reset();
   }
 
   /**

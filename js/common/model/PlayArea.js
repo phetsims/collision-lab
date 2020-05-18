@@ -37,11 +37,13 @@ class PlayArea {
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
    * @param {Property.<number>} elasticityPercentProperty - the elasticity of all collisions, as a percentage.
    * @param {Property.<boolean>} reflectingBorderProperty - indicates if Balls should reflect off the borders.
+   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    */
-  constructor( numberOfBallsProperty, elasticityPercentProperty, reflectingBorderProperty ) {
+  constructor( numberOfBallsProperty, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
+    assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
 
     // @public determines if the ball size is constant (i.e. independent of mass)
     this.constantRadiusProperty = new BooleanProperty( false );
@@ -96,14 +98,6 @@ class PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public determines if the balls are sticky
-    this.isStickyProperty = new BooleanProperty( true );
-
-    // @public {Property.<boolean>}
-    this.isComplettelyInelasticAndStickyProperty = new DerivedProperty( [ elasticityPercentProperty, this.isStickyProperty ],
-      ( elasticity, isSticky ) => elasticity === 0 && isSticky );
-
-
     // @public
     this.kineticEnergySumProperty = new KineticEnergySumProperty( this.balls );
 
@@ -114,7 +108,7 @@ class PlayArea {
     this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
       this.balls,
       new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
-      this.isComplettelyInelasticAndStickyProperty,
+      isStickyProperty,
       reflectingBorderProperty );
 
     // @public (read-only) shape for the grid
