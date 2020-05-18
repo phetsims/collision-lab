@@ -18,6 +18,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import Property from '../../../../axon/js/Property.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
@@ -33,8 +34,13 @@ const DEFAULT_BALL_SETTINGS = CollisionLabConstants.DEFAULT_BALL_SETTINGS;
 class PlayArea {
 
   /**
+   * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
+   * @param {Property.<number>} elasticityPercentProperty - the elasticity of all collisions, as a percentage.
    */
-  constructor( elasticityPercentProperty, numberOfBallsProperty ) {
+  constructor( numberOfBallsProperty, elasticityPercentProperty ) {
+    assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
+    assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
+
     // @public determines if the ball size is constant (i.e. independent of mass)
     this.constantRadiusProperty = new BooleanProperty( false );
 

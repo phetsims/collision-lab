@@ -29,15 +29,13 @@ class CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
-    //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
-    this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
-
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
     //                                        outside of the PlayArea in a Spinner.
     this.numberOfBallsProperty = new NumberProperty( 2 );
 
-
+    // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
+    //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
+    this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
 
 
