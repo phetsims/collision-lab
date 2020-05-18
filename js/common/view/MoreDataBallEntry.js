@@ -75,17 +75,17 @@ class MoreDataBallEntry extends Node {
 
 
     const massNumberDisplay = new NumberDisplay( ball.massProperty, MASS_RANGE, options.numberDisplayOptions );
-    const positionXNumberDisplay = new NumberDisplay( ball.positionXProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
-    const positionYNumberDisplay = new NumberDisplay( ball.positionYProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
-    const velocityXNumberDisplay = new NumberDisplay( ball.velocityXProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
-    const velocityYNumberDisplay = new NumberDisplay( ball.velocityYProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
-    const momentumXNumberDisplay = new NumberDisplay( ball.momentumXProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
-    const momentumYNumberDisplay = new NumberDisplay( ball.momentumYProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
+    const xPositionNumberDisplay = new NumberDisplay( ball.xPositionProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
+    const yPositionNumberDisplay = new NumberDisplay( ball.yPositionProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
+    const xVelocityNumberDisplay = new NumberDisplay( ball.xVelocityProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
+    const yVelocityNumberDisplay = new NumberDisplay( ball.yVelocityProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
+    const momentumXNumberDisplay = new NumberDisplay( ball.xMomentumProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
+    const momentumYNumberDisplay = new NumberDisplay( ball.yMomentumProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
 
     const moreDataBox = new HBox( {
       children: [ diskLayer, massNumberDisplay,
-        positionXNumberDisplay, positionYNumberDisplay,
-        velocityXNumberDisplay, velocityYNumberDisplay,
+        xPositionNumberDisplay, yPositionNumberDisplay,
+        xVelocityNumberDisplay, yVelocityNumberDisplay,
         momentumXNumberDisplay, momentumYNumberDisplay ],
       spacing: 10
     } );

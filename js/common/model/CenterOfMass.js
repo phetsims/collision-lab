@@ -57,7 +57,7 @@ class CenterOfMass {
 
         // {Vector2} determine the total first moment (Mass*position) of the system
         const totalFirstMoment = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
-          return accumulator.plus( ball.firstMoment );
+          return accumulator.plus( ball.position.times( ball.mass ) );
         } );
 
         this.positionProperty.value = totalFirstMoment.dividedScalar( getTotalMass() );
@@ -89,8 +89,8 @@ class CenterOfMass {
     const addItemAddedBallListener = addedBall => {
 
       // update the position and velocity of the center of mass
-      addedBall.positionDerivedProperty.link( updatePosition );
-      addedBall.velocityDerivedProperty.link( updateVelocity );
+      addedBall.positionProperty.link( updatePosition );
+      addedBall.velocityProperty.link( updateVelocity );
 
       // Observe when the ball is removed to unlink listeners
       const removeBallListener = removedBall => {
@@ -103,8 +103,8 @@ class CenterOfMass {
         if ( removedBall === addedBall ) {
 
           // unlink the listener attached to the removedBall.
-          removedBall.positionDerivedProperty.unlink( updatePosition );
-          removedBall.velocityDerivedProperty.unlink( updateVelocity );
+          removedBall.positionProperty.unlink( updatePosition );
+          removedBall.velocityProperty.unlink( updateVelocity );
 
           balls.removeItemRemovedListener( removeBallListener );
         }
