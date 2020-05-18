@@ -6,11 +6,11 @@
  * @author Martin Veillette
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import collisionLab from '../../collisionLab.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
 

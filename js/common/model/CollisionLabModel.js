@@ -4,9 +4,9 @@
  * Root class (to be subclassed) for the top-level model of every screen.
  *
  * Mainly responsible for:
- *   - Time Control Properties and stepping the simulation
+ *   - Time Control Properties and stepping the simulation.
  *   - Keep track of the top-level user-manipulation Properties, like the number of Balls or the elasticity.
- *   - Instantiation of a PlayArea
+ *   - Instantiation of a single PlayArea.
  *
  * @author Brandon Li
  * @author Martin Veillette
