@@ -121,8 +121,7 @@ class CollisionLabScreenView extends ScreenView {
     // create and add restart button
     const restartButton = new RestartButton( {
       listener: () => {
-        model.balls.forEach( ball =>
-          ball.reset() );
+        model.playArea.balls.forEach( ball => ball.reset() );
         model.timeClock.reset();
       },
       right: playAreaNode.right,
@@ -177,20 +176,20 @@ class CollisionLabScreenView extends ScreenView {
         if ( removedBall === addedBall ) {
           this.ballLayerNode.removeChild( addedBallNode );
           addedBallNode.dispose();
-          model.balls.removeItemRemovedListener( removeBallListener );
+          model.playArea.balls.removeItemRemovedListener( removeBallListener );
         }
       };
-      model.balls.addItemRemovedListener( removeBallListener );
+      model.playArea.balls.addItemRemovedListener( removeBallListener );
     };
 
-    model.balls.forEach( addItemAddedBallListener );
-    model.balls.addItemAddedListener( addItemAddedBallListener );
+    model.playArea.balls.forEach( addItemAddedBallListener );
+    model.playArea.balls.addItemAddedListener( addItemAddedBallListener );
 
     const moreDataCheckbox = new ControlPanelCheckbox( moreDataString, viewProperties.moreDataVisibleProperty );
     this.addChild( moreDataCheckbox );
     moreDataCheckbox.top = playAreaNode.bottom + 30;
 
-    const ballValuesDisplay = new BallValuesPanel( model.balls, viewProperties.moreDataVisibleProperty );
+    const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty );
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
     ballValuesDisplay.left = 40;

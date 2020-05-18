@@ -1,7 +1,12 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Common Model for collision lab
+ * Root class (to be subclassed) for the top-level model of every screen.
+ *
+ * Mainly responsible for:
+ *   -
+ *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -9,7 +14,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
@@ -35,36 +39,7 @@ class CollisionLabModel {
 
 
 
-    // @public {ObservableArray.<Ball>}
-    this.balls = new ObservableArray();
 
-    // @public - is the any of the balls in the play areas are user controlled
-    this.playAreaUserControlledProperty = new BooleanProperty( false );
-
-    const addItemAddedBallListener = ( addedBall, balls ) => {
-
-      // determine if any of the balls are userControlled
-      const isUserControlledFunction = () => {
-        this.playAreaUserControlledProperty.value = balls.some( ball => ball.isUserControlledProperty.value );
-      };
-      addedBall.isUserControlledProperty.link( isUserControlledFunction );
-
-      // Observe when the ball is removed to unlink listeners
-      const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
-          addedBall.isUserControlledProperty.unlink( isUserControlledFunction );
-          balls.removeItemRemovedListener( removeBallListener );
-        }
-      };
-      balls.addItemRemovedListener( removeBallListener );
-    };
-
-
-    // @public - is the any of the balls in the play areas not user controlled
-    this.playAreaFreeProperty = new DerivedProperty( [ this.playAreaUserControlledProperty ],
-      playAreaIsUserControlled => !playAreaIsUserControlled );
-
-    this.balls.addItemAddedListener( addItemAddedBallListener );
 
     // @public - controls the play/pause state of the play area
     this.playProperty = new BooleanProperty( true );
@@ -76,7 +51,13 @@ class CollisionLabModel {
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
-    this.playArea = new PlayArea( this.balls, this.elasticityPercentProperty, this.numberOfBallsProperty );
+    this.playArea = new PlayArea( this.elasticityPercentProperty, this.numberOfBallsProperty );
+
+
+    // @public - is the any of the balls in the play areas not user controlled
+    this.playAreaFreeProperty = new DerivedProperty( [ this.playArea.playAreaUserControlledProperty ],
+      playAreaIsUserControlled => !playAreaIsUserControlled );
+
 
     // add a time stepping function to the timeClock
     this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
