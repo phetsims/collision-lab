@@ -34,6 +34,7 @@ import PlayAreaControlPanel from './PlayAreaControlPanel.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
 import TimeDisplay from './TimeDisplay.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -112,9 +113,9 @@ class CollisionLabScreenView extends ScreenView {
       model.playAreaFreeProperty,
       model.timeClock.stepBackward.bind( model.timeClock ),
       model.timeClock.stepForward.bind( model.timeClock ), {
-        centerX: playAreaNode.centerX + 50,
         top: playAreaNode.bottom + 10
       } );
+    collisionLabTimeControlNode.setPlayPauseButtonCenter( new Vector2( playAreaNode.centerX, collisionLabTimeControlNode.centerY ).subtract( collisionLabTimeControlNode.leftTop ) );
     this.addChild( collisionLabTimeControlNode );
 
     // create and add restart button
