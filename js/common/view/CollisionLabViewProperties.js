@@ -14,7 +14,7 @@ class CollisionLabViewProperties {
   constructor() {
 
     // @public indicates if the velocity vector on each ball is visible
-    this.velocityVisibleProperty = new BooleanProperty( false );
+    this.velocityVisibleProperty = new BooleanProperty( true );
 
     // @public indicates if the momentum vector on each ball is visible
     this.momentumVisibleProperty = new BooleanProperty( false );
