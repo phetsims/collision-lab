@@ -147,7 +147,7 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( gridCheckbox );
 
     const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
-      model.playArea.reflectingBorderProperty,
+      model.reflectingBorderProperty,
       model.elasticityPercentProperty,
       model.playArea.isStickyProperty,
       model.playArea.constantRadiusProperty,

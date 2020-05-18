@@ -37,10 +37,13 @@ class CollisionLabModel {
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
+    // @public (read-only) {NumberProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
+    //                                        This Property is manipulated outside of the PlayArea.
+    this.reflectingBorderProperty = new BooleanProperty( true );
 
 
     // @public - controls the play/pause state of the play area
-    this.playProperty = new BooleanProperty( true );
+    this.playProperty = new BooleanProperty( false );
 
     // @public {EnumerationProperty.<TimeSpeed>} - controls the speed rate of the simulation, slow/normal
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
@@ -49,7 +52,7 @@ class CollisionLabModel {
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
     // @public - handle the playArea (ballistic motion and collision of balls)
-    this.playArea = new PlayArea( this.elasticityPercentProperty, this.numberOfBallsProperty );
+    this.playArea = new PlayArea( this.numberOfBallsProperty, this.elasticityPercentProperty, this.reflectingBorderProperty );
 
 
     // @public - is the any of the balls in the play areas not user controlled
@@ -70,8 +73,9 @@ class CollisionLabModel {
     this.timeSpeedProperty.reset();
     this.playArea.reset();
     this.timeClock.reset();
-    this.elasticityPercentProperty.reset();
     this.numberOfBallsProperty.reset();
+    this.elasticityPercentProperty.reset();
+    this.reflectingBorderProperty.reset();
   }
 
   /**

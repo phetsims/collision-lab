@@ -36,10 +36,12 @@ class PlayArea {
   /**
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
    * @param {Property.<number>} elasticityPercentProperty - the elasticity of all collisions, as a percentage.
+   * @param {Property.<boolean>} reflectingBorderProperty - indicates if Balls should reflect off the borders.
    */
-  constructor( numberOfBallsProperty, elasticityPercentProperty ) {
+  constructor( numberOfBallsProperty, elasticityPercentProperty, reflectingBorderProperty ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
+    assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
 
     // @public determines if the ball size is constant (i.e. independent of mass)
     this.constantRadiusProperty = new BooleanProperty( false );
@@ -94,9 +96,6 @@ class PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public determines if the balls will reflect at the border
-    this.reflectingBorderProperty = new BooleanProperty( true );
-
     // @public determines if the balls are sticky
     this.isStickyProperty = new BooleanProperty( true );
 
@@ -116,7 +115,7 @@ class PlayArea {
       this.balls,
       new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
       this.isComplettelyInelasticAndStickyProperty,
-      this.reflectingBorderProperty );
+      reflectingBorderProperty );
 
     // @public (read-only) shape for the grid
     this.grid = new Grid();
@@ -127,7 +126,6 @@ class PlayArea {
    * @public
    */
   reset() {
-    this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.kineticEnergySumProperty.reset();
   }
