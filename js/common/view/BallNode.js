@@ -118,6 +118,7 @@ class BallNode extends Node {
 
     // create the velocityVector and momentumVector nodes
     const ballVelocityVectorNode = new BallVelocityVectorNode(
+      ball,
       ball.velocityProperty,
       velocityVisibleProperty,
       playProperty,

@@ -32,7 +32,7 @@ class BallVelocityVectorNode extends BallVectorNode {
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( velocityProperty, visibleProperty, playProperty, modelViewTransform, options ) {
+  constructor( ball, velocityProperty, visibleProperty, playProperty, modelViewTransform, options ) {
 
     assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -77,7 +77,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     velocityProperty.link( velocityListener );
 
     const tipPositionListener = velocity => {
-      velocity = modelViewTransform.viewToModelDelta( velocity );
+      ball.velocity = modelViewTransform.viewToModelDelta( velocity );
     };
     // update the velocity vector upon change of the tip position
     tipPositionProperty.link( tipPositionListener );
