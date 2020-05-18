@@ -147,7 +147,7 @@ class BallNode extends Node {
       },
       end: () => {
         ball.isUserControlledProperty.value = false;
-        gridVisibleProperty.value && ball.snapPosition();
+        gridVisibleProperty.value && ball.snapToGrid();
       }
     } );
     centerPositionProperty.link( centerPosition => {

@@ -128,17 +128,13 @@ class Ball {
   }
 
   /**
-   * snap position to the minor grid-lines. // TODO: should there be a general "drag ball to" method that handles the functionality of grid visible snapping vs non-snapping in the model?
+   * Snaps the center position to the nearest grid-line.
    * @public
    */
-  snapPosition() {
-
-    // rounding function to minor grid line tick values
-    const round = number => Utils.roundSymmetric( number / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
-
-    // set new rounded position
-    this.xPosition = round( this.xPosition );
-    this.yPosition = round( this.yPosition );
+  snapToGrid() {
+    // Round the x and y center position to the nearest grid-line
+    this.xPosition = Utils.roundSymmetric( this.xPosition / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+    this.yPosition = Utils.roundSymmetric( this.yPosition / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
   }
 
   /**
