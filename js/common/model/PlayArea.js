@@ -24,7 +24,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
 import CollisionDetector from './CollisionDetector.js';
-import KineticEnergySumProperty from './KineticEnergySumProperty.js';
+import TotalKineticEnergyProperty from './TotalKineticEnergyProperty.js';
 
 // constants
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
@@ -110,7 +110,7 @@ class PlayArea {
     //----------------------------------------------------------------------------------------
 
     // @public
-    this.kineticEnergySumProperty = new KineticEnergySumProperty( this.balls );
+    this.totalKineticEnergyProperty = new TotalKineticEnergyProperty( this.balls );
 
     // @public (read-only)
     this.centerOfMass = new CenterOfMass( this.balls );
@@ -129,7 +129,7 @@ class PlayArea {
    */
   reset() {
     this.prepopulatedBalls.forEach( ball => ball.reset() ); // Reset All Possible Balls.
-    this.kineticEnergySumProperty.reset();
+    this.totalKineticEnergyProperty.reset();
   }
 
   /**

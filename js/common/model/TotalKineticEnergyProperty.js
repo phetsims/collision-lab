@@ -9,7 +9,7 @@
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import collisionLab from '../../collisionLab.js';
 
-class KineticEnergySumProperty extends NumberProperty {
+class TotalKineticEnergyProperty extends NumberProperty {
   /**
    *
    * @param {ObservableArray.<Ball>} balls
@@ -55,5 +55,5 @@ class KineticEnergySumProperty extends NumberProperty {
 }
 
 
-collisionLab.register( 'KineticEnergySumProperty', KineticEnergySumProperty );
-export default KineticEnergySumProperty;
+collisionLab.register( 'TotalKineticEnergyProperty', TotalKineticEnergyProperty );
+export default TotalKineticEnergyProperty;

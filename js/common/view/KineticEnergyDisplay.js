@@ -22,12 +22,12 @@ const kineticEnergyJString = collisionLabStrings.kineticEnergyJ;
 class KineticEnergyDisplay extends NumberDisplay {
 
   /**
-   * @param {Property.<number>} kineticEnergySumProperty
+   * @param {Property.<number>} totalKineticEnergyProperty
    * @param {Property.<boolean>} visibleProperty
    */
-  constructor( kineticEnergySumProperty, visibleProperty, options ) {
+  constructor( totalKineticEnergyProperty, visibleProperty, options ) {
 
-    super( kineticEnergySumProperty,
+    super( totalKineticEnergyProperty,
       SUM_RANGE,
       merge( {}, CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
         align: 'left',

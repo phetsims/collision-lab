@@ -71,7 +71,7 @@ class PlayAreaNode extends Node {
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
-    const kineticEnergyDisplay = new KineticEnergyDisplay( playArea.kineticEnergySumProperty,
+    const kineticEnergyDisplay = new KineticEnergyDisplay( playArea.totalKineticEnergyProperty,
       kineticEnergyVisibleProperty, {
         left: background.left + KINETIC_ENERGY_DISPLAY_MARGIN,
         bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
