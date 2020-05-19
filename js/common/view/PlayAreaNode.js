@@ -28,6 +28,7 @@ import KineticEnergyDisplay from './KineticEnergyDisplay.js';
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
 const MAJOR_GRIDLINE_SPACING = MINOR_GRIDLINE_SPACING * CollisionLabConstants.MINOR_GRIDLINES_PER_MAJOR_GRIDLINE; // model
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
+const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
 
 class PlayAreaNode extends Node {
 
@@ -70,6 +71,16 @@ class PlayAreaNode extends Node {
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
+    const kineticEnergyDisplay = new KineticEnergyDisplay( playArea.kineticEnergySumProperty,
+      kineticEnergyVisibleProperty, {
+        left: background.left + KINETIC_ENERGY_DISPLAY_MARGIN,
+        bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
+      } );
+
+    const centerOfMassNode = new CenterOfMassNode( playArea.centerOfMass,
+      centerOfMassVisibleProperty,
+      modelViewTransform );
+
     const border = new Rectangle( playAreaViewBounds, {
       stroke: CollisionLabColors.GRID_BORDER_COLOR,
       lineWidth: 3
@@ -80,8 +91,8 @@ class PlayAreaNode extends Node {
       background,
       minorGridLines,
       majorGridLines,
-      new KineticEnergyDisplay( playArea.kineticEnergySumProperty, kineticEnergyVisibleProperty, playAreaViewBounds ),
-      new CenterOfMassNode( playArea.centerOfMass, centerOfMassVisibleProperty, modelViewTransform ),
+      kineticEnergyDisplay,
+      centerOfMassNode,
       border
     ];
   }

@@ -25,11 +25,11 @@ class KineticEnergyDisplay extends NumberDisplay {
    * @param {Property.<number>} kineticEnergySumProperty
    * @param {Property.<boolean>} visibleProperty
    */
-  constructor( kineticEnergySumProperty, visibleProperty ) {
+  constructor( kineticEnergySumProperty, visibleProperty, options ) {
 
     super( kineticEnergySumProperty,
       SUM_RANGE,
-      merge( CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
+      merge( {}, CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
         align: 'left',
         backgroundLineWidth: 0,
         valuePattern: kineticEnergyJString,
@@ -38,7 +38,7 @@ class KineticEnergyDisplay extends NumberDisplay {
           font: CollisionLabConstants.DISPLAY_FONT
         },
         decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
-      } ) );
+      }, options ) );
 
     // link visibility of this display to the visibleProperty
     // present for the lifetime of the simulation
