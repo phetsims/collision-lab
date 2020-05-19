@@ -64,7 +64,7 @@ class CenterOfMass {
       if ( balls.length === 0 ) {
 
         // Set the velocity to null if there are no Balls since the center of mass doesn't exist.
-        this.velocityProperty.value = Vector2.ZERO;
+        this.velocityProperty.value = null;
       }
       else {
 
