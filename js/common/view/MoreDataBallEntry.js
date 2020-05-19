@@ -22,7 +22,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 
 // constants
-const MASS_RANGE = new Range( 0.1, 2 );
+const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 const MOMENTUM_COMPONENT_RANGE = new Range( -10, 10 );
 const POSITION_COMPONENT_RANGE = new Range( -10, 10 );
 const VELOCITY_COMPONENT_RANGE = new Range( -10, 10 );

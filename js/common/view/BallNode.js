@@ -76,7 +76,7 @@ class BallNode extends Node {
 
     // create and add disk to the scene graph
     const diskNode = new Circle( ballRadius, {
-      fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
+      fill: ball.fillProperty,
       stroke: 'black'
     } );
 

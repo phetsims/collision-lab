@@ -6,6 +6,7 @@
  * @author Martin Veillette
  */
 
+import Color from '../../../scenery/js/util/Color.js';
 import collisionLab from '../collisionLab.js';
 
 const CollisionLabColors = {
@@ -27,11 +28,11 @@ const CollisionLabColors = {
   //----------------------------------------------------------------------------------------
   // Ball Colors
   BALL_COLORS: [
-    'rgb( 255, 0, 0 )',
-    'rgb( 0, 155, 255 )',
-    'rgb( 0, 155, 0 )',
-    'rgb( 255, 0, 255 )',
-    'rgb( 255, 255, 0 )'
+    new Color( 'rgb( 255, 0, 0 )' ),
+    new Color( 'rgb( 0, 155, 255 )' ),
+    new Color( 'rgb( 0, 155, 0 )' ),
+    new Color( 'rgb( 255, 0, 255 )' ),
+    new Color( 'rgb( 255, 255, 0 )' )
   ],
 
   //----------------------------------------------------------------------------------------
