@@ -7,7 +7,6 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -20,16 +19,13 @@ class CenterOfMassNode extends Node {
    *
    * @param {CenterOfMass} centerOfMass
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<number>} numberOfBallsProperty
    * @param {ModelViewTransform2} modelViewTransform
    */
-  constructor( centerOfMass, centerOfMassVisibleProperty, numberOfBallsProperty, modelViewTransform ) {
+  constructor( centerOfMass, centerOfMassVisibleProperty, modelViewTransform ) {
 
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
     assert && assert( centerOfMassVisibleProperty instanceof BooleanProperty,
       `Invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
-    assert && assert( numberOfBallsProperty instanceof NumberProperty,
-      `Invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2 );
     //----------------------------------------------------------------------------------------
     super();
@@ -47,9 +43,9 @@ class CenterOfMassNode extends Node {
     // Link the visibility of the marker to the visibility property and the number of balls (the marker is only
     // present if number of balls >= 2)
     // The link is present for the lifetime of the simulation
-    Property.multilink( [ centerOfMassVisibleProperty, numberOfBallsProperty, centerOfMass.isDefinedProperty ],
-      ( centerOfMassVisible, numberOfBalls, isDefined ) => {
-        this.visible = ( numberOfBalls > 1 ) && centerOfMassVisible && isDefined;
+    Property.multilink( [ centerOfMassVisibleProperty, centerOfMass.isDefinedProperty ],
+      ( centerOfMassVisible, isDefined ) => {
+        this.visible = centerOfMassVisible && isDefined;
       } );
   }
 
