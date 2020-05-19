@@ -1,12 +1,12 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * CollisionDetector handles collision detection and response for all screens. Our collision model involves
- * rigid bodies. Once a collision is detected, the appropriate ball models are set to update their new velocity
- * and position.
+ * CollisionDetector handles collision all detection and responses for all screens within a PlayArea. Our collision
+ * model involves rigid bodies. Once a collision is detected, the appropriate ball models are set to update their
+ * new velocity and position.
  *
- * The algorithms for particle-particle collisions were adapted from the flash
- * implementation of Collision Lab. They follow the standard rigid-body collision model as described in (e.g.)
+ * The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
+ * standard rigid-body collision model as described in
  * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
  * @author Brandon Li
@@ -17,50 +17,49 @@ import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
+
+// constants
+const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class CollisionDetector {
 
   /**
-   * @param {Bounds2} bounds - the PlayArea inside which collision occur
    * @param {ObservableArray.<Ball>} balls - collections of balls
-   * @param {Property.<number>} elasticityProperty
-   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
+   * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} reflectingBorderProperty
+   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    */
-  constructor( bounds, balls, elasticityProperty, isStickyProperty, reflectingBorderProperty ) {
+  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty ) {
+    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    assert && assert( elasticityPercentProperty instanceof Property, `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
 
-    // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( balls instanceof ObservableArray
-    && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( elasticityProperty instanceof Property, `invalid elasticityProperty: ${elasticityProperty}` );
-
-    // @private
-    this.bounds = bounds;
-
-    // @private
+    // @private {ObservableArray.<balls>}
     this.balls = balls;
 
-    // @private
-    this.elasticityProperty = elasticityProperty;
+    // @private {Property.<number>}
+    this.elasticityPercentProperty = elasticityPercentProperty;
 
-    // @public
-    this.isReversing = false;
+    // @private {Property.<boolean>}
+    this.reflectingBorderProperty = reflectingBorderProperty;
 
-    // @public
+    // @private {Property.<boolean>}
     this.isStickyProperty = isStickyProperty;
 
-    // @public
-    this.reflectingBorderProperty = reflectingBorderProperty;
+    //----------------------------------------------------------------------------------------
+
+    // @public {boolean} - flag that indicates if
+    this.isReversing = false;
   }
 
   /**
    * @public
-   * @param {number} deltaTime  - time interval since last step
+   * @param {number} dt  - time interval since last step
    */
-  detectCollision( deltaTime ) {
+  detectCollision( dt ) {
 
-    assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     const N = this.balls.length;
     for ( let i = 0; i < N; i++ ) {
@@ -71,7 +70,7 @@ class CollisionDetector {
         const distance = ball1.position.distance( ball2.position );
         const minimumSeparation = ball1.radius + ball2.radius;
         if ( distance < minimumSeparation ) {
-          this.collideBalls( ball1, ball2, deltaTime );
+          this.collideBalls( ball1, ball2, dt );
         }
       }
     }
@@ -93,7 +92,7 @@ class CollisionDetector {
       const ball1 = this.balls.get( i );
 
       // determine if ball1 is outside the playArea
-      if ( !( this.bounds.eroded( ball1.radius ).containsPoint( ball1.position ) ) ) {
+      if ( !( PLAY_AREA_BOUNDS.eroded( ball1.radius ).containsPoint( ball1.position ) ) ) {
         collidingBallArray[ i ]++;
       }
 
@@ -151,16 +150,16 @@ class CollisionDetector {
     const v1t = normalizedDeltaR.crossScalar( v1 );
     const v2t = normalizedDeltaR.crossScalar( v2 );
 
-    let e = this.elasticityProperty.value;
-    if ( this.isReversing && this.elasticityProperty.value > 0 ) {
-      e = 1 / this.elasticityProperty.value;
+    let e = ( this.elasticityPercentProperty.value / 100 );
+    if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
+      e = 1 / ( this.elasticityPercentProperty.value / 100 );
     }
 
     // normal components of velocities after collision (P for prime = after)
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = this.elasticityProperty.value === 0 && this.isStickyProperty.value;
+    const isSticky = ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
@@ -259,29 +258,29 @@ class CollisionDetector {
     if ( this.reflectingBorderProperty.value ) {
       this.balls.forEach( ball => {
 
-        let elasticity = this.elasticityProperty.value;
-        if ( this.isReversing && this.elasticityProperty.value > 0 ) {
-          elasticity = 1 / this.elasticityProperty.value;
+        let elasticity = ( this.elasticityPercentProperty.value / 100 );
+        if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
+          elasticity = 1 / ( this.elasticityPercentProperty.value / 100 );
         }
 
         // left and right walls
-        if ( ball.left <= this.bounds.minX ) {
+        if ( ball.left <= PLAY_AREA_BOUNDS.minX ) {
           ball.flipHorizontalVelocity( elasticity );
-          ball.left = this.bounds.minX;
+          ball.left = PLAY_AREA_BOUNDS.minX;
         }
-        else if ( ball.right >= this.bounds.maxX ) {
+        else if ( ball.right >= PLAY_AREA_BOUNDS.maxX ) {
           ball.flipHorizontalVelocity( elasticity );
-          ball.right = this.bounds.maxX;
+          ball.right = PLAY_AREA_BOUNDS.maxX;
         }
 
         // top and bottom walls
-        if ( ball.top >= this.bounds.maxY ) {
+        if ( ball.top >= PLAY_AREA_BOUNDS.maxY ) {
           ball.flipVerticalVelocity( elasticity );
-          ball.top = this.bounds.maxY;
+          ball.top = PLAY_AREA_BOUNDS.maxY;
         }
-        else if ( ball.bottom <= this.bounds.minY ) {
+        else if ( ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
           ball.flipVerticalVelocity( elasticity );
-          ball.bottom = this.bounds.minY;
+          ball.bottom = PLAY_AREA_BOUNDS.minY;
         }
       } );
     }
@@ -298,23 +297,23 @@ class CollisionDetector {
 
     if ( this.reflectingBorderProperty.value ) {
 
-      let elasticity = this.elasticityProperty.value;
-      if ( this.isReversing && this.elasticityProperty.value > 0 ) {
-        elasticity = 1 / this.elasticityProperty.value;
+      let elasticity = ( this.elasticityPercentProperty.value / 100 );
+      if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
+        elasticity = 1 / ( this.elasticityPercentProperty.value / 100 );
       }
 
       this.balls.forEach( ball => {
 
         //TODO: consolidate  the if statements
         // left and right walls
-        if ( ball.left <= this.bounds.minX || ball.right >= this.bounds.maxX ) {
+        if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
 
           const offsetTime = -this.getWallContactTime( ball, deltaTime );
 
           // get positions at time of collision, rewind position time.
           const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          if ( this.elasticityProperty.value === 0 && this.isStickyProperty.value ) {
+          if ( ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value ) {
             ball.velocity = Vector2.ZERO;
           }
           else {
@@ -326,14 +325,14 @@ class CollisionDetector {
         }
 
         // top and bottom walls
-        if ( ball.top >= this.bounds.maxY || ball.bottom <= this.bounds.minY ) {
+        if ( ball.top >= PLAY_AREA_BOUNDS.maxY || ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
 
           const offsetTime = -this.getWallContactTime( ball, deltaTime );
 
           // get positions at time of collision, rewind position time.
           const contactPosition = ball.getPreviousPosition( offsetTime );
 
-          if ( this.elasticityProperty.value === 0 && this.isStickyProperty.value ) {
+          if ( ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value ) {
             ball.velocity = Vector2.ZERO;
           }
           else {
@@ -362,7 +361,7 @@ class CollisionDetector {
     // get position difference between current and previous position
     const deltaR = ball.velocity.timesScalar( deltaTime );
 
-    const erodedBounds = this.bounds.eroded( ball.radius );
+    const erodedBounds = PLAY_AREA_BOUNDS.eroded( ball.radius );
 
     const closestPoint = erodedBounds.closestPointTo( ball.position );
 

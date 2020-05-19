@@ -16,7 +16,6 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import collisionLab from '../../collisionLab.js';
@@ -25,9 +24,6 @@ import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
 import CollisionDetector from './CollisionDetector.js';
 import TotalKineticEnergyProperty from './TotalKineticEnergyProperty.js';
-
-// constants
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class PlayArea {
 
@@ -97,11 +93,10 @@ class PlayArea {
     this.centerOfMass = new CenterOfMass( this.balls );
 
     // @public
-    this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
-      this.balls,
-      new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
-      isStickyProperty,
-      reflectingBorderProperty );
+    this.collisionDetector = new CollisionDetector( this.balls,
+      elasticityPercentProperty,
+      reflectingBorderProperty,
+      isStickyProperty );
 
     //----------------------------------------------------------------------------------------
 
