@@ -35,7 +35,7 @@ class CenterOfMassNode extends Node {
 
     Property.multilink( [ centerOfMass.positionProperty, centerOfMassVisibleProperty ],
       ( position, centerOfMassVisible ) => {
-        this.visible = position !== null && centerOfMassVisible;
+        this.visible = centerOfMass.isDefined && centerOfMassVisible;
         if ( this.visible ) {
           this.center = modelViewTransform.modelToViewPosition( position );
         }
