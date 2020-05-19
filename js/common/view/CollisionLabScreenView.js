@@ -92,7 +92,6 @@ class CollisionLabScreenView extends ScreenView {
       model.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
       viewProperties.centerOfMassVisibleProperty,
-      model.numberOfBallsProperty,
       modelViewTransform
     );
     this.addChild( playAreaNode );

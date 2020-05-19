@@ -39,14 +39,12 @@ class PlayArea {
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    */
-  constructor(
-    numberOfBallsProperty,
-    elasticityPercentProperty,
-    reflectingBorderProperty,
-    constantRadiusProperty,
-    gridVisibleProperty,
-    isStickyProperty
-  ) {
+  constructor( numberOfBallsProperty,
+               elasticityPercentProperty,
+               reflectingBorderProperty,
+               constantRadiusProperty,
+               gridVisibleProperty,
+               isStickyProperty ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
