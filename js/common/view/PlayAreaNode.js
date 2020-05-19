@@ -58,11 +58,7 @@ class PlayAreaNode extends Node {
 
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( PLAY_AREA_BOUNDS );
 
-    const background = new Rectangle( playAreaViewBounds, {
-      stroke: CollisionLabColors.GRID_BORDER_COLOR,
-      fill: CollisionLabColors.GRID_BACKGROUND_COLOR,
-      lineWidth: 3
-    } );
+    const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
 
     const majorGridLines = new GridLines( MAJOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
       lineWidth: CollisionLabConstants.MAJOR_GRID_LINE_WIDTH,
@@ -74,6 +70,10 @@ class PlayAreaNode extends Node {
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
+    const border = new Rectangle( playAreaViewBounds, {
+      stroke: CollisionLabColors.GRID_BORDER_COLOR,
+      lineWidth: 3
+    } );
 
     // Set the children of the PlayAreaNode in the correct rendering order.
     this.children = [
@@ -81,7 +81,8 @@ class PlayAreaNode extends Node {
       minorGridLines,
       majorGridLines,
       new KineticEnergyDisplay( playArea.kineticEnergySumProperty, kineticEnergyVisibleProperty, playAreaViewBounds ),
-      new CenterOfMassNode( playArea.centerOfMass, centerOfMassVisibleProperty, modelViewTransform )
+      new CenterOfMassNode( playArea.centerOfMass, centerOfMassVisibleProperty, modelViewTransform ),
+      border
     ];
   }
 }

@@ -6,24 +6,23 @@
  * @author Martin Veillette
  */
 
-import Color from '../../../scenery/js/util/Color.js';
 import collisionLab from '../collisionLab.js';
 
 const CollisionLabColors = {
 
   //----------------------------------------------------------------------------------------
   // General colors
-  SCREEN_BACKGROUND: Color.WHITE,
+  SCREEN_BACKGROUND: 'rgb( 244, 250, 255 )',
 
   // PlayArea background color
   PLAY_AREA_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
 
   //----------------------------------------------------------------------------------------
   // Grid colors
-  GRID_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
+  GRID_BACKGROUND_COLOR: 'rgb( 255, 254, 255 )',
   MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
   MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
-  GRID_BORDER_COLOR: 'green',
+  GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
 
   //----------------------------------------------------------------------------------------
   // Ball Colors
