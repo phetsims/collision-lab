@@ -1,7 +1,13 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Class for the Center of Mass of all Balls
+ * The model representation for the center of mass of a system of Balls.
+ *
+ * Primary responsibilities are:
+ *  1. Track the position of the center of mass, if it exists.
+ *  2. Track the velocity of the center of mass, if it exists.
+ *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
