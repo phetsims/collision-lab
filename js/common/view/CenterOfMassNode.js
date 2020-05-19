@@ -41,7 +41,6 @@ class CenterOfMassNode extends Node {
         }
       } );
   }
-
 }
 
 collisionLab.register( 'CenterOfMassNode', CenterOfMassNode );

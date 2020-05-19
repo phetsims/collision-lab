@@ -54,6 +54,5 @@ class TotalKineticEnergyProperty extends NumberProperty {
   }
 }
 
-
 collisionLab.register( 'TotalKineticEnergyProperty', TotalKineticEnergyProperty );
 export default TotalKineticEnergyProperty;

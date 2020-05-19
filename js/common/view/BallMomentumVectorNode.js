@@ -42,7 +42,6 @@ class BallMomentumVectorNode extends BallVectorNode {
     super( momentumProperty, visibleProperty, modelViewTransform, options );
 
   }
-
 }
 
 collisionLab.register( 'BallMomentumVectorNode', BallMomentumVectorNode );

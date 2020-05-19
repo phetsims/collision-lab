@@ -87,7 +87,6 @@ class CenterOfMass {
 
       // Observe when the ball is removed to unlink listeners.
       const removeBallListener = removedBall => {
-
         if ( removedBall === addedBall ) {
 
           // Recompute the position and velocity of the center of mass now that there is one less Ball in the system.

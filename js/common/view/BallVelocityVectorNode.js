@@ -95,7 +95,6 @@ class BallVelocityVectorNode extends BallVectorNode {
       tipTargetNode.removeInputListener( tipDragListener );
       tipDragListener.dispose();
     };
-
   }
 
   /**
@@ -106,7 +105,6 @@ class BallVelocityVectorNode extends BallVectorNode {
     this.disposeVelocityVectorNode();
     super.dispose();
   }
-
 }
 
 collisionLab.register( 'BallVelocityVectorNode', BallVelocityVectorNode );

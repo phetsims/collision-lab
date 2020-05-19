@@ -378,7 +378,6 @@ class CollisionDetector {
     assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
     return contactTime;
   }
-
 }
 
 collisionLab.register( 'CollisionDetector', CollisionDetector );
