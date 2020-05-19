@@ -21,7 +21,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -33,19 +32,21 @@ const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 class Ball {
 
   /**
-   * @param {Vector2} initialPosition - starting position of the center of the ball
-   * @param {Vector2} initialVelocity - initial velocity of the center of mass of the ball
-   * @param {number} initialMass - starting mass of the ball, in kg
-   * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not
+   * @param {Vector2} initialPosition - starting position of the center of the ball.
+   * @param {Vector2} initialVelocity - initial velocity of the center of mass of the ball.
+   * @param {number} initialMass - starting mass of the ball, in kg.
+   * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not.
+   * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, index ) {
+  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, gridVisibleProperty, index ) {
     assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
     assert && assert( initialVelocity instanceof Vector2, `invalid initialVelocity: ${initialVelocity}` );
     assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
+    assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
@@ -113,6 +114,10 @@ class Ball {
     // @public userControlledProperty - indicates if the ball is currently being controlled (dragged) by the user.
     //                                  This is set externally in the view.
     this.userControlledProperty = new BooleanProperty( false );
+
+    // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
+    //                                            Used in the model to determine Ball snapping functionality.
+    this.gridVisibleProperty = gridVisibleProperty;
   }
 
   /**
@@ -129,13 +134,44 @@ class Ball {
   }
 
   /**
-   * Snaps the center position to the nearest grid-line.
+   * Invoked from the view when the Ball is dragged. Attempts to position the Ball at the passed in position but
+   * ensures the Ball is inside the PlayArea's Bounds.
+   *
+   * If the grid is visible, the Ball will also snap to the nearest grid-line.
    * @public
+   *
+   * @param {Vector} position - the position of the Center of the Ball to drag to
    */
-  snapToGrid() {
-    // Round the x and y center position to the nearest grid-line
-    this.xPosition = Utils.roundSymmetric( this.xPosition / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
-    this.yPosition = Utils.roundSymmetric( this.yPosition / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+  dragToPosition( position ) {
+    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+
+    /**
+     * Compute the constrainedRadius, which is the amount to erode the PlayArea Bounds to ensure that the Ball is fully
+     * inside of the PlayArea.
+     *
+     * If the grid is not visible, this value is just the radius of the Ball.
+     * If the grid is visible, this value is the radius rounded up to the nearest grid-line spacing value. This is so
+     * that the minimum/maximum values of the constrainedBounds are on a grid-line.
+     */
+    const constrainedRadius = this.gridVisibleProperty.value ? this.radius :  Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+
+    // Compute the Bounds of the Ball's center position. The center must be within the constrainedRadius meters of the
+    // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea.
+    const constrainedBallBounds = CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( constrainedRadius );
+
+    if ( !this.gridVisibleProperty.value ) {
+
+      // Ensure that the ball's position is inside of the constrainedBallBounds.
+      this.position = constrainedBallBounds.closestPointTo( position );
+    }
+    else {
+
+      // Ensure that the ball's position is inside of the constrainedBallBounds AND is rounded to the nearest grid-line.
+      this.position = constrainedBallBounds.closestPointTo( position )
+        .dividedScalar( MINOR_GRIDLINE_SPACING )
+        .roundSymmetric()
+        .timesScalar( MINOR_GRIDLINE_SPACING );
+    }
   }
 
   /**

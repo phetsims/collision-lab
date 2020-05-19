@@ -65,6 +65,7 @@ class PlayArea {
       ballSettings.velocity,
       ballSettings.mass,
       constantRadiusProperty,
+      gridVisibleProperty,
       index + 1
     ) );
 

@@ -65,9 +65,6 @@ class BallNode extends Node {
 
     super();
 
-    // drag bounds for the ball
-    const dragBoundsProperty = new Property( modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS ) );
-
     // bounds of the play area in view coordinates
     const viewPlayAreaBounds = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS );
 
@@ -140,18 +137,16 @@ class BallNode extends Node {
     // add input listener to disk
     const diskLayerDragListener = new DragListener( {
       positionProperty: centerPositionProperty,
-      dragBoundsProperty: dragBoundsProperty,
       start: () => {
         ball.userControlledProperty.value = true;
         this.moveToFront();
       },
       end: () => {
         ball.userControlledProperty.value = false;
-        gridVisibleProperty.value && ball.snapToGrid();
       }
     } );
     centerPositionProperty.link( centerPosition => {
-      ball.position = modelViewTransform.viewToModelPosition( centerPosition );
+      ball.dragToPosition( modelViewTransform.viewToModelPosition( centerPosition ) );
     } );
 
     diskLayer.addInputListener( diskLayerDragListener );
@@ -183,9 +178,6 @@ class BallNode extends Node {
 
       // update the radius of the ball
       diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
-
-      // shrink the dragBounds (in model coordinates) by the radius of the ball
-      dragBoundsProperty.value = modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( radius ) );
     };
 
     // updates the radius of the ball
