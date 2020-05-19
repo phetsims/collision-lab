@@ -6,7 +6,6 @@
  * @author Martin Veillette
  */
 
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
@@ -61,11 +60,33 @@ class CollisionLabTimeControlNode extends TimeControlNode {
         radioButtonGroupOptions: { spacing: 1 }
       },
 
-      enabledProperty: new DerivedProperty( [ playAreaUserControlledProperty ], playAreaUserControlled => !playAreaUserControlled ),
-
       // Spacing options
       buttonGroupXSpacing: 20 // horizontal space between push buttons and radio buttons
     }, options ) );
+
+
+    //----------------------------------------------------------------------------------------
+
+    // Flag that indicates whether the sim was playing before it was programmatically paused.
+    let wasPlaying = playProperty.value;
+
+    playAreaUserControlledProperty.link( playAreaUserControlled => {
+      // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
+      // See https://github.com/phetsims/collision-lab/issues/49.
+      if ( playAreaUserControlled ) {
+
+        // save playing state, pause the sim, and disable time controls
+        wasPlaying = playProperty.value;
+        playProperty.value = false;
+        this.enabledProperty.value = false;
+      }
+      else {
+
+        // enable time controls and restore playing state
+        this.enabledProperty.value = true;
+        playProperty.value = wasPlaying;
+      }
+    } );
   }
 }
 
