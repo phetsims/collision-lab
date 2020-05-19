@@ -23,6 +23,7 @@ const CollisionLabColors = {
   GRID_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
   MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
   MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
+  GRID_BORDER_COLOR: 'green',
 
   //----------------------------------------------------------------------------------------
   // Ball Colors
