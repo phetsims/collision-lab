@@ -397,6 +397,25 @@ class Ball {
    * @returns {Vector2} - in kg * (m/s).
    */
   get momentum() { return this.momentumProperty.value; }
+
+  /**
+   * Calculates the radius of a Ball when constant-radius mode is off. This calculation comes from
+   * the mass and the density (uniform) of the Ball.
+   *
+   * Volume = 4/3 PI * Radius^3
+   * => Density = Mass / Volume
+   * => Radius = (3 / 4 * Mass / Density / PI ) ^ 1/3
+   * @public
+   *
+   * @param {number} mass
+   * @param {number} density
+   */
+  static calculateRadius( mass, density ) {
+    assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
+    assert && assert( typeof density === 'number', `invalid density: ${density}` );
+
+    return Math.pow( ( 3 * mass / density ) / ( 4 * Math.PI ), 1 / 3 );
+  }
 }
 
 collisionLab.register( 'Ball', Ball );
