@@ -54,22 +54,33 @@ class CollisionDetector {
   }
 
   /**
+   * A time-discretization approach to detecting and processing ball-ball collisions within a system.
+   * This checks to see if a collision has occurred between any two balls in the last time step. If Balls have collided,
+   * which is detected if any two balls are on top of each other, then the collision is processed using `collideBalls`.
    * @public
+   *
+   * See https://en.wikipedia.org/wiki/Collision_detection
+   *
    * @param {number} dt  - time interval since last step
    */
-  detectCollision( dt ) {
-
+  doAllBallToBallCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    const N = this.balls.length;
-    for ( let i = 0; i < N; i++ ) {
+    for ( let i = 0; i < this.balls.length; i++ ) {
+
       const ball1 = this.balls.get( i );
-      for ( let j = i + 1; j < N; j++ ) {
+
+      for ( let j = i + 1; j < this.balls.length; j++ ) {
 
         const ball2 = this.balls.get( j );
-        const distance = ball1.position.distance( ball2.position );
+
+        assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
+
+        const distanceBetweenBalls = ball1.position.distance( ball2.position );
         const minimumSeparation = ball1.radius + ball2.radius;
-        if ( distance < minimumSeparation ) {
+
+        // If two balls are on top of each other, process the collision.
+        if ( distanceBetweenBalls < minimumSeparation ) {
           this.collideBalls( ball1, ball2, dt );
         }
       }
@@ -82,7 +93,6 @@ class CollisionDetector {
    * @public
    */
   collisionLogger() {
-
     const N = this.balls.length;
 
     // array of balls tha need processing in this time interval, initialize to zero
@@ -112,7 +122,6 @@ class CollisionDetector {
     if ( collidingBallArray.some( value => value > 1 ) ) {
       console.log( collidingBallArray );
     }
-
   }
 
   /**
@@ -180,7 +189,6 @@ class CollisionDetector {
     // this seems to improve stability
     ball1.position = r1.plus( ball1.velocity.times( offsetTime ) );
     ball2.position = r2.plus( ball2.velocity.times( offsetTime ) );
-
   }
 
   /**

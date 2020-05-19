@@ -151,7 +151,7 @@ class PlayArea {
     } );
 
     this.collisionDetector.isReversing = isReversing;
-    this.collisionDetector.detectCollision( dt );
+    this.collisionDetector.doAllBallToBallCollisions( dt );
     this.collisionDetector.doBallBorderCollisionsImproved( dt );
 
   }
