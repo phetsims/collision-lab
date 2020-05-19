@@ -153,7 +153,7 @@ class Ball {
      * If the grid is visible, this value is the radius rounded up to the nearest grid-line spacing value. This is so
      * that the minimum/maximum values of the constrainedBounds are on a grid-line.
      */
-    const constrainedRadius = this.gridVisibleProperty.value ? this.radius :  Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+    const constrainedRadius = this.gridVisibleProperty.value ? this.radius : Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
 
     // Compute the Bounds of the Ball's center position. The center must be within the constrainedRadius meters of the
     // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea.
