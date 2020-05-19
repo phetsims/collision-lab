@@ -24,7 +24,6 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
 import CollisionDetector from './CollisionDetector.js';
-import Grid from './Grid.js';
 import KineticEnergySumProperty from './KineticEnergySumProperty.js';
 
 // constants
@@ -124,9 +123,6 @@ class PlayArea {
       new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
       isStickyProperty,
       reflectingBorderProperty );
-
-    // @public (read-only) shape for the grid
-    this.grid = new Grid();
   }
 
   /**

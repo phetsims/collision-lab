@@ -2,9 +2,11 @@
 
 /**
  * View for the PlayArea, which includes:
- *  - The borders of the PlayArea as well as the grid lines
- *  - The label of the total kinetic energy in the PlayArea
- *  - The CenterOfMass node
+ *  - Border and grid lines
+ *  - Kinetic Energy Display
+ *  - Center of mass
+ *
+ * PlayAreaNode is created at the start of the sim and is never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -43,6 +45,9 @@ class PlayAreaNode extends Node {
     //----------------------------------------------------------------------------------------
 
     super( options );
+
+
+
 
     // create the grid and border of the playArea
     const gridNode = new GridNode( playArea.grid, gridVisibleProperty, modelViewTransform );
