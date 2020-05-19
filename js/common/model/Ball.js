@@ -26,7 +26,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 // constants
-const DEFAULT_RADIUS = CollisionLabConstants.DEFAULT_RADIUS; // in meters
+const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Balls if constant-radius is on, in meters.
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 
 class Ball {
@@ -103,7 +103,7 @@ class Ball {
     // Handle the changing radius of the Ball based on the mass
     // @public (read-only) - Property of the radius of the ball in meters. TODO #50
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
-      ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 ) // TODO: where does this calculation come from?
+      ( mass, constantRadius ) => constantRadius ? CONSTANT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 ) // TODO: where does this calculation come from?
     );
 
     // @public (read-only) kineticEnergyProperty - Property of the kinetic energy of the ball, in J.
