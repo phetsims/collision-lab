@@ -33,19 +33,12 @@ class CenterOfMassNode extends Node {
     const xNode = new XNode();
     this.addChild( xNode );
 
-    // Link the position of the marker to the center of mass property
-    // This link is present for the lifetime of the simulation
-    centerOfMass.positionProperty.link( position => {
-      this.center = modelViewTransform.modelToViewPosition( position );
-    } );
-
-
-    // Link the visibility of the marker to the visibility property and the number of balls (the marker is only
-    // present if number of balls >= 2)
-    // The link is present for the lifetime of the simulation
-    Property.multilink( [ centerOfMassVisibleProperty, centerOfMass.isDefinedProperty ],
-      ( centerOfMassVisible, isDefined ) => {
-        this.visible = centerOfMassVisible && isDefined;
+    Property.multilink( [ centerOfMass.positionProperty, centerOfMassVisibleProperty ],
+      ( position, centerOfMassVisible ) => {
+        this.visible = position !== null && centerOfMassVisible;
+        if ( this.visible ) {
+          this.center = modelViewTransform.modelToViewPosition( position );
+        }
       } );
   }
 

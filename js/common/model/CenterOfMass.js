@@ -11,10 +11,9 @@
  * @author Martin Veillette
  */
 
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
 
@@ -24,91 +23,78 @@ class CenterOfMass {
    * @param {ObservableArray.<Ball>} balls
    */
   constructor( balls ) {
-
-    assert && assert( balls instanceof ObservableArray
-    && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
     //----------------------------------------------------------------------------------------
 
-    // @public Center of Mass position - value will be updated later
-    this.positionProperty = new Vector2Property( Vector2.ZERO );
+    // @public (read-only) {Property.<null|Vector2>} - Property of the position of the ball, in meter coordinates.
+    //                                                 If null, the center of mass doesn't exist.
+    this.positionProperty = new Property( null, { isValidValue: value => ( value === null || value instanceof Vector2 ) } );
 
-    // @public Center Of Mass Velocity - value will be updated later
-    this.velocityProperty = new Vector2Property( Vector2.ZERO );
+    // @public (read-only) {Property.<null|Vector2>} - Property of the velocity of the ball, in meter per second.
+    //                                                 If null, the center of mass doesn't exist.
+    this.velocityProperty = new Property( null, { isValidValue: value => ( value === null || value instanceof Vector2 ) } );
 
-    // @public {Property.<boolean>} - are the position and velocity of the center of mass mathematically well defined
-    // center of mass is not defined when there are no balls
-    this.isDefinedProperty = new DerivedProperty( [ balls.lengthProperty ], length => {
-        return length > 0;
-      }
-    );
+    //----------------------------------------------------------------------------------------
 
-    // function that determines the total mass of all the balls
-    const getTotalMass = () => {
-      return balls.reduce( 0, ( accumulator, ball ) => {
-        return accumulator + ball.mass;
-      } );
-    };
+    // Convenience function that computes the total mass of the Balls.
+    const getTotalMass = () => balls.reduce( 0, ( accumulator, ball ) => accumulator + ball.mass );
 
-    // define a function to update the position of the center of mass
+    // Define a function to update the position of the center of mass.
     const updatePosition = () => {
       if ( balls.length === 0 ) {
 
-        // set the position to zero if there are no balls
-        // slight abuse of Vector2 since technically the center of mass does not exist, but we will handle this
-        // case through isDefinedProperty
-        this.positionProperty.value = Vector2.ZERO;
+        // Set the position to null if there are no Balls since the center of mass doesn't exist.
+        this.positionProperty.value = null;
       }
       else {
 
-        // {Vector2} determine the total first moment (Mass*position) of the system
-        const totalFirstMoment = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
-          return accumulator.plus( ball.position.times( ball.mass ) );
+        // Determine the total first moment (mass * position) of the system.
+        const totalFirstMoment = balls.reduce( Vector2.ZERO.copy(), ( accumulator, ball ) => {
+          return accumulator.add( ball.position.times( ball.mass ) );
         } );
 
+        // The position of the center of mass is the total first moment divided by the total mass.
         this.positionProperty.value = totalFirstMoment.dividedScalar( getTotalMass() );
       }
     };
 
-    // define a function to update the velocity of the center of mass
+    // Define a function to update the velocity of the center of mass.
     const updateVelocity = () => {
-
       if ( balls.length === 0 ) {
 
-        // assign a velocity of zero when there are no balls present.
+        // Set the velocity to null if there are no Balls since the center of mass doesn't exist.
         this.velocityProperty.value = Vector2.ZERO;
       }
       else {
 
-        // {Vector2} determine the total momentum of the system
-        const totalMomentum = balls.reduce( Vector2.ZERO, ( accumulator, ball ) => {
-          return accumulator.plus( ball.momentum );
+        // Determine the total momentum of the system.
+        const totalMomentum = balls.reduce( Vector2.ZERO.copy(), ( accumulator, ball ) => {
+          return accumulator.add( ball.momentum );
         } );
 
+        // The velocity of the center of mass is the total momentum divided by the total mass.
         this.velocityProperty.value = totalMomentum.dividedScalar( getTotalMass() );
       }
-
     };
 
+    // Observe when Balls are added to the system. Link is never removed since the CenterOfMass is never disposed.
+    balls.addItemAddedListener( addedBall => {
 
-    // create a listener that will listen to the addition of a new ball
-    const addItemAddedBallListener = addedBall => {
-
-      // update the position and velocity of the center of mass
+      // Update the position and velocity of the center of mass. Link removed when the Ball is removed from the system.
       addedBall.positionProperty.link( updatePosition );
       addedBall.velocityProperty.link( updateVelocity );
 
-      // Observe when the ball is removed to unlink listeners
+      // Observe when the ball is removed to unlink listeners.
       const removeBallListener = removedBall => {
-
-        // update the position and velocity of the center of mass
-        // since it will change when removing a ball
-        updatePosition();
-        updateVelocity();
 
         if ( removedBall === addedBall ) {
 
-          // unlink the listener attached to the removedBall.
+          // Recompute the position and velocity of the center of mass now that there is one less Ball in the system.
+          updatePosition();
+          updateVelocity();
+
+          // Unlink the listener attached to the removedBall.
           removedBall.positionProperty.unlink( updatePosition );
           removedBall.velocityProperty.unlink( updateVelocity );
 
@@ -116,11 +102,8 @@ class CenterOfMass {
         }
       };
       balls.addItemRemovedListener( removeBallListener );
-    };
-
-    balls.addItemAddedListener( addItemAddedBallListener );
+    } );
   }
-
 }
 
 collisionLab.register( 'CenterOfMass', CenterOfMass );

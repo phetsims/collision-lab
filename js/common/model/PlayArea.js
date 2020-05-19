@@ -53,6 +53,7 @@ class PlayArea {
     assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
 
     //----------------------------------------------------------------------------------------
+
     // @private {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation and are
     //                      never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                      PlayArea system. That is determined by the `this.balls` declaration below. This is just used
@@ -69,6 +70,40 @@ class PlayArea {
     // @public (read-only) {ObservableArray.<Ball>} - an array of the system of Balls within the PlayArea. Balls
     //                                                **must** be from `this.prepopulatedBalls`.
     this.balls = new ObservableArray();
+
+    //----------------------------------------------------------------------------------------
+
+    // @public (read-only) {BooleanProperty} - indicates if there are any Balls that are being controlled by the user.
+    this.playAreaUserControlledProperty = new BooleanProperty( false );
+
+    // Loop through each prepopulatedBall. Balls in the PlayArea system (in `this.balls`) must Balls be from
+    // the prepopulatedBalls array, so this accounts for all possible Balls.
+    this.prepopulatedBalls.forEach( prepopulatedBall => {
+
+      // Observe when the user is controlling the Ball. Link is never disposed as PlayAreas nor Balls are ever disposed.
+      prepopulatedBall.userControlledProperty.link( () => {
+
+        // Determine if any of the balls, within the system, are being controlled by the user.
+        this.playAreaUserControlledProperty.value = this.balls.some( ball => ball.userControlledProperty.value );
+      } );
+    } );
+
+    //----------------------------------------------------------------------------------------
+
+    // @public
+    this.totalKineticEnergyProperty = new TotalKineticEnergyProperty( this.balls );
+
+    // @public (read-only)
+    this.centerOfMass = new CenterOfMass( this.balls );
+
+    // @public
+    this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
+      this.balls,
+      new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
+      isStickyProperty,
+      reflectingBorderProperty );
+
+    //----------------------------------------------------------------------------------------
 
     // Observe when the number of Balls is manipulated by the user and if so, add or remove the correct number of Balls
     // to match the numberOfBallsProperty's value.
@@ -90,37 +125,6 @@ class PlayArea {
         }
       }
     } );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public (read-only) {BooleanProperty} - indicates if there are any Balls that are being controlled by the user.
-    this.playAreaUserControlledProperty = new BooleanProperty( false );
-
-    // Loop through each prepopulatedBall. Balls in the PlayArea system (in `this.balls`) must Balls be from
-    // the prepopulatedBalls array, so this accounts for all possible Balls.
-    this.prepopulatedBalls.forEach( prepopulatedBall => {
-
-      // Observe when the user is controlling the Ball. Link is never disposed as PlayAreas nor Balls are ever disposed.
-      prepopulatedBall.userControlledProperty.link( () => {
-        // Determine if any of the balls, within the system, are being controlled by the user.
-        this.playAreaUserControlledProperty.value = this.balls.some( ball => ball.userControlledProperty.value );
-      } );
-    } );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public
-    this.totalKineticEnergyProperty = new TotalKineticEnergyProperty( this.balls );
-
-    // @public (read-only)
-    this.centerOfMass = new CenterOfMass( this.balls );
-
-    // @public
-    this.collisionDetector = new CollisionDetector( PLAY_AREA_BOUNDS,
-      this.balls,
-      new DerivedProperty( [ elasticityPercentProperty ], elasticity => elasticity / 100 ),
-      isStickyProperty,
-      reflectingBorderProperty );
   }
 
   /**
