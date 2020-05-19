@@ -101,7 +101,7 @@ class Ball {
     //----------------------------------------------------------------------------------------
 
     // Handle the changing radius of the Ball based on the mass
-    // @public (read-only) - Property of the radius of the ball in meters
+    // @public (read-only) - Property of the radius of the ball in meters. TODO #50
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
       ( mass, constantRadius ) => constantRadius ? DEFAULT_RADIUS : 0.15 * Math.pow( mass, 1 / 3 ) // TODO: where does this calculation come from?
     );
