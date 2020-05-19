@@ -60,6 +60,11 @@ class CollisionLabModel {
     //                                         This Property is manipulated outside of the PlayArea.
     this.constantRadiusProperty = new BooleanProperty( false );
 
+    // @public (read-only) {BooleanProperty} - indicates if the grid of the PlayArea is visible. This Property is
+    //                                         manipulated outside of the PlayArea. This is placed inside of the model
+    //                                         since the visibility of the grid affects the drag-snapping of Balls.
+    this.gridVisibleProperty = new BooleanProperty( false );
+
     // @public (read-only) {BooleanProperty} - determines if the balls are sticky or if they slide on inelastic collisions.
     // TODO: this should be an EnumerationProperty of a Enum (stick vs slide).
     // TODO: what is the state of the design of this feature.
@@ -73,6 +78,7 @@ class CollisionLabModel {
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
       this.constantRadiusProperty,
+      this.gridVisibleProperty,
       this.isStickyProperty
     );
   }
@@ -89,6 +95,7 @@ class CollisionLabModel {
     this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
+    this.gridVisibleProperty.reset();
     this.isStickyProperty.reset();
     this.playArea.reset();
   }

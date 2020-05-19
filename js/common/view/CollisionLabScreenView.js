@@ -89,7 +89,7 @@ class CollisionLabScreenView extends ScreenView {
     // create the grid and border of the playArea
     const playAreaNode = new PlayAreaNode(
       model.playArea,
-      viewProperties.gridVisibleProperty,
+      model.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
       viewProperties.centerOfMassVisibleProperty,
       model.numberOfBallsProperty,
@@ -140,7 +140,7 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( resetAllButton );
 
-    const gridCheckbox = new GridCheckbox( viewProperties.gridVisibleProperty, {
+    const gridCheckbox = new GridCheckbox( model.gridVisibleProperty, {
       top: numberOfBallsSpinner.bottom + 5,
       left: numberOfBallsSpinner.left
     } );
@@ -166,7 +166,7 @@ class CollisionLabScreenView extends ScreenView {
         viewProperties.valuesVisibleProperty,
         viewProperties.velocityVisibleProperty,
         viewProperties.momentumVisibleProperty,
-        viewProperties.gridVisibleProperty,
+        model.gridVisibleProperty,
         model.playProperty,
         modelViewTransform );
       this.ballLayerNode.addChild( addedBallNode );

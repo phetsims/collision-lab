@@ -31,9 +31,6 @@ class CollisionLabViewProperties {
     // @public indicates if the path (trajectory) of each ball is visible
     this.pathVisibleProperty = new BooleanProperty( false );
 
-    // @public indicates if the grid of the play area is visible
-    this.gridVisibleProperty = new BooleanProperty( false );
-
     // @public indicates if the momenta diagram is expanded.
     this.momentaDiagramExpandedProperty = new BooleanProperty( false );
 
@@ -55,7 +52,6 @@ class CollisionLabViewProperties {
     this.kineticEnergyVisibleProperty.reset();
     this.valuesVisibleProperty.reset();
     this.pathVisibleProperty.reset();
-    this.gridVisibleProperty.reset();
     this.momentaDiagramExpandedProperty.reset();
     this.tipToTailProperty.reset();
   }
