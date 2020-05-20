@@ -1,9 +1,9 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A 'entry' in the BallValuesPanel: displays a row a values for a Single Ball.
+ * An 'entry' in the BallValuesPanel: displays a row a values for a Single Ball.
  *
- * Assuming the Ball is in the Play Area, this Node displays it's values, which are:
+ * Assumes that the Ball is in the PlayArea and displays it's values, which are:
  *    - Mass (kg)
  *    - The position of the Ball (m)
  *    - The velocity of the Ball (m/s)
