@@ -1,14 +1,12 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * BallValuesPanel is the Panel at the bottom of the screen.
+ * BallValuesPanel is the Panel at the bottom of all screen which displays and allows the user to modify Ball values.
  *
- * For each Ball in the PlayArea, this Panel displays it's values, which are:
- *    - Mass (kg)
- *    - The position of the Ball
- *    - The velocity of the Ball
- *    - The linear momentum of the Ball
- * Depending on if the "More Data" checkbox is checked or not, some of these values may be hidden.
+ *
+ *
+ * The Panel first
+ * For each Ball in the PlayArea, this Panel displays it's values, which is a BallValuesEntryNode.
  *
  * This panel exists for the entire sim and is never disposed.
  *

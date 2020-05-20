@@ -45,10 +45,11 @@ class BallValuesEntryToggleNode extends Node {
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
-      ballIconSpacing: 10,       // {number} - horizontal spacing between the ball-icon and the first NumberDisplay
-      numberDisplaySpacing: 17,  // {number} - horizontal spacing between the NumberDisplays
+      ballIconSpacing: 10,                // {number} - x-spacing between the ball-icon and the first NumberDisplay
+      componentNumberDisplaySpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplays
+      numberDisplayGroupSpacing: 20,      // {number} - x-spacing between the major groups of NumberDisplays
       sliderOptions: {
-        trackSize: new Dimension2( 150, 1 ),
+        trackSize: new Dimension2( 180, 0.5 ),
         thumbSize: new Dimension2( 13, 26 ),
         thumbFill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
         thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 )
@@ -65,21 +66,32 @@ class BallValuesEntryToggleNode extends Node {
     const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
     const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
     const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball.yVelocityProperty, true );
-    const momentumXNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, false );
-    const momentumYNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, false );
+    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, false );
+    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, false );
+
+    // Group the NumberDisplays by components
+    const positionNumberDisplaysBox = new HBox( {
+      children: [ xPositionNumberDisplay, yPositionNumberDisplay ],
+      spacing: options.componentNumberDisplaySpacing
+    } );
+    const velocityNumberDisplaysBox = new HBox( {
+      children: [ xVelocityNumberDisplay, yVelocityNumberDisplay ],
+      spacing: options.componentNumberDisplaySpacing
+    } );
+    const momentumNumberDisplaysBox = new HBox( {
+      children: [ xMomentumNumberDisplay, yMomentumNumberDisplay ],
+      spacing: options.componentNumberDisplaySpacing
+    } );
 
     // The content when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
         massNumberDisplay,
-        xPositionNumberDisplay,
-        yPositionNumberDisplay,
-        xVelocityNumberDisplay,
-        yVelocityNumberDisplay,
-        momentumXNumberDisplay,
-        momentumYNumberDisplay
+        positionNumberDisplaysBox,
+        velocityNumberDisplaysBox,
+        momentumNumberDisplaysBox
       ],
-      spacing: options.numberDisplaySpacing,
+      spacing: options.numberDisplayGroupSpacing,
       left: ballIcon.right + options.ballIconSpacing,
       centerY: ballIcon.centerY
     } );
@@ -90,7 +102,7 @@ class BallValuesEntryToggleNode extends Node {
         massNumberDisplay,
         massSlider
       ],
-      spacing: options.numberDisplaySpacing,
+      spacing: options.numberDisplayGroupSpacing,
       left: ballIcon.right + options.ballIconSpacing,
       centerY: ballIcon.centerY
     } );
@@ -116,8 +128,8 @@ class BallValuesEntryToggleNode extends Node {
       yPositionNumberDisplay.dispose();
       xVelocityNumberDisplay.dispose();
       yVelocityNumberDisplay.dispose();
-      momentumXNumberDisplay.dispose();
-      momentumYNumberDisplay.dispose();
+      xMomentumNumberDisplay.dispose();
+      yMomentumNumberDisplay.dispose();
       moreDataVisibleProperty.unlink( moreDataVisibleListener );
     };
   }
