@@ -31,17 +31,20 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
+import CollisionLabKeypad from './CollisionLabKeypad.js';
 
 class BallValuesEntryToggleNode extends Node {
 
   /**
    * @param {Ball} ball
    * @param {Property.<boolean>} moreDataVisibleProperty
+   * @param {CollisionLabKeypad} keypadLayer
    * @param {Object} [options]
    */
-  constructor( ball, moreDataVisibleProperty, options ) {
+  constructor( ball, moreDataVisibleProperty, keypadLayer, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+    assert && assert( keypadLayer instanceof CollisionLabKeypad, `invalid keypadLayer: ${keypadLayer}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
@@ -60,14 +63,14 @@ class BallValuesEntryToggleNode extends Node {
 
     // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
-    const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
+    const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, keypadLayer, true );
     const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.massSliderOptions );
-    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
-    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
-    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
-    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball.yVelocityProperty, true );
-    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, false );
-    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, false );
+    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, keypadLayer, true );
+    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, keypadLayer, true );
+    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, keypadLayer, true );
+    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball.yVelocityProperty, keypadLayer, true );
+    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, keypadLayer, false );
+    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, keypadLayer, false );
 
     // Group the NumberDisplays by components
     const positionNumberDisplaysBox = new HBox( {

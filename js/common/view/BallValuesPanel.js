@@ -38,7 +38,7 @@ class BallValuesPanel extends Panel {
    * @param {Property.<boolean>} moreDataProperty - Property that indicates if the "More Data" checkbox is checked.
    * @param {Object} [options]
    */
-  constructor( balls, moreDataProperty, options ) {
+  constructor( balls, moreDataProperty, keypad, options ) {
 
     assert && assert( balls instanceof ObservableArray
     && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
@@ -62,7 +62,7 @@ class BallValuesPanel extends Panel {
 
     const addItemAddedBallListener = addedBall => {
 
-      const addedBallEntryNode = new BallValuesEntryToggleNode( addedBall, moreDataProperty );
+      const addedBallEntryNode = new BallValuesEntryToggleNode( addedBall, moreDataProperty, keypad );
       panelContent.addChild( addedBallEntryNode );
 
       // Observe when the ball is removed to unlink listeners
