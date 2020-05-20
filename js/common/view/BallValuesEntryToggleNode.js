@@ -45,7 +45,8 @@ class BallValuesEntryToggleNode extends Node {
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
-      spacing: 10,  // {number} - horizontal spacing between the content
+      ballIconSpacing: 10,       // {number} - horizontal spacing between the ball-icon and the first NumberDisplay
+      numberDisplaySpacing: 17,  // {number} - horizontal spacing between the NumberDisplays
       sliderOptions: {
         trackSize: new Dimension2( 150, 1 ),
         thumbSize: new Dimension2( 13, 26 ),
@@ -70,7 +71,6 @@ class BallValuesEntryToggleNode extends Node {
     // The content when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
-        ballIcon,
         massNumberDisplay,
         xPositionNumberDisplay,
         yPositionNumberDisplay,
@@ -79,17 +79,20 @@ class BallValuesEntryToggleNode extends Node {
         momentumXNumberDisplay,
         momentumYNumberDisplay
       ],
-      spacing: options.spacing
+      spacing: options.numberDisplaySpacing,
+      left: ballIcon.right + options.ballIconSpacing,
+      centerY: ballIcon.centerY
     } );
 
     // The content when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        ballIcon,
         massNumberDisplay,
         massSlider
       ],
-      spacing: options.spacing
+      spacing: options.numberDisplaySpacing,
+      left: ballIcon.right + options.ballIconSpacing,
+      centerY: ballIcon.centerY
     } );
 
     super( options );
@@ -100,7 +103,7 @@ class BallValuesEntryToggleNode extends Node {
     // rather than the visibility of our children to change our Bounds, which allows out parent (Panel) to resize.
     // Link is removed below.
     const moreDataVisibleListener = moreDataVisible => {
-      this.children = [ moreDataVisible ? moreDataBox : lessDataBox ];
+      this.children = [ ballIcon, moreDataVisible ? moreDataBox : lessDataBox ];
     };
     moreDataVisibleProperty.link( moreDataVisibleListener );
 
