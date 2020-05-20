@@ -16,7 +16,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import merge from '../../../../phet-core/js/merge.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
+import VBox from '../../../../scenery/js/nodes/VBox.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -44,9 +44,14 @@ class BallValuesPanel extends Panel {
     && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( moreDataProperty instanceof BooleanProperty, `invalid moreDataProperty: ${moreDataProperty}` );
 
-    options = merge( CollisionLabColors.PANEL_COLORS, options );
 
-    const panelContent = new Node();
+    options = merge( {}, CollisionLabColors.PANEL_COLORS, {
+      xMargin: 16,
+      yMargin: 12,
+      cornerRadius: 7
+    }, options );
+
+    const panelContent = new VBox( { spacing: 6 } );
 
     // const massText = new Text( massUnitString, options.text);
     // const positionText = new Text( positionUnitString, textOptions);
@@ -59,7 +64,6 @@ class BallValuesPanel extends Panel {
 
       const addedBallEntryNode = new BallValuesEntryToggleNode( addedBall, moreDataProperty );
       panelContent.addChild( addedBallEntryNode );
-      addedBallEntryNode.bottom = addedBallEntryNode.height * 1.1 * addedBall.index;
 
       // Observe when the ball is removed to unlink listeners
       const removeBallListener = removedBall => {

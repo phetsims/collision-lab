@@ -47,10 +47,10 @@ class BallValuesEntryToggleNode extends Node {
     options = merge( {
       ballIconSpacing: 10,                // {number} - x-spacing between the ball-icon and the first NumberDisplay
       componentNumberDisplaySpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplays
-      numberDisplayGroupSpacing: 20,      // {number} - x-spacing between the major groups of NumberDisplays
+      numberDisplayGroupSpacing: 22,      // {number} - x-spacing between the major groups of NumberDisplays
       sliderOptions: {
         trackSize: new Dimension2( 180, 0.5 ),
-        thumbSize: new Dimension2( 13, 26 ),
+        thumbSize: new Dimension2( 11, 22 ),
         thumbFill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
         thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 )
       }
