@@ -21,6 +21,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -31,6 +32,7 @@ const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Ball
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
 const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
+const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class Ball {
 
@@ -173,7 +175,7 @@ class Ball {
 
     // Compute the Bounds of the Ball's center position. The center must be within the constrainedRadius meters of the
     // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea.
-    const constrainedBallBounds = CollisionLabConstants.PLAY_AREA_BOUNDS.eroded( constrainedRadius );
+    const constrainedBallBounds = PLAY_AREA_BOUNDS.eroded( constrainedRadius );
 
     if ( !this.gridVisibleProperty.value ) {
 
@@ -411,6 +413,20 @@ class Ball {
    * @returns {Vector2} - in kg * (m/s).
    */
   get momentum() { return this.momentumProperty.value; }
+
+  /**
+   * Gets the largest editable Range of the Center x-position of this ball so that the Ball is kept in the play-area.
+   * @public
+   * @returns {Range}
+   */
+  get xPositionRange() { return new Range( PLAY_AREA_BOUNDS.minX + this.radius, PLAY_AREA_BOUNDS.maxX - this.radius ); }
+
+  /**
+   * Gets the largest editable Range of the Center y-position of this ball so that the Ball is kept in the play-area.
+   * @public
+   * @returns {Range}
+   */
+  get yPositionRange() { return new Range( PLAY_AREA_BOUNDS.minY + this.radius, PLAY_AREA_BOUNDS.maxY - this.radius ); }
 
   /**
    * Calculates the radius of a Ball when constant-radius mode is off. This calculation comes from
