@@ -21,28 +21,34 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
+import BooleanToggleNode from '../../../../sun/js/BooleanToggleNode.js';
 import HSlider from '../../../../sun/js/HSlider.js';
+import ToggleNode from '../../../../sun/js/ToggleNode.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 
-class BallValuesEntryNode extends Node {
+// constants
+const CONTENT_SPACING = 10;
+
+class BallValuesEntryToggleNode extends BooleanToggleNode {
 
   /**
    * @param {Ball} ball
    * @param {Property.<boolean>} moreDataVisibleProperty
-   * @param {Object} [options]
    */
-  constructor( ball, moreDataVisibleProperty, options ) {
+  constructor( ball, moreDataVisibleProperty ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
+    //----------------------------------------------------------------------------------------
+
+    // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
     const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
+    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE );
     const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
     const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
     const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
@@ -50,35 +56,37 @@ class BallValuesEntryNode extends Node {
     const momentumXNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, false );
     const momentumYNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, false );
 
-
+    // The content when "More Data" is checked.
     const moreDataBox = new HBox( {
-      children: [ ballIcon, massNumberDisplay,
-        xPositionNumberDisplay, yPositionNumberDisplay,
-        xVelocityNumberDisplay, yVelocityNumberDisplay,
-        momentumXNumberDisplay, momentumYNumberDisplay ],
-      spacing: 10
+      children: [
+        ballIcon,
+        massNumberDisplay,
+        xPositionNumberDisplay,
+        yPositionNumberDisplay,
+        xVelocityNumberDisplay,
+        yVelocityNumberDisplay,
+        momentumXNumberDisplay,
+        momentumYNumberDisplay
+      ],
+      spacing: CONTENT_SPACING
     } );
 
-    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE );
+    // The content when "More Data" is not checked.
     const lessDataBox = new HBox( {
-      children: [ ballIcon, massNumberDisplay, massSlider ],
-      spacing: 10
+      children: [
+        ballIcon,
+        massNumberDisplay,
+        massSlider
+      ],
+      spacing: CONTENT_SPACING
     } );
 
-    super();
+    super( moreDataBox, lessDataBox, moreDataVisibleProperty, { alignChildren: ToggleNode.LEFT } );
 
-    this.addChild( moreDataBox );
-    this.addChild( lessDataBox );
+    //----------------------------------------------------------------------------------------
 
-
-    const moreDataVisibleListener = moreData => {
-      moreDataBox.visible = moreData;
-      lessDataBox.visible = !moreData;
-    };
-    moreDataVisibleProperty.link( moreDataVisibleListener );
-
-    // @private {function} disposeBallValuesEntryNode - function to unlink listeners, called in dispose().
-    this.disposeBallValuesEntryNode = () => {
+    // @private {function} - function that unlink listeners. This is called in the dispose() method.
+    this.disposeBallValuesEntryToggleNode = () => {
       massNumberDisplay.dispose();
       xPositionNumberDisplay.dispose();
       yPositionNumberDisplay.dispose();
@@ -86,22 +94,21 @@ class BallValuesEntryNode extends Node {
       yVelocityNumberDisplay.dispose();
       momentumXNumberDisplay.dispose();
       momentumYNumberDisplay.dispose();
-      moreDataVisibleProperty.unlink( moreDataVisibleListener );
     };
   }
 
   /**
-   * Disposes the BallValuesEntryNode, releasing all links that it maintained.
+   * Disposes the BallValuesEntryToggleNode, releasing all links that it maintained.
    * @public
    * @override
    *
    * Called when the Ball is removed from the PlayArea.
    */
   dispose() {
-    this.disposeBallValuesEntryNode();
+    this.disposeBallValuesEntryToggleNode();
     super.dispose();
   }
 }
 
-collisionLab.register( 'BallValuesEntryNode', BallValuesEntryNode );
-export default BallValuesEntryNode;
+collisionLab.register( 'BallValuesEntryToggleNode', BallValuesEntryToggleNode );
+export default BallValuesEntryToggleNode;

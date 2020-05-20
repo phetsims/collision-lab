@@ -23,7 +23,7 @@ import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
-import BallValuesEntryNode from './BallValuesEntryNode.js';
+import BallValuesEntryToggleNode from './BallValuesEntryToggleNode.js';
 
 // const Text = require( '/scenery/js/nodes/Text' );
 
@@ -59,7 +59,7 @@ class BallValuesPanel extends Panel {
 
     const addItemAddedBallListener = addedBall => {
 
-      const addedBallEntryNode = new BallValuesEntryNode( addedBall, moreDataProperty );
+      const addedBallEntryNode = new BallValuesEntryToggleNode( addedBall, moreDataProperty );
       panelContent.addChild( addedBallEntryNode );
       addedBallEntryNode.bottom = addedBallEntryNode.height * 1.1 * addedBall.index;
 
