@@ -20,35 +20,46 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import merge from '../../../../phet-core/js/merge.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
-import BooleanToggleNode from '../../../../sun/js/BooleanToggleNode.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import HSlider from '../../../../sun/js/HSlider.js';
-import ToggleNode from '../../../../sun/js/ToggleNode.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 
-// constants
-const CONTENT_SPACING = 10;
-
-class BallValuesEntryToggleNode extends BooleanToggleNode {
+class BallValuesEntryToggleNode extends Node {
 
   /**
    * @param {Ball} ball
    * @param {Property.<boolean>} moreDataVisibleProperty
+   * @param {Object} [options]
    */
-  constructor( ball, moreDataVisibleProperty ) {
+  constructor( ball, moreDataVisibleProperty, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
+    options = merge( {
+      spacing: 10,  // {number} - horizontal spacing between the content
+      sliderOptions: {
+        trackSize: new Dimension2( 150, 1 ),
+        thumbSize: new Dimension2( 13, 26 ),
+        thumbFill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
+        thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 )
+      }
+    }, options );
 
     //----------------------------------------------------------------------------------------
 
     // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
     const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
-    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE );
+    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.sliderOptions );
     const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
     const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
     const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
@@ -68,7 +79,7 @@ class BallValuesEntryToggleNode extends BooleanToggleNode {
         momentumXNumberDisplay,
         momentumYNumberDisplay
       ],
-      spacing: CONTENT_SPACING
+      spacing: options.spacing
     } );
 
     // The content when "More Data" is not checked.
@@ -78,10 +89,20 @@ class BallValuesEntryToggleNode extends BooleanToggleNode {
         massNumberDisplay,
         massSlider
       ],
-      spacing: CONTENT_SPACING
+      spacing: options.spacing
     } );
 
-    super( moreDataBox, lessDataBox, moreDataVisibleProperty, { alignChildren: ToggleNode.LEFT } );
+    super( options );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the moreDataVisibleProperty changes and update the children of our Node. We change our children
+    // rather than the visibility of our children to change our Bounds, which allows out parent (Panel) to resize.
+    // Link is removed below.
+    const moreDataVisibleListener = moreDataVisible => {
+      this.children = [ moreDataVisible ? moreDataBox : lessDataBox ];
+    };
+    moreDataVisibleProperty.link( moreDataVisibleListener );
 
     //----------------------------------------------------------------------------------------
 
@@ -94,6 +115,7 @@ class BallValuesEntryToggleNode extends BooleanToggleNode {
       yVelocityNumberDisplay.dispose();
       momentumXNumberDisplay.dispose();
       momentumYNumberDisplay.dispose();
+      moreDataVisibleProperty.unlink( moreDataVisibleListener );
     };
   }
 
