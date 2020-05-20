@@ -45,6 +45,9 @@ class BallValuesNumberDisplay extends NumberDisplay {
       },
       backgroundStroke: canEdit ? 'black' : null,
       backgroundFill: canEdit ? 'white' : null,
+      backgroundLineWidth: 0.5,
+      yMargin: 4,
+      xMargin: 10,
       decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
     }, options );
 
