@@ -56,7 +56,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     // Indicates if the Ball Property can be edited.
-    const canEdit = ballQuantity !== BallQuantities.X_MOMENTUM && BallQuantities.Y_MOMENTUM;
+    const canEdit = ballQuantity !== BallQuantities.X_MOMENTUM && ballQuantity !== BallQuantities.Y_MOMENTUM;
 
     options = merge( {
       align: 'center',
@@ -125,7 +125,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
   }
 
   /**
-   * Disposes the BallValuesEntryToggleNode, releasing all links that it maintained.
+   * Disposes the BallValuesNumberDisplay, releasing all links that it maintained.
    * @public
    * @override
    *
