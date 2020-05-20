@@ -13,6 +13,8 @@
  *   - Mass (kg)
  *   - A slider to change the mass
  *
+ * Ball values are displayed in a BallValuesNumberDisplay.
+ *
  * @author Brandon Li
  * @author Martin Veillette
  */
