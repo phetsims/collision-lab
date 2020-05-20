@@ -53,6 +53,10 @@ class CollisionDetector {
     this.isReversing = false;
   }
 
+  /*----------------------------------------------------------------------------*
+   * Ball To Ball Collisions
+   *----------------------------------------------------------------------------*/
+
   /**
    * A time-discretization approach to detecting and processing ball-ball collisions within a system.
    * This checks to see if a collision has occurred between any two balls in the last time step. If Balls have collided,
@@ -61,9 +65,9 @@ class CollisionDetector {
    *
    * See https://en.wikipedia.org/wiki/Collision_detection
    *
-   * @param {number} dt  - time interval since last step
+   * @param {number} dt - time interval since last step, in seconds.
    */
-  doAllBallToBallCollisions( dt ) {
+  handleAllBallToBallCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     for ( let i = 0; i < this.balls.length; i++ ) {
@@ -88,61 +92,25 @@ class CollisionDetector {
   }
 
   /**
-   * Determines the number of collisions that need to be processed within time interval
-   * Used for debugging purposes.
-   * @public
-   */
-  collisionLogger() {
-    const N = this.balls.length;
-
-    // array of balls tha need processing in this time interval, initialize to zero
-    const collidingBallArray = Array( N - 1 ).fill( 0 );
-
-    for ( let i = 0; i < N; i++ ) {
-      const ball1 = this.balls.get( i );
-
-      // determine if ball1 is outside the playArea
-      if ( !( PLAY_AREA_BOUNDS.eroded( ball1.radius ).containsPoint( ball1.position ) ) ) {
-        collidingBallArray[ i ]++;
-      }
-
-      for ( let j = i + 1; j < N; j++ ) {
-        const ball2 = this.balls.get( j );
-        const distance = ball1.position.distance( ball2.position );
-        const minimumSeparation = ball1.radius + ball2.radius;
-
-        // determine if ball1 and ball2 are overlapping
-        if ( distance < minimumSeparation ) {
-          collidingBallArray[ i ]++;
-          collidingBallArray[ j ]++;
-        }
-      }
-    }
-    // report if some balls are undergoing multiple collision processes in time interval.
-    if ( collidingBallArray.some( value => value > 1 ) ) {
-      console.log( collidingBallArray );
-    }
-  }
-
-  /**
-   * Process the collision updating the velocities and positions of ball 1 and ball 2
+   * Processes and responds to collision between two balls. Will update the velocity and position of both Balls.
    * @private
-   * @param {Ball} ball1
-   * @param {Ball} ball2
-   * @param {number} deltaTime  - time interval since last step
+   *
+   * @param {Ball} ball1 - the first Ball involved in the collision
+   * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} dt  - time interval since last step, in seconds.
    */
-  collideBalls( ball1, ball2, deltaTime ) {
+  collideBalls( ball1, ball2, dt ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
-    assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
+    // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
+    // when the balls first collided. Use the overlapped time to find the exact collision positions.
+    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, dt );
 
-    // Balls have already overlapped, so currently have incorrect positions
-    // find time of the collision such that we can rewind the positions to this time
-    const offsetTime = -this.getContactTime( ball1, ball2, deltaTime );
-
-    // get positions at time of collision, rewind position time.
-    const r1 = ball1.getPreviousPosition( offsetTime );
-    const r2 = ball2.getPreviousPosition( offsetTime );
+    // Get exact positions when the Balls collided by rewinding.
+    const r1 = ball1.getPreviousPosition( overlappedTime );
+    const r2 = ball2.getPreviousPosition( overlappedTime );
 
     const deltaR = r1.minus( r2 );
     const normalizedDeltaR = deltaR.equals( Vector2.ZERO ) ? Vector2.X_UNIT : deltaR.normalized();
@@ -152,31 +120,28 @@ class CollisionDetector {
     const v1 = ball1.velocity;
     const v2 = ball2.velocity;
 
-    // normal and tangential components of initial velocities
-
+    // Reference the normal and tangential components of initial velocities.
     const v1n = normalizedDeltaR.dot( v1 );
     const v2n = normalizedDeltaR.dot( v2 );
     const v1t = normalizedDeltaR.crossScalar( v1 );
     const v2t = normalizedDeltaR.crossScalar( v2 );
 
-    let e = ( this.elasticityPercentProperty.value / 100 );
-    if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
-      e = 1 / ( this.elasticityPercentProperty.value / 100 );
-    }
+    let e = this.elasticity;
+    if ( this.isReversing && this.elasticity > 0 ) { e = 1 / this.elasticity; }
 
-    // normal components of velocities after collision (P for prime = after)
+    // Normal components of velocities after collision (P for prime = after)
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value;
+    const isSticky = this.elasticity === 0 && this.isStickyProperty.value;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
-    // normal and tangential component of the velocity after collision
+    // Normal and tangential component of the velocity after collision
     const v1TN = new Vector2( v1tP, v1nP );
     const v2TN = new Vector2( v2tP, v2nP );
 
-    // velocity vectors after the collision in the x - y basis
+    // Velocity vectors after the collision in the x - y basis
     const v1xP = normalizedDeltaR.crossScalar( v1TN );
     const v1yP = normalizedDeltaR.dot( v1TN );
     const v2xP = normalizedDeltaR.crossScalar( v2TN );
@@ -185,44 +150,43 @@ class CollisionDetector {
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
-    // Don't allow balls to rebound after collision during timestep of collision
-    // this seems to improve stability
-    ball1.position = r1.plus( ball1.velocity.times( offsetTime ) );
-    ball2.position = r2.plus( ball2.velocity.times( offsetTime ) );
+    // Don't allow balls to rebound after collision during time-step of collision. This seems to improve stability.
+    ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
+    ball2.position = r2.plus( ball2.velocity.times( overlappedTime ) );
   }
 
   /**
-   * Gets the contact time between ball 1 and ball 2
-   * At t=0, (now) the ball1 and ball2 are overlapping whereas they were not at t=-deltaTime beforehand
-   * This algorithm reconstruct the ballistic motion to determines the contact
-   * time (measured from present time t=0) where the two balls started to make contact with one another
-   * The contact time is negative if the contact time occurred in the past and positive if the contact time is on the future
-   * (which may happened if the simulation is ran in reversed)
+   * Reconstructs ballistic motion of two colliding Balls that are overlapping to compute the elapsed time that the
+   * 2 colliding Balls were overlapping each other.
+   *
+   * The contact time is positive if the contact time occurred in the past and negative if the contact time is in the
+   * future (which may happened if the simulation is ran in reverse).
    * @private
-   * @param {Ball} ball1
-   * @param {Ball} ball2
-   * @param {number} deltaTime  - time interval since last step
+   *
+   * @param {Ball} ball1 - the first Ball involved in the collision
+   * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} dt  - time interval since last step, in seconds.
    * @returns {number} contactTime - in seconds
    */
-  getContactTime( ball1, ball2, deltaTime ) {
+  getBallToBallCollisionOverlapTime( ball1, ball2, dt ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    assert && assert( _.every( [ ball1, ball2 ], ball => ball instanceof Ball ) );
-    assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
+    let contactTime;
 
-    let contactTime;  // contact time (in seconds) of the collision,
+    // Get the position of the Balls in the last time step.
+    const r1 = ball1.getPreviousPosition( dt );
+    const r2 = ball2.getPreviousPosition( dt );
 
-    // get previous positions
-    const r1 = ball1.getPreviousPosition( deltaTime );
-    const r2 = ball2.getPreviousPosition( deltaTime );
-
-    // velocities
+    // Convenience reference to the velocities of the Balls.
     const v1 = ball1.velocity;
     const v2 = ball2.velocity;
 
     const deltaR = r2.minus( r1 );
     const deltaV = v2.minus( v1 );
 
-    // square of center-to-center separation of balls at contact
+    // The square of center-to-center separation of balls at contact.
     const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
     const deltaVSquared = deltaV.magnitudeSquared;
@@ -231,12 +195,12 @@ class CollisionDetector {
 
     const underSquareRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
 
-    // if collision is superslow, then set collision time = half-way point since last time step
-    // of if tiny number precision causes number under square root to be negative
+    // If the collision is super slow, then set collision time equal to the half-way point since last time step
+    // of if tiny number precision causes number under square root to be negative.
     if ( deltaVSquared < 1e-7 || underSquareRoot < 0 ) {
-      contactTime = -0.5 * ( deltaTime );
+      contactTime = 0.5 * ( dt );
     }
-    else { // if collision is normal
+    else {
 
       // the time interval that the collision occurred after the previous time step
       let deltaTimeCorrection;
@@ -247,127 +211,96 @@ class CollisionDetector {
       else {
         deltaTimeCorrection = ( -deltaRDotDeltaV - Math.sqrt( underSquareRoot ) ) / deltaVSquared;
       }
-      contactTime = -deltaTime + deltaTimeCorrection;
+      contactTime = dt - deltaTimeCorrection;
     }
 
     assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
     return contactTime;
   }
 
+  /*----------------------------------------------------------------------------*
+   * Ball To Border Collisions
+   *----------------------------------------------------------------------------*/
+
   /**
-   * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
-   * its way to its current position. The appropriate velocity component is then updated  and the
-   * ball is positioned within the bounds.
+   * A time-discretization approach to detecting and processing ball-border collisions. This checks to see if a
+   * collision has occurred between any balls are overlapping with the border in the last time step, which means the
+   * Ball has collided with the border.
+   *
+   * If a Ball is detected to have collided with the border, then the collision is processed and the velocity and the
+   * position of the Ball is updated.
    * @public
+   *
+   * See https://en.wikipedia.org/wiki/Collision_detection
+   *
+   * @param {number} dt - time interval since last step, in seconds.
    */
-  doBallBorderCollisions() {
+  handleAllBallToBorderCollisions( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
+    // Do nothing if the border doesn't reflect Balls, meaning there are no collisions involving the Border.
+    if ( !this.reflectingBorderProperty.value ) { return; }
 
-    if ( this.reflectingBorderProperty.value ) {
-      this.balls.forEach( ball => {
-
-        let elasticity = ( this.elasticityPercentProperty.value / 100 );
-        if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
-          elasticity = 1 / ( this.elasticityPercentProperty.value / 100 );
-        }
-
-        // left and right walls
-        if ( ball.left <= PLAY_AREA_BOUNDS.minX ) {
-          ball.flipHorizontalVelocity( elasticity );
-          ball.left = PLAY_AREA_BOUNDS.minX;
-        }
-        else if ( ball.right >= PLAY_AREA_BOUNDS.maxX ) {
-          ball.flipHorizontalVelocity( elasticity );
-          ball.right = PLAY_AREA_BOUNDS.maxX;
-        }
-
-        // top and bottom walls
-        if ( ball.top >= PLAY_AREA_BOUNDS.maxY ) {
-          ball.flipVerticalVelocity( elasticity );
-          ball.top = PLAY_AREA_BOUNDS.maxY;
-        }
-        else if ( ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
-          ball.flipVerticalVelocity( elasticity );
-          ball.bottom = PLAY_AREA_BOUNDS.minY;
-        }
-      } );
+    let elasticity = this.elasticity;
+    if ( this.isReversing && this.elasticity > 0 ) {
+      elasticity = 1 / this.elasticity;
     }
-  }
 
-  /**
-   * Detects and handles ball-border collisions. A collision occurred if a ball contacted a wall on
-   * its way to its current position. The appropriate velocity component is then updated  and the
-   * ball is positioned within the bounds.
-   * @param {number} deltaTime  - time interval since last step
-   * @public
-   */
-  doBallBorderCollisionsImproved( deltaTime ) {
+    this.balls.forEach( ball => {
 
-    if ( this.reflectingBorderProperty.value ) {
+      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the walls.
+      if ( ball.left <= PLAY_AREA_BOUNDS.minX ||
+           ball.right >= PLAY_AREA_BOUNDS.maxX ||
+           ball.top >= PLAY_AREA_BOUNDS.maxY ||
+           ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
 
-      let elasticity = ( this.elasticityPercentProperty.value / 100 );
-      if ( this.isReversing && ( this.elasticityPercentProperty.value / 100 ) > 0 ) {
-        elasticity = 1 / ( this.elasticityPercentProperty.value / 100 );
+        // When a collision is detected, the Ball has already overlapped, so the current positions isn't the exact
+        // position when the balls first collided. Use the overlapped time to find the exact collision positions.
+        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, dt );
+
+        // Get exact position when the Ball collided by rewinding.
+        const contactPosition = ball.getPreviousPosition( overlappedTime );
+
+        // Update the velocity after the collision.
+        if ( elasticity === 0 && this.isStickyProperty.value ) {
+
+          // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
+          ball.velocity = Vector2.ZERO;
+        }
+        else if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
+
+          // Left and Right Border wall collisions incur a flip in horizontal velocity.
+          ball.flipHorizontalVelocity( elasticity );
+        }
+        else {
+
+          // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
+          ball.flipVerticalVelocity( elasticity );
+        }
+
+        // Update the position after the collision.
+        ball.position = contactPosition.plus( ball.velocity.times( overlappedTime ) );
       }
-
-      this.balls.forEach( ball => {
-
-        //TODO: consolidate  the if statements
-        // left and right walls
-        if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
-
-          const offsetTime = -this.getWallContactTime( ball, deltaTime );
-
-          // get positions at time of collision, rewind position time.
-          const contactPosition = ball.getPreviousPosition( offsetTime );
-
-          if ( ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value ) {
-            ball.velocity = Vector2.ZERO;
-          }
-          else {
-            ball.flipHorizontalVelocity( elasticity );
-          }
-
-          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
-
-        }
-
-        // top and bottom walls
-        if ( ball.top >= PLAY_AREA_BOUNDS.maxY || ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
-
-          const offsetTime = -this.getWallContactTime( ball, deltaTime );
-
-          // get positions at time of collision, rewind position time.
-          const contactPosition = ball.getPreviousPosition( offsetTime );
-
-          if ( ( this.elasticityPercentProperty.value / 100 ) === 0 && this.isStickyProperty.value ) {
-            ball.velocity = Vector2.ZERO;
-          }
-          else {
-            ball.flipVerticalVelocity( elasticity );
-          }
-
-          ball.position = contactPosition.plus( ball.velocity.times( offsetTime ) );
-
-        }
-      } );
-    }
+    } );
   }
 
   /**
-   * Gets the contact time between ball and wall
+   * Reconstructs ballistic motion of a Ball that is overlapping with a border to compute the elapsed time that the
+   * colliding Ball was overlapping with the border.
+   *
+   * The contact time is positive if the contact time occurred in the past and negative if the contact time is in the
+   * future (which may happened if the simulation is ran in reverse).
    * @private
-   * @param {Ball} ball
-   * @param {number} deltaTime  - time interval since last step
+   *
+   * @param {Ball} ball - the ball involved in the collision
    * @returns {number} contactTime - in seconds
    */
-  getWallContactTime( ball, deltaTime ) {
-
+  getBallToBorderCollisionOverlapTime( ball, dt ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( typeof deltaTime === 'number', `invalid deltaTime: ${deltaTime}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    // get position difference between current and previous position
-    const deltaR = ball.velocity.timesScalar( deltaTime );
+    // Reference position difference between the current and previous position.
+    const deltaR = ball.velocity.timesScalar( dt );
 
     const erodedBounds = PLAY_AREA_BOUNDS.eroded( ball.radius );
 
@@ -380,11 +313,21 @@ class CollisionDetector {
       contactTime = 0;
     }
     else {
-      contactTime = offsetPoint.magnitudeSquared / deltaR.dot( offsetPoint ) * deltaTime;
+      contactTime = offsetPoint.magnitudeSquared / -deltaR.dot( offsetPoint ) * dt;
     }
     assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
     return contactTime;
   }
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Convenience method to get the elasticity of all collisions, as a decimal.
+   * @public
+   *
+   * @returns {number} elasticity
+   */
+  get elasticity() { return this.elasticityPercentProperty.value / 100; }
 }
 
 collisionLab.register( 'CollisionDetector', CollisionDetector );
