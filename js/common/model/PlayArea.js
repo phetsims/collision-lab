@@ -138,22 +138,17 @@ class PlayArea {
    * (2) corrected through collisionDetector, to take into account collisions between balls and walls
    * @public
    * @param {number} dt
-   * @param {boolean} isReversing - is simulation step in reverse
    */
-  step( dt, isReversing ) {
-
+  step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
 
     // updates the position and velocity of each ball
     this.balls.forEach( ball => {
       ball.step( dt );
     } );
 
-    this.collisionDetector.isReversing = isReversing;
     this.collisionDetector.handleAllBallToBallCollisions( dt );
     this.collisionDetector.handleAllBallToBorderCollisions( dt );
-
   }
 }
 

@@ -46,11 +46,6 @@ class CollisionDetector {
 
     // @private {Property.<boolean>}
     this.isStickyProperty = isStickyProperty;
-
-    //----------------------------------------------------------------------------------------
-
-    // @public {boolean} - flag that indicates if
-    this.isReversing = false;
   }
 
   /*----------------------------------------------------------------------------*
@@ -127,7 +122,7 @@ class CollisionDetector {
     const v2t = normalizedDeltaR.crossScalar( v2 );
 
     let e = this.elasticity;
-    if ( this.isReversing && this.elasticity > 0 ) { e = 1 / this.elasticity; }
+    if ( dt < 0 && this.elasticity > 0 ) { e = 1 / this.elasticity; }
 
     // Normal components of velocities after collision (P for prime = after)
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
@@ -205,7 +200,7 @@ class CollisionDetector {
       // the time interval that the collision occurred after the previous time step
       let deltaTimeCorrection;
 
-      if ( this.isReversing ) {
+      if ( dt < 0 ) {
         deltaTimeCorrection = ( -deltaRDotDeltaV + Math.sqrt( underSquareRoot ) ) / deltaVSquared;
       }
       else {
@@ -242,7 +237,7 @@ class CollisionDetector {
     if ( !this.reflectingBorderProperty.value ) { return; }
 
     let elasticity = this.elasticity;
-    if ( this.isReversing && this.elasticity > 0 ) {
+    if ( dt < 0 && this.elasticity > 0 ) {
       elasticity = 1 / this.elasticity;
     }
 

@@ -39,9 +39,6 @@ class CollisionLabModel {
     // @public (read-only) {TimeClock} - stopwatch for the simulation.
     this.timeClock = new TimeClock( this.timeSpeedProperty );
 
-    // add a time stepping function to the timeClock
-    this.timeClock.addTimeStepper( ( dt, isReversing ) => this.playArea.step( dt, isReversing ) );
-
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
@@ -109,7 +106,10 @@ class CollisionLabModel {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     if ( this.playProperty.value && !this.playArea.playAreaUserControlledProperty.value ) {
-      this.timeClock.playStep( dt * this.timeClock.speedFactorProperty.value );
+      const ellapsedTime = dt * this.timeClock.speedFactorProperty.value;
+
+      this.timeClock.step( ellapsedTime );
+      this.playArea.step( ellapsedTime );
     }
   }
 }

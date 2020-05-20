@@ -6,7 +6,6 @@
  * @author Martin Veillette
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
@@ -25,9 +24,6 @@ class TimeClock {
     // @public {Property.<number>} elapsed time (in seconds)
     this.elapsedTimeProperty = new NumberProperty( 0 );
 
-    // @public {Property.<boolean>} timeStep is reversing
-    this.isReversingProperty = new BooleanProperty( false );
-
     // @public {Property.<number>} speedFactor of the simulation: ranging from 1 (normal) to less than one (slow)
     this.speedFactorProperty = new DerivedProperty( [ timeSpeedProperty ], speed => {
       return speed === TimeSpeed.SLOW ? CollisionLabConstants.SLOW_SPEED_SCALE : CollisionLabConstants.NORMAL_SPEED_SCALE;
@@ -40,7 +36,6 @@ class TimeClock {
    */
   reset() {
     this.elapsedTimeProperty.reset();
-    this.isReversingProperty.reset();
   }
 
   /**
@@ -66,29 +61,8 @@ class TimeClock {
    * @public
    * @param  {number} dt
    */
-  playStep( dt ) {
-    this.isReversingProperty.value = false;
-    this.step( dt );
-  }
-
-  /**
-   * Steps the simulation by dt
-   * @public
-   * @param  {number} dt
-   */
   step( dt ) {
     this.elapsedTimeProperty.value += dt;
-
-    this.stepFunction( dt, this.isReversingProperty.value );
-  }
-
-  /**
-   * Adds a model time stepper for the simulation
-   * @public
-   * @param {function} stepFunction(dt,isReversing)
-   */
-  addTimeStepper( stepFunction ) {
-    this.stepFunction = stepFunction;
   }
 }
 
