@@ -116,11 +116,31 @@ class BallValuesEntryNode extends Node {
     this.addChild( lessDataBox );
 
 
-    // listener present for the lifetime of the simulation
-    moreDataVisibleProperty.link( moreData => {
+    const moreDataVisibleListener = moreData => {
       moreDataBox.visible = moreData;
       lessDataBox.visible = !moreData;
-    } );
+    };
+    moreDataVisibleProperty.link( moreDataVisibleListener );
+
+    // @private {function} disposeBallValuesEntryNode - function to unlink listeners, called in dispose().
+    this.disposeBallValuesEntryNode = () => {
+      massNumberDisplay.dispose();
+      xPositionNumberDisplay.dispose();
+      yPositionNumberDisplay.dispose();
+      xVelocityNumberDisplay.dispose();
+      yVelocityNumberDisplay.dispose();
+      momentumXNumberDisplay.dispose();
+      momentumYNumberDisplay.dispose();
+      moreDataVisibleProperty.unlink( moreDataVisibleListener );
+    };
+  }
+
+  /**
+   * Disposes the BallValuesEntryNode, releasing all links that it maintained.
+   * @public
+   */
+  dispose() {
+    this.disposeBallValuesEntryNode();
   }
 }
 

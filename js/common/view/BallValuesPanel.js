@@ -67,6 +67,7 @@ class BallValuesPanel extends Panel {
       const removeBallListener = removedBall => {
         if ( removedBall === addedBall ) {
           panelContent.removeChild( addedBallEntryNode );
+          addedBallEntryNode.dispose();
           balls.removeItemRemovedListener( removeBallListener );
         }
       };
