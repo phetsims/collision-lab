@@ -43,7 +43,6 @@ class TimeClock {
    * @public
    */
   stepBackward() {
-    this.isReversingProperty.value = true;
     this.step( -1 * STEP_DURATION * this.speedFactorProperty.value );
   }
 
@@ -52,7 +51,6 @@ class TimeClock {
    * @public
    */
   stepForward() {
-    this.isReversingProperty.value = false;
     this.step( STEP_DURATION * this.speedFactorProperty.value );
   }
 
