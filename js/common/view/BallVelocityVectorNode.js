@@ -52,7 +52,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     } );
 
     // create circular outline for the tip of velocity vector
-    const tipCircle = new Circle( 10, { stroke: 'black' } );
+    const tipCircle = new Circle( 13, { stroke: 'black' } );
 
     // create a layer node for the circular outline and tip label
     const tipTargetNode = new Node();
