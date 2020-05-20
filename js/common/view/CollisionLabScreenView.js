@@ -4,7 +4,6 @@
  * @author Martin Veillette
  */
 
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
@@ -13,13 +12,10 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import GridCheckbox from '../../../../scenery-phet/js/GridCheckbox.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import Image from '../../../../scenery/js/nodes/Image.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import HSlider from '../../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import mockupScreen2DLabImage from '../../../images/mockup-screen-2DLab_png.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -67,13 +63,6 @@ class CollisionLabScreenView extends ScreenView {
       PLAY_AREA_BOUNDS,
       playAreaViewBounds
     );
-
-    // mockup image and transparency slider
-    const transparencyProperty = new NumberProperty( 0 );
-    const backgroundImage = new Image( mockupScreen2DLabImage, { scale: 0.66 } );
-    const transparencySlider = new HSlider( transparencyProperty, new Range( 0, 1 ), { x: 600, y: 500 } );
-    transparencyProperty.link( transparency => {backgroundImage.imageOpacity = transparency;} );
-    this.setChildren( [ backgroundImage, transparencySlider ] );
 
     // create the view properties for the view
     const viewProperties = new CollisionLabViewProperties();
@@ -192,9 +181,6 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
     ballValuesDisplay.left = 40;
-
-    backgroundImage.moveToFront();
-    transparencySlider.moveToFront();
 
     const keypad = new CollisionLabKeypad();
     this.addChild( keypad );

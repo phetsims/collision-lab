@@ -48,9 +48,9 @@ class BallValuesEntryToggleNode extends Node {
       ballIconSpacing: 10,                // {number} - x-spacing between the ball-icon and the first NumberDisplay
       componentNumberDisplaySpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplays
       numberDisplayGroupSpacing: 22,      // {number} - x-spacing between the major groups of NumberDisplays
-      sliderOptions: {
+      massSliderOptions: {
         trackSize: new Dimension2( 180, 0.5 ),
-        thumbSize: new Dimension2( 11, 22 ),
+        thumbSize: new Dimension2( 12, 22 ),
         thumbFill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
         thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 )
       }
@@ -61,7 +61,7 @@ class BallValuesEntryToggleNode extends Node {
     // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
     const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
-    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.sliderOptions );
+    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.massSliderOptions );
     const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
     const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
     const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
