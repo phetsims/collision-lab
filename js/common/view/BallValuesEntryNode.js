@@ -138,6 +138,7 @@ class BallValuesEntryNode extends Node {
   /**
    * Disposes the BallValuesEntryNode, releasing all links that it maintained.
    * @public
+   * @override
    *
    * Called when the Ball is removed from the PlayArea.
    */
