@@ -41,7 +41,7 @@ const MOMENTUM_COMPONENT_RANGE = new Range( -10, 10 );
 const POSITION_COMPONENT_RANGE = new Range( -10, 10 );
 const VELOCITY_COMPONENT_RANGE = new Range( -10, 10 );
 
-class MoreDataBallEntry extends Node {
+class BallValuesEntryNode extends Node {
 
   /**
    * @param {Ball} ball
@@ -124,5 +124,5 @@ class MoreDataBallEntry extends Node {
   }
 }
 
-collisionLab.register( 'MoreDataBallEntry', MoreDataBallEntry );
-export default MoreDataBallEntry;
+collisionLab.register( 'BallValuesEntryNode', BallValuesEntryNode );
+export default BallValuesEntryNode;
