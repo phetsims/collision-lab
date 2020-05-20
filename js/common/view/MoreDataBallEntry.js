@@ -1,7 +1,21 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
+ * Displays a row a values for a Single Ball.
  *
+ * Assuming the Ball is in the Play Area, this Node displays it's values, which are:
+ *    - Mass (kg)
+ *    - The position of the Ball (m)
+ *    - The velocity of the Ball (m/s)
+ *    - The linear momentum of the Ball (kg m/s)
+ *
+ * Depending on if the "More Data" checkbox is not checked, the Node only displays:
+ *   - Mass (kg)
+ *   - A slider to change the mass
+ *
+ * Ball values are displayed in a BallValueNumberDisplay.
+ *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
