@@ -179,12 +179,12 @@ class CollisionLabScreenView extends ScreenView {
 
 
     const keypad = new CollisionLabKeypad();
-    this.addChild( keypad );
 
     const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
     ballValuesDisplay.left = 40;
+    this.addChild( keypad );
   }
 
   // @public
