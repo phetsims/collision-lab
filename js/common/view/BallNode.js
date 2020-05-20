@@ -23,7 +23,7 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
-import BallValuesDisplay from './BallValuesDisplay.js';
+import BallLabelsNode from './BallLabelsNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
 
 // constants
@@ -152,7 +152,7 @@ class BallNode extends Node {
     diskLayer.addInputListener( diskLayerDragListener );
 
     // create and add the speed and momentum display
-    const ballValuesDisplay = new BallValuesDisplay( ball.speedProperty, ball.momentumMagnitudeProperty, valuesVisibleProperty, {
+    const ballValuesDisplay = new BallLabelsNode( ball.speedProperty, ball.momentumMagnitudeProperty, valuesVisibleProperty, {
       verticalOffset: ballRadius + 10
     } );
     this.addChild( ballValuesDisplay );

@@ -13,8 +13,6 @@
  *   - Mass (kg)
  *   - A slider to change the mass
  *
- * Ball values are displayed in a BallValueNumberDisplay.
- *
  * @author Brandon Li
  * @author Martin Veillette
  */
@@ -138,6 +136,8 @@ class BallValuesEntryNode extends Node {
   /**
    * Disposes the BallValuesEntryNode, releasing all links that it maintained.
    * @public
+   *
+   * Called when the Ball is removed from the PlayArea.
    */
   dispose() {
     this.disposeBallValuesEntryNode();

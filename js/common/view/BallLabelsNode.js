@@ -23,7 +23,7 @@ const MOMENTUM_RANGE = new Range( 0, 999 ); // range for the momentum to determi
 const speedPatternString = collisionLabStrings.speedPattern;
 const momentumPatternString = collisionLabStrings.momentumPattern;
 
-class BallValuesDisplay extends Node {
+class BallLabelsNode extends Node {
 
   /**
    * @param {Property.<number>} speedProperty
@@ -78,8 +78,8 @@ class BallValuesDisplay extends Node {
     // visibility listener
     const valuesVisibleHandle = valuesVisibleProperty.linkAttribute( this, 'visible' );
 
-    // @private {function} disposeBallValuesDisplay - function to unlink listeners, called in dispose()
-    this.disposeBallValuesDisplay = () => {
+    // @private {function} disposeBallLabelsNode - function to unlink listeners, called in dispose()
+    this.disposeBallLabelsNode = () => {
       valuesVisibleProperty.unlinkAttribute( valuesVisibleHandle );
     };
 
@@ -90,10 +90,10 @@ class BallValuesDisplay extends Node {
    * @override
    */
   dispose() {
-    this.disposeBallValuesDisplay();
+    this.disposeBallLabelsNode();
     super.dispose();
   }
 }
 
-collisionLab.register( 'BallValuesDisplay', BallValuesDisplay );
-export default BallValuesDisplay;
+collisionLab.register( 'BallLabelsNode', BallLabelsNode );
+export default BallLabelsNode;
