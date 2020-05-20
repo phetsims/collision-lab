@@ -141,6 +141,7 @@ class BallValuesEntryNode extends Node {
    */
   dispose() {
     this.disposeBallValuesEntryNode();
+    super.dispose();
   }
 }
 
