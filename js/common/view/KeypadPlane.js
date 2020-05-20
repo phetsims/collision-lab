@@ -31,12 +31,7 @@ import Panel from '../../../../sun/js/Panel.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-
-// strings
-// const enterString = require( 'string!COLLISION_LAB/enter' );
-const enterString = 'enter';
-// const rangeMessageString = require( 'string!COLLISION_LAB/rangeMessage' );
-const rangeMessageString = 'rangeMessage';
+import collisionLabStrings from '../../collisionLabStrings.js';
 
 // constants
 const TEXT_FONT = new PhetFont( 15 );
@@ -94,7 +89,7 @@ class KeypadPlane extends Plane {
     const enterButton = new RectangularPushButton( {
       listener: this.commitEdit.bind( this ),
       baseColor: PhetColorScheme.BUTTON_YELLOW,
-      content: new Text( enterString, {
+      content: new Text( collisionLabStrings.enter, {
         font: TEXT_FONT,
         fill: 'black',
         maxWidth: this.keypadNode.width // i18n
@@ -164,7 +159,7 @@ class KeypadPlane extends Plane {
     this.onEndEdit = options.onEndEdit;
 
     this.valueRange = valueRange; // update value range to be used in commitedit
-    const rangeMessage = StringUtils.fillIn( rangeMessageString, {
+    const rangeMessage = StringUtils.fillIn( collisionLabStrings.rangeMessage, {
       min: valueRange.min,
       max: valueRange.max,
       units: unitsString ? unitsString : ''

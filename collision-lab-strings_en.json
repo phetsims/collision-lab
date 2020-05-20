@@ -76,5 +76,11 @@
   },
   "balls": {
     "value": "Balls"
+  },
+  "enter": {
+    "value": "Enter"
+  },
+  "rangeMessage": {
+    "value": "{{min}} to {{max}} {{units}}"
   }
 }
