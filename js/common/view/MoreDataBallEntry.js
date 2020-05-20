@@ -104,8 +104,8 @@ class MoreDataBallEntry extends Node {
 
     // listener present for the lifetime of the simulation
     moreDataVisibleProperty.link( moreData => {
-      moreDataBox.visible = !moreData;
-      lessDataBox.visible = moreData;
+      moreDataBox.visible = moreData;
+      lessDataBox.visible = !moreData;
     } );
   }
 }
