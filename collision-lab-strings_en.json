@@ -82,5 +82,14 @@
   },
   "rangeMessage": {
     "value": "{{min}} to {{max}} {{units}}"
+  },
+  "kg": {
+    "value": "kg"
+  },
+  "m": {
+    "value": "m"
+  },
+  "metersPerSecond": {
+    "value": "m/s"
   }
 }

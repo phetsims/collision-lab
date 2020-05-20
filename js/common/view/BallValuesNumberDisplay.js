@@ -25,6 +25,7 @@ import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import KeypadPlane from './KeypadPlane.js';
@@ -92,18 +93,34 @@ class BallValuesNumberDisplay extends NumberDisplay {
 
     if ( canEdit ) {
       let editRange; // The editing range of the Ball Property.
+      let unit; // The unit of the Ball Property that is being modified.
 
-      if ( ballQuantity === BallQuantities.MASS ) { editRange = CollisionLabConstants.MASS_RANGE; }
-      else if ( ballQuantity === BallQuantities.X_POSITION ) { editRange = ball.xPositionRange; }
-      else if ( ballQuantity === BallQuantities.Y_POSITION ) { editRange = ball.yPositionRange; }
-      else if ( ballQuantity === BallQuantities.X_VELOCITY ) { editRange = CollisionLabConstants.VELOCITY_RANGE; }
-      else if ( ballQuantity === BallQuantities.Y_VELOCITY ) { editRange = CollisionLabConstants.VELOCITY_RANGE; }
+      if ( ballQuantity === BallQuantities.MASS ) {
+        editRange = CollisionLabConstants.MASS_RANGE;
+        unit = collisionLabStrings.kg;
+      }
+      else if ( ballQuantity === BallQuantities.X_POSITION ) {
+        editRange = ball.xPositionRange;
+        unit = collisionLabStrings.m;
+      }
+      else if ( ballQuantity === BallQuantities.Y_POSITION ) {
+        editRange = ball.yPositionRange;
+        unit = collisionLabStrings.m;
+      }
+      else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
+        editRange = CollisionLabConstants.VELOCITY_RANGE;
+        unit = collisionLabStrings.metersPerSecond;
+      }
+      else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
+        editRange = CollisionLabConstants.VELOCITY_RANGE;
+        unit = collisionLabStrings.metersPerSecond;
+      }
 
       // Create a FireListener that listens to presses and to fire the keypadPlane to allow the user to edit the
       // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
       fireListener = new FireListener( {
         fire: () => {
-          keypadPlane.beginEdit( ballProperty, editRange, '', {
+          keypadPlane.beginEdit( ballProperty, editRange, unit, {
             onBeginEdit: () => { this.backgroundFill = PhetColorScheme.BUTTON_YELLOW; },
             onEndEdit: () => { this.backgroundFill = options.backgroundFill; }
           } );
