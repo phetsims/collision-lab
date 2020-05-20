@@ -62,6 +62,9 @@ const CollisionLabConstants = {
     lineWidth: 1
   },
 
+  // vector components or magnitudes smaller than this value are treated as effectively zero
+  ZERO_THRESHOLD: 1E-10,
+
   //----------------------------------------------------------------------------------------
   // Rounding
   NUMBER_DISPLAY_ROUNDING: 3, // rounding for all number display instances

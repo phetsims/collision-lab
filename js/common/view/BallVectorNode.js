@@ -17,6 +17,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 
 // const Vector2 = require( '/dot/js/Vector2' );
 
@@ -51,8 +52,13 @@ class BallVectorNode extends Node {
     this.addChild( this.arrowNode );
 
     const tipPositionListener = vector => {
-      const viewVector = modelViewTransform.modelToViewDelta( vector );
-      this.arrowNode.setTip( viewVector.x, viewVector.y );
+      if ( vector.magnitude > CollisionLabConstants.ZERO_THRESHOLD ) {
+        const viewVector = modelViewTransform.modelToViewDelta( vector );
+        this.arrowNode.setTip( viewVector.x, viewVector.y );
+      }
+      else {
+        this.arrowNode.setTip( 0, 0 );
+      }
     };
 
     tipPositionProperty.link( tipPositionListener );
