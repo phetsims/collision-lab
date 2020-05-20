@@ -1,25 +1,34 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * KeypadLayer handles creation and management of a modal keypad.
+ * KeypadPlane is a Plane sub-type that handles the creation and management of a modal Keypad for the 'collision lab'
+ * simulation. It is present on all screens.
  *
- * @author Martin Veillette
+ * KeypadPlane should be the last child in the ScreenView. It's only visible when the Keypad requested through the
+ * beginEdit() method, which occurs when the user presses on a BallValuesNumberDisplay, to allow the user to
+ * manipulate a Ball Property. Edits must be within a specified range. There will be a 'Enter' button to allow the user
+ * to submit a edit, and edits are canceled if the user presses outside of the Keypad.
+ *
+ * KeypadPlane is created at the start of the sim and is never disposed, so no dispose method is necessary and
+ * internal links are left as-is.
+ *
+ * @author Brandon Li
  */
 
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import DownUpListener from '../../../../scenery/js/input/DownUpListener.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Plane from '../../../../scenery/js/nodes/Plane.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import Panel from '../../../../sun/js/Panel.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 
@@ -34,7 +43,7 @@ const TEXT_FONT = new PhetFont( 15 );
 const TEXT_FILL_DEFAULT = 'black';
 const TEXT_FILL_ERROR = 'red';
 
-class CollisionLabKeypad extends Plane {
+class KeypadPlane extends Plane {
 
   constructor( options ) {
 
@@ -57,7 +66,7 @@ class CollisionLabKeypad extends Plane {
     // @private clicking outside the keypad cancels the edit
     this.clickOutsideListener = new DownUpListener( {
       down: event => {
-        if ( event.trail.lastNode() === this ) {this.cancelEdit();}
+        if ( event.trail.lastNode() === this ) {this.endEdit();}
       }
     } );
 
@@ -137,20 +146,11 @@ class CollisionLabKeypad extends Plane {
   }
 
   /**
-   * Positions keypad
-   * @param {function:KeypadPanel} setKeyPadPosition - function that lays out keypad, no return
-   */
-  positionKeypad( setKeyPadPosition ) {
-    this.keypadPanel && setKeyPadPosition( this.keypadPanel );
-  }
-
-  /**
    * Begins an edit, by opening a modal keypad.
    * @public
    *
    * @param {Property.<number>} valueProperty - the Property to be set by the keypad
    * @param {Range} valueRange
-   * @param {string} unitsString
    * @param {Object} [options]
    */
   beginEdit( valueProperty, valueRange, unitsString, options ) {
@@ -174,15 +174,12 @@ class CollisionLabKeypad extends Plane {
     // display the keypad
     this.visible = true;
 
-    // keypadLayer lasts for the lifetime of the sim, so listeners don't need to be disposed
+    // keypadPlane lasts for the lifetime of the sim, so listeners don't need to be disposed
     this.addInputListener( this.clickOutsideListener );
-
-    // execute client-specific hook
-    options.onBeginEdit && options.onBeginEdit();
   }
 
   /**
-   * Ends an edit, used by commitEdit and cancelEdit
+   * Ends an edit, used by commitEdit and endEdit
    * @private
    */
   endEdit() {
@@ -226,7 +223,7 @@ class CollisionLabKeypad extends Plane {
 
     // not entering a value in the keypad is a cancel
     if ( this.keypadNode.stringProperty.value === '' ) {
-      this.cancelEdit();
+      this.endEdit();
       return;
     }
 
@@ -237,15 +234,7 @@ class CollisionLabKeypad extends Plane {
     }
     this.warnOutOfRange();
   }
-
-  /**
-   * Cancels an edit
-   * @private
-   */
-  cancelEdit() {
-    this.endEdit();
-  }
 }
 
-collisionLab.register( 'CollisionLabKeypad', CollisionLabKeypad );
-export default CollisionLabKeypad;
+collisionLab.register( 'KeypadPlane', KeypadPlane );
+export default KeypadPlane;

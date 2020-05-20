@@ -31,20 +31,20 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
-import CollisionLabKeypad from './CollisionLabKeypad.js';
+import KeypadPlane from './KeypadPlane.js';
 
 class BallValuesEntryToggleNode extends Node {
 
   /**
    * @param {Ball} ball
    * @param {Property.<boolean>} moreDataVisibleProperty
-   * @param {CollisionLabKeypad} keypadLayer
+   * @param {KeypadPlane} keypadPlane
    * @param {Object} [options]
    */
-  constructor( ball, moreDataVisibleProperty, keypadLayer, options ) {
+  constructor( ball, moreDataVisibleProperty, keypadPlane, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
-    assert && assert( keypadLayer instanceof CollisionLabKeypad, `invalid keypadLayer: ${keypadLayer}` );
+    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
@@ -64,13 +64,13 @@ class BallValuesEntryToggleNode extends Node {
     // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
 
-    const massNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.MASS, keypadLayer );
-    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_POSITION, keypadLayer );
-    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_POSITION, keypadLayer );
-    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_VELOCITY, keypadLayer );
-    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_VELOCITY, keypadLayer );
-    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_MOMENTUM, keypadLayer );
-    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_MOMENTUM, keypadLayer );
+    const massNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.MASS, keypadPlane );
+    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_POSITION, keypadPlane );
+    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_POSITION, keypadPlane );
+    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_VELOCITY, keypadPlane );
+    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_VELOCITY, keypadPlane );
+    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_MOMENTUM, keypadPlane );
+    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_MOMENTUM, keypadPlane );
     const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.massSliderOptions );
 
     // Group the NumberDisplays by components

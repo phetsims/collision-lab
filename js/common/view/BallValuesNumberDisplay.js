@@ -27,7 +27,7 @@ import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
-import CollisionLabKeypad from './CollisionLabKeypad.js';
+import KeypadPlane from './KeypadPlane.js';
 
 // constants
 const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDisplay (used to determine width).
@@ -46,12 +46,12 @@ class BallValuesNumberDisplay extends NumberDisplay {
   /**
    * @param {Ball} ball - the Ball model
    * @param {BallQuantities} ballQuantity - the Ball Quantity to display
-   * @param {CollisionLabKeypad} keypadLayer
+   * @param {KeypadPlane} keypadPlane
    * @param {Object} [options]
    */
-  constructor( ball, ballQuantity, keypadLayer, options ) {
+  constructor( ball, ballQuantity, keypadPlane, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( keypadLayer instanceof CollisionLabKeypad, `invalid keypadLayer: ${keypadLayer}` );
+    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
     assert && assert( BallQuantities.includes( ballQuantity ), `invalid ballQuantity: ${ballQuantity}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
@@ -99,11 +99,11 @@ class BallValuesNumberDisplay extends NumberDisplay {
       else if ( ballQuantity === BallQuantities.X_VELOCITY ) { editRange = CollisionLabConstants.VELOCITY_RANGE; }
       else if ( ballQuantity === BallQuantities.Y_VELOCITY ) { editRange = CollisionLabConstants.VELOCITY_RANGE; }
 
-      // Create a FireListener that listens to presses and to fire the keypadLayer to allow the user to edit the
+      // Create a FireListener that listens to presses and to fire the keypadPlane to allow the user to edit the
       // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
       fireListener = new FireListener( {
         fire: () => {
-          keypadLayer.beginEdit( ballProperty, editRange, '', {
+          keypadPlane.beginEdit( ballProperty, editRange, '', {
             onBeginEdit: () => { this.backgroundFill = PhetColorScheme.BUTTON_YELLOW; },
             onEndEdit: () => { this.backgroundFill = options.backgroundFill; }
           } );
