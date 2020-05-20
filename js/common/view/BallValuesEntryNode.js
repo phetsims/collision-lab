@@ -20,19 +20,14 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import merge from '../../../../phet-core/js/merge.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import Circle from '../../../../scenery/js/nodes/Circle.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import Text from '../../../../scenery/js/nodes/Text.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
+import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 
 class BallValuesEntryNode extends Node {
 
@@ -46,30 +41,7 @@ class BallValuesEntryNode extends Node {
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
-    options = merge( {
-      diskNodeOptions: { // TODO: move this to icon factory
-        fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
-        center: Vector2.ZERO,
-        stroke: 'black'
-      },
-      labelNodeOptions: {
-        font: new PhetFont( 20 ),
-        center: Vector2.ZERO,
-        stroke: 'black',
-        fill: 'white'
-      }
-    }, options );
-
-    // create and add disk to the scene graph
-    const diskNode = new Circle( 10, options.diskNodeOptions );
-
-    // create and add labelNode of the ball
-    const labelNode = new Text( ball.index, options.labelNodeOptions );
-
-    // create and add a layer for the disk and label
-    const diskLayer = new Node( { children: [ diskNode, labelNode ] } );
-
-
+    const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
     const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
     const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
     const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
@@ -80,7 +52,7 @@ class BallValuesEntryNode extends Node {
 
 
     const moreDataBox = new HBox( {
-      children: [ diskLayer, massNumberDisplay,
+      children: [ ballIcon, massNumberDisplay,
         xPositionNumberDisplay, yPositionNumberDisplay,
         xVelocityNumberDisplay, yVelocityNumberDisplay,
         momentumXNumberDisplay, momentumYNumberDisplay ],
@@ -89,7 +61,7 @@ class BallValuesEntryNode extends Node {
 
     const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE );
     const lessDataBox = new HBox( {
-      children: [ diskLayer, massNumberDisplay, massSlider ],
+      children: [ ballIcon, massNumberDisplay, massSlider ],
       spacing: 10
     } );
 
