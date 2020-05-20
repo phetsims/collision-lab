@@ -29,7 +29,7 @@ const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDispl
 class BallValuesNumberDisplay extends NumberDisplay {
 
   /**
-   * @param {Property.<number>} ballProperty
+   * @param {Property.<number>} ballProperty - Property to display in the NumberDisplay
    * @param {boolean} canEdit - indicates if the user can press the NumberDisplay and edit the ballProperty
    * @param {Object} [options]
    */
@@ -46,7 +46,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
       backgroundStroke: canEdit ? 'black' : null,
       backgroundFill: canEdit ? 'white' : null,
       decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
-    } );
+    }, options );
 
     super( ballProperty, DISPLAY_RANGE, options );
 

@@ -20,10 +20,8 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
-import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
@@ -34,12 +32,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
-
-// constants
-const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
-const MOMENTUM_COMPONENT_RANGE = new Range( -10, 10 );
-const POSITION_COMPONENT_RANGE = new Range( -10, 10 );
-const VELOCITY_COMPONENT_RANGE = new Range( -10, 10 );
+import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 
 class BallValuesEntryNode extends Node {
 
@@ -49,23 +42,12 @@ class BallValuesEntryNode extends Node {
    * @param {Object} [options]
    */
   constructor( ball, moreDataVisibleProperty, options ) {
-
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
-      numberDisplayOptions: merge(
-        CollisionLabColors.BALL_DISPLAY_COLORS, {
-          align: 'right',
-          maxWidth: 80, // determined empirically,
-          textOptions: {
-            font: CollisionLabConstants.DISPLAY_FONT
-          },
-          backgroundStroke: 'black',
-          backgroundLineWidth: 1,
-          decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
-        } ),
-      diskNodeOptions: {
+      diskNodeOptions: { // TODO: move this to icon factory
         fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
         center: Vector2.ZERO,
         stroke: 'black'
@@ -88,13 +70,14 @@ class BallValuesEntryNode extends Node {
     const diskLayer = new Node( { children: [ diskNode, labelNode ] } );
 
 
-    const massNumberDisplay = new NumberDisplay( ball.massProperty, MASS_RANGE, options.numberDisplayOptions );
-    const xPositionNumberDisplay = new NumberDisplay( ball.xPositionProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
-    const yPositionNumberDisplay = new NumberDisplay( ball.yPositionProperty, POSITION_COMPONENT_RANGE, options.numberDisplayOptions );
-    const xVelocityNumberDisplay = new NumberDisplay( ball.xVelocityProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
-    const yVelocityNumberDisplay = new NumberDisplay( ball.yVelocityProperty, VELOCITY_COMPONENT_RANGE, options.numberDisplayOptions );
-    const momentumXNumberDisplay = new NumberDisplay( ball.xMomentumProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
-    const momentumYNumberDisplay = new NumberDisplay( ball.yMomentumProperty, MOMENTUM_COMPONENT_RANGE, options.numberDisplayOptions );
+    const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, true );
+    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, true );
+    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, true );
+    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, true );
+    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball.yVelocityProperty, true );
+    const momentumXNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, false );
+    const momentumYNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, false );
+
 
     const moreDataBox = new HBox( {
       children: [ diskLayer, massNumberDisplay,
@@ -104,7 +87,7 @@ class BallValuesEntryNode extends Node {
       spacing: 10
     } );
 
-    const massSlider = new HSlider( ball.massProperty, MASS_RANGE );
+    const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE );
     const lessDataBox = new HBox( {
       children: [ diskLayer, massNumberDisplay, massSlider ],
       spacing: 10
