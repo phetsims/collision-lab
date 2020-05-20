@@ -9,7 +9,7 @@
  *    - The velocity of the Ball (m/s)
  *    - The linear momentum of the Ball (kg m/s)
  *
- * Depending on if the "More Data" checkbox is not checked, the Node only displays:
+ * If the "More Data" checkbox is not checked, the Node only displays:
  *   - Mass (kg)
  *   - A slider to change the mass
  *
