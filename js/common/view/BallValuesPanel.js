@@ -21,7 +21,7 @@ import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
-import BallValuesEntryToggleNode from './BallValuesEntryToggleNode.js';
+import BallValuesEntryNode from './BallValuesEntryNode.js';
 
 // const Text = require( '/scenery/js/nodes/Text' );
 
@@ -62,7 +62,7 @@ class BallValuesPanel extends Panel {
 
     const addItemAddedBallListener = addedBall => {
 
-      const addedBallEntryNode = new BallValuesEntryToggleNode( addedBall, moreDataProperty, keypad );
+      const addedBallEntryNode = new BallValuesEntryNode( addedBall, moreDataProperty, keypad );
       panelContent.addChild( addedBallEntryNode );
 
       // Observe when the ball is removed to unlink listeners
