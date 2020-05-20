@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * Displays a row a values for a Single Ball.
+ * A 'entry' in the BallValuesPanel: displays a row a values for a Single Ball.
  *
  * Assuming the Ball is in the Play Area, this Node displays it's values, which are:
  *    - Mass (kg)
