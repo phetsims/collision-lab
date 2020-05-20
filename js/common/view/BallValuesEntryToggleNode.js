@@ -63,14 +63,15 @@ class BallValuesEntryToggleNode extends Node {
 
     // Create the content of the Entry
     const ballIcon = CollisionLabIconFactory.createBallIcon( ball );
-    const massNumberDisplay = new BallValuesNumberDisplay( ball.massProperty, keypadLayer, true );
+
+    const massNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.MASS, keypadLayer );
+    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_POSITION, keypadLayer );
+    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_POSITION, keypadLayer );
+    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_VELOCITY, keypadLayer );
+    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_VELOCITY, keypadLayer );
+    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.X_MOMENTUM, keypadLayer );
+    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball, BallValuesNumberDisplay.BallQuantities.Y_MOMENTUM, keypadLayer );
     const massSlider = new HSlider( ball.massProperty, CollisionLabConstants.MASS_RANGE, options.massSliderOptions );
-    const xPositionNumberDisplay = new BallValuesNumberDisplay( ball.xPositionProperty, keypadLayer, true );
-    const yPositionNumberDisplay = new BallValuesNumberDisplay( ball.yPositionProperty, keypadLayer, true );
-    const xVelocityNumberDisplay = new BallValuesNumberDisplay( ball.xVelocityProperty, keypadLayer, true );
-    const yVelocityNumberDisplay = new BallValuesNumberDisplay( ball.yVelocityProperty, keypadLayer, true );
-    const xMomentumNumberDisplay = new BallValuesNumberDisplay( ball.xMomentumProperty, keypadLayer, false );
-    const yMomentumNumberDisplay = new BallValuesNumberDisplay( ball.yMomentumProperty, keypadLayer, false );
 
     // Group the NumberDisplays by components
     const positionNumberDisplaysBox = new HBox( {
