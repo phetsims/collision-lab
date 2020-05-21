@@ -1,18 +1,18 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A rectangular push button, used to restart the playArea of the simulation.
+ * A rectangular Reset button. An solution using common-code components was investigated, and it was decided
+ * to use the FontAwesomeNode 'undo' character. See https://github.com/phetsims/collision-lab/issues/54
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
-import Matrix3 from '../../../../dot/js/Matrix3.js';
 import merge from '../../../../phet-core/js/merge.js';
-import Path from '../../../../scenery/js/nodes/Path.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import ColorConstants from '../../../../sun/js/ColorConstants.js';
+import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
-import RestartShape from './RestartShape.js';
 
 class RestartButton extends RectangularPushButton {
 
@@ -23,27 +23,15 @@ class RestartButton extends RectangularPushButton {
   constructor( options ) {
 
     options = merge( {
+
+      // super-class
       baseColor: ColorConstants.LIGHT_BLUE,
-      arrowColor: 'black',
       lineWidth: 0
+
     }, options );
 
-    // {Shape} shape of the restart icon
-    const restartShape = new RestartShape();
-
-    // restart icon
-    const restartIcon = new Path( restartShape, { fill: options.arrowColor } );
-
-    // inverted shape of the restart shape
-    const invertedShape = restartShape.transformed( Matrix3.scaling( -1, -1 ) );
-
-    // bounds of the restart icon is union of this icon and invertedShape to ensure
-    // that the center of the icon is at the center of the button
-    restartIcon.localBounds = restartShape.bounds.union( invertedShape.bounds );
-
     assert && assert( !options.content, 'content is not customizable' );
-
-    options.content = restartIcon;
+    options.content = new FontAwesomeNode( 'undo', { scale: 0.5 } ); // Scale determined empirically.
 
     super( options );
   }
