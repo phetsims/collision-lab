@@ -20,7 +20,9 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from './PlayArea.js';
-import CollisionLabClock from './CollisionLabClock.js';
+
+// constants
+const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
 
 class CollisionLabModel {
 
@@ -30,14 +32,14 @@ class CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    // @public (read-only) {BooleanProperty} - indicates the play/pause state of the simulation.
+    // @public (read-only) {BooleanProperty} - indicates the play/pause state of the screen.
     this.playProperty = new BooleanProperty( false );
+
+    // @public {Property.<number>} elapsed time (in seconds) of the screen.
+    this.elapsedTimeProperty = new NumberProperty( 0 );
 
     // @public (read-only) {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
-
-    // @public (read-only) {CollisionLabClock} - stopwatch for the simulation.
-    this.clock = new CollisionLabClock( this.timeSpeedProperty );
 
     //----------------------------------------------------------------------------------------
 
@@ -86,8 +88,8 @@ class CollisionLabModel {
    */
   reset() {
     this.playProperty.reset();
+    this.elapsedTimeProperty.reset();
     this.timeSpeedProperty.reset();
-    this.clock.reset();
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
@@ -98,20 +100,59 @@ class CollisionLabModel {
   }
 
   /**
-   * Steps the model forward in time
+   * Gets the time speed factor, which is set externally by the user and is based off the timeSpeedProperty.
    * @public
-   * @param {number} dt
+   *
+   * @returns {number} - the speedFactor, from 1 (normal) to less than one (slow)
+   */
+  getTimeSpeedFactor() {
+    return this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
+              CollisionLabConstants.NORMAL_SPEED_SCALE :
+              CollisionLabConstants.SLOW_SPEED_SCALE;
+  }
+
+  /**
+   * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the
+   * sim is paused.
+   * @public
+   *
+   * @param {number} dt - time since the last step, in seconds.
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    if ( this.playProperty.value && !this.playArea.playAreaUserControlledProperty.value ) {
-      const ellapsedTime = dt * this.clock.speedFactorProperty.value;
-
-      this.clock.step( ellapsedTime );
-      this.playArea.step( ellapsedTime );
-    }
+    if ( this.playProperty.value ) { this.stepManual( dt * this.getTimeSpeedFactor() ); }
   }
+
+  /**
+   * Steps the simulation manually, as regardless if the sim is paused. Intended to be called by clients that step the
+   * simulation through step-buttons or used by the main step method when the sim isn't paused.
+   * @private
+   *
+   * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
+   */
+  stepManual( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+
+    this.elapsedTimeProperty.value += dt;
+    this.playArea.step( dt );
+  }
+
+  /**
+   * Steps the simulation backward by one time-step.
+   * @public
+   *
+   * Called when the user presses the step-backward button.
+   */
+  stepBackward() { this.stepManual( -STEP_DURATION * this.getTimeSpeedFactor() ); }
+
+  /**
+   * Steps the simulation forward by one time-step.
+   * @public
+   *
+   * Called when the user presses the step-forward button.
+   */
+  stepForward() { this.stepManual( STEP_DURATION * this.getTimeSpeedFactor() ); }
 }
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );

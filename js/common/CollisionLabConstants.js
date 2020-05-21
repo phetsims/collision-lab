@@ -16,7 +16,7 @@ import CollisionLabColors from './CollisionLabColors.js';
 
 const CollisionLabConstants = {
 
-  STEP_DURATION: 1 / 60, // seconds, for a single manual time step
+  STEP_DURATION: 1 / 30, // seconds, for a single manual time step
 
   NORMAL_SPEED_SCALE: 1, // 100%
   SLOW_SPEED_SCALE: 0.3, //  30%
