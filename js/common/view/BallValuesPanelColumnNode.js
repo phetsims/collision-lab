@@ -149,6 +149,7 @@ class BallValuesPanelColumnNode extends VBox {
     // Observe when the ball is removed to update the Display and dispose the contentNode.
     const removeBallListener = removedBall => {
       if ( ball === removedBall ) {
+        this.contentAlignGroup.removeAlignBox( contentAlignBox );
         this.contentContainerNode.removeChild( contentAlignBox );
         if ( contentNode instanceof BallValuesNumberDisplay ) {
           contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
