@@ -165,7 +165,7 @@ class BallValuesPanelColumnNode extends VBox {
    */
   getLabelString() {
     const xString = collisionLabStrings.symbol.x;
-    const yString = collisionLabStrings.symbol.x;
+    const yString = collisionLabStrings.symbol.y;
 
     if ( this.columnType === ColumnTypes.X_POSITION ) { return xString; }
     if ( this.columnType === ColumnTypes.Y_POSITION ) { return yString; }
