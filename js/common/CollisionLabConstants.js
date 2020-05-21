@@ -9,8 +9,10 @@
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Range from '../../../dot/js/Range.js';
 import Vector2 from '../../../dot/js/Vector2.js';
+import merge from '../../../phet-core/js/merge.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
+import CollisionLabColors from './CollisionLabColors.js';
 
 const CollisionLabConstants = {
 
@@ -76,7 +78,15 @@ const CollisionLabConstants = {
   PANEL_LABEL_FONT: new PhetFont( 18 ),
   CHECKBOX_FONT: new PhetFont( 16 ),
   DISPLAY_FONT: new PhetFont( 16 ),
-  PANEL_TITLE_FONT: new PhetFont( { size: 16, weight: 600 } )
+  PANEL_TITLE_FONT: new PhetFont( { size: 16, weight: 600 } ),
+
+  //----------------------------------------------------------------------------------------
+  // panels
+  PANEL_OPTIONS: merge( {
+    xMargin: 16,
+    yMargin: 12,
+    cornerRadius: 7
+  }, CollisionLabColors.PANEL_COLORS )
 };
 
 collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );

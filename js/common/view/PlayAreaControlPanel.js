@@ -61,7 +61,7 @@ class PlayAreaControlPanel extends Panel {
                constantRadiusProperty,
                options ) {
 
-    options = merge( CollisionLabColors.PANEL_COLORS, options );
+    options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, options );
 
     const velocityCheckbox = new ControlPanelCheckbox(
       velocityString,

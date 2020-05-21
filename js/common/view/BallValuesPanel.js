@@ -3,10 +3,18 @@
 /**
  * BallValuesPanel is the Panel at the bottom of all screen which displays and allows the user to modify Ball values.
  *
+ * For each Ball in the PlayArea, it displays it's values, which are:
+ *    - Masses (kg)
+ *    - The positions of the Balls (m)
+ *    - The velocities of the Balls (m/s)
+ *    - The linear momentum of the Balls (kg m/s)
  *
+ * If the "More Data" checkbox is not checked, the Node only displays:
+ *   - Masses of the Balls (kg)
+ *   - A slider to change the mass
  *
- * The Panel first
- * For each Ball in the PlayArea, this Panel displays it's values, which is a BallValuesEntryNode.
+ * The Panel is built into columns using BallValuesPanelColumnNode. Then, columns are grouped together (like the
+ * x-position and the y-position column) and a title-label is placed above it (in this case "Position").
  *
  * This panel exists for the entire sim and is never disposed.
  *
@@ -23,7 +31,6 @@ import VBox from '../../../../scenery/js/nodes/VBox.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
@@ -33,7 +40,7 @@ class BallValuesPanel extends Panel {
 
   /**
    * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
-   * @param {Property.<boolean>} moreDataVisibleProperty - Property that indicates if the "More Data" checkbox is checked.
+   * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
    * @param {KeypadPlane} keypadPlane
    * @param {Object} [options]
    */
@@ -43,27 +50,22 @@ class BallValuesPanel extends Panel {
     assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
-    options = merge( {}, CollisionLabColors.PANEL_COLORS, {
+    options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
       ballIconColumnSpacing: 10,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
       columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
       columnGroupsTopMargin: 5,     // {number} - y-margin between the columns and the title-labels above them
-      titleLabelFont: CollisionLabConstants.PANEL_TITLE_FONT,
-
-      // super-class
-      xMargin: 16,
-      yMargin: 12,
-      cornerRadius: 7
+      titleLabelFont: CollisionLabConstants.PANEL_TITLE_FONT
 
     }, options );
 
     //----------------------------------------------------------------------------------------
 
-    // Create AlignGroups for the content and labels of every column to match the vertical height of each component of
-    // the BallValuesPanel. See BallValuesPanelColumnNode for more documentation.
-    const labelAlignGroup = new AlignGroup( {  matchHorizontal: false, matchVertical: true } );
-    const contentAlignGroup = new AlignGroup( {  matchHorizontal: false, matchVertical: true } );
+    // Create AlignGroups for the content and labels of every BallValuesPanelColumnNode to match the vertical height of
+    // each component in the BallValuesPanel. See BallValuesPanelColumnNode for more documentation.
+    const labelAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
+    const contentAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
     // Create each BallValuesPanelColumnNode for each type of BallValuesPanelColumnNode.ColumnTypes
     const ballIconsColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS, contentAlignGroup, labelAlignGroup, keypadPlane );
@@ -76,7 +78,7 @@ class BallValuesPanel extends Panel {
     const yMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadPlane );
     const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadPlane );
 
-    // Group the columns by components
+    // Horizontally group the components of BallValuesPanelColumnNodes into groups.
     const positionColumnGroup = new HBox( {
       children: [ xPositionColumnNode, yPositionColumnNode ],
       spacing: options.componentColumnsSpacing
@@ -98,20 +100,20 @@ class BallValuesPanel extends Panel {
     const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, { font: options.titleLabelFont } );
     const massTitleLabelText = new Text( collisionLabStrings.massUnit, { font: options.titleLabelFont } );
 
-    // Position the groups of columns with their respective title Labels in a VBox.
-    const massColumnWithTitleBox = new VBox( {
+    // Horizontally group the column groups with their respective title Labels in a VBox.
+    const massColumnGroupAndTitleBox = new VBox( {
       children: [ massTitleLabelText, massColumnNode ],
       spacing: options.columnGroupsTopMargin
     } );
-    const positionColumnWithTitleBox = new VBox( {
+    const positionColumnGroupAndTitleBox = new VBox( {
       children: [ positionTitleLabelText, positionColumnGroup ],
       spacing: options.columnGroupsTopMargin
     } );
-    const velocityColumnWithTitleBox = new VBox( {
+    const velocityColumnGroupAndTitleBox = new VBox( {
       children: [ velocityTitleLabelText, velocityColumnGroup ],
       spacing: options.columnGroupsTopMargin
     } );
-    const momentumColumnWithTitleBox = new VBox( {
+    const momentumColumnGroupAndTitleBox = new VBox( {
       children: [ momentumTitleLabelText, momentumColumnGroup ],
       spacing: options.columnGroupsTopMargin
     } );
@@ -121,21 +123,23 @@ class BallValuesPanel extends Panel {
     // The content of the entire Panel when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
-        massColumnWithTitleBox,
-        positionColumnWithTitleBox,
-        velocityColumnWithTitleBox,
-        momentumColumnWithTitleBox
+        massColumnGroupAndTitleBox,
+        positionColumnGroupAndTitleBox,
+        velocityColumnGroupAndTitleBox,
+        momentumColumnGroupAndTitleBox
       ],
-      spacing: options.columnGroupSpacing
+      spacing: options.columnGroupSpacing,
+      align: 'bottom'
     } );
 
     // The content of the entire Panel when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        massColumnWithTitleBox,
+        massColumnGroupAndTitleBox,
         massSlidersColumnNode
       ],
-      spacing: options.columnGroupSpacing
+      spacing: options.columnGroupSpacing,
+      align: 'bottom'
     } );
 
     //----------------------------------------------------------------------------------------
@@ -143,8 +147,8 @@ class BallValuesPanel extends Panel {
     // Reference the content Node of the Panel, passed to the super-class.
     const panelContentNode = new HBox( { spacing: options.ballIconColumnSpacing, align: 'bottom' } );
 
-    // Observe when the moreDataVisibleProperty changes and update the children of our Node. We change our children
-    // rather than the visibility of our children to change our Bounds, which allows out super-class to resize.
+    // Observe when the moreDataVisibleProperty changes and update the children of the content. We change the children
+    // rather than the visibility of the children to change the Panel's Bounds, which allows the super-class to resize.
     // Link is not removed since BallValuesPanels are never disposed.
     moreDataVisibleProperty.link( moreDataVisible => {
       panelContentNode.children = [ ballIconsColumnNode, moreDataVisible ? moreDataBox : lessDataBox ];
