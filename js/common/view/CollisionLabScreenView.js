@@ -85,7 +85,7 @@ class CollisionLabScreenView extends ScreenView {
     );
     this.addChild( playAreaNode );
 
-    const timeDisplay = new TimeDisplay( model.timeClock.elapsedTimeProperty );
+    const timeDisplay = new TimeDisplay( model.clock.elapsedTimeProperty );
     this.addChild( timeDisplay );
     timeDisplay.left = playAreaNode.left + 5;
     timeDisplay.top = playAreaNode.bottom + 5;
@@ -99,8 +99,8 @@ class CollisionLabScreenView extends ScreenView {
       model.playProperty,
       model.timeSpeedProperty,
       model.playArea.playAreaUserControlledProperty,
-      model.timeClock.stepBackward.bind( model.timeClock ),
-      model.timeClock.stepForward.bind( model.timeClock )
+      model.clock.stepBackward.bind( model.clock ),
+      model.clock.stepForward.bind( model.clock )
     );
     const playPauseButtonCenter = playAreaNode.centerBottom.plusXY( 0, collisionLabTimeControlNode.height / 2 + 5 );
     collisionLabTimeControlNode.setPlayPauseButtonCenter( playPauseButtonCenter );
@@ -110,7 +110,7 @@ class CollisionLabScreenView extends ScreenView {
     const restartButton = new RestartButton( {
       listener: () => {
         model.playArea.balls.forEach( ball => ball.reset() );
-        model.timeClock.reset();
+        model.clock.reset();
       },
       right: playAreaNode.right,
       top: playAreaNode.bottom + 5

@@ -20,7 +20,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from './PlayArea.js';
-import TimeClock from './TimeClock.js';
+import CollisionLabClock from './CollisionLabClock.js';
 
 class CollisionLabModel {
 
@@ -36,8 +36,8 @@ class CollisionLabModel {
     // @public (read-only) {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
-    // @public (read-only) {TimeClock} - stopwatch for the simulation.
-    this.timeClock = new TimeClock( this.timeSpeedProperty );
+    // @public (read-only) {CollisionLabClock} - stopwatch for the simulation.
+    this.clock = new CollisionLabClock( this.timeSpeedProperty );
 
     //----------------------------------------------------------------------------------------
 
@@ -87,7 +87,7 @@ class CollisionLabModel {
   reset() {
     this.playProperty.reset();
     this.timeSpeedProperty.reset();
-    this.timeClock.reset();
+    this.clock.reset();
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
     this.reflectingBorderProperty.reset();
@@ -106,9 +106,9 @@ class CollisionLabModel {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     if ( this.playProperty.value && !this.playArea.playAreaUserControlledProperty.value ) {
-      const ellapsedTime = dt * this.timeClock.speedFactorProperty.value;
+      const ellapsedTime = dt * this.clock.speedFactorProperty.value;
 
-      this.timeClock.step( ellapsedTime );
+      this.clock.step( ellapsedTime );
       this.playArea.step( ellapsedTime );
     }
   }

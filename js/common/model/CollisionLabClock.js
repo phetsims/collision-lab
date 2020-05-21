@@ -3,6 +3,7 @@
 /**
  * The clock for this simulation.
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -15,7 +16,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 // constants
 const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
 
-class TimeClock {
+class CollisionLabClock {
   /**
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
    */
@@ -31,7 +32,7 @@ class TimeClock {
   }
 
   /**
-   * Resets the timeClock
+   * Resets the clock
    * @public
    */
   reset() {
@@ -64,5 +65,5 @@ class TimeClock {
   }
 }
 
-collisionLab.register( 'TimeClock', TimeClock );
-export default TimeClock;
+collisionLab.register( 'CollisionLabClock', CollisionLabClock );
+export default CollisionLabClock;
