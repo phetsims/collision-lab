@@ -18,21 +18,16 @@ import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
+import Text from '../../../../scenery/js/nodes/Text.js';
+import VBox from '../../../../scenery/js/nodes/VBox.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import KeypadPlane from './KeypadPlane.js';
-
-// const Text = require( '/scenery/js/nodes/Text' );
-
-// strings
-// const momentumUnitString = require( 'string!COLLISION_LAB/momentumUnit' );
-// const positionUnitString = require( 'string!COLLISION_LAB/positionUnit' );
-// const velocityUnitString = require( 'string!COLLISION_LAB/velocityUnit' );
-// const massUnitString = require( 'string!COLLISION_LAB/massUnit' );
 
 class BallValuesPanel extends Panel {
 
@@ -53,6 +48,8 @@ class BallValuesPanel extends Panel {
       ballIconColumnSpacing: 10,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
       columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
+      columnGroupsTopMargin: 5,     // {number} - y-margin between the columns and the title-labels above them
+      titleLabelFont: CollisionLabConstants.PANEL_TITLE_FONT,
 
       // super-class
       xMargin: 16,
@@ -93,34 +90,58 @@ class BallValuesPanel extends Panel {
       spacing: options.componentColumnsSpacing
     } );
 
-    // The content when "More Data" is checked.
-    const moreDataBox = new HBox( {
-      children: [
-        massColumnNode,
-        positionColumnGroup,
-        velocityColumnGroup,
-        momentumColumnGroup
-      ],
-      spacing: options.columnGroupSpacing,
-      left: ballIconsColumnNode.right + options.ballIconColumnSpacing,
-      centerY: ballIconsColumnNode.centerY
+    //----------------------------------------------------------------------------------------
+
+    // Create the Title Labels for the groups of columns.
+    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, { font: options.titleLabelFont } );
+    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, { font: options.titleLabelFont } );
+    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, { font: options.titleLabelFont } );
+    const massTitleLabelText = new Text( collisionLabStrings.massUnit, { font: options.titleLabelFont } );
+
+    // Position the groups of columns with their respective title Labels in a VBox.
+    const massColumnWithTitleBox = new VBox( {
+      children: [ massTitleLabelText, massColumnNode ],
+      spacing: options.columnGroupsTopMargin
+    } );
+    const positionColumnWithTitleBox = new VBox( {
+      children: [ positionTitleLabelText, positionColumnGroup ],
+      spacing: options.columnGroupsTopMargin
+    } );
+    const velocityColumnWithTitleBox = new VBox( {
+      children: [ velocityTitleLabelText, velocityColumnGroup ],
+      spacing: options.columnGroupsTopMargin
+    } );
+    const momentumColumnWithTitleBox = new VBox( {
+      children: [ momentumTitleLabelText, momentumColumnGroup ],
+      spacing: options.columnGroupsTopMargin
     } );
 
-    // The content when "More Data" is not checked.
+    //----------------------------------------------------------------------------------------
+
+    // The content of the entire Panel when "More Data" is checked.
+    const moreDataBox = new HBox( {
+      children: [
+        massColumnWithTitleBox,
+        positionColumnWithTitleBox,
+        velocityColumnWithTitleBox,
+        momentumColumnWithTitleBox
+      ],
+      spacing: options.columnGroupSpacing
+    } );
+
+    // The content of the entire Panel when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        massColumnNode,
+        massColumnWithTitleBox,
         massSlidersColumnNode
       ],
-      spacing: options.columnGroupSpacing,
-      left: ballIconsColumnNode.right + options.ballIconColumnSpacing,
-      centerY: ballIconsColumnNode.centerY
+      spacing: options.columnGroupSpacing
     } );
 
     //----------------------------------------------------------------------------------------
 
     // Reference the content Node of the Panel, passed to the super-class.
-    const panelContentNode = new Node();
+    const panelContentNode = new HBox( { spacing: options.ballIconColumnSpacing, align: 'bottom' } );
 
     // Observe when the moreDataVisibleProperty changes and update the children of our Node. We change our children
     // rather than the visibility of our children to change our Bounds, which allows out super-class to resize.
