@@ -71,7 +71,7 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( ballsText );
 
     // create and add number spinner for number of balls
-    const numberOfBallsRange = new Range( 0, CollisionLabConstants.MAX_BALLS );
+    const numberOfBallsRange = new Range( 1, CollisionLabConstants.MAX_BALLS );
     const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
     this.addChild( numberOfBallsSpinner );
 
