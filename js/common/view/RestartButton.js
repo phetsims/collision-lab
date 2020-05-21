@@ -9,9 +9,9 @@
  */
 
 import merge from '../../../../phet-core/js/merge.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import ColorConstants from '../../../../sun/js/ColorConstants.js';
 import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
 
 class RestartButton extends RectangularPushButton {

@@ -22,8 +22,8 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
-import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallLabelsNode from './BallLabelsNode.js';
+import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
 
 // constants

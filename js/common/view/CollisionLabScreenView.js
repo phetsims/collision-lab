@@ -19,13 +19,13 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import CollisionLabModel from '../model/CollisionLabModel.js'; // TODO: #13
+import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
 import BallValuesPanel from './BallValuesPanel.js';
-import KeypadPlane from './KeypadPlane.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
+import KeypadPlane from './KeypadPlane.js';
 import PlayAreaControlPanel from './PlayAreaControlPanel.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
