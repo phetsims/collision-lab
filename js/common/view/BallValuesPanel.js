@@ -16,12 +16,15 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import merge from '../../../../phet-core/js/merge.js';
-import VBox from '../../../../scenery/js/nodes/VBox.js';
+import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
+import HBox from '../../../../scenery/js/nodes/HBox.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
-import BallValuesEntryNode from './BallValuesEntryNode.js';
+import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
+import KeypadPlane from './KeypadPlane.js';
 
 // const Text = require( '/scenery/js/nodes/Text' );
 
@@ -35,49 +38,98 @@ class BallValuesPanel extends Panel {
 
   /**
    * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
-   * @param {Property.<boolean>} moreDataProperty - Property that indicates if the "More Data" checkbox is checked.
+   * @param {Property.<boolean>} moreDataVisibleProperty - Property that indicates if the "More Data" checkbox is checked.
+   * @param {KeypadPlane} keypadPlane
    * @param {Object} [options]
    */
-  constructor( balls, moreDataProperty, keypad, options ) {
-
-    assert && assert( balls instanceof ObservableArray
-    && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( moreDataProperty instanceof BooleanProperty, `invalid moreDataProperty: ${moreDataProperty}` );
-
+  constructor( balls, moreDataVisibleProperty, keypadPlane, options ) {
+    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
+    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
+
+      ballIconColumnSpacing: 10,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
+      componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
+      columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
+
+      // super-class
       xMargin: 16,
       yMargin: 12,
       cornerRadius: 7
+
     }, options );
 
-    const panelContent = new VBox( { spacing: 6 } );
+    //----------------------------------------------------------------------------------------
 
-    // const massText = new Text( massUnitString, options.text);
-    // const positionText = new Text( positionUnitString, textOptions);
-    // const velocityText = new Text( velocityUnitString, textOptions);
-    // const momentumText = new Text( momentumUnitString, textOptions);
+    // Create AlignGroups for the content and labels of every column to match the vertical height of each component of
+    // the BallValuesPanel. See BallValuesPanelColumnNode for more documentation.
+    const labelAlignGroup = new AlignGroup( {  matchHorizontal: false, matchVertical: true } );
+    const contentAlignGroup = new AlignGroup( {  matchHorizontal: false, matchVertical: true } );
 
-    super( panelContent, options );
+    // Create each BallValuesPanelColumnNode for each type of BallValuesPanelColumnNode.ColumnTypes
+    const ballIconsColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const massColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const xPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_POSITION, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const yPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_POSITION, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const xVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const yVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const xMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const yMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadPlane );
 
-    const addItemAddedBallListener = addedBall => {
+    // Group the columns by components
+    const positionColumnGroup = new HBox( {
+      children: [ xPositionColumnNode, yPositionColumnNode ],
+      spacing: options.componentColumnsSpacing
+    } );
+    const velocityColumnGroup = new HBox( {
+      children: [ xVelocityColumnNode, yVelocityColumnNode ],
+      spacing: options.componentColumnsSpacing
+    } );
+    const momentumColumnGroup = new HBox( {
+      children: [ xMomentumColumnNode, yMomentumColumnNode ],
+      spacing: options.componentColumnsSpacing
+    } );
 
-      const addedBallEntryNode = new BallValuesEntryNode( addedBall, moreDataProperty, keypad );
-      panelContent.addChild( addedBallEntryNode );
+    // The content when "More Data" is checked.
+    const moreDataBox = new HBox( {
+      children: [
+        massColumnNode,
+        positionColumnGroup,
+        velocityColumnGroup,
+        momentumColumnGroup
+      ],
+      spacing: options.columnGroupSpacing,
+      left: ballIconsColumnNode.right + options.ballIconColumnSpacing,
+      centerY: ballIconsColumnNode.centerY
+    } );
 
-      // Observe when the ball is removed to unlink listeners
-      const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
-          panelContent.removeChild( addedBallEntryNode );
-          addedBallEntryNode.dispose();
-          balls.removeItemRemovedListener( removeBallListener );
-        }
-      };
-      balls.addItemRemovedListener( removeBallListener );
-    };
+    // The content when "More Data" is not checked.
+    const lessDataBox = new HBox( {
+      children: [
+        massColumnNode,
+        massSlidersColumnNode
+      ],
+      spacing: options.columnGroupSpacing,
+      left: ballIconsColumnNode.right + options.ballIconColumnSpacing,
+      centerY: ballIconsColumnNode.centerY
+    } );
 
-    balls.addItemAddedListener( addItemAddedBallListener );
-    balls.forEach( addItemAddedBallListener );
+    //----------------------------------------------------------------------------------------
+
+    // Reference the content Node of the Panel, passed to the super-class.
+    const panelContentNode = new Node();
+
+    // Observe when the moreDataVisibleProperty changes and update the children of our Node. We change our children
+    // rather than the visibility of our children to change our Bounds, which allows out super-class to resize.
+    // Link is not removed since BallValuesPanels are never disposed.
+    moreDataVisibleProperty.link( moreDataVisible => {
+      panelContentNode.children = [ ballIconsColumnNode, moreDataVisible ? moreDataBox : lessDataBox ];
+    } );
+
+    super( panelContentNode, options );
   }
 }
 

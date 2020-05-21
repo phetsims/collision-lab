@@ -27,7 +27,6 @@ import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import collisionLab from '../../collisionLab.js';
@@ -52,7 +51,7 @@ const ColumnTypes = Enumeration.byKeys( [
   'Y_MOMENTUM'
 ] );
 
-class BallValuesPanelColumnNode extends Node {
+class BallValuesPanelColumnNode extends VBox {
 
   /**
    * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
@@ -72,8 +71,10 @@ class BallValuesPanelColumnNode extends Node {
 
     options = merge( {
 
-      contentSpacing: 10, // {number} - y-spacing between the content
-      labelSpacing: 8     // {number} - y-spacing between the label and the first content Node
+      contentContainerSpacing: 6, // {number} - y-spacing between the content
+
+      // super-class
+      spacing: 3    // {number} - y-spacing between the label and the content container
 
     }, options );
 
@@ -90,10 +91,7 @@ class BallValuesPanelColumnNode extends Node {
     } ) );
 
     // @private {VBox} - create the VBox wrapper for the content of column.
-    this.contentContainerNode = new VBox( {
-      top: labelNode.bottom + options.labelSpacing,
-      centerX: labelNode.centerX
-    } );
+    this.contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
 
     // @private {AlignGroup}
     this.contentAlignGroup = contentAlignGroup;
@@ -110,11 +108,11 @@ class BallValuesPanelColumnNode extends Node {
     //----------------------------------------------------------------------------------------
 
     // Register the Balls that are already in the system.
-    balls.forEach( this.registerBall.bind( this ) );
+    balls.forEach( this.registerAddedBall.bind( this ) );
 
     // Observe when Balls are added to the system and register the added Ball. Link is never disposed as
     // BallValuesColumnNodes are never disposed.
-    balls.addItemAddedListener( this.registerBall.bind( this ) );
+    balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
   }
 
   /**
@@ -132,8 +130,12 @@ class BallValuesPanelColumnNode extends Node {
     let contentNode;
 
     if ( this.columnType === ColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
-    else if ( this.columnType === ColumnTypes.BALL_ICONS ) { contentNode = new BallMassSlider( ball ); }
-    else { contentNode = new BallValuesNumberDisplay( ball, this.columnType, this.keypadPlane ); }
+    else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball ); }
+    else {
+      contentNode = new BallValuesNumberDisplay( ball,
+        BallValuesNumberDisplay.BallQuantities[ this.columnType.name ],
+        this.keypadPlane );
+    }
 
     const alignBox = this.contentAlignGroup.createBox( contentNode );
     this.contentContainerNode.addChild( alignBox );
@@ -157,15 +159,15 @@ class BallValuesPanelColumnNode extends Node {
    * @returns {string} - label to display. May use inlined HTML.
    */
   getLabelString() {
-    const xString = collisionLabStrings.x;
-    const yString = collisionLabStrings.x;
+    const xString = collisionLabStrings.symbol.x;
+    const yString = collisionLabStrings.symbol.x;
 
     if ( this.columnType === ColumnTypes.X_POSITION ) { return xString; }
     if ( this.columnType === ColumnTypes.Y_POSITION ) { return yString; }
-    if ( this.columnType === ColumnTypes.X_VELOCITY ) { return `${collisionLabStrings.v}<sub>${xString}</sub>`; }
-    if ( this.columnType === ColumnTypes.Y_VELOCITY ) { return `${collisionLabStrings.v}<sub>${yString}</sub>`; }
-    if ( this.columnType === ColumnTypes.X_MOMENTUM ) { return `${collisionLabStrings.p}<sub>${xString}</sub>`; }
-    if ( this.columnType === ColumnTypes.Y_MOMENTUM ) { return `${collisionLabStrings.p}<sub>${yString}</sub>`; }
+    if ( this.columnType === ColumnTypes.X_VELOCITY ) { return `${collisionLabStrings.symbol.v}<sub>${xString}</sub>`; }
+    if ( this.columnType === ColumnTypes.Y_VELOCITY ) { return `${collisionLabStrings.symbol.v}<sub>${yString}</sub>`; }
+    if ( this.columnType === ColumnTypes.X_MOMENTUM ) { return `${collisionLabStrings.symbol.p}<sub>${xString}</sub>`; }
+    if ( this.columnType === ColumnTypes.Y_MOMENTUM ) { return `${collisionLabStrings.symbol.p}<sub>${yString}</sub>`; }
 
     // At this point, the column doesn't have a specific label, so return the empty string.
     return '';
