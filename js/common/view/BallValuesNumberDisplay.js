@@ -13,7 +13,7 @@
  *    - Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadLayer is fired,
  *      allowing the user to edit the value of the Ball quantity.
  *
- * This BallValuesNumberDisplay should be disposed if the Ball is removed from the PlayArea.
+ * The BallValuesNumberDisplay should be disposed if the Ball is removed from the PlayArea.
  *
  * @author Brandon Li
  */
@@ -52,8 +52,8 @@ class BallValuesNumberDisplay extends NumberDisplay {
    */
   constructor( ball, ballQuantity, keypadPlane, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
     assert && assert( BallQuantities.includes( ballQuantity ), `invalid ballQuantity: ${ballQuantity}` );
+    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     // Indicates if the Ball Property can be edited.

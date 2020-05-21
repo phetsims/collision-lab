@@ -91,5 +91,17 @@
   },
   "metersPerSecond": {
     "value": "m/s"
+  },
+  "symbol.x": {
+    "value": "x"
+  },
+  "symbol.y": {
+    "value": "y"
+  },
+  "symbol.p": {
+    "value": "p"
+  },
+  "symbol.v": {
+    "value": "v"
   }
 }
