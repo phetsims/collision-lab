@@ -58,9 +58,9 @@ const CollisionLabConstants = {
   MINOR_GRIDLINES_PER_MAJOR_GRIDLINE: 5,
 
   ARROW_OPTIONS: {
-    headWidth: 11,
-    headHeight: 8,
-    tailWidth: 4,
+    headWidth: 12,
+    headHeight: 13,
+    tailWidth: 3.5,
     lineWidth: 1
   },
 
