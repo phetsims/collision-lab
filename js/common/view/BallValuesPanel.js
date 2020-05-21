@@ -56,7 +56,11 @@ class BallValuesPanel extends Panel {
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
       columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
       columnGroupsTopMargin: 1,     // {number} - y-margin between the columns and the title-labels above them
-      titleLabelFont: CollisionLabConstants.PANEL_TITLE_FONT
+
+      titleLabelTextOptions: {
+        font: CollisionLabConstants.PANEL_TITLE_FONT,
+        maxWidth: 140 // constrain width for i18n, determined empirically
+      }
 
     }, options );
 
@@ -95,10 +99,10 @@ class BallValuesPanel extends Panel {
     //----------------------------------------------------------------------------------------
 
     // Create the Title Labels for the groups of columns.
-    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, { font: options.titleLabelFont } );
-    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, { font: options.titleLabelFont } );
-    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, { font: options.titleLabelFont } );
-    const massTitleLabelText = new Text( collisionLabStrings.massUnit, { font: options.titleLabelFont } );
+    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, options.titleLabelTextOptions );
+    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, options.titleLabelTextOptions );
+    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, options.titleLabelTextOptions );
+    const massTitleLabelText = new Text( collisionLabStrings.massUnit, options.titleLabelTextOptions );
 
     // Horizontally group the column groups with their respective title Labels in a VBox.
     const massColumnGroupAndTitleBox = new VBox( {

@@ -89,7 +89,10 @@ class BallValuesPanelColumnNode extends VBox {
     this.columnType = columnType;
 
     // First create the Label Node. Wrapped in a AlignBox to align with the AlignGroup.
-    const labelNode = labelAlignGroup.createBox( new RichText( this.getLabelString(), { font: options.labelFont } ) );
+    const labelNode = labelAlignGroup.createBox( new RichText( this.getLabelString(), {
+      font: options.labelFont,
+      maxWidth: 25 // constrain width for i18n, determined empirically
+    } ) );
 
     // @private {VBox} - create the VBox wrapper for the content of column.
     this.contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
