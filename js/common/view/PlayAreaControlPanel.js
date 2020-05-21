@@ -21,6 +21,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
 import XNode from './XNode.js';
 
@@ -66,13 +67,13 @@ class PlayAreaControlPanel extends Panel {
     const velocityCheckbox = new ControlPanelCheckbox(
       velocityString,
       viewProperties.velocityVisibleProperty,
-      { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
+      { rightIconNode: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
     );
 
     const momentumCheckbox = new ControlPanelCheckbox(
       momentumString,
       viewProperties.momentumVisibleProperty,
-      { rightIconNode: new ArrowNode( 0, 0, 40, 0, CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
+      { rightIconNode: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
     );
 
     const centerOfMassCheckbox = new ControlPanelCheckbox(

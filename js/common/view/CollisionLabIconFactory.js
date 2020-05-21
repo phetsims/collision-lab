@@ -11,12 +11,15 @@
  * @author Brandon Li
  */
 
+import merge from '../../../../phet-core/js/merge.js';
+import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 
 const CollisionLabIconFactory = {
@@ -45,6 +48,24 @@ const CollisionLabIconFactory = {
     } );
 
     return new Node( { children: [ ballCircle, labelNode ] } );
+  },
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Creates a vector icon that points to the right, used with various checkboxes.
+   * @public
+   * @param {Object} [options]
+   * @returns {Node}
+   */
+  createVectorIcon( options ) {
+
+    options = merge( {}, CollisionLabConstants.ARROW_OPTIONS, {
+      lineWidth: 1,
+      length: 27
+    }, options );
+
+    return new ArrowNode( 0, 0, options.length, 0, options );
   }
 };
 
