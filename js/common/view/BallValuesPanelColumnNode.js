@@ -1,8 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * An column in the BallValuesPanel: either displays a column of a single type of Ball Values for all Balls
- * or other visuals, like Ball icons or Mass sliders.
+ * A single column in the BallValuesPanel: either displays a column of a single type of Ball Values for all Balls
+ * or other components, like Ball icons or Mass sliders.
  *
  * Possible 'types' of Ball columns are:
  *   - Mass (kg)
@@ -13,10 +13,10 @@
  *   - Mass Sliders
  *
  * Each column has:
- *   - Content Nodes; these are the main content Nodes of the column (eg. the Mass Sliders)
- *   - Label Nodes; these are the Labels above some of the columns (eg. the 'x' above the x position NumberDisplays)
- *     These the column doesn't have a label, this will be an empty Node. These are all aligned vertically in a
- *     AlignGroup (provided externally).
+ *   - Content Nodes - these are the main content Nodes of the column (eg. the NumberDisplays).
+ *   - Label Nodes - these are the Labels above some of the columns (eg. the 'x' above the x position NumberDisplays).
+ *     If the column doesn't have a label, the label will be an empty Node. These are all aligned to have the same
+ *     heights vertically in a AlignGroup (provided externally).
  *
  * BallValuesColumnNodes are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -38,7 +38,7 @@ import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import KeypadPlane from './KeypadPlane.js';
 
-// Possible BallValuesPanelColumnNode types. See the comment at the top of this file more context.
+// Possible BallValuesPanelColumnNode types. See the comment at the top of this file for context.
 const ColumnTypes = Enumeration.byKeys( [
   'BALL_ICONS',
   'MASS',
@@ -54,10 +54,10 @@ const ColumnTypes = Enumeration.byKeys( [
 class BallValuesPanelColumnNode extends VBox {
 
   /**
-   * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
-   * @param {ColumnTypes} columnType - the Ball Quantity to display
-   * @param {AlignGroup} contentAlignGroup - align group for the content of the column
-   * @param {AlignGroup} labelAlignGroup - align group for the label of the column, even if there is no apparent label.
+   * @param {ObservableArray.<Ball>} balls - collections of particles inside the PlayArea.
+   * @param {ColumnTypes} columnType - the column-type.
+   * @param {AlignGroup} contentAlignGroup - AlignGroup for the main content of the column.
+   * @param {AlignGroup} labelAlignGroup - AlignGroup for the label of the column, even if there is no apparent label.
    * @param {KeypadPlane} keypadPlane
    * @param {Object} [options]
    */
@@ -71,12 +71,15 @@ class BallValuesPanelColumnNode extends VBox {
 
     options = merge( {
 
-      contentContainerSpacing: 6, // {number} - y-spacing between the content
-
-      // super-class
-      spacing: 3    // {number} - y-spacing between the label and the content container
+      contentContainerSpacing: 5, // {number} - y-spacing between the content
+      labelSpacing: 3,            // {number} - y-spacing between the label and the content container
+      labelFont: CollisionLabConstants.DISPLAY_FONT
 
     }, options );
+
+    // Set the spacing super-class option.
+    assert && assert( !options.spacing, 'BallValuesPanelColumnNode sets spacing' );
+    options.spacing = options.labelSpacing;
 
     super( options );
 
@@ -86,9 +89,7 @@ class BallValuesPanelColumnNode extends VBox {
     this.columnType = columnType;
 
     // First create the Label Node. Wrapped in a AlignBox to align with the AlignGroup.
-    const labelNode = labelAlignGroup.createBox( new RichText( this.getLabelString(), {
-      font: CollisionLabConstants.DISPLAY_FONT
-    } ) );
+    const labelNode = labelAlignGroup.createBox( new RichText( this.getLabelString(), { font: options.labelFont } ) );
 
     // @private {VBox} - create the VBox wrapper for the content of column.
     this.contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
@@ -116,9 +117,9 @@ class BallValuesPanelColumnNode extends VBox {
   }
 
   /**
-   * Registers a new Ball by adding the appropriate ball value NumberDisplay. This is generally invoked when Balls are
-   * added to the system, meaning the column needs to update. Will also ensure that the NumberDisplay is disposed if
-   * the Ball is removed from the play-area system.
+   * Registers a new Ball by adding the appropriate contentNodes (usually NumberDisplays). This is generally invoked
+   * when Balls are added to the system, meaning the column needs to update. Will also ensure that the contentNode
+   * is removed if the Ball is removed from the play-area system, and disposes all unused NumberDisplays.
    * @private
    *
    * @param {Ball} ball
@@ -133,18 +134,22 @@ class BallValuesPanelColumnNode extends VBox {
     else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball ); }
     else {
       contentNode = new BallValuesNumberDisplay( ball,
-        BallValuesNumberDisplay.BallQuantities[ this.columnType.name ],
-        this.keypadPlane );
+        BallValuesNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
+        this.keypadPlane
+      );
     }
 
-    const alignBox = this.contentAlignGroup.createBox( contentNode );
-    this.contentContainerNode.addChild( alignBox );
+    // Wrap the content in a AlignBox to align with contentAlignBox.
+    const contentAlignBox = this.contentAlignGroup.createBox( contentNode );
+    this.contentContainerNode.addChild( contentAlignBox );
 
     // Observe when the ball is removed to update the Display and dispose the contentNode.
     const removeBallListener = removedBall => {
       if ( ball === removedBall ) {
-        contentNode.dispose();
-        this.contentContainerNode.removeChild( alignBox );
+        this.contentContainerNode.removeChild( contentAlignBox );
+        if ( contentNode instanceof BallValuesNumberDisplay ) {
+          contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
+        }
         this.balls.removeItemRemovedListener( removeBallListener );
       }
     };
@@ -153,7 +158,7 @@ class BallValuesPanelColumnNode extends VBox {
 
   /**
    * Gets the label string representation of the column. The label is above the content of the column. For instance,
-   * there is a 'x' label above the x-position NumberDisplays of the Ball.
+   * there is a 'x' label above the x-position NumberDisplays in the BallValuesPanel.
    * @private
    *
    * @returns {string} - label to display. May use inlined HTML.

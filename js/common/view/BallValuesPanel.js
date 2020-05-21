@@ -55,7 +55,7 @@ class BallValuesPanel extends Panel {
       ballIconColumnSpacing: 10,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
       columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
-      columnGroupsTopMargin: 5,     // {number} - y-margin between the columns and the title-labels above them
+      columnGroupsTopMargin: 1,     // {number} - y-margin between the columns and the title-labels above them
       titleLabelFont: CollisionLabConstants.PANEL_TITLE_FONT
 
     }, options );
