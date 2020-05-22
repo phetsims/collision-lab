@@ -14,6 +14,9 @@ import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
 
+// shared constants within this file
+const RIGHT_PANEL_WIDTH = 175; // fixed width of panels and accordion boxes on right side of the screen
+
 const CollisionLabConstants = {
 
   STEP_DURATION: 1 / 30, // seconds, for a single manual time step
@@ -80,6 +83,7 @@ const CollisionLabConstants = {
   DISPLAY_FONT: new PhetFont( 16 ),
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),
   KEYPAD_FONT: new PhetFont( 15 ),
+  CONTROL_FONT: new PhetFont( 16 ),  // default font for controls (buttons, checkboxes, ...)
 
   //----------------------------------------------------------------------------------------
   // panels
@@ -87,7 +91,13 @@ const CollisionLabConstants = {
     xMargin: 16,
     yMargin: 12,
     cornerRadius: 7
-  }, CollisionLabColors.PANEL_COLORS )
+  }, CollisionLabColors.PANEL_COLORS ),
+
+  // fixed width of each GraphControlPanel
+  CONTROL_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
+  MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
+
+  CHECKBOX_BOX_WIDTH: 18
 };
 
 collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );

@@ -1,8 +1,9 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View for the control panel of the play area
+ * View for the control panel.
  *
+ * @author Brandon Li
  * @author Alex Schor
  */
 
@@ -21,10 +22,12 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
-import ControlPanelCheckbox from './ControlPanelCheckbox.js';
+import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
+const TICK_FONT = new PhetFont( 12 );
+
 
 const centerOfMassString = collisionLabStrings.centerOfMass;
 const constantSizeString = collisionLabStrings.constantSize;
@@ -38,8 +41,6 @@ const pathString = collisionLabStrings.path;
 const reflectingBorderString = collisionLabStrings.reflectingBorder;
 const valuesString = collisionLabStrings.values;
 const velocityString = collisionLabStrings.velocity;
-
-// strings
 const stickString = collisionLabStrings.stick;
 const slipString = collisionLabStrings.slip;
 
@@ -62,42 +63,42 @@ class CollisionLabControlPanel extends Panel {
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, options );
 
-    const velocityCheckbox = new ControlPanelCheckbox(
-      velocityString,
+    const velocityCheckbox = new CollisionLabCheckbox(
       viewProperties.velocityVisibleProperty,
-      { rightIconNode: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
+      velocityString,
+      { icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
     );
 
-    const momentumCheckbox = new ControlPanelCheckbox(
-      momentumString,
+    const momentumCheckbox = new CollisionLabCheckbox(
       viewProperties.momentumVisibleProperty,
-      { rightIconNode: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
+      momentumString,
+      { icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
     );
 
-    const centerOfMassCheckbox = new ControlPanelCheckbox(
-      centerOfMassString,
+    const centerOfMassCheckbox = new CollisionLabCheckbox(
       viewProperties.centerOfMassVisibleProperty,
-      { rightIconNode: CollisionLabIconFactory.createCenterOfMassIcon() }
+      centerOfMassString,
+      { icon: CollisionLabIconFactory.createCenterOfMassIcon() }
     );
 
-    const kineticEnergyCheckbox = new ControlPanelCheckbox(
-      kineticEnergyString,
-      viewProperties.kineticEnergyVisibleProperty
+    const kineticEnergyCheckbox = new CollisionLabCheckbox(
+      viewProperties.kineticEnergyVisibleProperty,
+      kineticEnergyString
     );
 
-    const valuesCheckbox = new ControlPanelCheckbox(
-      valuesString,
-      viewProperties.valuesVisibleProperty
+    const valuesCheckbox = new CollisionLabCheckbox(
+      viewProperties.valuesVisibleProperty,
+      valuesString
     );
 
-    const pathCheckbox = new ControlPanelCheckbox(
-      pathString,
-      viewProperties.pathVisibleProperty
+    const pathCheckbox = new CollisionLabCheckbox(
+      viewProperties.pathVisibleProperty,
+      pathString
     );
 
-    const reflectingBorderCheckbox = new ControlPanelCheckbox(
-      reflectingBorderString,
-      reflectingBorderProperty
+    const reflectingBorderCheckbox = new CollisionLabCheckbox(
+      reflectingBorderProperty,
+      reflectingBorderString
     );
 
     const upperCheckboxes = new VBox( {
@@ -113,10 +114,10 @@ class CollisionLabControlPanel extends Panel {
       includeArrowButtons: false,
       sliderOptions: {
         majorTicks: [ {
-          value: ELASTICITY_PERCENT_RANGE.min, label: new Text( inelasticString, { font: new PhetFont( 12 ) } )
+          value: ELASTICITY_PERCENT_RANGE.min, label: new Text( inelasticString, { font: TICK_FONT } )
         },
           {
-            value: ELASTICITY_PERCENT_RANGE.max, label: new Text( elasticString, { font: new PhetFont( 12 ) } )
+            value: ELASTICITY_PERCENT_RANGE.max, label: new Text( elasticString, { font: TICK_FONT } )
           } ],
         majorTickLength: 5,
         trackSize: new Dimension2( upperCheckboxes.width - 30, 1 ),
@@ -148,9 +149,9 @@ class CollisionLabControlPanel extends Panel {
     } );
 
 
-    const constantRadiusCheckbox = new ControlPanelCheckbox(
-      constantSizeString,
-      constantRadiusProperty
+    const constantRadiusCheckbox = new CollisionLabCheckbox(
+      constantRadiusProperty,
+      constantSizeString
     );
 
     const separatingLine = new Line( 0, 0, upperCheckboxes.width, 0, { stroke: 'black' } );

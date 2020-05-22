@@ -24,7 +24,7 @@ import BallNode from './BallNode.js';
 import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
-import ControlPanelCheckbox from './ControlPanelCheckbox.js';
+import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import KeypadDialog from './KeypadDialog.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import PlayAreaNode from './PlayAreaNode.js';
@@ -174,7 +174,7 @@ class CollisionLabScreenView extends ScreenView {
     model.playArea.balls.forEach( addItemAddedBallListener );
     model.playArea.balls.addItemAddedListener( addItemAddedBallListener );
 
-    const moreDataCheckbox = new ControlPanelCheckbox( moreDataString, viewProperties.moreDataVisibleProperty );
+    const moreDataCheckbox = new CollisionLabCheckbox( viewProperties.moreDataVisibleProperty, moreDataString );
     this.addChild( moreDataCheckbox );
     moreDataCheckbox.top = playAreaNode.bottom + 30;
 
