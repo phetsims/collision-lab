@@ -141,8 +141,7 @@ class KeypadDialog extends Dialog {
    * @param {Property.<number>} valueProperty - the Property that the user can manipulate through the KeypadDialog
    * @param {Range} valueRange - the Range that the user can edit the valueProperty
    * @param {string} unitsString - the template string that formats the text on the rangeText.
-   * @param {function} editFinishedCallback - callback when edit is finished through the "Enter" button, regardless
-   *                                          of whether or not the edit was valid.
+   * @param {function} editFinishedCallback - callback when edit is entered or canceled.
    */
   beginEdit( valueProperty, valueRange, unitsString, editFinishedCallback ) {
     assert && assert( valueProperty instanceof Property && typeof valueProperty.value === 'number', `invalid valueProperty: ${ valueProperty }` );
@@ -175,11 +174,10 @@ class KeypadDialog extends Dialog {
    * This is called when the user presses the 'Enter' button.
    */
   submitEdit() {
-    this.editFinishedCallback();
 
     // If the user didn't enter anything, treat this as a cancel.
     if ( this.keypad.stringProperty.value === '' ) {
-      this.resetAndHide();
+      this.finishEdit();
       return;
     }
 
@@ -189,7 +187,7 @@ class KeypadDialog extends Dialog {
     // If the edit is valid, the valueProperty is set and the edit.
     if ( this.valueRange.contains( value ) ) {
       this.valueProperty.value = value;
-      this.resetAndHide();
+      this.finishEdit();
     }
     else { this.warnOutOfRange(); }
   }
@@ -205,12 +203,12 @@ class KeypadDialog extends Dialog {
   }
 
   /**
-   * Convenience method to reset the state of the KeypadDialog and to hide the KeypadDialog.
+   * Convenience method to finish the KeypadDialog.
    * @private
    *
    * This method is invoked when a edit is canceled or when a valid edit is entered.
    */
-  resetAndHide() {
+  finishEdit() {
     this.hide(); // Hide the KeypadDialog
     this.keypad.clear(); // Clear the Keypad
 
@@ -218,6 +216,16 @@ class KeypadDialog extends Dialog {
     this.valueProperty = null;
     this.valueRange = null;
     this.editFinishedCallback = null;
+  }
+
+  /**
+   * @override
+   * Hides the dialog. Overridden to also call the editFinishedCallback function when edits are canceled.
+   * @public
+   */
+  hide() {
+    this.editFinishedCallback();
+    super.hide();
   }
 }
 
