@@ -33,29 +33,12 @@ class TotalKineticEnergyProperty extends NumberProperty {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when Balls are added to the system. Never unlinked since the TotalKineticEnergyProperty is never disposed
-    balls.addItemAddedListener( addedBall => {
+    // Register the Balls that are already in the system.
+    balls.forEach( this.registerAddedBall.bind( this ) );
 
-      // Update the value of this Property when the addedBall's kineticEnergy changes. Link is removed when the Ball is
-      // removed from the system.
-      const kineticEnergyListener = () => { this.value = this.computeTotalBallKineticEnergy(); };
-      addedBall.kineticEnergyProperty.link( kineticEnergyListener );
-
-      // Observe when the ball is removed to unlink listeners.
-      const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
-
-          // Recompute the total kinetic energy now that there is one less Ball in the system.
-          this.value = this.computeTotalBallKineticEnergy();
-
-          // Unlink the listener attached to the removedBall.
-          removedBall.kineticEnergyProperty.unlink( kineticEnergyListener );
-
-          balls.removeItemRemovedListener( removeBallListener );
-        }
-      };
-      balls.addItemRemovedListener( removeBallListener );
-    } );
+    // Observe when Balls are added to the system and register the added Ball. Link is never disposed as
+    // TotalKineticEnergyProperty is never disposed.
+    balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
   }
 
   /**
@@ -71,6 +54,42 @@ class TotalKineticEnergyProperty extends NumberProperty {
       totalKineticEnergy += ball.kineticEnergy;
     } );
     return totalKineticEnergy;
+  }
+
+  /**
+   * Registers a new Ball by adding the appropriate links to update the TotalKineticEnergyProperty. This is generally
+   * invoked when Balls are added to the system, meaning the total kinetic energy has changed. Will also ensure that
+   * links are removed if the Ball is removed from the play-area system.
+   * @private
+   *
+   * @param {Ball} ball
+   */
+  registerAddedBall( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+
+    // Update the value of the kinetic energy when the ball's kineticEnergy changes. Link is removed when the Ball is
+    // removed from the system.
+    const kineticEnergyListener = () => {
+      this.value = this.computeTotalBallKineticEnergy();
+    };
+
+    ball.kineticEnergyProperty.link( kineticEnergyListener );
+
+    // Observe when the ball is removed to unlink listeners.
+    const removeBallListener = removedBall => {
+      if ( ball === removedBall ) {
+
+        // Recompute the total kinetic energy now that there is one less Ball in the system.
+        this.value = this.computeTotalBallKineticEnergy();
+
+        // Unlink the listener attached to the removedBall.
+        removedBall.kineticEnergyProperty.unlink( kineticEnergyListener );
+
+        // Remove the removeBallListener.
+        this.balls.removeItemRemovedListener( removeBallListener );
+      }
+    };
+    this.balls.addItemRemovedListener( removeBallListener );
   }
 }
 
