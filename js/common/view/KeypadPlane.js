@@ -79,7 +79,7 @@ class KeypadPlane extends Plane {
 
     const valueParent = new Node( { children: [ valueBackgroundNode, valueNode ] } );
 
-    this.keypadNode = new Keypad( Keypad.PositiveFloatingPointLayout, {
+    this.keypadNode = new Keypad( Keypad.PositiveAndNegativeFloatingPointLayout, {
       maxDigits: options.maxDigits,
       maxDigitsRightOfMantissa: options.maxDecimals,
       tandem: options.tandem.createTandem( 'keypad' ),
