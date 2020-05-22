@@ -55,7 +55,7 @@ class CenterOfMass {
         this.updateVelocity();
       } );
 
-      // Observe when the ball is removed from the system to dispose Multilinks.
+      // Observe when the ball is removed from the system to unlink listeners.
       const removeBallListener = removedBall => {
         if ( ball === removedBall ) {
 
@@ -63,10 +63,9 @@ class CenterOfMass {
           this.updatePosition();
           this.updateVelocity();
 
-          // Unlink Multilinks
+          // Unlink listeners
           Property.unmultilink( updatePositionMultilink );
           Property.unmultilink( updateVelocityMultilink );
-
           balls.removeItemRemovedListener( removeBallListener );
         }
       };
