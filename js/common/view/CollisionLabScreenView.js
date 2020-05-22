@@ -109,8 +109,9 @@ class CollisionLabScreenView extends ScreenView {
     // create and add restart button
     const restartButton = new RestartButton( {
       listener: () => {
-        model.playArea.balls.forEach( ball => ball.reset() );
-        model.clock.reset();
+        // TODO: move this to a model method.
+        // model.playArea.balls.forEach( ball => ball.reset() );
+        // model.clock.reset();
       },
       right: playAreaNode.right,
       top: playAreaNode.bottom + 5
