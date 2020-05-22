@@ -36,7 +36,7 @@ import Ball from '../model/Ball.js';
 import BallMassSlider from './BallMassSlider.js';
 import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
-import KeypadPlane from './KeypadPlane.js';
+import KeypadDialog from './KeypadDialog.js';
 
 // Possible BallValuesPanelColumnNode types. See the comment at the top of this file for context.
 const ColumnTypes = Enumeration.byKeys( [
@@ -58,15 +58,15 @@ class BallValuesPanelColumnNode extends VBox {
    * @param {ColumnTypes} columnType - the column-type.
    * @param {AlignGroup} contentAlignGroup - AlignGroup for the main content of the column.
    * @param {AlignGroup} labelAlignGroup - AlignGroup for the label of the column, even if there is no apparent label.
-   * @param {KeypadPlane} keypadPlane
+   * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( balls, columnType, contentAlignGroup, labelAlignGroup, keypadPlane, options ) {
+  constructor( balls, columnType, contentAlignGroup, labelAlignGroup, keypadDialog, options ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( ColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
     assert && assert( contentAlignGroup instanceof AlignGroup, `invalid contentAlignGroup: ${contentAlignGroup}` );
     assert && assert( labelAlignGroup instanceof AlignGroup, `invalid labelAlignGroup: ${labelAlignGroup}` );
-    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
+    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
@@ -100,8 +100,8 @@ class BallValuesPanelColumnNode extends VBox {
     // @private {AlignGroup}
     this.contentAlignGroup = contentAlignGroup;
 
-    // @private {KeypadPlane}
-    this.keypadPlane = keypadPlane;
+    // @private {KeypadDialog}
+    this.keypadDialog = keypadDialog;
 
     // @private {ObservableArray.<Ball>}
     this.balls = balls;
@@ -138,7 +138,7 @@ class BallValuesPanelColumnNode extends VBox {
     else {
       contentNode = new BallValuesNumberDisplay( ball,
         BallValuesNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
-        this.keypadPlane
+        this.keypadDialog
       );
     }
 

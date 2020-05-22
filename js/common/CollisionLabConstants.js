@@ -79,6 +79,7 @@ const CollisionLabConstants = {
   CHECKBOX_FONT: new PhetFont( 16 ),
   DISPLAY_FONT: new PhetFont( 16 ),
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),
+  KEYPAD_FONT: new PhetFont( 15 ),
 
   //----------------------------------------------------------------------------------------
   // panels

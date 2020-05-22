@@ -28,7 +28,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
-import KeypadPlane from './KeypadPlane.js';
+import KeypadDialog from './KeypadDialog.js';
 
 // constants
 const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDisplay (used to determine width).
@@ -47,13 +47,13 @@ class BallValuesNumberDisplay extends NumberDisplay {
   /**
    * @param {Ball} ball - the Ball model
    * @param {BallQuantities} ballQuantity - the Ball Quantity to display
-   * @param {KeypadPlane} keypadPlane
+   * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( ball, ballQuantity, keypadPlane, options ) {
+  constructor( ball, ballQuantity, keypadDialog, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( BallQuantities.includes( ballQuantity ), `invalid ballQuantity: ${ballQuantity}` );
-    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
+    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     // Indicates if the Ball Property can be edited.
@@ -116,13 +116,14 @@ class BallValuesNumberDisplay extends NumberDisplay {
         unit = collisionLabStrings.metersPerSecond;
       }
 
-      // Create a FireListener that listens to presses and to fire the keypadPlane to allow the user to edit the
+      // Create a FireListener that listens to presses and to fire the keypadDialog to allow the user to edit the
       // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
       fireListener = new FireListener( {
         fire: () => {
-          keypadPlane.beginEdit( ballProperty, editRange, unit, {
-            onBeginEdit: () => { this.backgroundFill = PhetColorScheme.BUTTON_YELLOW; },
-            onEndEdit: () => { this.backgroundFill = options.backgroundFill; }
+          this.backgroundFill = PhetColorScheme.BUTTON_YELLOW;
+
+          keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
+            this.backgroundFill = options.backgroundFill;
           } );
         },
         fireOnDown: true

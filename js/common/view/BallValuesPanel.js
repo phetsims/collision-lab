@@ -34,20 +34,20 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
-import KeypadPlane from './KeypadPlane.js';
+import KeypadDialog from './KeypadDialog.js';
 
 class BallValuesPanel extends Panel {
 
   /**
    * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
    * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
-   * @param {KeypadPlane} keypadPlane
+   * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( balls, moreDataVisibleProperty, keypadPlane, options ) {
+  constructor( balls, moreDataVisibleProperty, keypadDialog, options ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
-    assert && assert( keypadPlane instanceof KeypadPlane, `invalid keypadPlane: ${keypadPlane}` );
+    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
@@ -72,15 +72,15 @@ class BallValuesPanel extends Panel {
     const contentAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
     // Create each BallValuesPanelColumnNode for each type of BallValuesPanelColumnNode.ColumnTypes
-    const ballIconsColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const massColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const xPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_POSITION, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const yPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_POSITION, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const xVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const yVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const xMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const yMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadPlane );
-    const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadPlane );
+    const ballIconsColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const massColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const xPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_POSITION, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const yPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_POSITION, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const xVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const yVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const xMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const yMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadDialog );
 
     // Horizontally group the components of BallValuesPanelColumnNodes into groups.
     const positionColumnGroup = new HBox( {

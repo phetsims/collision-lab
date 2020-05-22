@@ -25,7 +25,7 @@ import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
-import KeypadPlane from './KeypadPlane.js';
+import KeypadDialog from './KeypadDialog.js';
 import PlayAreaControlPanel from './PlayAreaControlPanel.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
@@ -179,13 +179,12 @@ class CollisionLabScreenView extends ScreenView {
     moreDataCheckbox.top = playAreaNode.bottom + 30;
 
 
-    const keypad = new KeypadPlane();
+    const keypad = new KeypadDialog();
 
     const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
     ballValuesDisplay.left = 40;
-    this.addChild( keypad );
   }
 
   // @public
