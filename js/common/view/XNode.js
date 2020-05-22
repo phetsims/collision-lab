@@ -6,7 +6,7 @@
  *
  * XNode's rendering strategy is to sub-type PlusNode and rotate the Node 45 degrees.
  *
- * @author Brandon Li <brandon.li820@gmail.com>
+ * @author Brandon Li
  * @author Alex Schor
  */
 
