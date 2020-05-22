@@ -26,7 +26,7 @@ import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
 import KeypadDialog from './KeypadDialog.js';
-import PlayAreaControlPanel from './PlayAreaControlPanel.js';
+import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
 import TimeDisplay from './TimeDisplay.js';
@@ -135,7 +135,7 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( gridCheckbox );
 
-    const playAreaControlPanel = new PlayAreaControlPanel( viewProperties,
+    const playAreaControlPanel = new CollisionLabControlPanel( viewProperties,
       model.reflectingBorderProperty,
       model.elasticityPercentProperty,
       model.isStickyProperty,

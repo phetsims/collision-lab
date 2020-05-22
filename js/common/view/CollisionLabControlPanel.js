@@ -43,7 +43,7 @@ const velocityString = collisionLabStrings.velocity;
 const stickString = collisionLabStrings.stick;
 const slipString = collisionLabStrings.slip;
 
-class PlayAreaControlPanel extends Panel {
+class CollisionLabControlPanel extends Panel {
 
   /**
    * @param {CollisionLabViewProperties} viewProperties
@@ -170,5 +170,5 @@ class PlayAreaControlPanel extends Panel {
   }
 }
 
-collisionLab.register( 'PlayAreaControlPanel', PlayAreaControlPanel );
-export default PlayAreaControlPanel;
+collisionLab.register( 'CollisionLabControlPanel', CollisionLabControlPanel );
+export default CollisionLabControlPanel;
