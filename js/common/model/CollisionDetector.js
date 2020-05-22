@@ -262,15 +262,17 @@ class CollisionDetector {
           // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
           ball.velocity = Vector2.ZERO;
         }
-        else if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
-
-          // Left and Right Border wall collisions incur a flip in horizontal velocity.
-          ball.flipHorizontalVelocity( elasticity );
-        }
         else {
+          if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
 
-          // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
-          ball.flipVerticalVelocity( elasticity );
+            // Left and Right Border wall collisions incur a flip in horizontal velocity.
+            ball.flipHorizontalVelocity( elasticity );
+          }
+          if ( ball.top >= PLAY_AREA_BOUNDS.maxY || ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
+
+            // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
+            ball.flipVerticalVelocity( elasticity );
+          }
         }
 
         // Update the position after the collision.
