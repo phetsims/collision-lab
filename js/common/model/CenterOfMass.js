@@ -41,26 +41,31 @@ class CenterOfMass {
     //----------------------------------------------------------------------------------------
 
     // Observe when Balls are added to the system. Link is never removed since the CenterOfMass is never disposed.
-    balls.addItemAddedListener( addedBall => {
+    balls.addItemAddedListener( ball => {
 
-      // Update the position and velocity of the center of mass. Links removed when the Ball is removed from the system.
-      const positionListener = () => { this.updatePosition(); };
-      const velocityListener = () => { this.updateVelocity(); };
+      // Observe when the ball's position or mass changes and update the position of the center-of-mass.
+      // Multilink is disposed when the Ball is removed from the system.
+      const updatePositionMultilink = Property.multilink( [ ball.positionProperty, ball.massProperty ], () => {
+        this.updatePosition();
+      } );
 
-      addedBall.positionProperty.link( positionListener );
-      addedBall.velocityProperty.link( velocityListener );
+      // Observe when the ball's velocity or mass changes and update the velocity of the center-of-mass.
+      // Multilink is disposed when the Ball is removed from the system.
+      const updateVelocityMultilink = Property.multilink( [ ball.velocityProperty, ball.massProperty ], () => {
+        this.updateVelocity();
+      } );
 
-      // Observe when the ball is removed to unlink listeners.
+      // Observe when the ball is removed from the system to dispose Multilinks.
       const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
+        if ( ball === removedBall ) {
 
           // Recompute the position and velocity of the center of mass now that there is one less Ball in the system.
           this.updatePosition();
           this.updateVelocity();
 
-          // Unlink the listener attached to the removedBall.
-          removedBall.positionProperty.unlink( positionListener );
-          removedBall.velocityProperty.unlink( velocityListener );
+          // Unlink Multilinks
+          Property.unmultilink( updatePositionMultilink );
+          Property.unmultilink( updateVelocityMultilink );
 
           balls.removeItemRemovedListener( removeBallListener );
         }
