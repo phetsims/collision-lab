@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Enumeration of the possible 'types' of Inelastic Collisions.
+ * Enumeration of the possible 'types' of perfectly inelastic Collisions.
  *
  * @author Brandon Li
  */
@@ -11,13 +11,12 @@ import collisionLab from '../../collisionLab.js';
 
 const InelasticCollisionTypes = Enumeration.byKeys( [
 
-
+  // TODO: Document this
   'STICK',
 
 
-  'SLIDE'
-
-
+  // TODO: Document this
+  'SLIP'
 ] );
 
 collisionLab.register( 'InelasticCollisionTypes', InelasticCollisionTypes );
