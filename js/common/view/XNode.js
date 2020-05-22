@@ -1,8 +1,12 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Node for a square "X" symbol.
+ * XNode is a specialized view for displaying a 'x'. It is used throughout the sim to indicate the center of mass
+ * of a system of Balls. Generalized to appear as a icon aswell.
  *
+ * XNode's rendering strategy is to sub-type PlusNode and rotate the Node 45 degrees.
+ *
+ * @author Brandon Li <brandon.li820@gmail.com>
  * @author Alex Schor
  */
 
@@ -18,28 +22,26 @@ class XNode extends PlusNode {
    * @param {Object} [options]
    */
   constructor( options ) {
+    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
-    options = merge( {
-      lineWidth: 2, // lineWidth of stroke
-      sideLength: 30, // the side length of the bounding square of the X
-      legThickness: 9 // thickness of the legs of the X
-    }, CollisionLabColors.X_MARKER_COLORS, options );
+    options = merge( {}, CollisionLabColors.X_MARKER_COLORS, {
 
-    // width of the plus sign
-    const plusSideLength = ( options.sideLength - options.legThickness ) * Math.sqrt( 2 );
+      legThickness: 6, // {number} - thickness of the legs of the 'x'
+      length: 22,      // {number} - the length of the diagonal of the 'x'
 
-    // options for plusNode
-    const plusNodeOptions = merge( options, {
+      // super-class options
+      lineWidth: 1.5
+    }, options );
 
-      // width of the plus sign, height of the horizontal line in plus sign
-      size: new Dimension2( plusSideLength, options.legThickness ),
+    //----------------------------------------------------------------------------------------
 
-      // rotate plusNode by 45 degrees
-      rotation: Math.PI / 4
-    } );
+    // Set super-class options that cannot be overridden.
+    assert && assert( !options.size, 'XNode sets size' );
+    assert && assert( !options.rotation, 'XNode sets rotation' );
+    options.size = new Dimension2( options.length, options.legThickness );
+    options.rotation = Math.PI / 4;
 
-    super( plusNodeOptions );
-
+    super( options );
   }
 }
 

@@ -22,7 +22,6 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import ControlPanelCheckbox from './ControlPanelCheckbox.js';
-import XNode from './XNode.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
@@ -78,7 +77,7 @@ class PlayAreaControlPanel extends Panel {
     const centerOfMassCheckbox = new ControlPanelCheckbox(
       centerOfMassString,
       viewProperties.centerOfMassVisibleProperty,
-      { rightIconNode: new XNode( { lineWidth: 1, sideLength: 15, legThickness: 4 } ) }
+      { rightIconNode: CollisionLabIconFactory.createCenterOfMassIcon() }
     );
 
     const kineticEnergyCheckbox = new ControlPanelCheckbox(

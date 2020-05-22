@@ -5,6 +5,7 @@
  *
  * ## Creates the following icons):
  *  - Ball Icons (BallValuesPanel)
+ *  - Checkbox Icons
  *
  * NOTE: All floating numbers in this file were determined empirically and are tentative.
  *
@@ -21,6 +22,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import XNode from './XNode.js';
 
 const CollisionLabIconFactory = {
 
@@ -66,6 +68,23 @@ const CollisionLabIconFactory = {
     }, options );
 
     return new ArrowNode( 0, 0, options.length, 0, options );
+  },
+
+  /**
+   * Creates the center-of-mass icon, which is placed next to a checkbox to toggle the visibility of the center-of-mass.
+   * @public
+   * @param {Object} [options]
+   * @returns {Node}
+   */
+  createCenterOfMassIcon( options ) {
+
+    options = merge( {
+      lineWidth: 1,
+      length: 18,
+      legThickness: 4
+    }, options );
+
+    return new XNode( options );
   }
 };
 
