@@ -32,10 +32,6 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-// constants
-const TEXT_FILL_DEFAULT = 'black';
-const TEXT_FILL_ERROR = 'red';
-
 class KeypadDialog extends Dialog {
 
   /**
@@ -132,8 +128,8 @@ class KeypadDialog extends Dialog {
 
     // Observe when a key is pressed and reset text colors. Link is never disposed.
     this.keypad.accumulatedKeysProperty.link( () => {
-      this.valueText.fill = TEXT_FILL_DEFAULT;
-      this.rangeText.fill = TEXT_FILL_DEFAULT;
+      this.valueText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.default;
+      this.rangeText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.default;
     } );
   }
 
@@ -203,8 +199,8 @@ class KeypadDialog extends Dialog {
    * @private
    */
   warnOutOfRange() {
-    this.valueText.fill = TEXT_FILL_ERROR;
-    this.rangeText.fill = TEXT_FILL_ERROR;
+    this.valueText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.error;
+    this.rangeText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.error;
     this.keypad.setClearOnNextKeyPress( true );
   }
 

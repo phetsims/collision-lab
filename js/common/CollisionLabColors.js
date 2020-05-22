@@ -72,6 +72,11 @@ const CollisionLabColors = {
   PANEL_COLORS: {
     stroke: 'rgb( 190, 190, 190 )',
     fill: 'rgb( 240, 240, 240 )'
+  },
+
+  KEYPAD_TEXT_COLORS: {
+    error: Color.RED,
+    default: Color.BLACK
   }
 };
 
