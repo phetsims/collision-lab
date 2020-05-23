@@ -45,7 +45,7 @@ class CollisionLabModel {
 
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
     //                                        outside of the PlayArea in a Spinner.
-    this.numberOfBallsProperty = new NumberProperty( 2 );
+    this.numberOfBallsProperty = new NumberProperty( 2, { range: CollisionLabConstants.BALLS_RANGE } );
 
     // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.

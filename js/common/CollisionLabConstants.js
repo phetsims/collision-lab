@@ -29,11 +29,11 @@ const CollisionLabConstants = {
   SCREEN_VIEW_X_MARGIN: 24,
   SCREEN_VIEW_Y_MARGIN: 14,
 
-  MAX_BALLS: 5,
   CONSTANT_RADIUS: 0.15, // radius of balls when constant radius mode is on, in meters.
   MASS_RANGE: new Range( 0.1, 3.0 ),
   VELOCITY_RANGE: new Range( -10, 10 ),
   ELASTICITY_PERCENT_RANGE: new Range( 0, 100 ),
+  BALLS_RANGE: new Range( 1, 5 ),
 
 
   DEFAULT_BALL_SETTINGS: [

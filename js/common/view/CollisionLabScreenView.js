@@ -4,17 +4,12 @@
  * @author Martin Veillette
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import Range from '../../../../dot/js/Range.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import GridCheckbox from '../../../../scenery-phet/js/GridCheckbox.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import Text from '../../../../scenery/js/nodes/Text.js';
-import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -22,6 +17,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
 import BallValuesPanel from './BallValuesPanel.js';
+import BallsControlNode from './BallsControlNode.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
@@ -37,7 +33,6 @@ const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
-const ballsString = collisionLabStrings.balls;
 const moreDataString = collisionLabStrings.moreData;
 
 
@@ -67,13 +62,8 @@ class CollisionLabScreenView extends ScreenView {
     // create the view properties for the view
     const viewProperties = new CollisionLabViewProperties();
 
-    const ballsText = new Text( ballsString, { font: new PhetFont( 18 ) } );
-    this.addChild( ballsText );
-
-    // create and add number spinner for number of balls
-    const numberOfBallsRange = new Range( 1, CollisionLabConstants.MAX_BALLS );
-    const numberOfBallsSpinner = new NumberSpinner( model.numberOfBallsProperty, new Property( numberOfBallsRange ) );
-    this.addChild( numberOfBallsSpinner );
+    const ballsControlNode = new BallsControlNode( model.numberOfBallsProperty );
+    this.addChild( ballsControlNode );
 
     // create the grid and border of the playArea
     const playAreaNode = new PlayAreaNode(
@@ -90,10 +80,8 @@ class CollisionLabScreenView extends ScreenView {
     timeDisplay.left = playAreaNode.left + 5;
     timeDisplay.top = playAreaNode.bottom + 5;
 
-    numberOfBallsSpinner.left = playAreaNode.right + 5;
-    ballsText.center = numberOfBallsSpinner.center;
-    ballsText.top = 20;
-    numberOfBallsSpinner.top = ballsText.bottom + 5;
+    ballsControlNode.left = playAreaNode.right + 5;
+    ballsControlNode.top = 20;
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.playProperty,
@@ -130,8 +118,8 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( resetAllButton );
 
     const gridCheckbox = new GridCheckbox( model.gridVisibleProperty, {
-      top: numberOfBallsSpinner.bottom + 5,
-      left: numberOfBallsSpinner.left
+      top: ballsControlNode.bottom + 5,
+      left: ballsControlNode.left
     } );
     this.addChild( gridCheckbox );
 
