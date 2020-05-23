@@ -1,11 +1,23 @@
 // Copyright 2019-2020, University of Colorado Boulder
-
 /**
- * View for the control panel.
+ * Control Panel at the upper-right corner of each screen that allows the user to manipulate certain Properties of
+ * the simulation. It exists for the lifetime of the sim and is not intended to be disposed.
+ *
+ * The CollisionLabControlPanel displays:
+ *  - 'Velocity' visibility Checkbox
+ *  - 'Momentum' visibility Checkbox
+ *  - 'Center of Mass' visibility Checkbox
+ *  - 'Kinetic Energy' visibility Checkbox
+ *  - 'Values' visibility Checkbox
+ *  - 'Path' visibility Checkbox
+ *  - 'Reflecting Border' toggle Checkbox
+ *  - 'Elasticity' NumberControl
+ *  - 'Constant Radius' toggle Checkbox
  *
  * @author Brandon Li
  * @author Alex Schor
  */
+
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import merge from '../../../../phet-core/js/merge.js';
