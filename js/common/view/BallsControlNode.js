@@ -12,6 +12,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
@@ -34,16 +35,20 @@ class BallsControlNode extends VBox {
       // {Object} - passed to the title Text instance.
       titleTextOptions: {
         font: CollisionLabConstants.CONTROL_FONT,
-        maxWidth: 90 // constrain width for i18n, determined empirically
+        maxWidth: 40 // constrain width for i18n, determined empirically
       },
 
       // {Object} - options passed to the NumberSpinner instance
       numberSpinnerOptions: {
-
+        yMargin: 4,
+        backgroundMinWidth: 37,
+        font: new PhetFont( 26 ),
+        backgroundLineWidth: 0.5,
+        arrowButtonLineWidth: 0.5
       },
 
       // {number} - spacing between the title and the NumberSpinner
-      spacing: 5
+      spacing: 6
 
     }, options );
 
