@@ -1,60 +1,28 @@
 // Copyright 2019-2020, University of Colorado Boulder
+
 /**
  * Control Panel at the upper-right corner of each screen that allows the user to manipulate certain Properties of
  * the simulation. It exists for the lifetime of the sim and is not intended to be disposed.
- *
- * The CollisionLabControlPanel displays:
- *  - 'Velocity' visibility Checkbox
- *  - 'Momentum' visibility Checkbox
- *  - 'Center of Mass' visibility Checkbox
- *  - 'Kinetic Energy' visibility Checkbox
- *  - 'Values' visibility Checkbox
- *  - 'Path' visibility Checkbox
- *  - 'Reflecting Border' toggle Checkbox
- *  - 'Elasticity' NumberControl
- *  - 'Constant Radius' toggle Checkbox
  *
  * @author Brandon Li
  * @author Alex Schor
  */
 
-
-import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
-import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import Line from '../../../../scenery/js/nodes/Line.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
-import Text from '../../../../scenery/js/nodes/Text.js';
+import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
-import ABSwitch from '../../../../sun/js/ABSwitch.js';
+import Color from '../../../../scenery/js/util/Color.js';
+import HSeparator from '../../../../sun/js/HSeparator.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
-
-// constants
-const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
-const TICK_FONT = new PhetFont( 12 );
-
-
-const centerOfMassString = collisionLabStrings.centerOfMass;
-const constantSizeString = collisionLabStrings.constantSize;
-const elasticityPercentString = collisionLabStrings.elasticityPercent;
-const elasticityString = collisionLabStrings.elasticity;
-const elasticString = collisionLabStrings.elastic;
-const inelasticString = collisionLabStrings.inelastic;
-const kineticEnergyString = collisionLabStrings.kineticEnergy;
-const momentumString = collisionLabStrings.momentum;
-const pathString = collisionLabStrings.path;
-const reflectingBorderString = collisionLabStrings.reflectingBorder;
-const valuesString = collisionLabStrings.values;
-const velocityString = collisionLabStrings.velocity;
-const stickString = collisionLabStrings.stick;
-const slipString = collisionLabStrings.slip;
+import CollisionLabIconFactory from './CollisionLabIconFactory.js';
+import CollisionLabViewProperties from './CollisionLabViewProperties.js';
+import ElasticityControlSetNode from './ElasticityControlSetNode.js';
 
 class CollisionLabControlPanel extends Panel {
 
@@ -72,114 +40,90 @@ class CollisionLabControlPanel extends Panel {
                isStickyProperty,
                constantRadiusProperty,
                options ) {
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
+    assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
+    assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
+    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
-    options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, options );
+    options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-    const velocityCheckbox = new CollisionLabCheckbox(
-      viewProperties.velocityVisibleProperty,
-      velocityString,
-      { icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS ) }
-    );
+      contentSpacing: 5 // {number} - the spacing between the content Nodes of the Panel
 
-    const momentumCheckbox = new CollisionLabCheckbox(
-      viewProperties.momentumVisibleProperty,
-      momentumString,
-      { icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS ) }
-    );
+    }, options );
 
-    const centerOfMassCheckbox = new CollisionLabCheckbox(
-      viewProperties.centerOfMassVisibleProperty,
-      centerOfMassString,
-      { icon: CollisionLabIconFactory.createCenterOfMassIcon() }
-    );
+    // Make the panel a fixed width.
+    assert && assert( options.minWidth === undefined, 'CollisionLabControlPanel sets minWidth' );
+    assert && assert( options.maxWidth === undefined, 'CollisionLabControlPanel sets maxWidth' );
+    const panelWidth = CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH + 2 * options.xMargin;
+    options.minWidth = panelWidth;
+    options.maxWidth = panelWidth;
 
-    const kineticEnergyCheckbox = new CollisionLabCheckbox(
-      viewProperties.kineticEnergyVisibleProperty,
-      kineticEnergyString
-    );
+    //----------------------------------------------------------------------------------------
 
-    const valuesCheckbox = new CollisionLabCheckbox(
-      viewProperties.valuesVisibleProperty,
-      valuesString
-    );
+    // 'Velocity' visibility Checkbox
+    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVisibleProperty,
+      collisionLabStrings.velocity, {
+        icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS )
+      } );
 
-    const pathCheckbox = new CollisionLabCheckbox(
-      viewProperties.pathVisibleProperty,
-      pathString
-    );
+    // 'Momentum' visibility Checkbox
+    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVisibleProperty,
+      collisionLabStrings.momentum, {
+        icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS )
+      } );
 
-    const reflectingBorderCheckbox = new CollisionLabCheckbox(
-      reflectingBorderProperty,
-      reflectingBorderString
-    );
-
-    const upperCheckboxes = new VBox( {
-      children:
-        [ velocityCheckbox, momentumCheckbox, centerOfMassCheckbox,
-          kineticEnergyCheckbox, valuesCheckbox, pathCheckbox, reflectingBorderCheckbox ],
-      align: 'left',
-      spacing: 10
+    // 'Center of Mass' visibility Checkbox
+    const centerOfMassCheckbox = new CollisionLabCheckbox( viewProperties.centerOfMassVisibleProperty,
+      collisionLabStrings.centerOfMass, {
+      icon: CollisionLabIconFactory.createCenterOfMassIcon()
     } );
 
-    const elasticityNumberControl = new NumberControl( elasticityString, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, {
-      layoutFunction: NumberControl.createLayoutFunction4(),
-      includeArrowButtons: false,
-      sliderOptions: {
-        majorTicks: [ {
-          value: ELASTICITY_PERCENT_RANGE.min, label: new Text( inelasticString, { font: TICK_FONT } )
-        },
-          {
-            value: ELASTICITY_PERCENT_RANGE.max, label: new Text( elasticString, { font: TICK_FONT } )
-          } ],
-        majorTickLength: 5,
-        trackSize: new Dimension2( upperCheckboxes.width - 30, 1 ),
-        thumbSize: new Dimension2( 10, 20 )
-      },
-      numberDisplayOptions: {
-        valuePattern: elasticityPercentString,
-        textOptions: {
-          font: new PhetFont( 14 )
-        }
-      },
-      titleNodeOptions: {
-        font: new PhetFont( 16 ),
-        maxWidth: 120
-      }
-    } );
-
-    const stickText = new Text( stickString, { font: new PhetFont( 16 ) } );
-    const slipText = new Text( slipString, { font: new PhetFont( 16 ) } );
-
-    const stickSlipSwitch = new ABSwitch( isStickyProperty, true, stickText, false, slipText, {
-      toggleSwitchOptions: { size: new Dimension2( 30, 15 ) }
-    } );
-
-    elasticityPercentProperty.link( elasticity => {
-      const enabled = ( elasticity === 0 );
-      stickSlipSwitch.opacity = enabled ? 1 : 0.5;
-      stickSlipSwitch.pickable = enabled;
-    } );
-
-
-    const constantRadiusCheckbox = new CollisionLabCheckbox(
-      constantRadiusProperty,
-      constantSizeString
+    // 'Kinetic Energy' visibility Checkbox
+    const kineticEnergyCheckbox = new CollisionLabCheckbox( viewProperties.kineticEnergyVisibleProperty,
+      collisionLabStrings.kineticEnergy
     );
 
-    const separatingLine = new Line( 0, 0, upperCheckboxes.width, 0, { stroke: 'black' } );
+    // 'Values' visibility Checkbox
+    const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
-    const panelContent = new Node();
-    panelContent.setChildren( [ upperCheckboxes, separatingLine, constantRadiusCheckbox,
-      elasticityNumberControl, stickSlipSwitch ] );
+    // 'Path' visibility Checkbox
+    const pathCheckbox = new CollisionLabCheckbox( viewProperties.pathVisibleProperty, collisionLabStrings.path );
 
-    separatingLine.top = upperCheckboxes.bottom + 5;
-    elasticityNumberControl.top = separatingLine.bottom + 5;
-    stickSlipSwitch.top = elasticityNumberControl.bottom + 5;
-    constantRadiusCheckbox.top = stickSlipSwitch.bottom + 5;
-    stickSlipSwitch.centerX = elasticityNumberControl.centerX;
+    // 'Reflecting Border' Checkbox
+    const reflectingBorderCheckbox = new CollisionLabCheckbox( reflectingBorderProperty,
+      collisionLabStrings.reflectingBorder );
 
+    // 'Elasticity' control
+    const elasticityControlSetNode = new ElasticityControlSetNode( elasticityPercentProperty, isStickyProperty );
 
-    super( panelContent, options );
+    // 'Constant Radius' Checkbox
+    const constantRadiusCheckbox = new CollisionLabCheckbox( constantRadiusProperty, collisionLabStrings.constantSize );
+
+    //----------------------------------------------------------------------------------------
+
+    // Create an AlignGroups for the Checkboxes so that they are all the same height.
+    const checkboxAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
+
+    // Create the content Node of the Panel
+    const contentNode = new VBox( {
+      spacing: options.contentSpacing,
+      children: [
+        checkboxAlignGroup.createBox( velocityCheckbox ),
+        checkboxAlignGroup.createBox( momentumCheckbox ),
+        checkboxAlignGroup.createBox( centerOfMassCheckbox ),
+        checkboxAlignGroup.createBox( kineticEnergyCheckbox ),
+        checkboxAlignGroup.createBox( valuesCheckbox ),
+        checkboxAlignGroup.createBox( pathCheckbox ),
+        checkboxAlignGroup.createBox( reflectingBorderCheckbox ),
+        new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } ),
+        elasticityControlSetNode,
+        checkboxAlignGroup.createBox( constantRadiusCheckbox )
+      ]
+    } );
+
+    super( contentNode, options );
   }
 }
 
