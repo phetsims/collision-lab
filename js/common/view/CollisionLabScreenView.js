@@ -26,10 +26,10 @@ import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
+import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
-import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
