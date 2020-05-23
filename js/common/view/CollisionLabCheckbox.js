@@ -57,20 +57,20 @@ class CollisionLabCheckbox extends Checkbox {
     if ( options.icon ) {
       contentNode.addChild( options.icon );
 
-      // Apply the maxWidth of the labelText.
+      // Apply the maxWidth of the labelText for i18n.
       labelText.maxWidth = options.width - options.boxWidth - 2 * options.spacing - options.icon.width;
 
       // Position the icon to the far-right side of the constant-size Checkbox.
-      options.icon.right = options.width;
+      options.icon.right = options.width - options.boxWidth - options.spacing;
       options.icon.centerY = labelText.centerY;
     }
     else {
 
-      // Apply the maxWidth of the labelText.
+      // Apply the maxWidth of the labelText for i18n.
       labelText.maxWidth = options.width - options.boxWidth - options.spacing;
 
       // Prevents the content from getting narrower than fixedWidth
-      contentNode.addChild( new HStrut( options.width, { pickable: false, centerLeft: labelText.centerLeft } ) );
+      contentNode.addChild( new HStrut( labelText.maxWidth, { pickable: false, centerLeft: labelText.centerLeft } ) );
     }
 
     super( contentNode, checkboxProperty, options );

@@ -15,7 +15,7 @@ import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
 
 // shared constants within this file
-const RIGHT_PANEL_WIDTH = 175; // fixed width of panels and accordion boxes on right side of the screen
+const RIGHT_PANEL_WIDTH = 200; // fixed width of panels and accordion boxes on right side of the screen
 
 const CollisionLabConstants = {
 
