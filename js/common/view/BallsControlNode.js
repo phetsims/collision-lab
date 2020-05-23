@@ -40,11 +40,11 @@ class BallsControlNode extends VBox {
 
       // {Object} - options passed to the NumberSpinner instance
       numberSpinnerOptions: {
-        yMargin: 4,
-        backgroundMinWidth: 37,
         font: new PhetFont( 26 ),
+        backgroundMinWidth: 37,
         backgroundLineWidth: 0.5,
-        arrowButtonLineWidth: 0.5
+        arrowButtonLineWidth: 0.5,
+        yMargin: 4
       },
 
       // {number} - spacing between the title and the NumberSpinner
