@@ -22,7 +22,7 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from '../model/PlayArea.js';
 import CenterOfMassNode from './CenterOfMassNode.js';
-import KineticEnergyDisplay from './KineticEnergyDisplay.js';
+import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
@@ -71,7 +71,7 @@ class PlayAreaNode extends Node {
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
-    const kineticEnergyDisplay = new KineticEnergyDisplay( playArea.totalKineticEnergyProperty,
+    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( playArea.totalKineticEnergyProperty,
       kineticEnergyVisibleProperty, {
         left: background.left + KINETIC_ENERGY_DISPLAY_MARGIN,
         bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN

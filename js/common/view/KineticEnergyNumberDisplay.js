@@ -19,7 +19,7 @@ const SUM_RANGE = new Range( 0, 10 ); // range for the kinetic energy values
 
 const kineticEnergyJString = collisionLabStrings.kineticEnergyJ;
 
-class KineticEnergyDisplay extends NumberDisplay {
+class KineticEnergyNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Property.<number>} totalKineticEnergyProperty
@@ -47,5 +47,5 @@ class KineticEnergyDisplay extends NumberDisplay {
   }
 }
 
-collisionLab.register( 'KineticEnergyDisplay', KineticEnergyDisplay );
-export default KineticEnergyDisplay;
+collisionLab.register( 'KineticEnergyNumberDisplay', KineticEnergyNumberDisplay );
+export default KineticEnergyNumberDisplay;
