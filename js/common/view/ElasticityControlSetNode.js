@@ -79,7 +79,7 @@ class ElasticityControlSetNode extends VBox {
 
     // Create the Text Nodes that appear in the ElasticityControlSetNode
     const inelasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.inelastic, options.tickTextOptions ) );
-    const elasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.inelastic, options.tickTextOptions ) );
+    const elasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.elastic, options.tickTextOptions ) );
     const stickLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.stick, options.stickSlipTextOptions ) );
     const slipLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.slip, options.stickSlipTextOptions ) );
 
@@ -131,7 +131,7 @@ class ElasticityControlSetNode extends VBox {
     // Observe when the elasticity is manipulated to disable the stickSlipSwitch if the elasticity isn't perfectly
     // inelastic. Link is never disposed as ElasticityControlSetNodes are never disposed.
     elasticityPercentProperty.link( elasticity => {
-      stickSlipSwitch.enabledProperty = ( elasticity === 0 );
+      stickSlipSwitch.enabledProperty.value = ( elasticity === 0 );
     } );
   }
 }
