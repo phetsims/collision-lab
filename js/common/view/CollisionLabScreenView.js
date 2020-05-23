@@ -29,7 +29,7 @@ import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import KeypadDialog from './KeypadDialog.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
-import TimeDisplay from './TimeDisplay.js';
+import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
@@ -85,7 +85,7 @@ class CollisionLabScreenView extends ScreenView {
     );
     this.addChild( playAreaNode );
 
-    const timeDisplay = new TimeDisplay( model.elapsedTimeProperty );
+    const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
     this.addChild( timeDisplay );
     timeDisplay.left = playAreaNode.left + 5;
     timeDisplay.top = playAreaNode.bottom + 5;

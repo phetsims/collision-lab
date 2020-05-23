@@ -19,7 +19,7 @@ const TIME_RANGE = new Range( 0, 999 ); // range for the time to determine size 
 
 const sString = collisionLabStrings.s;
 
-class TimeDisplay extends NumberDisplay {
+class ElapsedTimeNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Property.<number>} timeProperty
@@ -40,5 +40,5 @@ class TimeDisplay extends NumberDisplay {
   }
 }
 
-collisionLab.register( 'TimeDisplay', TimeDisplay );
-export default TimeDisplay;
+collisionLab.register( 'ElapsedTimeNumberDisplay', ElapsedTimeNumberDisplay );
+export default ElapsedTimeNumberDisplay;
