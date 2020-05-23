@@ -22,7 +22,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
-import ElasticityControlSetNode from './ElasticityControlSetNode.js';
+import ElasticityControlSet from './ElasticityControlSet.js';
 
 class CollisionLabControlPanel extends Panel {
 
@@ -96,7 +96,7 @@ class CollisionLabControlPanel extends Panel {
       collisionLabStrings.reflectingBorder );
 
     // 'Elasticity' control
-    const elasticityControlSetNode = new ElasticityControlSetNode( elasticityPercentProperty, isStickyProperty );
+    const elasticityControlSetNode = new ElasticityControlSet( elasticityPercentProperty, isStickyProperty );
 
     // 'Constant Radius' Checkbox
     const constantRadiusCheckbox = new CollisionLabCheckbox( constantRadiusProperty, collisionLabStrings.constantSize );

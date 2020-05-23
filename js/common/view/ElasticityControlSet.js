@@ -4,12 +4,12 @@
  * A view specialized to display Controls for the user the manipulate the elasticity and, if necessary, the type of
  * elasticity, for all ball collisions in a system. It appears inside of control-panels on all screens.
  *
- * The ElasticityControlSetNode consists of:
+ * The ElasticityControlSet consists of:
  *   - a standard NumberControl to allow the user to change the elasticity.
  *   - an ABSwitch to allow the user to switch between sticky and slipping perfectly inelastic collisions. This switch
  *     is disabled if the elasticity isn't perfectly inelastic.
  *
- * ElasticityControlSetNodes are created at the start of the sim and are never disposed, so no dispose method is
+ * ElasticityControlSets are created at the start of the sim and are never disposed, so no dispose method is
  * necessary and internal links are left as-is.
  *
  * @author Brandon Li
@@ -32,7 +32,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 const TOGGLE_SWITCH_SIZE = new Dimension2( 30, 15 );
 
-class ElasticityControlSetNode extends VBox {
+class ElasticityControlSet extends VBox {
 
   /**
    * @param {Property.<number>} elasticityPercentProperty
@@ -77,7 +77,7 @@ class ElasticityControlSetNode extends VBox {
     const tickAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
     const stickSlipAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
-    // Create the Text Nodes that appear in the ElasticityControlSetNode
+    // Create the Text Nodes that appear in the ElasticityControlSet
     const inelasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.inelastic, options.tickTextOptions ) );
     const elasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.elastic, options.tickTextOptions ) );
     const stickLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.stick, options.stickSlipTextOptions ) );
@@ -129,12 +129,12 @@ class ElasticityControlSetNode extends VBox {
     //----------------------------------------------------------------------------------------
 
     // Observe when the elasticity is manipulated to disable the stickSlipSwitch if the elasticity isn't perfectly
-    // inelastic. Link is never disposed as ElasticityControlSetNodes are never disposed.
+    // inelastic. Link is never disposed as ElasticityControlSets are never disposed.
     elasticityPercentProperty.link( elasticity => {
       stickSlipSwitch.enabledProperty.value = ( elasticity === 0 );
     } );
   }
 }
 
-collisionLab.register( 'ElasticityControlSetNode', ElasticityControlSetNode );
-export default ElasticityControlSetNode;
+collisionLab.register( 'ElasticityControlSet', ElasticityControlSet );
+export default ElasticityControlSet;
