@@ -8,7 +8,6 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import GridCheckbox from '../../../../scenery-phet/js/GridCheckbox.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
@@ -16,7 +15,7 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
-import BallsControlNode from './BallsControlNode.js';
+import PlayAreaControlSet from './PlayAreaControlSet.js';
 import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
@@ -62,8 +61,8 @@ class CollisionLabScreenView extends ScreenView {
     // create the view properties for the view
     const viewProperties = new CollisionLabViewProperties();
 
-    const ballsControlNode = new BallsControlNode( model.numberOfBallsProperty );
-    this.addChild( ballsControlNode );
+    const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.gridVisibleProperty );
+    this.addChild( playAreaControlSet );
 
     // create the grid and border of the playArea
     const playAreaNode = new PlayAreaNode(
@@ -80,8 +79,8 @@ class CollisionLabScreenView extends ScreenView {
     timeDisplay.left = playAreaNode.left + 5;
     timeDisplay.top = playAreaNode.bottom + 5;
 
-    ballsControlNode.left = playAreaNode.right + 5;
-    ballsControlNode.top = 20;
+    playAreaControlSet.left = playAreaNode.right + 5;
+    playAreaControlSet.top = 20;
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.playProperty,
@@ -117,11 +116,6 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( resetAllButton );
 
-    const gridCheckbox = new GridCheckbox( model.gridVisibleProperty, {
-      top: ballsControlNode.bottom + 5,
-      left: ballsControlNode.left
-    } );
-    this.addChild( gridCheckbox );
 
     const playAreaControlPanel = new CollisionLabControlPanel( viewProperties,
       model.reflectingBorderProperty,
