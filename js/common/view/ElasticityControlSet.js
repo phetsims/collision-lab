@@ -23,6 +23,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -106,7 +107,9 @@ class ElasticityControlSet extends VBox {
         },
         numberDisplayOptions: {
           valuePattern: collisionLabStrings.elasticityPercent,
-          textOptions: { font: CollisionLabConstants.DISPLAY_FONT, maxWidth: options.titleTextOptions.maxWidth }
+          textOptions: { font: CollisionLabConstants.DISPLAY_FONT, maxWidth: options.titleTextOptions.maxWidth },
+          backgroundStroke: Color.BLACK,
+          backgroundLineWidth: 0.5
         },
         titleNodeOptions: options.titleTextOptions
       } );
