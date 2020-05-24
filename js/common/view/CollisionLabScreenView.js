@@ -15,7 +15,6 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
-import PlayAreaControlSet from './PlayAreaControlSet.js';
 import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
@@ -23,6 +22,7 @@ import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
+import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
 
