@@ -23,15 +23,18 @@ class RestartButton extends RectangularPushButton {
   constructor( options ) {
 
     options = merge( {
+      undoScale: 0.5, // {number} - scale applied to the undo FontAwesomeNode
 
       // super-class
       baseColor: ColorConstants.LIGHT_BLUE,
-      lineWidth: 0
+      lineWidth: 0,
+      xMargin: 6.5,
+      yMargin: 5.5
 
     }, options );
 
     assert && assert( !options.content, 'content is not customizable' );
-    options.content = new FontAwesomeNode( 'undo', { scale: 0.5 } ); // Scale determined empirically.
+    options.content = new FontAwesomeNode( 'undo', { scale: options.scale } );
 
     super( options );
   }
