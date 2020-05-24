@@ -57,9 +57,10 @@ const CollisionLabColors = {
   },
 
   TIME_DISPLAY_COLORS: {
-    backgroundFill: 'rgb( 255, 255, 255 )',
+    backgroundFill: 'white',
     stroke: 'black'
   },
+
   //----------------------------------------------------------------------------------------
   // X Marker Colors
   X_MARKER_COLORS: {
