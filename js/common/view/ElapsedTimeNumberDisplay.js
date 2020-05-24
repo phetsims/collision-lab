@@ -4,7 +4,8 @@
  * ElapsedTimeNumberDisplay is a subclass of NumberDisplay for displaying the total elapsed time of the sim.
  * Instances are positioned just outside the PlayArea on the bottom-left side and appears on all Screens.
  *
- * PlayAreaControlSets are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * ElapsedTimeNumberDisplays are created at the start of the sim and are never disposed, so no dispose method is
+ * necessary.
  *
  * @author Brandon Li
  * @author Martin Veillette
@@ -39,7 +40,10 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       xMargin: 6,
       backgroundStroke: Color.BLACK,
       valuePattern: collisionLabStrings.s,
-      textOptions: { font: CollisionLabConstants.DISPLAY_FONT },
+      textOptions: {
+        font: CollisionLabConstants.DISPLAY_FONT,
+        maxWidth: 100 // constrain width for i18n, determined empirically
+      },
       decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
 
     }, options );

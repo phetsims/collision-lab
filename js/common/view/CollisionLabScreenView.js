@@ -11,17 +11,16 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
 import BallValuesPanel from './BallValuesPanel.js';
-import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
+import MoreDataCheckbox from './MoreDataCheckbox.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
@@ -31,9 +30,6 @@ const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordin
 const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
-
-const moreDataString = collisionLabStrings.moreData;
-
 
 class CollisionLabScreenView extends ScreenView {
 
@@ -76,7 +72,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
     this.addChild( timeDisplay );
-    timeDisplay.left = playAreaNode.left + 5;
+    timeDisplay.left = SCREEN_VIEW_X_MARGIN;
     timeDisplay.top = playAreaNode.bottom + 5;
 
     playAreaControlSet.left = playAreaNode.right + 5;
@@ -156,9 +152,11 @@ class CollisionLabScreenView extends ScreenView {
     model.playArea.balls.forEach( addItemAddedBallListener );
     model.playArea.balls.addItemAddedListener( addItemAddedBallListener );
 
-    const moreDataCheckbox = new CollisionLabCheckbox( viewProperties.moreDataVisibleProperty, moreDataString );
+    const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
+      top: playAreaNode.bottom + 36,
+      left: SCREEN_VIEW_X_MARGIN
+    } );
     this.addChild( moreDataCheckbox );
-    moreDataCheckbox.top = playAreaNode.bottom + 30;
 
 
     const keypad = new KeypadDialog();
@@ -166,7 +164,7 @@ class CollisionLabScreenView extends ScreenView {
     const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
-    ballValuesDisplay.left = 40;
+    ballValuesDisplay.left = SCREEN_VIEW_X_MARGIN;
   }
 
   // @public

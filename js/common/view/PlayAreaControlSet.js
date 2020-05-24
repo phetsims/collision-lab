@@ -3,7 +3,7 @@
 /**
  * A view specialized to display Controls for the user to change the number of Balls in the PlayArea system and if the
  * PlayArea grid is visible. It is positioned just outside the PlayArea on the top-right side and appears on all of the
- *  Screens except for the 'Intro' screen.
+ * Screens except for the 'Intro' screen.
  *
  * The PlayAreaControlSet consists of:
  *   - a NumberSpinner to allow the user to change the number of balls in the PlayArea
