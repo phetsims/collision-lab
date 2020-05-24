@@ -30,7 +30,7 @@ class CollisionLabCheckbox extends Checkbox {
     assert && assert( typeof label === 'string', `invalid label: ${label}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `Extra prototype on options: ${options}` );
 
-    options = merge( {
+    options = merge( {}, CollisionLabConstants.CHECKBOX_OPTIONS, {
 
       // {Node|null} optional icon, to the right of text
       icon: null,
@@ -38,11 +38,7 @@ class CollisionLabCheckbox extends Checkbox {
       // {number} - the width of the entire Checkbox, including its content. If the icon is provided, it is placed at
       //            the far-right side to ensure that this is the width of the entire Checkbox. This is generally
       //            used to align icons within a control-panel. This is also used to compute the maxWidth for the Text.
-      width: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
-
-      // superclass options
-      boxWidth: CollisionLabConstants.CHECKBOX_BOX_WIDTH,
-      spacing: 6
+      width: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH
 
     }, options );
 

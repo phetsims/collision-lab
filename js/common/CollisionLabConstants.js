@@ -79,7 +79,6 @@ const CollisionLabConstants = {
   //----------------------------------------------------------------------------------------
   // Fonts
   PANEL_LABEL_FONT: new PhetFont( 18 ),
-  CHECKBOX_FONT: new PhetFont( 16 ),
   DISPLAY_FONT: new PhetFont( 16 ),
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),
   KEYPAD_FONT: new PhetFont( 15 ),
@@ -88,8 +87,8 @@ const CollisionLabConstants = {
   //----------------------------------------------------------------------------------------
   // panels
   PANEL_OPTIONS: merge( {
-    xMargin: 16,
-    yMargin: 12,
+    xMargin: 13.5,
+    yMargin: 9.5,
     cornerRadius: 7
   }, CollisionLabColors.PANEL_COLORS ),
 
@@ -97,7 +96,10 @@ const CollisionLabConstants = {
   CONTROL_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
   MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
 
-  CHECKBOX_BOX_WIDTH: 18
+  CHECKBOX_OPTIONS: {
+    boxWidth: 18,
+    spacing: 6
+  }
 };
 
 collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );

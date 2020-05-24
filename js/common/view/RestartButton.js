@@ -34,7 +34,7 @@ class RestartButton extends RectangularPushButton {
     }, options );
 
     assert && assert( !options.content, 'content is not customizable' );
-    options.content = new FontAwesomeNode( 'undo', { scale: options.scale } );
+    options.content = new FontAwesomeNode( 'undo', { scale: options.undoScale } );
 
     super( options );
   }

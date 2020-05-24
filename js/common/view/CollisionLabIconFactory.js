@@ -80,8 +80,8 @@ const CollisionLabIconFactory = {
 
     options = merge( {
       lineWidth: 1,
-      length: 18,
-      legThickness: 4
+      length: 15.5,
+      legThickness: 3.4
     }, options );
 
     return new XNode( options );

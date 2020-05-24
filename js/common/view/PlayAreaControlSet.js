@@ -55,10 +55,9 @@ class PlayAreaControlSet extends VBox {
       },
 
       // {Object} - options passed to the NumberSpinner instance
-      gridCheckboxOptions: {
-        boxWidth: CollisionLabConstants.CHECKBOX_BOX_WIDTH,
+      gridCheckboxOptions: merge( {}, CollisionLabConstants.CHECKBOX_OPTIONS, {
         gridSize: 26
-      },
+      } ),
 
       // {number} - y-margins between the title, number spinner, and grid checkbox, respectively.
       titleToNumberSpinnerMargin: 6,

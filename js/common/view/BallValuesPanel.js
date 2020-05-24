@@ -52,15 +52,16 @@ class BallValuesPanel extends Panel {
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      ballIconColumnSpacing: 10,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
+      ballIconColumnSpacing: 12,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
-      columnGroupSpacing: 22,       // {number} - x-spacing between the major groups of NumberDisplay columns
-      columnGroupsTopMargin: 1,     // {number} - y-margin between the columns and the title-labels above them
+      columnGroupSpacing: 21,       // {number} - x-spacing between the major groups of NumberDisplay columns
+      columnGroupsTopMargin: 0.5,   // {number} - y-margin between the columns and the title-labels above them
 
-      titleLabelTextOptions: {
-        font: CollisionLabConstants.PANEL_TITLE_FONT,
-        maxWidth: 140 // constrain width for i18n, determined empirically
-      }
+      massTitleMaxWidth: 65,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
+      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for 18n
+
+      // {Font} - applied to all of the title label Text instances
+      titleFont: CollisionLabConstants.PANEL_TITLE_FONT
 
     }, options );
 
@@ -83,44 +84,23 @@ class BallValuesPanel extends Panel {
     const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadDialog );
 
     // Horizontally group the components of BallValuesPanelColumnNodes into groups.
-    const positionColumnGroup = new HBox( {
-      children: [ xPositionColumnNode, yPositionColumnNode ],
-      spacing: options.componentColumnsSpacing
-    } );
-    const velocityColumnGroup = new HBox( {
-      children: [ xVelocityColumnNode, yVelocityColumnNode ],
-      spacing: options.componentColumnsSpacing
-    } );
-    const momentumColumnGroup = new HBox( {
-      children: [ xMomentumColumnNode, yMomentumColumnNode ],
-      spacing: options.componentColumnsSpacing
-    } );
+    const positionColumnGroup = new HBox( { children: [ xPositionColumnNode, yPositionColumnNode ], spacing: options.componentColumnsSpacing } );
+    const velocityColumnGroup = new HBox( { children: [ xVelocityColumnNode, yVelocityColumnNode ], spacing: options.componentColumnsSpacing } );
+    const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode, yMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
 
     //----------------------------------------------------------------------------------------
 
     // Create the Title Labels for the groups of columns.
-    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, options.titleLabelTextOptions );
-    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, options.titleLabelTextOptions );
-    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, options.titleLabelTextOptions );
-    const massTitleLabelText = new Text( collisionLabStrings.massUnit, options.titleLabelTextOptions );
+    const massTitleLabelText = new Text( collisionLabStrings.massUnit, { font: options.titleFont, maxWidth: options.massTitleMaxWidth } );
+    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
+    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
+    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
 
     // Horizontally group the column groups with their respective title Labels in a VBox.
-    const massColumnGroupAndTitleBox = new VBox( {
-      children: [ massTitleLabelText, massColumnNode ],
-      spacing: options.columnGroupsTopMargin
-    } );
-    const positionColumnGroupAndTitleBox = new VBox( {
-      children: [ positionTitleLabelText, positionColumnGroup ],
-      spacing: options.columnGroupsTopMargin
-    } );
-    const velocityColumnGroupAndTitleBox = new VBox( {
-      children: [ velocityTitleLabelText, velocityColumnGroup ],
-      spacing: options.columnGroupsTopMargin
-    } );
-    const momentumColumnGroupAndTitleBox = new VBox( {
-      children: [ momentumTitleLabelText, momentumColumnGroup ],
-      spacing: options.columnGroupsTopMargin
-    } );
+    const massColumnGroupAndTitleBox = new VBox( { children: [ massTitleLabelText, massColumnNode ], spacing: options.columnGroupsTopMargin } );
+    const positionColumnGroupAndTitleBox = new VBox( { children: [ positionTitleLabelText, positionColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const velocityColumnGroupAndTitleBox = new VBox( { children: [ velocityTitleLabelText, velocityColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const momentumColumnGroupAndTitleBox = new VBox( { children: [ momentumTitleLabelText, momentumColumnGroup ], spacing: options.columnGroupsTopMargin } );
 
     //----------------------------------------------------------------------------------------
 

@@ -10,7 +10,6 @@
 
 import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
-import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import HSeparator from '../../../../sun/js/HSeparator.js';
@@ -49,7 +48,7 @@ class CollisionLabControlPanel extends Panel {
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      contentSpacing: 5 // {number} - the spacing between the content Nodes of the Panel
+      contentSpacing: 10 // {number} - the spacing between the content Nodes of the Panel
 
     }, options );
 
@@ -103,23 +102,20 @@ class CollisionLabControlPanel extends Panel {
 
     //----------------------------------------------------------------------------------------
 
-    // Create an AlignGroups for the Checkboxes so that they are all the same height.
-    const checkboxAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
-
     // Create the content Node of the Panel
     const contentNode = new VBox( {
       spacing: options.contentSpacing,
       children: [
-        checkboxAlignGroup.createBox( velocityCheckbox ),
-        checkboxAlignGroup.createBox( momentumCheckbox ),
-        checkboxAlignGroup.createBox( centerOfMassCheckbox ),
-        checkboxAlignGroup.createBox( kineticEnergyCheckbox ),
-        checkboxAlignGroup.createBox( valuesCheckbox ),
-        checkboxAlignGroup.createBox( pathCheckbox ),
-        checkboxAlignGroup.createBox( reflectingBorderCheckbox ),
+        velocityCheckbox,
+        momentumCheckbox,
+        centerOfMassCheckbox,
+        kineticEnergyCheckbox,
+        valuesCheckbox,
+        pathCheckbox,
+        reflectingBorderCheckbox,
         new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } ),
         elasticityControlSetNode,
-        checkboxAlignGroup.createBox( constantRadiusCheckbox )
+        constantRadiusCheckbox
       ]
     } );
 
