@@ -6,6 +6,7 @@
  * @author Martin Veillette
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
@@ -21,7 +22,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, timeSpeedProperty, playAreaUserControlledProperty,
+  constructor( playProperty, elasticityProperty, timeSpeedProperty, playAreaUserControlledProperty,
                stepBackward, stepForward, options ) {
 
 
@@ -41,6 +42,11 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
         stepBackwardButtonOptions: {
           listener: () => stepBackward(),
+
+          // Workaround for https://github.com/phetsims/scenery-phet/issues/606.
+          isPlayingProperty: new DerivedProperty( [ playProperty, elasticityProperty ], ( playing, elasticity ) => {
+            return playing || elasticity < 100;
+          } ),
           radius: 20
         },
         stepForwardButtonOptions: {
