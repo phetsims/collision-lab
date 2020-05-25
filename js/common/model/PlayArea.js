@@ -142,11 +142,12 @@ class PlayArea {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    // updates the position and velocity of each ball
+    // Updates the position and velocity of each ball.
     this.balls.forEach( ball => {
       ball.step( dt );
     } );
 
+    // First detect collisions and handle them.
     this.collisionDetector.handleAllBallToBallCollisions( dt );
     this.collisionDetector.handleAllBallToBorderCollisions( dt );
   }
