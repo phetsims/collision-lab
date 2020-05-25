@@ -91,6 +91,14 @@ class CollisionLabModel {
       this.reflectingBorderProperty,
       this.isStickyProperty
     );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the pathVisiblePRoperty is manipulated to clear the Paths of the PlayArea Balls and center of mass.
+    // Link for the lifetime of the simulation.
+    this.pathVisibleProperty.lazyLink( pathVisible => {
+      if ( !pathVisible ) { this.playArea.clearPaths(); }
+    } );
   }
 
   /**
@@ -155,6 +163,10 @@ class CollisionLabModel {
      */
     this.playArea.step( dt );
     this.collisionDetector.step( dt );
+
+    if ( this.pathVisibleProperty.value ) {
+      this.playArea.updatePathDataPoints( this.elapsedTimeProperty.value );
+    }
   }
 
   /**

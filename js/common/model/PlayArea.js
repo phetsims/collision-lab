@@ -126,6 +126,27 @@ class PlayArea {
       ball.step( dt );
     } );
   }
+
+  /**
+   * Clear the trace 'paths' of the Balls and the CenterOfMass. This is called when the 'path' Checkbox is unchecked.
+   * @public
+   */
+  clearPaths() {
+    this.balls.forEach( ball => ball.clearDataPoints() );
+    this.centerOfMass.clearDataPoints();
+  }
+
+  /**
+   * Records and updates the current DataPoinnts of the Balls and CenterOfMass for the trace 'paths'.
+   * Called when the 'Path' Checkbox is checked on each step.
+   * @public
+   *
+   * @param {number} time - the total elapsed time of the simulation, in seconds.
+   */
+  updatePathDataPoints( time ) {
+    this.balls.forEach( ball => ball.updateDataPoints( time ) );
+    this.centerOfMass.updateDataPoints( time );
+  }
 }
 
 collisionLab.register( 'PlayArea', PlayArea );
