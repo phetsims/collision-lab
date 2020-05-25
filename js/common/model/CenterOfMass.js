@@ -16,8 +16,9 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
+import MovingObject from './MovingObject.js';
 
-class CenterOfMass {
+class CenterOfMass extends MovingObject {
 
   /**
    * @param {ObservableArray.<Ball>} balls
@@ -25,6 +26,7 @@ class CenterOfMass {
   constructor( balls ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
+    super();
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Property.<null|Vector2>} - Property of the position of the ball, in meter coordinates.
@@ -80,6 +82,14 @@ class CenterOfMass {
    * @returns {boolean}
    */
   get isDefined() { return this.balls.length !== 0; }
+
+  /**
+   * Gets the center position of the CenterOfMass, in meter coordinates.
+   * @public
+   * @override
+   * @returns {Vector2} - in meter coordinates
+   */
+  get position() { return this.positionProperty.value; }
 
   /**
    * Computes the total mass of the Balls in the system.
