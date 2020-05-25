@@ -257,7 +257,7 @@ class Ball {
    * @public
    * @returns {number} - in meter coordinates
    */
-  get xPosition() { return this.xPositionProperty.value;}
+  get xPosition() { return this.xPositionProperty.value; }
 
   /**
    * Sets the x-coordinate of the center position of the Ball, in meter coordinates.
@@ -271,7 +271,7 @@ class Ball {
    * @public
    * @returns {number} - in meter coordinates
    */
-  get yPosition() { return this.yPositionProperty.value;}
+  get yPosition() { return this.yPositionProperty.value; }
 
   /**
    * Sets the y-coordinate of the center position of the Ball, in meter coordinates.
@@ -359,7 +359,7 @@ class Ball {
    * @public
    * @returns {number} xVelocity, in m/s.
    */
-  get xVelocity() { return this.xVelocityProperty.value;}
+  get xVelocity() { return this.xVelocityProperty.value; }
 
   /**
    * Sets the horizontal velocity of the ball, in m/s.
@@ -373,7 +373,7 @@ class Ball {
    * @public
    * @returns {number} yVelocity, in m/s.
    */
-  get yVelocity() { return this.yVelocityProperty.value;}
+  get yVelocity() { return this.yVelocityProperty.value; }
 
   /**
    * Sets the vertical velocity of the ball, in m/s.
