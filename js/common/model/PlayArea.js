@@ -22,31 +22,19 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
-import CollisionDetector from './CollisionDetector.js';
 import TotalKineticEnergyProperty from './TotalKineticEnergyProperty.js';
 
 class PlayArea {
 
   /**
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
-   * @param {Property.<number>} elasticityPercentProperty - the elasticity of all collisions, as a percentage.
-   * @param {Property.<boolean>} reflectingBorderProperty - indicates if Balls should reflect off the borders.
    * @param {Property.<boolean>} constantRadiusProperty - indicates if Ball radii should be constant.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
-   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
    */
-  constructor( numberOfBallsProperty,
-               elasticityPercentProperty,
-               reflectingBorderProperty,
-               constantRadiusProperty,
-               gridVisibleProperty,
-               isStickyProperty ) {
+  constructor( numberOfBallsProperty, constantRadiusProperty, gridVisibleProperty ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
-    assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
-    assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
-    assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
 
     //----------------------------------------------------------------------------------------
 
@@ -92,12 +80,6 @@ class PlayArea {
     // @public (read-only)
     this.centerOfMass = new CenterOfMass( this.balls );
 
-    // @public
-    this.collisionDetector = new CollisionDetector( this.balls,
-      elasticityPercentProperty,
-      reflectingBorderProperty,
-      isStickyProperty );
-
     //----------------------------------------------------------------------------------------
 
     // Observe when the number of Balls is manipulated by the user and if so, add or remove the correct number of Balls
@@ -132,10 +114,7 @@ class PlayArea {
   }
 
   /**
-   * Steps the position of the balls
-   * The position of the balls is
-   * (1) updated based on the ballistic motion of individual balls
-   * (2) corrected through collisionDetector, to take into account collisions between balls and walls
+   * Steps the position of the balls.
    * @public
    * @param {number} dt
    */
@@ -146,10 +125,6 @@ class PlayArea {
     this.balls.forEach( ball => {
       ball.step( dt );
     } );
-
-    // First detect collisions and handle them.
-    this.collisionDetector.handleAllBallToBallCollisions( dt );
-    this.collisionDetector.handleAllBallToBorderCollisions( dt );
   }
 }
 

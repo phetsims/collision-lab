@@ -48,6 +48,17 @@ class CollisionDetector {
     this.isStickyProperty = isStickyProperty;
   }
 
+  /**
+   * Steps the Collision Detector, which will handle all collisions involving Balls.
+   * @public
+   *
+   * @param {number} dt - the time interval since the last step, in seconds.
+   */
+  step( dt ) {
+    this.handleAllBallToBallCollisions( dt );
+    this.handleAllBallToBorderCollisions( dt );
+  }
+
   /*----------------------------------------------------------------------------*
    * Ball To Ball Collisions
    *----------------------------------------------------------------------------*/

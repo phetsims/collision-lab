@@ -7,6 +7,7 @@
  *   - Time Control Properties and stepping the simulation.
  *   - Keep track of the top-level user-manipulation Properties, like the number of Balls or the elasticity.
  *   - Instantiation of a single PlayArea.
+ *   - Instantiation of the CollisionDetector collision engine.
  *
  * @author Brandon Li
  * @author Martin Veillette
@@ -19,6 +20,7 @@ import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionDetector from './CollisionDetector.js';
 import PlayArea from './PlayArea.js';
 
 // constants
@@ -78,10 +80,15 @@ class CollisionLabModel {
     // @public (read-only) {PlayArea} - create the PlayArea of the screen.
     this.playArea = new PlayArea(
       this.numberOfBallsProperty,
+      this.constantRadiusProperty,
+      this.gridVisibleProperty
+    );
+
+    // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.
+    this.collisionDetector = new CollisionDetector(
+      this.playArea.balls,
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
-      this.constantRadiusProperty,
-      this.gridVisibleProperty,
       this.isStickyProperty
     );
   }
@@ -140,7 +147,14 @@ class CollisionLabModel {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     this.elapsedTimeProperty.value += dt;
+
+    /**
+     * The position of the balls is
+     * (1) updated based on the ballistic motion of individual balls
+     * (2) corrected through collisionDetector, to take into account collisions between balls and walls
+     */
     this.playArea.step( dt );
+    this.collisionDetector.step( dt );
   }
 
   /**
