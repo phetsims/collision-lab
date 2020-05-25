@@ -8,8 +8,6 @@
  * are rendered as a fading line if the 'Path' checkbox is checked, meaning DataPoints are removed after a set amount
  * of time. See https://github.com/phetsims/collision-lab/issues/61.
  *
- * DataPoints should and must be disposed of once they are no longer needed and referenced.
- *
  * @author Brandon Li
  */
 
@@ -33,14 +31,6 @@ class DataPoint {
 
     // @public (read-only) {Vector2}
     this.position = position;
-  }
-
-  /**
-   * Disposes the DataPoint, releasing its internal references.
-   * @public
-   */
-  dispose() {
-    this.position.freeToPool();
   }
 }
 
