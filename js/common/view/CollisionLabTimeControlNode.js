@@ -44,6 +44,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
           listener: () => stepBackward(),
 
           // Workaround for https://github.com/phetsims/scenery-phet/issues/606.
+          // Also see https://github.com/phetsims/scenery-phet/issues/563
           isPlayingProperty: new DerivedProperty( [ playProperty, elasticityProperty ], ( playing, elasticity ) => {
             return playing || elasticity < 100;
           } ),
