@@ -28,9 +28,6 @@ class CollisionLabViewProperties {
     // @public indicates if the labels for the velocity and momentum are present on each ball
     this.valuesVisibleProperty = new BooleanProperty( false );
 
-    // @public indicates if the path (trajectory) of each ball is visible
-    this.pathVisibleProperty = new BooleanProperty( false );
-
     // @public indicates if the momenta diagram is expanded.
     this.momentaDiagramExpandedProperty = new BooleanProperty( false );
 
@@ -51,7 +48,6 @@ class CollisionLabViewProperties {
     this.centerOfMassVisibleProperty.reset();
     this.kineticEnergyVisibleProperty.reset();
     this.valuesVisibleProperty.reset();
-    this.pathVisibleProperty.reset();
     this.momentaDiagramExpandedProperty.reset();
     this.tipToTailProperty.reset();
   }

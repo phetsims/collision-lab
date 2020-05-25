@@ -46,7 +46,7 @@ class MovingObject {
    *     step-backward button is pressed.
    * @public
    *
-   * Generally called when the Ball's position is moved or when it changes direction.
+   * Generally called when the Ball's position is moved or when it changes direction and paths are visible.
    *
    * @param {number} time - the total elapsed time of the simulation, in seconds.
    */
@@ -77,8 +77,11 @@ class MovingObject {
   }
 
   /**
-   * Clears the dataPoints array. Called when the reset all button is pressed or when the restart button is pressed.
+   * Clears the dataPoints array.
    * @public
+   *
+   * Generally called when the reset all button is pressed or when the restart button is pressed. Also called when
+   * the 'Path' checkbox is un-checked.
    */
   clearDataPoints() {
     while ( this.dataPoints.length ) {

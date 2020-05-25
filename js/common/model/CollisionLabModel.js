@@ -51,6 +51,10 @@ class CollisionLabModel {
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
+    // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trace paths are visible. In the model since
+    //                                         Ball DataPoints are only recorded if this is true.
+    this.pathVisibleProperty = new BooleanProperty( false );
+
     // @public (read-only) {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
     //                                         This Property is manipulated outside of the PlayArea.
     this.reflectingBorderProperty = new BooleanProperty( true );
@@ -92,6 +96,7 @@ class CollisionLabModel {
     this.timeSpeedProperty.reset();
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
+    this.pathVisibleProperty.reset();
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.gridVisibleProperty.reset();

@@ -26,6 +26,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import MovingObject from './MovingObject.js';
 
 // constants
 const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Balls if constant-radius is on, in meters.
@@ -34,7 +35,7 @@ const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg
 const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
-class Ball {
+class Ball extends MovingObject {
 
   /**
    * @param {Vector2} initialPosition - starting position of the center of the ball.
@@ -53,6 +54,8 @@ class Ball {
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
+
+    super();
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
@@ -139,6 +142,7 @@ class Ball {
   /**
    * Resets this Ball.
    * @public
+   * @override
    */
   reset() {
     this.xPositionProperty.reset();
@@ -147,6 +151,7 @@ class Ball {
     this.yVelocityProperty.reset();
     this.massProperty.reset();
     this.userControlledProperty.reset();
+    super.reset();
   }
 
   /**
@@ -283,6 +288,7 @@ class Ball {
   /**
    * Gets the center position of the Ball, in meter coordinates.
    * @public
+   * @override
    * @returns {Vector2} - in meter coordinates
    */
   get position() { return this.positionProperty.value; }

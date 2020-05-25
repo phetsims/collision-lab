@@ -27,6 +27,7 @@ class CollisionLabControlPanel extends Panel {
 
   /**
    * @param {CollisionLabViewProperties} viewProperties
+   * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} isStickyProperty
@@ -34,12 +35,14 @@ class CollisionLabControlPanel extends Panel {
    * @param {Object} [options]
    */
   constructor( viewProperties,
+               pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                isStickyProperty,
                constantRadiusProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
@@ -88,7 +91,7 @@ class CollisionLabControlPanel extends Panel {
     const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
     // 'Path' visibility Checkbox
-    const pathCheckbox = new CollisionLabCheckbox( viewProperties.pathVisibleProperty, collisionLabStrings.path );
+    const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
 
     // 'Reflecting Border' Checkbox
     const reflectingBorderCheckbox = new CollisionLabCheckbox( reflectingBorderProperty,
