@@ -36,7 +36,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       displayRange: new Range( 0, 100 ),
 
       // super-class options
-      yMargin: 6.6,
+      yMargin: 6,
       xMargin: 6,
       backgroundStroke: Color.BLACK,
       valuePattern: collisionLabStrings.s,

@@ -57,7 +57,7 @@ class BallValuesPanel extends Panel {
       columnGroupSpacing: 21,       // {number} - x-spacing between the major groups of NumberDisplay columns
       columnGroupsTopMargin: 0.5,   // {number} - y-margin between the columns and the title-labels above them
 
-      massTitleMaxWidth: 65,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
+      massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
       componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for 18n
 
       // {Font} - applied to all of the title label Text instances
@@ -90,17 +90,20 @@ class BallValuesPanel extends Panel {
 
     //----------------------------------------------------------------------------------------
 
-    // Create the Title Labels for the groups of columns.
-    const massTitleLabelText = new Text( collisionLabStrings.massUnit, { font: options.titleFont, maxWidth: options.massTitleMaxWidth } );
-    const momentumTitleLabelText = new Text( collisionLabStrings.momentumUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
-    const positionTitleLabelText = new Text( collisionLabStrings.positionUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
-    const velocityTitleLabelText = new Text( collisionLabStrings.velocityUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } );
+    // Create a AlignGroup for the Title Labels to match the vertical height of each Text instance.
+    const titleAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
+
+    // Create the Title Labels for the groups of columns. Wrapped in AlignBoxes to ensure they have the same height.
+    const massTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.massUnit, { font: options.titleFont, maxWidth: options.massTitleMaxWidth } ) );
+    const momentumTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.momentumUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
+    const positionTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.positionUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
+    const velocityTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.velocityUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
 
     // Horizontally group the column groups with their respective title Labels in a VBox.
-    const massColumnGroupAndTitleBox = new VBox( { children: [ massTitleLabelText, massColumnNode ], spacing: options.columnGroupsTopMargin } );
-    const positionColumnGroupAndTitleBox = new VBox( { children: [ positionTitleLabelText, positionColumnGroup ], spacing: options.columnGroupsTopMargin } );
-    const velocityColumnGroupAndTitleBox = new VBox( { children: [ velocityTitleLabelText, velocityColumnGroup ], spacing: options.columnGroupsTopMargin } );
-    const momentumColumnGroupAndTitleBox = new VBox( { children: [ momentumTitleLabelText, momentumColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const massColumnGroupAndTitleBox = new VBox( { children: [ massTitleNode, massColumnNode ], spacing: options.columnGroupsTopMargin } );
+    const positionColumnGroupAndTitleBox = new VBox( { children: [ positionTitleNode, positionColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const velocityColumnGroupAndTitleBox = new VBox( { children: [ velocityTitleNode, velocityColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const momentumColumnGroupAndTitleBox = new VBox( { children: [ momentumTitleNode, momentumColumnGroup ], spacing: options.columnGroupsTopMargin } );
 
     //----------------------------------------------------------------------------------------
 

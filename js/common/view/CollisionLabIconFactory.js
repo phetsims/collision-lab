@@ -36,14 +36,14 @@ const CollisionLabIconFactory = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     // Circle representation of the Ball.
-    const ballCircle = new Circle( 12, {
+    const ballCircle = new Circle( 10.5, {
       fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
       stroke: 'black'
     } );
 
     // Labels the index of the Ball
     const labelNode = new Text( ball.index, {
-      font: new PhetFont( { size: 19, weight: 600 } ),
+      font: new PhetFont( { size: 18, weight: 600 } ),
       center: ballCircle.center,
       stroke: 'black',
       fill: 'white'

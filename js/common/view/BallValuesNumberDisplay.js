@@ -68,7 +68,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
       backgroundFill: canEdit ? 'white' : null,
       cursor: canEdit ? 'pointer' : null,
       backgroundLineWidth: 0.5,
-      yMargin: 4,
+      yMargin: 3,
       xMargin: 10,
       decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
     }, options );

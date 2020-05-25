@@ -26,7 +26,7 @@ import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
 
 // constants
-const MODEL_TO_VIEW_SCALE = 200; // meter to view coordinates (1 m = 200 coordinates)
+const MODEL_TO_VIEW_SCALE = 190; // meter to view coordinates (1 m = 200 coordinates)
 const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
@@ -73,7 +73,7 @@ class CollisionLabScreenView extends ScreenView {
     const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
     this.addChild( timeDisplay );
     timeDisplay.left = SCREEN_VIEW_X_MARGIN;
-    timeDisplay.top = playAreaNode.bottom + 5;
+    timeDisplay.top = playAreaNode.bottom + 10;
 
     playAreaControlSet.left = playAreaNode.right + 5;
     playAreaControlSet.top = 20;
@@ -85,7 +85,7 @@ class CollisionLabScreenView extends ScreenView {
       model.stepBackward.bind( model ),
       model.stepForward.bind( model )
     );
-    const playPauseButtonCenter = playAreaNode.centerBottom.plusXY( 0, collisionLabTimeControlNode.height / 2 + 5 );
+    const playPauseButtonCenter = playAreaNode.centerBottom.plusXY( 0, collisionLabTimeControlNode.height / 2 + 10 );
     collisionLabTimeControlNode.setPlayPauseButtonCenter( playPauseButtonCenter );
     this.addChild( collisionLabTimeControlNode );
 
@@ -97,7 +97,7 @@ class CollisionLabScreenView extends ScreenView {
         // model.clock.reset();
       },
       right: playAreaNode.right,
-      top: playAreaNode.bottom + 5
+      centerY: timeDisplay.centerY
     } );
     this.addChild( restartButton );
 
@@ -163,7 +163,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
     this.addChild( ballValuesDisplay );
-    ballValuesDisplay.top = collisionLabTimeControlNode.bottom + 10;
+    ballValuesDisplay.top = 410;
     ballValuesDisplay.left = SCREEN_VIEW_X_MARGIN;
   }
 

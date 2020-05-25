@@ -28,8 +28,8 @@ class RestartButton extends RectangularPushButton {
       // super-class
       baseColor: ColorConstants.LIGHT_BLUE,
       lineWidth: 0,
-      xMargin: 6.5,
-      yMargin: 5.5
+      xMargin: 6,
+      yMargin: 5
 
     }, options );
 
