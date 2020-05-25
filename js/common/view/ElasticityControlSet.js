@@ -134,7 +134,7 @@ class ElasticityControlSet extends VBox {
     // Observe when the elasticity is manipulated to disable the stickSlipSwitch if the elasticity isn't perfectly
     // inelastic. Link is never disposed as ElasticityControlSets are never disposed.
     elasticityPercentProperty.link( elasticity => {
-      stickSlipSwitch.enabledProperty.value = ( elasticity === 0 );
+      stickSlipSwitch.enabled = ( elasticity === 0 );
     } );
   }
 }
