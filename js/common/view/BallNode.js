@@ -185,7 +185,7 @@ class BallNode extends Node {
       vectorLayer.translation = viewPosition;
       setGraticulePosition( viewPosition );
 
-      pathNode.invalidatePaint();
+      // pathNode.invalidatePaint();
       vectorLayer.visible = viewPlayAreaBounds.containsPoint( viewPosition );
     };
 

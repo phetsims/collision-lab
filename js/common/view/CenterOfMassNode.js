@@ -43,10 +43,10 @@ class CenterOfMassNode extends Node {
 
     Property.multilink( [ centerOfMass.positionProperty, centerOfMassVisibleProperty ],
       ( position, centerOfMassVisible ) => {
-        this.visible = centerOfMass.isDefined && centerOfMassVisible;
+        this.visible = centerOfMassVisible;
         if ( this.visible ) {
           xNode.center = modelViewTransform.modelToViewPosition( position );
-          centerOfMassPathNode.invalidatePaint(); // re-draw the path now that it is in a different position
+          // centerOfMassPathNode.invalidatePaint(); // re-draw the path now that it is in a different position
         }
       } );
   }

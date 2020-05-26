@@ -47,7 +47,7 @@ class Ball {
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, pathVisibleProperty, gridVisibleProperty, index ) {
+  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index ) {
     assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
     assert && assert( initialVelocity instanceof Vector2, `invalid initialVelocity: ${initialVelocity}` );
     assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
