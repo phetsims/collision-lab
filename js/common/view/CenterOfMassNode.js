@@ -13,7 +13,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CenterOfMass from '../model/CenterOfMass.js';
-import MovingObjectPathNode from './MovingObjectPathNode.js';
+import PathCanvasNode from './PathCanvasNode.js';
 import XNode from './XNode.js';
 
 class CenterOfMassNode extends Node {
@@ -32,10 +32,10 @@ class CenterOfMassNode extends Node {
     //----------------------------------------------------------------------------------------
     super();
 
-    // const centerOfMassPathNode = new MovingObjectPathNode( centerOfMass, modelViewTransform, {
-    //   pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
-    // } );
-    // this.addChild( centerOfMassPathNode );
+    const centerOfMassPathNode = new PathCanvasNode( centerOfMass.path, modelViewTransform, {
+      pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
+    } );
+    this.addChild( centerOfMassPathNode );
 
 
     const xNode = new XNode();
@@ -46,7 +46,6 @@ class CenterOfMassNode extends Node {
         this.visible = centerOfMassVisible;
         if ( this.visible ) {
           xNode.center = modelViewTransform.modelToViewPosition( position );
-          // centerOfMassPathNode.invalidatePaint(); // re-draw the path now that it is in a different position
         }
       } );
   }

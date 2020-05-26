@@ -28,7 +28,7 @@ import Ball from '../model/Ball.js';
 import BallLabelsNode from './BallLabelsNode.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
-import MovingObjectPathNode from './MovingObjectPathNode.js';
+import PathCanvasNode from './PathCanvasNode.js';
 
 // constants
 const BALL_VELOCITY_VECTOR_OPTIONS = merge(
@@ -170,11 +170,11 @@ class BallNode extends Node {
     } );
     this.addChild( ballValuesDisplay );
 
-    // const pathNode = new MovingObjectPathNode( ball, modelViewTransform, {
-    //   pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
-    // } );
-    // this.addChild( pathNode );
-    // pathNode.moveToBack();
+    const pathNode = new PathCanvasNode( ball.path, modelViewTransform, {
+      pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
+    } );
+    this.addChild( pathNode );
+    pathNode.moveToBack();
 
 
     const ballPositionListener = position => {
@@ -185,7 +185,6 @@ class BallNode extends Node {
       vectorLayer.translation = viewPosition;
       setGraticulePosition( viewPosition );
 
-      // pathNode.invalidatePaint();
       vectorLayer.visible = viewPlayAreaBounds.containsPoint( viewPosition );
     };
 
@@ -215,8 +214,8 @@ class BallNode extends Node {
       ballMomentumVectorNode.dispose();
       ballValuesDisplay.dispose();
       fillProperty.dispose();
+      pathNode.dispose();
     };
-
   }
 
   /**

@@ -34,7 +34,7 @@ class Path {
     assert && assert( positionProperty instanceof Property && positionProperty.value instanceof Vector2, `invalid positionProperty: ${positionProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
 
-    // @private {Property.<Vector2>} - reference to the positionProperty passed in.
+    // @public (read-only) {Property.<Vector2>} - reference to the positionProperty passed in.
     this.positionProperty = positionProperty;
 
     // @private {Property.<boolean>} - reference to the pathVisibleProperty passed in.
