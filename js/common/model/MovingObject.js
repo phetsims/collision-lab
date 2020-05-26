@@ -14,8 +14,11 @@
 
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
 import DataPoint from './DataPoint.js';
+
+// constants
+const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 
 class MovingObject {
 
@@ -25,7 +28,7 @@ class MovingObject {
   constructor() {
 
     // @public (read-only) {DataPoint[]} - the recorded points of the path trail of the MovingObject within a given
-    //                                      time period, which is CollisionLabConstants.MAX_DATA_POINT_LIFETIME.
+    //                                     time period, which is PATH_DATA_POINT_LIFETIME seconds.
     this.dataPoints = [];
   }
 
@@ -60,7 +63,7 @@ class MovingObject {
 
     // Remove any expired DataPoints that are past the CollisionLabConstants.MAX_DATA_POINT_LIFETIME
     const expiredDataPoints = this.dataPoints.filter( dataPoint => {
-      return dataPoint.time + CollisionLabConstants.MAX_DATA_POINT_LIFETIME <= time;
+      return dataPoint.time + PATH_DATA_POINT_LIFETIME <= time;
     } );
 
     expiredDataPoints.forEach( expiredDataPoint => { arrayRemove( this.dataPoints, expiredDataPoint ); } );
