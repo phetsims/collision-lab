@@ -24,7 +24,7 @@ class MovingObject {
    */
   constructor() {
 
-    // @public (read-only) {DataPoitns[]} - the recorded points of the path trail of the MovingObject within a given
+    // @public (read-only) {DataPoint[]} - the recorded points of the path trail of the MovingObject within a given
     //                                      time period, which is CollisionLabConstants.MAX_DATA_POINT_LIFETIME.
     this.dataPoints = [];
   }
