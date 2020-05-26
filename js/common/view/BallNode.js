@@ -3,6 +3,7 @@
 /**
  * View for a ball that is dragged onto the play area. The ball supports dragging.
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -25,6 +26,7 @@ import Ball from '../model/Ball.js';
 import BallLabelsNode from './BallLabelsNode.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
+import MovingObjectPathNode from './MovingObjectPathNode.js';
 
 // constants
 const BALL_VELOCITY_VECTOR_OPTIONS = merge(
@@ -156,6 +158,13 @@ class BallNode extends Node {
       verticalOffset: ballRadius + 10
     } );
     this.addChild( ballValuesDisplay );
+
+    const pathNode = new MovingObjectPathNode( ball, modelViewTransform, {
+      pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
+    } );
+    this.addChild( pathNode );
+    pathNode.moveToBack();
+
 
     const ballPositionListener = position => {
       const viewPosition = modelViewTransform.modelToViewPosition( position );

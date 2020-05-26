@@ -11,7 +11,6 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import BallNode from './BallNode.js';
@@ -22,7 +21,6 @@ import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
-import MovingObjectPathNode from './MovingObjectPathNode.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
@@ -129,9 +127,6 @@ class CollisionLabScreenView extends ScreenView {
       } );
     this.addChild( playAreaControlPanel );
 
-    this.pathLayerNode = new Node();
-    this.addChild( this.pathLayerNode );
-
     this.ballLayerNode = new Node();
     this.addChild( this.ballLayerNode );
 
@@ -146,18 +141,11 @@ class CollisionLabScreenView extends ScreenView {
         modelViewTransform );
       this.ballLayerNode.addChild( addedBallNode );
 
-      const addedBallPathNode = new MovingObjectPathNode( addedBall, modelViewTransform, {
-        pathBaseColor: CollisionLabColors.BALL_COLORS[ addedBall.index - 1 ]
-      } );
-
-      this.pathLayerNode.addChild( addedBallPathNode );
-
       // Observe when the ball is removed to unlink listeners
       const removeBallListener = removedBall => {
         if ( removedBall === addedBall ) {
           this.ballLayerNode.removeChild( addedBallNode );
           addedBallNode.dispose();
-          addedBallPathNode.dispose();
           model.playArea.balls.removeItemRemovedListener( removeBallListener );
         }
       };
