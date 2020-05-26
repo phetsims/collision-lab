@@ -64,7 +64,7 @@ class MovingObjectPathNode extends CanvasNode {
     this.modelViewTransform = modelViewTransform;
 
     // @private {Color} - reference the base color of the Path.
-    this.baseColor = PaintDef.toColor( this.baseColor );
+    this.baseColor = PaintDef.toColor( options.pathBaseColor );
 
     //----------------------------------------------------------------------------------------
 
@@ -110,6 +110,11 @@ class MovingObjectPathNode extends CanvasNode {
       return; // Do nothing.
     }
 
+    // Reference the time of the first and last DataPoints.
+    const firstDataPointTime = this.movingObject.dataPoints[ 0 ].time;
+    const lastDataPointTime = _.last( this.movingObject.dataPoints ).time;
+
+
     // Draw the segments that connect each of the DataPoints.
     for ( let i = 1; i < this.movingObject.dataPoints.length; i++ ) {
 
@@ -129,7 +134,7 @@ class MovingObjectPathNode extends CanvasNode {
       context.lineTo( segmentEndPosition.x, segmentEndPosition.y );
 
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
-      const alpha = Utils.linear( 0, this.movingObject.dataPoints.length - 1, 1, 0, i );
+      const alpha = Utils.linear( firstDataPointTime, lastDataPointTime, 0, 1, currentDataPoint.time );
       context.strokeStyle = this.baseColor.setAlpha( alpha ).toCSS();
       context.stroke();
       context.closePath();
