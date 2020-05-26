@@ -27,6 +27,7 @@ class CollisionLabControlPanel extends Panel {
 
   /**
    * @param {CollisionLabViewProperties} viewProperties
+   * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
@@ -35,6 +36,7 @@ class CollisionLabControlPanel extends Panel {
    * @param {Object} [options]
    */
   constructor( viewProperties,
+               centerOfMassVisibleProperty,
                pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
@@ -42,6 +44,7 @@ class CollisionLabControlPanel extends Panel {
                constantRadiusProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
@@ -77,7 +80,7 @@ class CollisionLabControlPanel extends Panel {
       } );
 
     // 'Center of Mass' visibility Checkbox
-    const centerOfMassCheckbox = new CollisionLabCheckbox( viewProperties.centerOfMassVisibleProperty,
+    const centerOfMassCheckbox = new CollisionLabCheckbox( centerOfMassVisibleProperty,
       collisionLabStrings.centerOfMass, {
       icon: CollisionLabIconFactory.createCenterOfMassIcon()
     } );

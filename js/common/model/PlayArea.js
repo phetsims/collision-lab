@@ -127,24 +127,48 @@ class PlayArea {
     } );
   }
 
+  /*----------------------------------------------------------------------------*
+   * Handle Paths.
+   *----------------------------------------------------------------------------*/
+
   /**
-   * Clear the trace 'paths' of the Balls and the CenterOfMass. This is called when the 'path' Checkbox is unchecked.
+   * Clear the trace 'paths' of the Balls and the CenterOfMass. This is generally called when the 'path' Checkbox is
+   * unchecked.
    * @public
    */
-  clearPaths() {
+  clearAllPathDataPoints() {
     this.balls.forEach( ball => ball.clearDataPoints() );
+    this.clearCenterOfMassPathDataPoints();
+  }
+
+  /**
+   * Clear the trace 'paths' of just the CenterOfMass. This is generally called when the 'Center of Mass' Checkbox is
+   * unchecked.
+   * @public
+   */
+  clearCenterOfMassPathDataPoints() {
     this.centerOfMass.clearDataPoints();
   }
 
   /**
-   * Records and updates the current DataPoinnts of the Balls and CenterOfMass for the trace 'paths'.
+   * Records and updates the current DataPoinnts of the Balls for the trace 'paths'.
    * Called when the 'Path' Checkbox is checked on each step.
    * @public
    *
    * @param {number} time - the total elapsed time of the simulation, in seconds.
    */
-  updatePathDataPoints( time ) {
+  updateBallPaths( time ) {
     this.balls.forEach( ball => ball.updateDataPoints( time ) );
+  }
+
+  /**
+   * Records and updates the current DataPoinnts of the CenterOfMass for the trace 'paths'.
+   * Called when the 'Path' Checkbox is checked and the 'Center of Mass' Checkbox is checked on each step.
+   * @public
+   *
+   * @param {number} time - the total elapsed time of the simulation, in seconds.
+   */
+  updateCenterOfMassPath( time ) {
     this.centerOfMass.updateDataPoints( time );
   }
 }

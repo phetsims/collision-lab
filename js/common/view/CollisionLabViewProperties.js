@@ -19,9 +19,6 @@ class CollisionLabViewProperties {
     // @public indicates if the momentum vector on each ball is visible
     this.momentumVisibleProperty = new BooleanProperty( false );
 
-    // @public indicates if the center of mass is visible
-    this.centerOfMassVisibleProperty = new BooleanProperty( false );
-
     // @public controls the visibility of the kinetic energy numberDisplay
     this.kineticEnergyVisibleProperty = new BooleanProperty( false );
 
@@ -45,7 +42,6 @@ class CollisionLabViewProperties {
   reset() {
     this.velocityVisibleProperty.reset();
     this.momentumVisibleProperty.reset();
-    this.centerOfMassVisibleProperty.reset();
     this.kineticEnergyVisibleProperty.reset();
     this.valuesVisibleProperty.reset();
     this.momentaDiagramExpandedProperty.reset();

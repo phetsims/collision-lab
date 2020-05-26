@@ -10,7 +10,6 @@
  *   - Instantiation of the CollisionDetector collision engine.
  *
  * @author Brandon Li
- * @author Martin Veillette
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
@@ -58,6 +57,13 @@ class CollisionLabModel {
     //                                         set to false.
     this.pathVisibleProperty = new BooleanProperty( false );
 
+    // @public (read-only) {BooleanProperty} - indicates if center of mass is visible. This is in the model since
+    //                                         CenterOfMass DataPoints are only recorded if this is true and are cleared
+    //                                         when set to false.
+    this.centerOfMassVisibleProperty = new BooleanProperty( false );
+
+    //----------------------------------------------------------------------------------------
+
     // @public (read-only) {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
     //                                         This Property is manipulated outside of the PlayArea.
     this.reflectingBorderProperty = new BooleanProperty( true );
@@ -95,10 +101,16 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the pathVisiblePRoperty is manipulated to clear the Paths of the PlayArea Balls and center of mass.
-    // Link for the lifetime of the simulation.
+    // Observe when the pathVisibleProperty is manipulated to clear the Paths of the PlayArea Balls and center of mass.
+    // Link lasts for the lifetime of the simulation.
     this.pathVisibleProperty.lazyLink( pathVisible => {
-      if ( !pathVisible ) { this.playArea.clearPaths(); }
+      if ( !pathVisible ) { this.playArea.clearAllPathDataPoints(); }
+    } );
+
+    // Observe when the centerOfMassVisibleProperty is manipulated to clear the Paths of the center of mass.
+    // Link lasts for the lifetime of the simulation.
+    this.centerOfMassVisibleProperty.lazyLink( centerOfMassVisible => {
+      if ( !centerOfMassVisible ) { this.playArea.clearCenterOfMassPathDataPoints(); }
     } );
   }
 
@@ -113,6 +125,7 @@ class CollisionLabModel {
     this.numberOfBallsProperty.reset();
     this.elasticityPercentProperty.reset();
     this.pathVisibleProperty.reset();
+    this.centerOfMassVisibleProperty.reset();
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.gridVisibleProperty.reset();
@@ -166,7 +179,11 @@ class CollisionLabModel {
     this.collisionDetector.step( dt );
 
     if ( this.pathVisibleProperty.value ) {
-      this.playArea.updatePathDataPoints( this.elapsedTimeProperty.value );
+      this.playArea.updateBallPaths( this.elapsedTimeProperty.value );
+
+      if ( this.centerOfMassVisibleProperty.value ) {
+        this.playArea.updateCenterOfMassPath( this.elasticityPercentProperty.value );
+      }
     }
   }
 
