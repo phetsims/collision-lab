@@ -32,10 +32,10 @@ class CenterOfMassNode extends Node {
     //----------------------------------------------------------------------------------------
     super();
 
-    const centerOfMassPathNode = new MovingObjectPathNode( centerOfMass, modelViewTransform, {
-      pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
-    } );
-    this.addChild( centerOfMassPathNode );
+    // const centerOfMassPathNode = new MovingObjectPathNode( centerOfMass, modelViewTransform, {
+    //   pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
+    // } );
+    // this.addChild( centerOfMassPathNode );
 
 
     const xNode = new XNode();

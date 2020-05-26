@@ -170,11 +170,11 @@ class BallNode extends Node {
     } );
     this.addChild( ballValuesDisplay );
 
-    const pathNode = new MovingObjectPathNode( ball, modelViewTransform, {
-      pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
-    } );
-    this.addChild( pathNode );
-    pathNode.moveToBack();
+    // const pathNode = new MovingObjectPathNode( ball, modelViewTransform, {
+    //   pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
+    // } );
+    // this.addChild( pathNode );
+    // pathNode.moveToBack();
 
 
     const ballPositionListener = position => {

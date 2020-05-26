@@ -88,7 +88,9 @@ class CollisionLabModel {
     this.playArea = new PlayArea(
       this.numberOfBallsProperty,
       this.constantRadiusProperty,
-      this.gridVisibleProperty
+      this.gridVisibleProperty,
+      this.pathVisibleProperty,
+      this.centerOfMassVisibleProperty
     );
 
     // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.

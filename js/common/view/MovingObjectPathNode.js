@@ -22,7 +22,7 @@ import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import MovingObject from '../model/MovingObject.js';
+// import MovingObject from '../model/MovingObject.js';
 
 // constants
 const LINE_WIDTH = 2.3; // lineWidth of the Path
