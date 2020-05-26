@@ -8,9 +8,8 @@
  * https://github.com/phetsims/collision-lab/issues/61 for context on the decision to use CanvasNode.
  * MovingObjectPathNodes are also only visible and updated if the 'Path' checkbox is checked.
  *
- * If the MovingObject is a Ball, then the MovingObjectPathNodes should be disposed if and when the Ball is removed
- * from the PlayArea. Otherwise, the MovingObject represents a center of mass and is never disposed since CenterOfMasses
- * last for the lifetime of the sim.
+ * The invalidatePaint() method of MovingObjectPathNodes should be set externally when the MovingObject's position
+ * changes. Thus, since there are no internal links to MovingObjectPathNodes, they are never disposed.
  *
  * @author Brandon Li
  */
@@ -62,31 +61,6 @@ class MovingObjectPathNode extends CanvasNode {
 
     // @private {Color} - reference the base color of the Path.
     this.baseColor = PaintDef.toColor( options.pathBaseColor );
-
-    //----------------------------------------------------------------------------------------
-
-    // Observe when the Path trail of the MovingObject should be redrawn. Listener is removed in the dispose method.
-    const redrawPathEmitter = () => {
-      this.invalidatePaint();
-    };
-    movingObject.redrawPathEmitter.addListener( redrawPathEmitter );
-
-    // @private {function} - function that removes listeners. This is called in the dispose() method.
-    this.disposeMovingObjectPathNode = () => {
-      movingObject.redrawPathEmitter.removeListener( redrawPathEmitter );
-    };
-  }
-
-  /**
-   * Disposes the MovingObjectPathNode, releasing all links that it maintained.
-   * @public
-   * @override
-   *
-   * Called when the MovingObject is a Ball that removed from the PlayArea.
-   */
-  dispose() {
-    this.disposeMovingObjectPathNode();
-    super.dispose();
   }
 
   /**

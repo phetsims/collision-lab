@@ -12,7 +12,6 @@
  * @author Brandon Li
  */
 
-import Emitter from '../../../../axon/js/Emitter.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -28,9 +27,6 @@ class MovingObject {
     // @public (read-only) {DataPoint[]} - the recorded points of the path trail of the MovingObject within a given
     //                                      time period, which is CollisionLabConstants.MAX_DATA_POINT_LIFETIME.
     this.dataPoints = [];
-
-    // @public (read-only) {Emitter} - Emits when the path of the trail of the MovingObject needs to be redrawn.
-    this.redrawPathEmitter = new Emitter();
   }
 
   /**
@@ -78,9 +74,6 @@ class MovingObject {
     } );
 
     futureDataPoints.forEach( futureDataPoint => { arrayRemove( this.dataPoints, futureDataPoint ); } );
-
-    // Signal that the trace 'Path' needs to be redrawn.
-    this.redrawPathEmitter.emit();
   }
 
   /**
@@ -94,9 +87,6 @@ class MovingObject {
     while ( this.dataPoints.length ) {
       this.dataPoints.pop();
     }
-
-    // Signal that the trace 'Path' needs to be redrawn.
-    this.redrawPathEmitter.emit();
   }
 
   /**

@@ -46,6 +46,7 @@ class CenterOfMassNode extends Node {
         this.visible = centerOfMass.isDefined && centerOfMassVisible;
         if ( this.visible ) {
           xNode.center = modelViewTransform.modelToViewPosition( position );
+          centerOfMassPathNode.invalidatePaint(); // re-draw the path now that it is in a different position
         }
       } );
   }
