@@ -201,6 +201,7 @@ class BallNode extends Node {
       diskLayerDragListener.dispose();
       ballVelocityVectorNode.dispose();
       ballMomentumVectorNode.dispose();
+      pathNode.dispose();
     };
 
   }
