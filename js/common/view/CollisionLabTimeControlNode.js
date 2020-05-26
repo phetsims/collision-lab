@@ -59,12 +59,12 @@ class CollisionLabTimeControlNode extends TimeControlNode {
       speedRadioButtonGroupOptions: {
         // Options for the Normal/Slow text labels
         labelOptions: {
-          font: new PhetFont( 16 ),
-          maxWidth: 200
+          font: new PhetFont( 13 ),
+          maxWidth: 150
         },
 
         // Options for the radio button group
-        radioButtonGroupOptions: { spacing: 1 }
+        radioButtonGroupOptions: { spacing: 5 }
       },
 
       // Spacing options
