@@ -54,7 +54,7 @@ class MovingObject {
    * @param {number} time - the total elapsed time of the simulation, in seconds.
    */
   updateDataPoints( time ) {
-    assert && assert( typeof time === 'number' && time > 0, `invalid time: ${time}` );
+    assert && assert( typeof time === 'number' && time >= 0, `invalid time: ${time}` );
 
     // Add a new DataPoint for the current position of the MovingObject.
     this.dataPoints.push( new DataPoint( time, this.position ) );
