@@ -13,11 +13,11 @@
  * @author Brandon Li
  */
 
+import Property from '../../../../axon/js/Property.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
-import Ball from './Ball.js';
-import CenterOfMass from './CenterOfMass.js';
 import PathDataPoint from './PathDataPoint.js';
 
 // constants
@@ -26,15 +26,16 @@ const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 class Path {
 
   /**
-   * @param {Ball|CenterOfMass} movingObject - the moving object whose 'Path' is traced.
+   * @param {Property.<Vector2>} positionProperty - the position moving object whose 'Path' is traced.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is currently visible. PathDataPoints are
    *                                                   only recorded if this is true and are cleared when set to false.
    */
-  constructor( movingObject, pathVisibleProperty ) {
-    assert && assert( movingObject instanceof Ball || movingObject instanceof CenterOfMass, `invalid movingObject: ${movingObject}` );
+  constructor( positionProperty, pathVisibleProperty ) {
+    assert && assert( positionProperty instanceof Property && positionProperty.value instanceof Vector2, `invalid positionProperty: ${positionProperty}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
 
-    // @private {Ball|CenterOfMass} - reference to the movingObject passed in.
-    this.movingObject = movingObject;
+    // @private {Property.<Vector2>} - reference to the positionProperty passed in.
+    this.positionProperty = positionProperty;
 
     // @private {Property.<boolean>} - reference to the pathVisibleProperty passed in.
     this.pathVisibleProperty = pathVisibleProperty;
@@ -90,7 +91,7 @@ class Path {
     if ( !this.pathVisibleProperty.value ) { return; /* do nothing */ }
 
     // Add a new PathDataPoint for the current position of the moving object.
-    this.dataPoints.push( new PathDataPoint( elapsedTime, this.position ) );
+    this.dataPoints.push( new PathDataPoint( elapsedTime, this.positionProperty.value ) );
 
     //----------------------------------------------------------------------------------------
 
