@@ -11,9 +11,7 @@
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class DataPoint {
 
@@ -24,7 +22,6 @@ class DataPoint {
    */
   constructor( time, position ) {
     assert && assert( typeof time === 'number' && time > 0, `invalid time: ${time}` );
-    assert && assert( position instanceof Vector2 && CollisionLabConstants.PLAY_AREA_BOUNDS.containsPoint( position ), `invalid position: ${position}` );
 
     // @public (read-only) {number}
     this.time = time;
