@@ -26,8 +26,8 @@ const CollisionLabConstants = {
 
   //----------------------------------------------------------------------------------------
   // ScreenView constants
-  SCREEN_VIEW_X_MARGIN: 24,
-  SCREEN_VIEW_Y_MARGIN: 14,
+  SCREEN_VIEW_X_MARGIN: 26,
+  SCREEN_VIEW_Y_MARGIN: 12,
 
   CONSTANT_RADIUS: 0.15, // radius of balls when constant radius mode is on, in meters.
   MASS_RANGE: new Range( 0.1, 3.0 ),
