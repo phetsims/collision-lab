@@ -7,7 +7,9 @@
  * @author Martin Veillette
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import Shape from '../../../../kite/js/Shape.js';
@@ -35,6 +37,7 @@ const BALL_VELOCITY_VECTOR_OPTIONS = merge(
 const BALL_MOMENTUM_VECTOR_OPTIONS = merge(
   CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
 );
+const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 
 class BallNode extends Node {
 
@@ -43,7 +46,7 @@ class BallNode extends Node {
    * @param {Property.<boolean>} valuesVisibleProperty - are the speed and momentum label visible
    * @param {Property.<boolean>} velocityVisibleProperty - is the velocity vector visible
    * @param {Property.<boolean>} momentumVisibleProperty - is the momentum vector visible
-   * @param {Property.<boolean>} gridVisibleProperty - is the grid on the playArea visible
+   * @param {Property.<boolean>} constantDadiusProperty - is the grid on the playArea visible
    * @param {Property.<boolean>} playProperty - is simulation of the playArea on
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
@@ -52,7 +55,7 @@ class BallNode extends Node {
                valuesVisibleProperty,
                velocityVisibleProperty,
                momentumVisibleProperty,
-               gridVisibleProperty,
+               constantRadiusProperty,
                playProperty,
                modelViewTransform,
                options ) {
@@ -76,9 +79,17 @@ class BallNode extends Node {
     // ball position in view coordinates
     const position = modelViewTransform.modelToViewPosition( ball.position );
 
+
+    // @public (read-only) {DerivedProperty.<PaintDef>} - the fill color of the Ball. The color of the Ball changes
+    //                                                    when constantRadiusProperty is true.
+    const fillProperty = new DerivedProperty( [ ball.massProperty, constantRadiusProperty ],
+      ( mass, constantRadius ) => {
+        const brightnessFactor = constantRadius ? Utils.linear( MASS_RANGE.min, MASS_RANGE.max, 0.7, 0, mass ) : 0;
+        return CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( brightnessFactor );
+      } );
     // create and add disk to the scene graph
     const diskNode = new Circle( ballRadius, {
-      fill: ball.fillProperty,
+      fill: fillProperty,
       stroke: 'black'
     } );
 
@@ -203,6 +214,7 @@ class BallNode extends Node {
       ballVelocityVectorNode.dispose();
       ballMomentumVectorNode.dispose();
       ballValuesDisplay.dispose();
+      fillProperty.dispose();
     };
 
   }

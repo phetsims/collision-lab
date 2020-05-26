@@ -24,7 +24,6 @@ import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import MovingObject from './MovingObject.js';
 
@@ -32,7 +31,6 @@ import MovingObject from './MovingObject.js';
 const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Balls if constant-radius is on, in meters.
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
-const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class Ball extends MovingObject {
@@ -120,15 +118,6 @@ class Ball extends MovingObject {
       { valueType: 'number' } );
 
     //----------------------------------------------------------------------------------------
-
-    // @public (read-only) {DerivedProperty.<PaintDef>} - the fill color of the Ball. The color of the Ball changes
-    //                                                    when constantRadiusProperty is true.
-    this.fillProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
-      ( mass, constantRadius ) => {
-        return constantRadius ?
-          CollisionLabColors.BALL_COLORS[ this.index - 1 ].colorUtilsBrighter( 1 - mass / MASS_RANGE.max ) :
-          CollisionLabColors.BALL_COLORS[ this.index - 1 ];
-      } );
 
     // @public userControlledProperty - indicates if the ball is currently being controlled by the user, either by
     //                                  dragging or editing a value through the Keypad. This is set externally in the
