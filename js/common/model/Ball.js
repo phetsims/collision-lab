@@ -10,6 +10,7 @@
  *  3. velocity and momentum vector Properties
  *  4. radius Property to track the inner radius of the Ball
  *  5. track the kinetic energy of the Ball
+ *  6. create the trailing path behind the Ball
  *
  * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -25,7 +26,7 @@ import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import MovingObject from './MovingObject.js';
+import Path from './Path.js';
 
 // constants
 const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Balls if constant-radius is on, in meters.
@@ -33,7 +34,7 @@ const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
-class Ball extends MovingObject {
+class Ball {
 
   /**
    * @param {Vector2} initialPosition - starting position of the center of the ball.
@@ -41,19 +42,19 @@ class Ball extends MovingObject {
    * @param {number} initialMass - starting mass of the ball, in kg.
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, gridVisibleProperty, index ) {
+  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, pathVisibleProperty, gridVisibleProperty, index ) {
     assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
     assert && assert( initialVelocity instanceof Vector2, `invalid initialVelocity: ${initialVelocity}` );
     assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid initialVelocity: ${pathVisibleProperty}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
-
-    super();
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
@@ -124,6 +125,9 @@ class Ball extends MovingObject {
     //                                  view.
     this.userControlledProperty = new BooleanProperty( false );
 
+    // @public (read-only) {Path} - create the trailing 'Path' behind the ball.
+    this.path = new Path( this.positionProperty, pathVisibleProperty );
+
     // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
     //                                            Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
@@ -141,7 +145,7 @@ class Ball extends MovingObject {
     this.yVelocityProperty.reset();
     this.massProperty.reset();
     this.userControlledProperty.reset();
-    super.reset();
+    this.path.clear();
   }
 
   /**
@@ -185,6 +189,9 @@ class Ball extends MovingObject {
         .roundSymmetric()
         .timesScalar( MINOR_GRIDLINE_SPACING );
     }
+
+    // Clear the trailing path of the Ball when it is dragged to a different location.
+    this.path.clear();
   }
 
   /**

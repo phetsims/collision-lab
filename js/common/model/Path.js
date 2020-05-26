@@ -59,11 +59,12 @@ class Path {
    * Clears the Path's dataPoints.
    * @public
    *
-   * This is invoked in 4 scenarios:
+   * This is invoked in the following scenarios:
    *   - the reset all button is pressed.
    *   - the restart button is pressed.
    *   - when the 'Path' checkbox is un-checked.
    *   - when the Ball is dragged to a different position.
+   *   - when the Ball's position changes from the Keypad.
    */
   clear() {
     while ( this.dataPoints.length ) {
