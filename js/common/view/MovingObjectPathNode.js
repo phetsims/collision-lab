@@ -26,6 +26,9 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import MovingObject from '../model/MovingObject.js';
 
+// constants
+const LINE_WIDTH = 2.3; // lineWidth of the Path
+
 class MovingObjectPathNode extends CanvasNode {
 
   /**
@@ -136,6 +139,7 @@ class MovingObjectPathNode extends CanvasNode {
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
       const alpha = Utils.linear( firstDataPointTime, lastDataPointTime, 0, 1, currentDataPoint.time );
       context.strokeStyle = this.baseColor.setAlpha( alpha ).toCSS();
+      context.lineWidth = LINE_WIDTH;
       context.stroke();
       context.closePath();
     }
