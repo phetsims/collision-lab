@@ -12,8 +12,8 @@ import collisionLab from '../collisionLab.js';
 const CollisionLabQueryParameters = QueryStringMachine.getAll( {
 
   /**
-   * The max life-time of recorded DataPoints along the trace 'Path' of the Center of Mass and the Balls when the 'Path'
-   * Checkbox is checked.
+   * The max life-time of recorded PathDataPoints along the trailing 'Path' of the Center of Mass and the Balls when the
+   * 'Path' Checkbox is checked.
    *
    * See https://github.com/phetsims/collision-lab/issues/61.
    * For internal use only.
