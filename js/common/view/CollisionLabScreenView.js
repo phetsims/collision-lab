@@ -154,19 +154,19 @@ class CollisionLabScreenView extends ScreenView {
     model.playArea.balls.forEach( addItemAddedBallListener );
     model.playArea.balls.addItemAddedListener( addItemAddedBallListener );
 
-    const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
-      top: playAreaNode.bottom + 36,
-      left: SCREEN_VIEW_X_MARGIN
-    } );
-    this.addChild( moreDataCheckbox );
-
 
     const keypad = new KeypadDialog();
 
     const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
     this.addChild( ballValuesDisplay );
-    ballValuesDisplay.top = 410;
+    ballValuesDisplay.top = 420;
     ballValuesDisplay.left = SCREEN_VIEW_X_MARGIN;
+
+    const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
+      bottom: ballValuesDisplay.top - 4,
+      left: SCREEN_VIEW_X_MARGIN
+    } );
+    this.addChild( moreDataCheckbox );
   }
 
   // @public

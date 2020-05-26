@@ -71,8 +71,8 @@ class BallValuesPanelColumnNode extends VBox {
 
     options = merge( {
 
-      contentContainerSpacing: 5, // {number} - y-spacing between the content
-      labelSpacing: 3,            // {number} - y-spacing between the label and the content container
+      contentContainerSpacing: 3.5, // {number} - y-spacing between the content
+      labelSpacing: 3,              // {number} - y-spacing between the label and the content container
       labelFont: CollisionLabConstants.DISPLAY_FONT
 
     }, options );
