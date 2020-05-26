@@ -122,8 +122,12 @@ class BallValuesNumberDisplay extends NumberDisplay {
         fire: () => {
           this.backgroundFill = PhetColorScheme.BUTTON_YELLOW;
 
+          // Indicate that the Ball is currently being user controlled.
+          ball.userControlledProperty.value = true;
+
           keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
             this.backgroundFill = options.backgroundFill;
+            ball.userControlledProperty.value = false;
           } );
         },
         fireOnDown: true

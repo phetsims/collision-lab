@@ -130,8 +130,9 @@ class Ball extends MovingObject {
           CollisionLabColors.BALL_COLORS[ this.index - 1 ];
       } );
 
-    // @public userControlledProperty - indicates if the ball is currently being controlled (dragged) by the user.
-    //                                  This is set externally in the view.
+    // @public userControlledProperty - indicates if the ball is currently being controlled by the user, either by
+    //                                  dragging or editing a value through the Keypad. This is set externally in the
+    //                                  view.
     this.userControlledProperty = new BooleanProperty( false );
 
     // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
