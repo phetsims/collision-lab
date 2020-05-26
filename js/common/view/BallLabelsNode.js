@@ -81,6 +81,8 @@ class BallLabelsNode extends Node {
     // @private {function} disposeBallLabelsNode - function to unlink listeners, called in dispose()
     this.disposeBallLabelsNode = () => {
       valuesVisibleProperty.unlinkAttribute( valuesVisibleHandle );
+      momentumNumberDisplay.dispose();
+      speedNumberDisplay.dispose();
     };
 
   }
