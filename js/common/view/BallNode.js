@@ -48,6 +48,7 @@ class BallNode extends Node {
    * @param {Property.<boolean>} momentumVisibleProperty - is the momentum vector visible
    * @param {Property.<boolean>} constantDadiusProperty - is the grid on the playArea visible
    * @param {Property.<boolean>} playProperty - is simulation of the playArea on
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
@@ -57,6 +58,7 @@ class BallNode extends Node {
                momentumVisibleProperty,
                constantRadiusProperty,
                playProperty,
+               pathVisibleProperty,
                modelViewTransform,
                options ) {
 
@@ -170,7 +172,7 @@ class BallNode extends Node {
     } );
     this.addChild( ballValuesDisplay );
 
-    const pathNode = new PathCanvasNode( ball.path, modelViewTransform, {
+    const pathNode = new PathCanvasNode( ball.path, pathVisibleProperty, modelViewTransform, {
       pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
     } );
     this.addChild( pathNode );

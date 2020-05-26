@@ -3,6 +3,7 @@
 /**
  * View for the center of mass marker, appears on the play area
  *
+ * @author Brandon Li
  * @author Alex Schor
  */
 
@@ -21,9 +22,10 @@ class CenterOfMassNode extends Node {
    *
    * @param {CenterOfMass} centerOfMass
    * @param {Property.<boolean>} centerOfMassVisibleProperty
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    */
-  constructor( centerOfMass, centerOfMassVisibleProperty, modelViewTransform ) {
+  constructor( centerOfMass, centerOfMassVisibleProperty, pathVisibleProperty, modelViewTransform ) {
 
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
     assert && assert( centerOfMassVisibleProperty instanceof BooleanProperty,
@@ -32,7 +34,7 @@ class CenterOfMassNode extends Node {
     //----------------------------------------------------------------------------------------
     super();
 
-    const centerOfMassPathNode = new PathCanvasNode( centerOfMass.path, modelViewTransform, {
+    const centerOfMassPathNode = new PathCanvasNode( centerOfMass.path, pathVisibleProperty, modelViewTransform, {
       pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
     } );
     this.addChild( centerOfMassPathNode );

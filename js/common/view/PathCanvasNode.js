@@ -15,6 +15,7 @@
  * @author Brandon Li
  */
 
+import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -32,11 +33,13 @@ class PathCanvasNode extends CanvasNode {
 
   /**
    * {Path} path - the Path model that is rendered.
+   * {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( path, modelViewTransform, options ) {
+  constructor( path, pathVisibleProperty, modelViewTransform, options ) {
     assert && assert( path instanceof Path, `invalid path: ${path}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -65,16 +68,23 @@ class PathCanvasNode extends CanvasNode {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the current position of the Path changes and re-draw the PathCanvasNode. Link is removed in the
-    // dispose() method.
-    const positionListener = () => {
-      this.invalidatePaint();
-    };
-    path.positionProperty.link( positionListener );
+    // Observe when the position of the Path changes and when the pathVisibleProperty is set to true to repaint the
+    // when appropriate. Multilink is disposed in the dispose() method.
+    const repaintMultilink = Property.multilink( [ path.positionProperty, pathVisibleProperty ],
+      ( position, pathVisible ) => {
+
+        // Update visibility.
+        this.visible = pathVisible;
+
+        // Repaint if visible.
+        if ( pathVisible ) {
+          this.invalidatePaint();
+        }
+      } );
 
     // @private {function} - function that removes listeners. This is called in the dispose() method.
     this.disposeMovingObjectPathNode = () => {
-      path.positionProperty.unlink( positionListener );
+      Property.unmultilink( repaintMultilink );
     };
   }
 

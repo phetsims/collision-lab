@@ -170,7 +170,7 @@ class CenterOfMass {
    *
    * @returns {number} - in kg.
    */
-   updateVelocity() {
+  updateVelocity() {
 
     // Do nothing if the center-of-mass is not visible.
     if ( !this.centerOfMassVisibleProperty.value ) { return; /* do nothing */ }

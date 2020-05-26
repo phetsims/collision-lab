@@ -37,6 +37,7 @@ class PlayAreaNode extends Node {
    * @param {Property.<boolean>} gridVisibleProperty
    * @param {Property.<boolean>} kineticEnergyVisibleProperty
    * @param {Property.<boolean>} centerOfMassVisibleProperty
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
@@ -44,6 +45,7 @@ class PlayAreaNode extends Node {
                gridVisibleProperty,
                kineticEnergyVisibleProperty,
                centerOfMassVisibleProperty,
+               pathVisibleProperty,
                modelViewTransform,
                options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
@@ -79,6 +81,7 @@ class PlayAreaNode extends Node {
 
     const centerOfMassNode = new CenterOfMassNode( playArea.centerOfMass,
       centerOfMassVisibleProperty,
+      pathVisibleProperty,
       modelViewTransform );
 
     const border = new Rectangle( playAreaViewBounds, {
