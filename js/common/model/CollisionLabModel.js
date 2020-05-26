@@ -54,7 +54,8 @@ class CollisionLabModel {
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
     // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trace paths are visible. In the model since
-    //                                         Ball DataPoints are only recorded if this is true.
+    //                                         Ball DataPoints are only recorded if this is true and are cleared when
+    //                                         set to false.
     this.pathVisibleProperty = new BooleanProperty( false );
 
     // @public (read-only) {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.

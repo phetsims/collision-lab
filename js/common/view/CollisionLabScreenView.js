@@ -145,12 +145,8 @@ class CollisionLabScreenView extends ScreenView {
         modelViewTransform );
       this.ballLayerNode.addChild( addedBallNode );
 
-      const addedBallPathNode = new MovingObjectPathNode( addedBall, model.pathVisibleProperty, modelViewTransform, {
+      const addedBallPathNode = new MovingObjectPathNode( addedBall, modelViewTransform, {
         pathBaseColor: CollisionLabColors.BALL_COLORS[ addedBall.index - 1 ]
-      } );
-
-      addedBall.positionProperty.link( () => {
-        addedBallPathNode.invalidatePaint();
       } );
 
       this.pathLayerNode.addChild( addedBallPathNode );

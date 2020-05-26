@@ -15,7 +15,6 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -33,13 +32,11 @@ class MovingObjectPathNode extends CanvasNode {
 
   /**
    * {MovingObject} movingObject - the generic MovingObject instance whose path is rendered.
-   * {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( movingObject, pathVisibleProperty, modelViewTransform, options ) {
+  constructor( movingObject, modelViewTransform, options ) {
     assert && assert( movingObject instanceof MovingObject, `invalid movingObject: ${movingObject}` );
-    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -60,9 +57,6 @@ class MovingObjectPathNode extends CanvasNode {
     // @private {MovingObject} - reference the passed-in MovingObject.
     this.movingObject = movingObject;
 
-    // @private {Property.<boolean>} - reference the passed-in pathVisibleProperty.
-    this.pathVisibleProperty = pathVisibleProperty;
-
     // @private {ModelViewTransform2} - reference the passed-in modelViewTransform.
     this.modelViewTransform = modelViewTransform;
 
@@ -71,19 +65,15 @@ class MovingObjectPathNode extends CanvasNode {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the pathVisibleProperty change and update the visibility of this Node. Link is unlinked in the
-    // dispose method.
-    const pathVisibleListener = pathVisible => {
-      this.visible = pathVisible;
-
-      // Invalidate the CanvasNode to ensure that it is repainted if the path is turned to visible.
-      if ( pathVisible ) { this.invalidatePaint(); }
+    // Observe when the Path trail of the MovingObject should be redrawn. Listener is removed in the dispose method.
+    const redrawPathEmitter = () => {
+      this.invalidatePaint();
     };
-    pathVisibleProperty.link( pathVisibleListener );
+    movingObject.redrawPathEmitter.addListener( redrawPathEmitter );
 
     // @private {function} - function that removes listeners. This is called in the dispose() method.
     this.disposeMovingObjectPathNode = () => {
-      pathVisibleProperty.unlink( pathVisibleListener );
+      movingObject.redrawPathEmitter.removeListener( redrawPathEmitter );
     };
   }
 
@@ -109,9 +99,7 @@ class MovingObjectPathNode extends CanvasNode {
   paintCanvas( context ) {
 
     // If the path is not visible or there are not enough DataPoints, do not update the path of the MovingObject.
-    if ( !this.pathVisibleProperty.value || this.movingObject.dataPoints.length <= 1 ) {
-      return; // Do nothing.
-    }
+    if ( this.movingObject.dataPoints.length <= 1 ) { return; /* Do nothing */ }
 
     // Reference the time of the first and last DataPoints.
     const firstDataPointTime = this.movingObject.dataPoints[ 0 ].time;
