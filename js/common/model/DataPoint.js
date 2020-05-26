@@ -32,6 +32,16 @@ class DataPoint {
     // @public (read-only) {Vector2}
     this.position = position;
   }
+
+  /**
+   * Debugging string for the DataPoint.
+   * @public
+   *
+   * @returns {string}
+   */
+  toString() {
+    return `DataPoint[ time: ${this.time}, position: ${this.position.toString()} ]`;
+  }
 }
 
 collisionLab.register( 'DataPoint', DataPoint );

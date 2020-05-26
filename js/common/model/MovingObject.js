@@ -79,6 +79,7 @@ class MovingObject {
 
     futureDataPoints.forEach( futureDataPoint => { arrayRemove( this.dataPoints, futureDataPoint ); } );
 
+    // Signal that the trace 'Path' needs to be redrawn.
     this.redrawPathEmitter.emit();
   }
 
@@ -93,6 +94,8 @@ class MovingObject {
     while ( this.dataPoints.length ) {
       this.dataPoints.pop();
     }
+
+    // Signal that the trace 'Path' needs to be redrawn.
     this.redrawPathEmitter.emit();
   }
 

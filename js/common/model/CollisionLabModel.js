@@ -182,7 +182,7 @@ class CollisionLabModel {
       this.playArea.updateBallPaths( this.elapsedTimeProperty.value );
 
       if ( this.centerOfMassVisibleProperty.value ) {
-        this.playArea.updateCenterOfMassPath( this.elasticityPercentProperty.value );
+        this.playArea.updateCenterOfMassPath( this.elapsedTimeProperty.value );
       }
     }
   }

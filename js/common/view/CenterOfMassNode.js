@@ -11,7 +11,9 @@ import Property from '../../../../axon/js/Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CenterOfMass from '../model/CenterOfMass.js';
+import MovingObjectPathNode from './MovingObjectPathNode.js';
 import XNode from './XNode.js';
 
 class CenterOfMassNode extends Node {
@@ -30,6 +32,12 @@ class CenterOfMassNode extends Node {
     //----------------------------------------------------------------------------------------
     super();
 
+    const centerOfMassPathNode = new MovingObjectPathNode( centerOfMass, modelViewTransform, {
+      pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
+    } );
+    this.addChild( centerOfMassPathNode );
+
+
     const xNode = new XNode();
     this.addChild( xNode );
 
@@ -37,7 +45,7 @@ class CenterOfMassNode extends Node {
       ( position, centerOfMassVisible ) => {
         this.visible = centerOfMass.isDefined && centerOfMassVisible;
         if ( this.visible ) {
-          this.center = modelViewTransform.modelToViewPosition( position );
+          xNode.center = modelViewTransform.modelToViewPosition( position );
         }
       } );
   }
