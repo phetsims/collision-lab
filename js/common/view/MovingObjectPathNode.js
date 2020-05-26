@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A view that renders the trace Path of recent DataPoints for a single generic MovingObject, which includes Balls and
+ * A view that renders the trace Path of recent PathDataPoints for a single generic MovingObject, which includes Balls and
  * the CenterOfMass.
  *
  * It is a sub-type of CanvasNode to linearly reduce the stroke-alpha to give a "fade over-time" illusion. See
@@ -64,7 +64,7 @@ class MovingObjectPathNode extends CanvasNode {
   }
 
   /**
-   * Draws the path along the DataPoints of a MovingObject.
+   * Draws the path along the PathDataPoints of a MovingObject.
    * @public
    * @override
    *
@@ -72,34 +72,34 @@ class MovingObjectPathNode extends CanvasNode {
    */
   paintCanvas( context ) {
 
-    // If the path is not visible or there are not enough DataPoints, do not update the path of the MovingObject.
+    // If the path is not visible or there are not enough PathDataPoints, do not update the path of the MovingObject.
     if ( this.movingObject.dataPoints.length <= 1 ) { return; /* Do nothing */ }
 
-    // Reference the time of the first and last DataPoints.
-    const firstDataPointTime = this.movingObject.dataPoints[ 0 ].time;
-    const lastDataPointTime = _.last( this.movingObject.dataPoints ).time;
+    // Reference the time of the first and last PathDataPoints.
+    const firstPathDataPointTime = this.movingObject.dataPoints[ 0 ].time;
+    const lastPathDataPointTime = _.last( this.movingObject.dataPoints ).time;
 
 
-    // Draw the segments that connect each of the DataPoints.
+    // Draw the segments that connect each of the PathDataPoints.
     for ( let i = 1; i < this.movingObject.dataPoints.length; i++ ) {
 
       // Each segment of the dataPoint path needs a new canvas path to create the gradient effect.
       context.beginPath();
 
       // Get the current and the previous dataPoint.
-      const previousDataPoint = this.movingObject.dataPoints[ i - 1 ];
-      const currentDataPoint = this.movingObject.dataPoints[ i ];
+      const previousPathDataPoint = this.movingObject.dataPoints[ i - 1 ];
+      const currentPathDataPoint = this.movingObject.dataPoints[ i ];
 
       // Get the start and end positions of the line-segment.
-      const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousDataPoint.position );
-      const segmentEndPosition = this.modelViewTransform.modelToViewPosition( currentDataPoint.position );
+      const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousPathDataPoint.position );
+      const segmentEndPosition = this.modelViewTransform.modelToViewPosition( currentPathDataPoint.position );
 
       // Draw the line-segment that connects the start and end positions.
       context.moveTo( segmentStartPosition.x, segmentStartPosition.y );
       context.lineTo( segmentEndPosition.x, segmentEndPosition.y );
 
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
-      const alpha = Utils.linear( firstDataPointTime, lastDataPointTime, 0, 1, currentDataPoint.time );
+      const alpha = Utils.linear( firstPathDataPointTime, lastPathDataPointTime, 0, 1, currentPathDataPoint.time );
       context.strokeStyle = this.baseColor.setAlpha( alpha ).toCSS();
       context.lineWidth = LINE_WIDTH;
       context.stroke();

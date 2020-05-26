@@ -52,14 +52,14 @@ class CollisionLabModel {
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
 
-    // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trace paths are visible. In the model since
-    //                                         Ball DataPoints are only recorded if this is true and are cleared when
+    // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trailing paths are visible. In the model since
+    //                                         Ball PathDataPoints are only recorded if this is true and are cleared when
     //                                         set to false.
     this.pathVisibleProperty = new BooleanProperty( false );
 
-    // @public (read-only) {BooleanProperty} - indicates if center of mass is visible. This is in the model since
-    //                                         CenterOfMass DataPoints are only recorded if this is true and are cleared
-    //                                         when set to false.
+    // @public (read-only) {BooleanProperty} - indicates if the center of mass is visible. This is in the model since
+    //                                         CenterOfMass PathDataPoints are only recorded if this is true and are
+    //                                         cleared when set to false.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
     //----------------------------------------------------------------------------------------
@@ -98,20 +98,6 @@ class CollisionLabModel {
       this.reflectingBorderProperty,
       this.isStickyProperty
     );
-
-    //----------------------------------------------------------------------------------------
-
-    // Observe when the pathVisibleProperty is manipulated to clear the Paths of the PlayArea Balls and center of mass.
-    // Link lasts for the lifetime of the simulation.
-    this.pathVisibleProperty.lazyLink( pathVisible => {
-      if ( !pathVisible ) { this.playArea.clearAllPathDataPoints(); }
-    } );
-
-    // Observe when the centerOfMassVisibleProperty is manipulated to clear the Paths of the center of mass.
-    // Link lasts for the lifetime of the simulation.
-    this.centerOfMassVisibleProperty.lazyLink( centerOfMassVisible => {
-      if ( !centerOfMassVisible ) { this.playArea.clearCenterOfMassPathDataPoints(); }
-    } );
   }
 
   /**
@@ -179,11 +165,7 @@ class CollisionLabModel {
     this.collisionDetector.step( dt );
 
     if ( this.pathVisibleProperty.value ) {
-      this.playArea.updateBallPaths( this.elapsedTimeProperty.value );
-
-      if ( this.centerOfMassVisibleProperty.value ) {
-        this.playArea.updateCenterOfMassPath( this.elapsedTimeProperty.value );
-      }
+      this.playArea.updatePaths( this.elapsedTimeProperty.value );
     }
   }
 

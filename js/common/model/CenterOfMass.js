@@ -6,6 +6,7 @@
  * Primary responsibilities are:
  *  1. Track the position of the center of mass.
  *  2. Track the velocity of the center of mass.
+ *  3. Create the trailing path behind the center of mass.
  *
  * CenterOfMasses are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -29,7 +30,6 @@ class CenterOfMass {
    *                                                           This is needed for performance; the position, velocity,
    *                                                           and path are only updated if this is true.
    * @param {Property.<boolean>} pathVisibleProperty
-   *
    */
   constructor( balls, centerOfMassVisibleProperty, pathVisibleProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
@@ -44,7 +44,7 @@ class CenterOfMass {
     //                                         updated later.
     this.velocityProperty = new Vector2Property( Vector2.ZERO );
 
-    // @public (read-only) {Path} - create the trailing 'Path' behind the CenterOfMass. It is updated externally.
+    // @public (read-only) {Path} - create the trailing 'Path' behind the CenterOfMass.
     this.path = new Path( this.positionProperty, pathVisibleProperty );
 
     // @private {ObservableArray.<Ball>} - reference the balls that were passed in.
@@ -74,6 +74,14 @@ class CenterOfMass {
         this.updateVelocity();
       }
     } );
+  }
+
+  /**
+   * Resets this CenterOfMass (particularly its trailing Path).
+   * @public
+   */
+  reset() {
+    this.path.clear();
   }
 
   /**

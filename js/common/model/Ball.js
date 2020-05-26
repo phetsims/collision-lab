@@ -136,7 +136,6 @@ class Ball {
   /**
    * Resets this Ball.
    * @public
-   * @override
    */
   reset() {
     this.xPositionProperty.reset();
@@ -234,6 +233,16 @@ class Ball {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     this.position = this.position.plus( this.velocity.times( dt ) );
+  }
+
+  /**
+   * Updates the path of the Ball. Mainly here to have parallel structure with CenterOfMass.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  updatePath( elapsedTime ) {
+    this.path.updatePath( elapsedTime );
   }
 
   /*----------------------------------------------------------------------------*

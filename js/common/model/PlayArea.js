@@ -30,11 +30,19 @@ class PlayArea {
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
    * @param {Property.<boolean>} constantRadiusProperty - indicates if Ball radii should be constant.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
+   * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    */
-  constructor( numberOfBallsProperty, constantRadiusProperty, gridVisibleProperty ) {
+  constructor( numberOfBallsProperty,
+               constantRadiusProperty,
+               gridVisibleProperty,
+               pathVisibleProperty,
+               centerOfMassVisibleProperty ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
+    assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
 
     //----------------------------------------------------------------------------------------
 
@@ -48,6 +56,7 @@ class PlayArea {
       ballSettings.mass,
       constantRadiusProperty,
       gridVisibleProperty,
+      pathVisibleProperty,
       index + 1
     ) );
 
@@ -78,7 +87,7 @@ class PlayArea {
     this.totalKineticEnergyProperty = new TotalKineticEnergyProperty( this.balls );
 
     // @public (read-only)
-    this.centerOfMass = new CenterOfMass( this.balls );
+    this.centerOfMass = new CenterOfMass( this.balls, centerOfMassVisibleProperty, pathVisibleProperty );
 
     //----------------------------------------------------------------------------------------
 
@@ -105,11 +114,12 @@ class PlayArea {
   }
 
   /**
-   * Resets the model
+   * Resets the PlayArea.
    * @public
    */
   reset() {
     this.prepopulatedBalls.forEach( ball => ball.reset() ); // Reset All Possible Balls.
+    this.centerOfMass.reset();
     this.totalKineticEnergyProperty.reset();
   }
 
@@ -127,49 +137,15 @@ class PlayArea {
     } );
   }
 
-  /*----------------------------------------------------------------------------*
-   * Handle Paths.
-   *----------------------------------------------------------------------------*/
-
   /**
-   * Clear the trace 'paths' of the Balls and the CenterOfMass. This is generally called when the 'path' Checkbox is
-   * unchecked.
-   * @public
-   */
-  clearAllPathDataPoints() {
-    this.balls.forEach( ball => ball.clearDataPoints() );
-    this.clearCenterOfMassPathDataPoints();
-  }
-
-  /**
-   * Clear the trace 'paths' of just the CenterOfMass. This is generally called when the 'Center of Mass' Checkbox is
-   * unchecked.
-   * @public
-   */
-  clearCenterOfMassPathDataPoints() {
-    this.centerOfMass.clearDataPoints();
-  }
-
-  /**
-   * Records and updates the current DataPoinnts of the Balls for the trace 'paths'.
-   * Called when the 'Path' Checkbox is checked on each step.
+   * Updates the trailing 'Paths' of all Balls in the system and the CenterOfMass.
    * @public
    *
-   * @param {number} time - the total elapsed time of the simulation, in seconds.
+   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
    */
-  updateBallPaths( time ) {
-    this.balls.forEach( ball => ball.updateDataPoints( time ) );
-  }
-
-  /**
-   * Records and updates the current DataPoinnts of the CenterOfMass for the trace 'paths'.
-   * Called when the 'Path' Checkbox is checked and the 'Center of Mass' Checkbox is checked on each step.
-   * @public
-   *
-   * @param {number} time - the total elapsed time of the simulation, in seconds.
-   */
-  updateCenterOfMassPath( time ) {
-    this.centerOfMass.updateDataPoints( time );
+  updatePaths( elapsedTime ) {
+    this.balls.forEach( ball => ball.updatePath( elapsedTime ) );
+    this.centerOfMass.updatePath( elapsedTime );
   }
 }
 
