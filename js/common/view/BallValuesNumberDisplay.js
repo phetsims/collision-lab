@@ -128,6 +128,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
           keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
             this.backgroundFill = options.backgroundFill;
             ball.userControlledProperty.value = false;
+            ball.path.clear();
           } );
         },
         fireOnDown: true
