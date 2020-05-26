@@ -193,7 +193,10 @@ class CollisionLabModel {
    *
    * Called when the user presses the step-backward button.
    */
-  stepBackward() { this.stepManual( -STEP_DURATION * this.getTimeSpeedFactor() ); }
+  stepBackward() {
+    // Step backwards the minimum of one step of the current elapsed time to ensure that elapsed time is never negative.
+    this.stepManual( -1 * Math.min( STEP_DURATION * this.getTimeSpeedFactor(), this.elapsedTimeProperty.value ) );
+  }
 
   /**
    * Steps the simulation forward by one time-step.

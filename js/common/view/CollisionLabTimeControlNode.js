@@ -22,7 +22,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, elasticityProperty, timeSpeedProperty, playAreaUserControlledProperty,
+  constructor( playProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, playAreaUserControlledProperty,
                stepBackward, stepForward, options ) {
 
 
@@ -45,8 +45,8 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
           // Workaround for https://github.com/phetsims/scenery-phet/issues/606.
           // Also see https://github.com/phetsims/scenery-phet/issues/563
-          isPlayingProperty: new DerivedProperty( [ playProperty, elasticityProperty ], ( playing, elasticity ) => {
-            return playing || elasticity < 100;
+          isPlayingProperty: new DerivedProperty( [ playProperty, elasticityProperty, elapsedTimeProperty ], ( playing, elasticity, elapsedTimeProperty ) => {
+            return elapsedTimeProperty === 0 || playing || elasticity < 100;
           } ),
           radius: 20
         },
