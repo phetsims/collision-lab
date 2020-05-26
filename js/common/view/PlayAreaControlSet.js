@@ -61,7 +61,7 @@ class PlayAreaControlSet extends VBox {
 
       // {number} - y-margins between the title, number spinner, and grid checkbox, respectively.
       titleToNumberSpinnerMargin: 6,
-      numberSpinnerToGridCheckboxMargin: 15,
+      numberSpinnerToGridCheckboxMargin: 12,
 
       // super-class options
       align: 'left'
