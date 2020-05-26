@@ -79,7 +79,7 @@ class MovingObjectPathNode extends CanvasNode {
     pathVisibleProperty.link( pathVisibleListener );
 
     // @private {function} - function that removes listeners. This is called in the dispose() method.
-    this.dispoeMovingObjectPathNode = () => {
+    this.disposeMovingObjectPathNode = () => {
       pathVisibleProperty.unlink( pathVisibleListener );
     };
   }
