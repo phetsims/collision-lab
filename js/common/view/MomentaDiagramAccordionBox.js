@@ -63,7 +63,8 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     // Assign a max width to the title node for i18n.
     options.titleNode.maxWidth = options.contentWidth
                                  - options.expandCollapseButtonOptions.sideLength
-                                 - options.titleXSpacing;
+                                 - options.titleXSpacing
+                                 - options.titleXMargin;
 
 
     super( new Rectangle(  new Bounds2( 0, 0, options.contentWidth, 25 ), { fill: 'blue' } ), options );
