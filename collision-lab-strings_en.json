@@ -26,6 +26,9 @@
   "values": {
     "value": "Values"
   },
+  "momentaDiagram": {
+    "value": "Momenta Diagram"
+  },
   "reflectingBorder": {
     "value": "Reflecting Border"
   },

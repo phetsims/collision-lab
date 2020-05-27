@@ -16,6 +16,9 @@ import CollisionLabColors from './CollisionLabColors.js';
 
 // shared constants within this file
 const RIGHT_PANEL_WIDTH = 200; // fixed width of panels and accordion boxes on right side of the screen
+const PANEL_CORNER_RADIUS = 7;
+const PANEL_X_MARGIN = 13.5;
+const PANEL_Y_MARGIN = 9.5;
 
 const CollisionLabConstants = {
 
@@ -87,10 +90,15 @@ const CollisionLabConstants = {
   //----------------------------------------------------------------------------------------
   // panels
   PANEL_OPTIONS: merge( {
-    xMargin: 13.5,
-    yMargin: 9.5,
-    cornerRadius: 7
+    xMargin: PANEL_X_MARGIN,
+    yMargin: PANEL_Y_MARGIN,
+    cornerRadius: PANEL_CORNER_RADIUS
   }, CollisionLabColors.PANEL_COLORS ),
+
+  PANEL_X_MARGIN: PANEL_X_MARGIN,
+  PANEL_Y_MARGIN: PANEL_Y_MARGIN,
+  PANEL_CORNER_RADIUS: PANEL_CORNER_RADIUS,
+
 
   // fixed width of each GraphControlPanel
   CONTROL_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
