@@ -31,7 +31,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
-const TOGGLE_SWITCH_SIZE = new Dimension2( 30, 15 );
+const TOGGLE_SWITCH_SIZE = new Dimension2( 28, 12 );
 
 class ElasticityControlSet extends VBox {
 
@@ -61,12 +61,12 @@ class ElasticityControlSet extends VBox {
 
       // {Object} - passed to the labels of the ABSwitch
       stickSlipTextOptions: {
-        font: new PhetFont( 14 ),
+        font: new PhetFont( 13 ),
         maxWidth: 70 // constrain width for i18n, determined empirically
       },
 
       // superclass options
-      spacing: 5 // determines spacing between the NumberControl and the ABSwitch
+      spacing: 3.5 // determines spacing between the NumberControl and the ABSwitch
 
     }, options );
 

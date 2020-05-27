@@ -54,7 +54,7 @@ class CollisionLabControlPanel extends Panel {
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      contentSpacing: 10 // {number} - the spacing between the content Nodes of the Panel
+      contentSpacing: 7 // {number} - the spacing between the content Nodes of the Panel
 
     }, options );
 

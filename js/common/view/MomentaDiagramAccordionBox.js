@@ -67,7 +67,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
                                  - options.titleXMargin;
 
 
-    super( new Rectangle(  new Bounds2( 0, 0, options.contentWidth, 25 ), { fill: 'blue' } ), options );
+    super( new Rectangle(  new Bounds2( 0, 0, options.contentWidth, options.contentWidth * 11 / 14 ), { fill: 'white' } ), options );
   }
 }
 
