@@ -22,7 +22,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -435,20 +434,6 @@ class Ball {
    * @returns {Vector2} - in kg * (m/s).
    */
   get momentum() { return this.momentumProperty.value; }
-
-  /**
-   * Gets the largest editable Range of the Center x-position of this ball so that the Ball is kept in the play-area.
-   * @public
-   * @returns {Range}
-   */
-  get xPositionRange() { return new Range( PLAY_AREA_BOUNDS.minX + this.radius, PLAY_AREA_BOUNDS.maxX - this.radius ); }
-
-  /**
-   * Gets the largest editable Range of the Center y-position of this ball so that the Ball is kept in the play-area.
-   * @public
-   * @returns {Range}
-   */
-  get yPositionRange() { return new Range( PLAY_AREA_BOUNDS.minY + this.radius, PLAY_AREA_BOUNDS.maxY - this.radius ); }
 
   /**
    * Calculates the radius of a Ball when constant-radius mode is off. This calculation comes from
