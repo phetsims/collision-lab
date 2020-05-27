@@ -19,6 +19,7 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
@@ -100,11 +101,15 @@ class BallValuesNumberDisplay extends NumberDisplay {
         unit = collisionLabStrings.kg;
       }
       else if ( ballQuantity === BallQuantities.X_POSITION ) {
-        editRange = ball.xPositionRange;
+        const gridSafeBounds = ball.getGridSafeConstrainedBounds();
+        editRange = new Range( Utils.toFixed( gridSafeBounds.minX, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ),
+          Utils.toFixed( gridSafeBounds.maxX, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ) );
         unit = collisionLabStrings.m;
       }
       else if ( ballQuantity === BallQuantities.Y_POSITION ) {
-        editRange = ball.yPositionRange;
+        const gridSafeBounds = ball.getGridSafeConstrainedBounds();
+        editRange = new Range( Utils.toFixed( gridSafeBounds.minY, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ),
+          Utils.toFixed( gridSafeBounds.maxY, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ) );
         unit = collisionLabStrings.m;
       }
       else if ( ballQuantity === BallQuantities.X_VELOCITY ) {

@@ -159,31 +159,16 @@ class Ball {
   dragToPosition( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
 
-    /**
-     * Compute the constrainedRadius, which is the amount to erode the PlayArea Bounds to ensure that the Ball is fully
-     * inside of the PlayArea.
-     *
-     * If the grid is not visible, this value is just the radius of the Ball.
-     * If the grid is visible, this value is the radius rounded up to the nearest grid-line spacing value. This is so
-     * that the minimum/maximum values of the constrainedBounds are on a grid-line.
-     */
-    const constrainedRadius = !this.gridVisibleProperty.value ?
-      this.radius :
-      Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
-
-    // Compute the Bounds of the Ball's center position. The center must be within the constrainedRadius meters of the
-    // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea.
-    const constrainedBallBounds = PLAY_AREA_BOUNDS.eroded( constrainedRadius );
-
     if ( !this.gridVisibleProperty.value ) {
 
-      // Ensure that the ball's position is inside of the constrainedBallBounds.
-      this.position = constrainedBallBounds.closestPointTo( position );
+      // Ensure that the ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
+      // entire Ball is inside the PlayArea.
+      this.position = PLAY_AREA_BOUNDS.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
-      // Ensure that the ball's position is inside of the constrainedBallBounds AND is rounded to the nearest grid-line.
-      this.position = constrainedBallBounds.closestPointTo( position )
+      // Ensure that the ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
+      this.position = this.getGridSafeConstrainedBounds().closestPointTo( position )
         .dividedScalar( MINOR_GRIDLINE_SPACING )
         .roundSymmetric()
         .timesScalar( MINOR_GRIDLINE_SPACING );
@@ -191,6 +176,26 @@ class Ball {
 
     // Clear the trailing path of the Ball when it is dragged to a different location.
     this.path.clear();
+  }
+
+  /**
+   * Compute the Bounds of the center position of the Ball such that the position is both on a grid-line and inside the
+   * PlayArea bounds. This bounds is used when dragging with the grid visible to ensure that the Ball isn't snapped to a
+   * position that makes part of the ball out of bounds. Also used for ranges in the Keypad.
+   * @public
+   *
+   * @returns {Bounds2}
+   */
+  getGridSafeConstrainedBounds() {
+
+    // Compute the constrainedRadius, which is the amount to erode the PlayArea Bounds to ensure that the Ball is fully
+    // inside of the PlayArea.T his value is the radius rounded up to the nearest grid-line spacing value. This is so
+    // that the minimum/maximum values of the constrainedBounds are on a grid-line.
+    const roundedUpRadius = Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
+
+    // Compute the Bounds of the Ball's center position. The center must be within the roundedUpRadius meters of the
+    // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea and on a grid-line.
+    return PLAY_AREA_BOUNDS.eroded( roundedUpRadius );
   }
 
   /**

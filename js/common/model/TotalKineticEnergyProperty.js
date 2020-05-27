@@ -6,8 +6,8 @@
  * TotalKineticEnergyProperty is created at the start of the sim and is never disposed, so no dispose method
  * is necessary.
  *
- * @author Martin Veillette
  * @author Brandon Li
+ * @author Martin Veillette
  */
 
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
