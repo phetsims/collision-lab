@@ -288,9 +288,16 @@ class Ball {
   get mass() { return this.massProperty.value; }
 
   /**
-   * Gets the Ball's radius, in kg.
+   * Sets the Ball's mass, in kg.
    * @public
-   * @returns {number} - in kg
+   * @param {number}  mass- in kg
+   */
+  set mass( mass ) { this.massProperty.value = mass; }
+
+  /**
+   * Gets the Ball's radius, in meters.
+   * @public
+   * @returns {number} - in meters
    */
   get radius() { return this.radiusProperty.value; }
 
@@ -304,7 +311,7 @@ class Ball {
   /**
    * Sets the x-coordinate of the center position of the Ball, in meter coordinates.
    * @public
-   * @returns {number} xPosition - in meter coordinates
+   * @param {number} xPosition - in meter coordinates
    */
   set xPosition( xPosition ) { this.xPositionProperty.value = xPosition; }
 
@@ -318,7 +325,7 @@ class Ball {
   /**
    * Sets the y-coordinate of the center position of the Ball, in meter coordinates.
    * @public
-   * @returns {number} yPosition - in meter coordinates
+   * @param {number} yPosition - in meter coordinates
    */
   set yPosition( yPosition ) { this.yPositionProperty.value = yPosition; }
 
@@ -333,7 +340,7 @@ class Ball {
   /**
    * Sets the center position of the Ball, in meter coordinates.
    * @public
-   * @returns {Vector2} position - in meter coordinates
+   * @param {Vector2} position - in meter coordinates
    */
   set position( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );

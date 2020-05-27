@@ -100,10 +100,16 @@ class CollisionLabModel {
       this.reflectingBorderProperty,
       this.isStickyProperty
     );
+
+    // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
+    // restart() call. Link is never removed and lasts for the lifetime of the simulation.
+    this.playProperty.lazyLink( play => {
+      if ( play ) { this.playArea.saveBallStates(); }
+    } );
   }
 
   /**
-   * Resets the model
+   * Resets the model.
    * @public
    */
   reset() {
@@ -119,6 +125,18 @@ class CollisionLabModel {
     this.gridVisibleProperty.reset();
     this.isStickyProperty.reset();
     this.playArea.reset();
+  }
+
+  /**
+   * Restarts this model.
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    this.playProperty.value = false;
+    this.elapsedTimeProperty.reset();
+    this.playArea.restart();
   }
 
   /**

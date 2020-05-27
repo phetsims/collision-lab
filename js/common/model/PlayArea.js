@@ -129,6 +129,25 @@ class PlayArea {
   }
 
   /**
+   * Restarts the PlayArea.
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    this.balls.forEach( ball => ball.restart() );
+  }
+
+  /**
+   * Saves the states of all the Balls in the PlayArea system for the next restart() call. This is called when the user
+   * presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
+   * @public
+   */
+  saveBallStates() {
+    this.balls.forEach( ball => ball.saveState() );
+  }
+
+  /**
    * Steps the position of the balls.
    * @public
    * @param {number} dt
