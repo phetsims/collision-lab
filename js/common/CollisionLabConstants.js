@@ -13,6 +13,7 @@ import merge from '../../../phet-core/js/merge.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
+import BallState from './model/BallState.js';
 
 // shared constants within this file
 const RIGHT_PANEL_WIDTH = 218; // fixed width of panels and accordion boxes on right side of the screen
@@ -39,12 +40,12 @@ const CollisionLabConstants = {
   BALLS_RANGE: new Range( 1, 5 ),
 
 
-  DEFAULT_BALL_SETTINGS: [
-    { mass: 0.5, position: new Vector2( -1.0, 0.00 ), velocity: new Vector2( 1.0, 0.3 ) },
-    { mass: 1.5, position: new Vector2( 0.0, 0.50 ), velocity: new Vector2( -0.5, -0.5 ) },
-    { mass: 1.0, position: new Vector2( -1.0, -0.50 ), velocity: new Vector2( -0.5, -0.25 ) },
-    { mass: 1.0, position: new Vector2( 0.2, -0.65 ), velocity: new Vector2( 1.1, 0.2 ) },
-    { mass: 1.0, position: new Vector2( -0.8, 0.65 ), velocity: new Vector2( -1.1, 0 ) }
+  INITIAL_BALL_STATES: [
+    new BallState( new Vector2( -1.0, 0.00 ), new Vector2( 1.0, 0.3 ), 0.5 ),
+    new BallState( new Vector2( 0.0, 0.50 ), new Vector2( -0.5, -0.5 ), 1.5 ),
+    new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.0 ),
+    new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 ),
+    new BallState( new Vector2( -0.8, 0.65 ), new Vector2( -1.1, 0 ), 1.0 )
   ],
 
   INTRO_DEFAULT_BALL_SETTINGS: [

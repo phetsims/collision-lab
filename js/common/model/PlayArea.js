@@ -50,10 +50,8 @@ class PlayArea {
     //                      never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                      PlayArea system. That is determined by the `this.balls` declaration below. This is just used
     //                      so that the same Ball instances are added with the same number of balls.
-    this.prepopulatedBalls = CollisionLabConstants.DEFAULT_BALL_SETTINGS.map( ( ballSettings, index ) => new Ball(
-      ballSettings.position,
-      ballSettings.velocity,
-      ballSettings.mass,
+    this.prepopulatedBalls = CollisionLabConstants.INITIAL_BALL_STATES.map( ( ballState, index ) => new Ball(
+      ballState,
       constantRadiusProperty,
       gridVisibleProperty,
       pathVisibleProperty,

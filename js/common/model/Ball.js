@@ -25,6 +25,7 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import BallState from './BallState.js';
 import Path from './Path.js';
 
 // constants
@@ -36,9 +37,7 @@ const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 class Ball {
 
   /**
-   * @param {Vector2} initialPosition - starting position of the center of the ball.
-   * @param {Vector2} initialVelocity - initial velocity of the center of mass of the ball.
-   * @param {number} initialMass - starting mass of the ball, in kg.
+   * @param {BallState} initialBallState - starting state of the Ball. Resetting sets to this state's current values.
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
@@ -46,13 +45,11 @@ class Ball {
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialPosition, initialVelocity, initialMass, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index ) {
-    assert && assert( initialPosition instanceof Vector2, `invalid initialPosition: ${initialPosition}` );
-    assert && assert( initialVelocity instanceof Vector2, `invalid initialVelocity: ${initialVelocity}` );
-    assert && assert( typeof initialMass === 'number' && initialMass > 0, `invalid initialMass: ${initialMass}` );
-    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid initialVelocity: ${pathVisibleProperty}` );
+  constructor( initialBallState, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index ) {
+    assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
+    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid initialVelocity: ${pathVisibleProperty}` );
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
@@ -63,8 +60,8 @@ class Ball {
     // @public (read-only) {NumberProperty} - Properties of the Ball's center coordinates, in meters coordinates.
     //                                        Separated into components to individually display each component and to
     //                                        allow the user to individually manipulate.
-    this.xPositionProperty = new NumberProperty( initialPosition.x );
-    this.yPositionProperty = new NumberProperty( initialPosition.y );
+    this.xPositionProperty = new NumberProperty( initialBallState.position.x );
+    this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the ball, in meter coordinates.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
@@ -75,8 +72,8 @@ class Ball {
 
     // @public (read-only) {NumberProperty} - the Ball's velocity, in m/s. Separated into components to individually
     //                                        display each component and to allow the user to manipulate separately.
-    this.xVelocityProperty = new NumberProperty( initialVelocity.x );
-    this.yVelocityProperty = new NumberProperty( initialVelocity.y );
+    this.xVelocityProperty = new NumberProperty( initialBallState.velocity.x );
+    this.yVelocityProperty = new NumberProperty( initialBallState.velocity.y );
 
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the ball, in m/s.
     this.velocityProperty = new DerivedProperty( [ this.xVelocityProperty, this.yVelocityProperty ],
@@ -89,7 +86,7 @@ class Ball {
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {NumberProperty} - mass of the ball, in kg.
-    this.massProperty = new NumberProperty( initialMass, { isValidValue: value => value > 0 } );
+    this.massProperty = new NumberProperty( initialBallState.mass, { isValidValue: value => value > 0 } );
 
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
@@ -127,6 +124,10 @@ class Ball {
     // @public (read-only) {Path} - create the trailing 'Path' behind the ball.
     this.path = new Path( this.positionProperty, pathVisibleProperty );
 
+    // @private (read-only) {BallState} - reference the initialBallState, which will track our restarting state. See
+    //                                    BallState.js for more context.
+    this.restartState = initialBallState;
+
     // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
     //                                            Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
@@ -152,6 +153,27 @@ class Ball {
     this.massProperty.reset();
     this.userControlledProperty.reset();
     this.path.clear();
+  }
+
+  /**
+   * Restarts this Ball.
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    this.position = this.restartState.position;
+    this.velocity = this.restartState.velocity;
+    this.mass = this.restartState.mass;
+  }
+
+  /**
+   * Saves the state of the Ball in our restartState for the next restart() call. This is called when the user presses
+   * the play button. See https://github.com/phetsims/collision-lab/issues/76.
+   * @public
+   */
+  saveState() {
+    this.restartState.saveState( this.position, this.velocity, this.mass );
   }
 
   /**
