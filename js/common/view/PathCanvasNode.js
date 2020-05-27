@@ -32,8 +32,8 @@ const LINE_WIDTH = 2.3; // lineWidth of the Path
 class PathCanvasNode extends CanvasNode {
 
   /**
-   * {Path} path - the Path model that is rendered.
-   * {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
+   * @param {Path} path - the Path model that is rendered.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
