@@ -48,7 +48,8 @@ class Path {
     // @public (read-only) {Emitter} - Emits when the trailing path needs to be redrawn. Using an ObservableArray
     //                                 was considered for the dataPoints array instead of this, but ObservableArray's
     //                                 itemRemovedEmitter emits after each item removed, which would result in redrawing
-    //                                 too many times when the dataPoints is cleared. Thus, this is used for performance
+    //                                 too many times when the dataPoints is cleared. Thus, this is used for a
+    //                                 performance boost.
     this.redrawPathEmitter = new Emitter();
 
     //----------------------------------------------------------------------------------------
