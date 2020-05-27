@@ -1,4 +1,4 @@
-// Copyright 2016-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * Immutable data point class that contains information about the position of a generic moving object at a given elapsed

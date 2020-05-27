@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * MoreDataCheckbox is the checkbox labeled 'More Data'. It is used to control visibility of extra NumberDisplays in the

@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * Model for the trailing 'Path' behind a moving object, including Balls and the Center of Mass.
