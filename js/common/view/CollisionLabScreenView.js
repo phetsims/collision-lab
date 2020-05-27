@@ -20,6 +20,7 @@ import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
+import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
@@ -128,6 +129,14 @@ class CollisionLabScreenView extends ScreenView {
         top: SCREEN_VIEW_Y_MARGIN
       } );
     this.addChild( playAreaControlPanel );
+
+
+    const momentaDiagram = new MomentaDiagramAccordionBox( {
+      centerX: playAreaControlPanel.centerX,
+      top: playAreaControlPanel.bottom + 6
+    } );
+    this.addChild( momentaDiagram );
+
 
     this.ballLayerNode = new Node();
     this.addChild( this.ballLayerNode );

@@ -15,8 +15,9 @@
  * @author Brandon Li
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
+import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import collisionLab from '../../collisionLab.js';
@@ -26,7 +27,7 @@ import CollisionLabColors from '../CollisionLabColors.js';
 
 // constants
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
-const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
+const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_Y_MARGIN;
 const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
 
 class MomentaDiagramAccordionBox extends AccordionBox {
@@ -36,22 +37,21 @@ class MomentaDiagramAccordionBox extends AccordionBox {
    */
   constructor( options ) {
 
-
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 
-      contentWidth: CollisionLabConstants.MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH, // fixed content width
+      contentWidth: CollisionLabConstants.MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH,
 
       // super-class options
-      titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.PANEL_LABEL_FONT } ),
+      titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.CONTROL_FONT } ),
       cornerRadius: PANEL_CORNER_RADIUS,
       contentXMargin: PANEL_X_MARGIN,
       contentYMargin: PANEL_Y_MARGIN,
-      contentYSpacing: PANEL_Y_MARGIN,
       buttonXMargin: PANEL_X_MARGIN,
       buttonYMargin: PANEL_Y_MARGIN,
       titleYMargin: PANEL_Y_MARGIN,
       titleXMargin: PANEL_X_MARGIN,
       titleXSpacing: PANEL_X_MARGIN,
+      contentYSpacing: 0,
       titleAlignX: 'left',
       expandCollapseButtonOptions: {
         sideLength: 22,
@@ -66,7 +66,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
                                  - options.titleXSpacing;
 
 
-    super( new Node(), options );
+    super( new Rectangle(  new Bounds2( 0, 0, options.contentWidth, 25 ), { fill: 'blue' } ), options );
   }
 }
 
