@@ -8,6 +8,7 @@
  *  - Keeping the tail of the ArrowNode at the center of the Ball
  *  - Creating an API to update the direction and magnitude of the ArrowNode
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -27,12 +28,13 @@ class BallVelocityVectorNode extends BallVectorNode {
 
   /**
    * @param {Property.<Vector2>} velocityProperty
+   * @param {Property.<boolean>} userControlledProperty
    * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
    * @param {Property.<boolean>} playProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ball, velocityProperty, visibleProperty, playProperty, modelViewTransform, options ) {
+  constructor( ball, velocityProperty, userControlledProperty, visibleProperty, playProperty, modelViewTransform, options ) {
 
     assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -65,7 +67,13 @@ class BallVelocityVectorNode extends BallVectorNode {
 
     // create dragListener for the tip
     const tipDragListener = new DragListener( {
-      positionProperty: tipPositionProperty
+      positionProperty: tipPositionProperty,
+      start: () => {
+        userControlledProperty.value = true;
+      },
+      end: () => {
+        userControlledProperty.value = false;
+      }
     } );
 
     // add input listener to tip of the velocity vector
@@ -82,7 +90,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     // update the velocity vector upon change of the tip position
     tipPositionProperty.link( tipPositionListener );
 
-    const playListener = play => {tipTargetNode.visible = !play;};
+    const playListener = play => { tipTargetNode.visible = !play; };
 
     //  make the tip invisible if the simulation is running
     playProperty.link( playListener );

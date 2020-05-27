@@ -110,8 +110,8 @@ class Ball {
     // Handle the changing radius of the Ball based on the mass
     // @public (read-only) - Property of the radius of the ball in meters. TODO #50
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
-      ( mass, constantRadius ) => constantRadius ? CONSTANT_RADIUS : Ball.calculateRadius( mass )
-    );
+      ( mass, constantRadius ) => constantRadius ? CONSTANT_RADIUS : Ball.calculateRadius( mass ),
+      { valueType: 'number', isValidValue: value => value > 0 } );
 
     // @public (read-only) kineticEnergyProperty - Property of the kinetic energy of the ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
@@ -131,6 +131,14 @@ class Ball {
     // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
     //                                            Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the user is finished controlling the Ball to clear the trailing Path. Link lasts for the life-time
+    // of the sim as Balls are never disposed.
+    this.userControlledProperty.lazyLink( userControlled => {
+      if ( !userControlled ) { this.path.clear(); }
+    } );
   }
 
   /**
@@ -173,9 +181,6 @@ class Ball {
         .roundSymmetric()
         .timesScalar( MINOR_GRIDLINE_SPACING );
     }
-
-    // Clear the trailing path of the Ball when it is dragged to a different location.
-    this.path.clear();
   }
 
   /**

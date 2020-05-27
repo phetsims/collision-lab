@@ -132,6 +132,7 @@ class BallNode extends Node {
     const ballVelocityVectorNode = new BallVelocityVectorNode(
       ball,
       ball.velocityProperty,
+      ball.userControlledProperty,
       velocityVisibleProperty,
       playProperty,
       modelViewTransform,

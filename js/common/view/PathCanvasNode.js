@@ -68,23 +68,19 @@ class PathCanvasNode extends CanvasNode {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the position of the Path changes and when the pathVisibleProperty is set to true to repaint the
-    // when appropriate. Multilink is disposed in the dispose() method.
-    const repaintMultilink = Property.multilink( [ path.positionProperty, pathVisibleProperty ],
-      ( position, pathVisible ) => {
+    // Observe when the Path trail of the MovingObject should be redrawn. Listener is removed in the dispose method.
+    const redrawPathEmitter = () => {
+      this.invalidatePaint();
+    };
+    path.redrawPathEmitter.addListener( redrawPathEmitter );
 
-        // Update visibility.
-        this.visible = pathVisible;
-
-        // Repaint if visible.
-        if ( pathVisible ) {
-          this.invalidatePaint();
-        }
-      } );
+    // Observe when the pathVisibleProperty changes to update our visibility. Link removed in the dispose method.
+    const updateVisibilityListener = pathVisibleProperty.linkAttribute( this, 'visible' );
 
     // @private {function} - function that removes listeners. This is called in the dispose() method.
     this.disposeMovingObjectPathNode = () => {
-      Property.unmultilink( repaintMultilink );
+      path.redrawPathEmitter.removeListener( redrawPathEmitter );
+      pathVisibleProperty.unlinkAttribute( updateVisibilityListener );
     };
   }
 

@@ -13,6 +13,7 @@
  * @author Brandon Li
  */
 
+import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
@@ -34,7 +35,7 @@ class Path {
     assert && assert( positionProperty instanceof Property && positionProperty.value instanceof Vector2, `invalid positionProperty: ${positionProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
 
-    // @public (read-only) {Property.<Vector2>} - reference to the positionProperty passed in.
+    // @private {Property.<Vector2>} - reference to the positionProperty passed in.
     this.positionProperty = positionProperty;
 
     // @private {Property.<boolean>} - reference to the pathVisibleProperty passed in.
@@ -43,6 +44,12 @@ class Path {
     // @public (read-only) {PathDataPoint[]} - the recorded points of the trailing points of the Path within a given
     //                                         time period, which is PATH_DATA_POINT_LIFETIME seconds.
     this.dataPoints = [];
+
+    // @public (read-only) {Emitter} - Emits when the trailing path needs to be redrawn. Using an ObservableArray
+    //                                 was considered for the dataPoints array instead of this, but ObservableArray's
+    //                                 itemRemovedEmitter emits after each item removed, which would result in redrawing
+    //                                 too many times when the dataPoints is cleared. Thus, this is used for performance
+    this.redrawPathEmitter = new Emitter();
 
     //----------------------------------------------------------------------------------------
 
@@ -70,6 +77,9 @@ class Path {
     while ( this.dataPoints.length ) {
       this.dataPoints.pop();
     }
+
+    // Signal once that the trace 'Path' needs to be redrawn.
+    this.redrawPathEmitter.emit();
   }
 
   /**
@@ -112,6 +122,9 @@ class Path {
     } );
 
     futurePathDataPoints.forEach( futurePathDataPoint => { arrayRemove( this.dataPoints, futurePathDataPoint ); } );
+
+    // Signal that the trace 'Path' needs to be redrawn.
+    this.redrawPathEmitter.emit();
   }
 }
 

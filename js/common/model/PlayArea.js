@@ -89,6 +89,13 @@ class PlayArea {
     // @public (read-only)
     this.centerOfMass = new CenterOfMass( this.balls, centerOfMassVisibleProperty, pathVisibleProperty );
 
+    // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
+    // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
+    // the sim as PlayAreas are never disposed.
+    this.playAreaUserControlledProperty.lazyLink( playAreaUserControlled => {
+      if ( !playAreaUserControlled ) { this.centerOfMass.path.clear(); }
+    } );
+
     //----------------------------------------------------------------------------------------
 
     // Observe when the number of Balls is manipulated by the user and if so, add or remove the correct number of Balls
