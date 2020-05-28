@@ -33,7 +33,7 @@ const CollisionLabConstants = {
   NUMBER_OF_BALLS_RANGE: new RangeWithValue( 1, 5, 2 ),
 
   // Time
-  TIME_STEP_DURATION: 0.03, // time step used when pressing the Step button, in seconds.
+  TIME_STEP_DURATION: 0.03, // Seconds of real time per each press of the Step button.
   NORMAL_SPEED_FACTOR: 1,
   SLOW_SPEED_FACTOR: 0.33,
 
