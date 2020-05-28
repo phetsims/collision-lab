@@ -165,6 +165,7 @@ class Ball {
     this.position = this.restartState.position;
     this.velocity = this.restartState.velocity;
     this.mass = this.restartState.mass;
+    this.path.clear();
   }
 
   /**
