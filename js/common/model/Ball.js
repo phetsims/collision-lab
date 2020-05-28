@@ -30,10 +30,10 @@ import BallState from './BallState.js';
 import Path from './Path.js';
 
 // constants
-const CONSTANT_RADIUS = CollisionLabConstants.CONSTANT_RADIUS; // radius of Balls if constant-radius is on, in meters.
+const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
+const CONSTANT_RADIUS = 0.15; // radius of Balls if constant-radius is on, in meters.
 
 class Ball {
 

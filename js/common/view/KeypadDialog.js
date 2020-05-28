@@ -19,14 +19,15 @@ import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import Dialog from '../../../../sun/js/Dialog.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -42,16 +43,16 @@ class KeypadDialog extends Dialog {
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 
-      // {Font} - font used for all Text instances
-      font: CollisionLabConstants.KEYPAD_FONT,
+      // {Font} - font used for all Text instances within the Dialog.
+      font: new PhetFont( 15 ),
 
-      // {number} - maximum number of decimal places that can be entered on the keypad
-      maxDecimals: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES,
+      // {number} - maximum number of decimal places that can be entered on the keypad.
+      maxDecimals: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
 
-      maxDigits: 8,       // {number} - maximum number of digits that can be entered on the keypad
-      valueBoxWidth: 85,  // {number} - width of the value field, height determined by valueFont
-      valueYMargin: 3,    // {number} - vertical margin inside the value box
-      contentSpacing: 10, // {number} - vertical spacing between the content of the KeypadDialog
+      maxDigits: 8,       // {number} - maximum number of digits that can be entered on the keypad.
+      valueBoxWidth: 85,  // {number} - width of the value field, height determined by valueFont.
+      valueYMargin: 3,    // {number} - vertical margin inside the value box.
+      contentSpacing: 10, // {number} - vertical spacing between the content of the KeypadDialog.
 
       // super-class options
       xSpacing: 2
@@ -84,10 +85,10 @@ class KeypadDialog extends Dialog {
     } );
 
     // @private {Text} - the Text Node that displays the Range of the current edit.
-    this.rangeText = new Text( '', { font: CollisionLabConstants.KEYPAD_FONT, maxWidth: this.keypad.width } );
+    this.rangeText = new Text( '', { font: options.font, maxWidth: this.keypad.width } );
 
     // @private {Text} - the Text Node that shows the current value of the Keypad edit.
-    this.valueText = new Text( '', { font: CollisionLabConstants.KEYPAD_FONT } );
+    this.valueText = new Text( '', { font: options.font } );
 
     // Create the Background to the valueText Node.
     const valueBackgroundNode = new Rectangle( 0, 0, options.valueBoxWidth, this.height + 2 * options.valueYMargin, {
@@ -103,7 +104,7 @@ class KeypadDialog extends Dialog {
       listener: this.submitEdit.bind( this ),
       baseColor: PhetColorScheme.BUTTON_YELLOW,
       content: new Text( collisionLabStrings.enter, {
-        font: CollisionLabConstants.KEYPAD_FONT,
+        font: options.font,
         fill: 'black',
         maxWidth: this.keypad.width // constrain width for i18n
       } )

@@ -44,7 +44,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
         font: CollisionLabConstants.DISPLAY_FONT,
         maxWidth: 100 // constrain width for i18n, determined empirically
       },
-      decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
+      decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
 
     }, options );
 

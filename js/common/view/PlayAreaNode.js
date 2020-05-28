@@ -29,6 +29,8 @@ const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // 
 const MAJOR_GRIDLINE_SPACING = MINOR_GRIDLINE_SPACING * CollisionLabConstants.MINOR_GRIDLINES_PER_MAJOR_GRIDLINE; // model
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
+const MAJOR_GRID_LINE_WIDTH = 2; // view units
+const MINOR_GRID_LINE_WIDTH = 1; // view units
 
 class PlayAreaNode extends Node {
 

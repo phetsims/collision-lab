@@ -47,7 +47,7 @@ class BallLabelsNode extends Node {
             align: 'left',
             backgroundLineWidth: 0,
             maxWidth: 150, // determined empirically,
-            decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES,
+            decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
             textOptions: {
               font: CollisionLabConstants.DISPLAY_FONT
             }

@@ -23,7 +23,7 @@ import CollisionDetector from './CollisionDetector.js';
 import PlayArea from './PlayArea.js';
 
 // constants
-const STEP_DURATION = CollisionLabConstants.STEP_DURATION;
+const TIME_STEP_DURATION = CollisionLabConstants.TIME_STEP_DURATION;
 
 class CollisionLabModel {
 
@@ -197,7 +197,7 @@ class CollisionLabModel {
    */
   stepBackward() {
     // Step backwards the minimum of one step of the current elapsed time to ensure that elapsed time is never negative.
-    this.stepManual( -1 * Math.min( STEP_DURATION * this.getTimeSpeedFactor(), this.elapsedTimeProperty.value ) );
+    this.stepManual( -1 * Math.min( TIME_STEP_DURATION * this.getTimeSpeedFactor(), this.elapsedTimeProperty.value ) );
   }
 
   /**
@@ -206,7 +206,7 @@ class CollisionLabModel {
    *
    * Called when the user presses the step-forward button.
    */
-  stepForward() { this.stepManual( STEP_DURATION * this.getTimeSpeedFactor() ); }
+  stepForward() { this.stepManual( TIME_STEP_DURATION * this.getTimeSpeedFactor() ); }
 }
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );

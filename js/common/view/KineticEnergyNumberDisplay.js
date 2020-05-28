@@ -37,7 +37,7 @@ class KineticEnergyNumberDisplay extends NumberDisplay {
         textOptions: {
           font: CollisionLabConstants.DISPLAY_FONT
         },
-        decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
+        decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
       }, options ) );
 
     // link visibility of this display to the visibleProperty

@@ -71,7 +71,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
       backgroundLineWidth: 0.5,
       yMargin: 3,
       xMargin: 10,
-      decimalPlaces: CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES
+      decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
     }, options );
 
     //----------------------------------------------------------------------------------------
@@ -102,14 +102,14 @@ class BallValuesNumberDisplay extends NumberDisplay {
       }
       else if ( ballQuantity === BallQuantities.X_POSITION ) {
         const gridSafeBounds = ball.getGridSafeConstrainedBounds();
-        editRange = new Range( Utils.toFixed( gridSafeBounds.minX, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ),
-          Utils.toFixed( gridSafeBounds.maxX, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ) );
+        editRange = new Range( Utils.toFixed( gridSafeBounds.minX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ),
+          Utils.toFixed( gridSafeBounds.maxX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ) );
         unit = collisionLabStrings.m;
       }
       else if ( ballQuantity === BallQuantities.Y_POSITION ) {
         const gridSafeBounds = ball.getGridSafeConstrainedBounds();
-        editRange = new Range( Utils.toFixed( gridSafeBounds.minY, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ),
-          Utils.toFixed( gridSafeBounds.maxY, CollisionLabConstants.NUMBER_DISPLAY_DECIMAL_PLACES ) );
+        editRange = new Range( Utils.toFixed( gridSafeBounds.minY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ),
+          Utils.toFixed( gridSafeBounds.maxY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ) );
         unit = collisionLabStrings.m;
       }
       else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
