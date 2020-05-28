@@ -12,12 +12,10 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
-import IntroModel from './model/IntroModel.js';
-import IntroScreenView from './view/IntroScreenView.js';
+import Explore1DModel from './model/Explore1DModel.js';
+import Explore1DScreenView from './view/Explore1DScreenView.js';
 
-const screenIntroString = collisionLabStrings.screen.intro;
-
-class IntroScreen extends Screen {
+class Explore1DScreen extends Screen {
 
   /**
    * @param {Tandem} tandem
@@ -27,18 +25,18 @@ class IntroScreen extends Screen {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     const options = {
-      name: screenIntroString,
+      name: collisionLabStrings.screen.explore1D,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       tandem: tandem
     };
 
     super(
-      () => new IntroModel( tandem.createTandem( 'introModel' ) ),
-      model => new IntroScreenView( model, tandem.createTandem( 'introView' ) ),
+      () => new Explore1DModel( tandem.createTandem( 'explore1DModel' ) ),
+      model => new Explore1DScreenView( model, tandem.createTandem( 'explore2DScreenView' ) ),
       options
     );
   }
 }
 
-collisionLab.register( 'IntroScreen', IntroScreen );
-export default IntroScreen;
+collisionLab.register( 'Explore1DScreen', Explore1DScreen );
+export default Explore1DScreen;

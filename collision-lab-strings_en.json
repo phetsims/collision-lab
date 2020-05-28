@@ -5,6 +5,12 @@
   "screen.intro": {
     "value": "Intro"
   },
+  "screen.explore1D": {
+    "value": "Explore 1D"
+  },
+  "screen.explore2D": {
+    "value": "Explore 2D"
+  },
   "velocity": {
     "value": "Velocity"
   },
