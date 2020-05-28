@@ -56,7 +56,6 @@ class CenterOfMass {
     const ballPositionProperties = prepopulatedBalls.map( ball => ball.positionProperty );
     const ballVelocityProperties = prepopulatedBalls.map( ball => ball.velocityProperty );
 
-
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
     //
     // For the dependencies, we use:
