@@ -103,7 +103,9 @@ class CollisionLabModel {
       this.playArea.balls,
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
-      this.isStickyProperty
+      this.isStickyProperty,
+      this.pathVisibleProperty,
+      this.elapsedTimeProperty
     );
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next

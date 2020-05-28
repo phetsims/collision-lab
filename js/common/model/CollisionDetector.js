@@ -30,8 +30,10 @@ class CollisionDetector {
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
+   * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty ) {
+  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty, pathVisibleProperty, elapsedTimeProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( elasticityPercentProperty instanceof Property, `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
 
@@ -46,6 +48,10 @@ class CollisionDetector {
 
     // @private {Property.<boolean>}
     this.isStickyProperty = isStickyProperty;
+
+    this.pathVisibleProperty = pathVisibleProperty;
+
+    this.elapsedTimeProperty = elapsedTimeProperty;
   }
 
   /**
@@ -155,6 +161,12 @@ class CollisionDetector {
 
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
+
+    // Set the position of the balls to the contactPosition.
+    if ( this.pathVisibleProperty.value ) {
+      ball1.path.updatePath( r1, this.elapsedTimeProperty.value - overlappedTime );
+      ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
+    }
 
     // Don't allow balls to rebound after collision during time-step of collision. This seems to improve stability.
     ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
@@ -284,6 +296,13 @@ class CollisionDetector {
             // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
             ball.flipVerticalVelocity( elasticity );
           }
+        }
+
+        //----------------------------------------------------------------------------------------
+
+        // Set the position of the ball to the contactPosition.
+        if ( this.pathVisibleProperty.value ) {
+          ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
         }
 
         // Update the position after the collision.

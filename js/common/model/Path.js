@@ -27,16 +27,11 @@ const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 class Path {
 
   /**
-   * @param {Property.<Vector2>} positionProperty - the position moving object whose 'Path' is traced.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is currently visible. PathDataPoints are
    *                                                   only recorded if this is true and are cleared when set to false.
    */
-  constructor( positionProperty, pathVisibleProperty ) {
-    assert && assert( positionProperty instanceof Property && positionProperty.value instanceof Vector2, `invalid positionProperty: ${positionProperty}` );
+  constructor( pathVisibleProperty ) {
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
-
-    // @private {Property.<Vector2>} - reference to the positionProperty passed in.
-    this.positionProperty = positionProperty;
 
     // @private {Property.<boolean>} - reference to the pathVisibleProperty passed in.
     this.pathVisibleProperty = pathVisibleProperty;
@@ -94,16 +89,18 @@ class Path {
    *
    * @public
    *
+   * @param {Vector2} position - the position of the moving object, in meter coordinates.
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  updatePath( elapsedTime ) {
+  updatePath( position, elapsedTime ) {
+    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // If the path is not visible, nothing happens.
     if ( !this.pathVisibleProperty.value ) { return; /* do nothing */ }
 
     // Add a new PathDataPoint for the current position of the moving object.
-    this.dataPoints.push( new PathDataPoint( elapsedTime, this.positionProperty.value ) );
+    this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
 
     //----------------------------------------------------------------------------------------
 

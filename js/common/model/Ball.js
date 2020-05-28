@@ -122,7 +122,7 @@ class Ball {
     this.userControlledProperty = new BooleanProperty( false );
 
     // @public (read-only) {Path} - create the trailing 'Path' behind the ball.
-    this.path = new Path( this.positionProperty, pathVisibleProperty );
+    this.path = new Path( pathVisibleProperty );
 
     // @private (read-only) {BallState} - reference the initialBallState, which will track our restarting state. See
     //                                    BallState.js for more context.
@@ -274,7 +274,7 @@ class Ball {
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
   updatePath( elapsedTime ) {
-    this.path.updatePath( elapsedTime );
+    this.path.updatePath( this.position, elapsedTime );
   }
 
   /*----------------------------------------------------------------------------*

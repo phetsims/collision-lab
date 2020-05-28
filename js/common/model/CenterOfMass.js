@@ -45,7 +45,7 @@ class CenterOfMass {
     this.velocityProperty = new Vector2Property( Vector2.ZERO );
 
     // @public (read-only) {Path} - create the trailing 'Path' behind the CenterOfMass.
-    this.path = new Path( this.positionProperty, pathVisibleProperty );
+    this.path = new Path( pathVisibleProperty );
 
     // @private {ObservableArray.<Ball>} - reference the balls that were passed in.
     this.balls = balls;
@@ -192,7 +192,7 @@ class CenterOfMass {
    */
   updatePath( elapsedTime ) {
     if ( this.centerOfMassVisibleProperty.value ) {
-      this.path.updatePath( elapsedTime );
+      this.path.updatePath( this.positionProperty.value, elapsedTime );
     }
   }
 }
