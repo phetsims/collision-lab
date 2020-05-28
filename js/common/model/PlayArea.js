@@ -15,14 +15,13 @@
  * @author Brandon Li
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
-import TotalKineticEnergyProperty from './TotalKineticEnergyProperty.js';
 
 class PlayArea {
 
@@ -64,38 +63,6 @@ class PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {BooleanProperty} - indicates if there are any Balls that are being controlled by the user.
-    this.playAreaUserControlledProperty = new BooleanProperty( false );
-
-    // Loop through each prepopulatedBall. Balls in the PlayArea system (in `this.balls`) must Balls be from
-    // the prepopulatedBalls array, so this accounts for all possible Balls.
-    this.prepopulatedBalls.forEach( prepopulatedBall => {
-
-      // Observe when the user is controlling the Ball. Link is never disposed as PlayAreas nor Balls are ever disposed.
-      prepopulatedBall.userControlledProperty.link( () => {
-
-        // Determine if any of the balls, within the system, are being controlled by the user.
-        this.playAreaUserControlledProperty.value = this.balls.some( ball => ball.userControlledProperty.value );
-      } );
-    } );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public
-    this.totalKineticEnergyProperty = new TotalKineticEnergyProperty( this.balls );
-
-    // @public (read-only)
-    this.centerOfMass = new CenterOfMass( this.balls, centerOfMassVisibleProperty, pathVisibleProperty );
-
-    // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
-    // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
-    // the sim as PlayAreas are never disposed.
-    this.playAreaUserControlledProperty.lazyLink( playAreaUserControlled => {
-      if ( !playAreaUserControlled ) { this.centerOfMass.path.clear(); }
-    } );
-
-    //----------------------------------------------------------------------------------------
-
     // Observe when the number of Balls is manipulated by the user and if so, add or remove the correct number of Balls
     // to match the numberOfBallsProperty's value.
     //
@@ -116,6 +83,42 @@ class PlayArea {
         }
       }
     } );
+
+    //----------------------------------------------------------------------------------------
+
+    // Gather the kineticEnergyProperty and the userControlledProperty of ALL possible balls into their respective
+    // arrays.
+    const ballUserControlledProperties = this.prepopulatedBalls.map( ball => ball.userControlledProperty );
+    const ballKineticEnergyProperties = this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty );
+
+    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled by the user. Use
+    //                                       all possible userControlledProperties as dependencies to update the
+    //                                       derivation but only the balls in the play-area are used in the calculation.
+    this.playAreaUserControlledProperty = new DerivedProperty( ballUserControlledProperties, () => {
+        return this.balls.some( ball => ball.userControlledProperty.value );
+      }, { valueType: 'boolean' } );
+
+    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls. We use the kinetic energy
+    //                                      Property of the prepopulatedBalls as dependencies to update the derivation
+    //                                      but only the balls in the play-area are used in the calculation. We also
+    //                                      observe when the numberOfBalls changes, since that changes the total KE.
+    this.totalKineticEnergyProperty = new DerivedProperty( [ ...ballKineticEnergyProperties, numberOfBallsProperty ],
+      () => _.sum( this.balls.map( ball => ball.kineticEnergy ) ), {
+        valueType: 'number',
+        isValidValue: value => value >= 0
+    } );
+
+    //----------------------------------------------------------------------------------------
+
+    // @public (read-only)
+    this.centerOfMass = new CenterOfMass( this.balls, centerOfMassVisibleProperty, pathVisibleProperty );
+
+    // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
+    // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
+    // the sim as PlayAreas are never disposed.
+    this.playAreaUserControlledProperty.lazyLink( playAreaUserControlled => {
+      if ( !playAreaUserControlled ) { this.centerOfMass.path.clear(); }
+    } );
   }
 
   /**
@@ -125,7 +128,6 @@ class PlayArea {
   reset() {
     this.prepopulatedBalls.forEach( ball => ball.reset() ); // Reset All Possible Balls.
     this.centerOfMass.reset();
-    this.totalKineticEnergyProperty.reset();
   }
 
   /**
