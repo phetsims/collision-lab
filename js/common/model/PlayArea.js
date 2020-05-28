@@ -98,10 +98,13 @@ class PlayArea {
         return this.balls.some( ball => ball.userControlledProperty.value );
       }, { valueType: 'boolean' } );
 
-    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls. We use the kinetic energy
-    //                                      Property of the prepopulatedBalls as dependencies to update the derivation
-    //                                      but only the balls in the play-area are used in the calculation. We also
-    //                                      observe when the numberOfBalls changes, since that changes the total KE.
+    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
+    //
+    // For the dependencies, we use:
+    //  - The KE Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - numberOfBallsProperty, since removing or adding a Ball changes the total kinetic energy of the system.
+    //
+    // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty( [ ...ballKineticEnergyProperties, numberOfBallsProperty ],
       () => _.sum( this.balls.map( ball => ball.kineticEnergy ) ), {
         valueType: 'number',
@@ -110,8 +113,13 @@ class PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only)
-    this.centerOfMass = new CenterOfMass( this.balls, centerOfMassVisibleProperty, pathVisibleProperty );
+    // @public (read-only) {CenterOfMass} - the center of mass of the system of Balls
+    this.centerOfMass = new CenterOfMass(
+      this.prepopulatedBalls,
+      this.balls,
+      centerOfMassVisibleProperty,
+      pathVisibleProperty
+    );
 
     // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
     // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of

@@ -14,10 +14,11 @@
  * @author Martin Veillette
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
+import isArray from '../../../../phet-core/js/isArray.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
 import Path from './Path.js';
@@ -25,24 +26,18 @@ import Path from './Path.js';
 class CenterOfMass {
 
   /**
-   * @param {ObservableArray.<Ball>} balls
+   * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
+   * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           This is needed for performance; the position, velocity,
    *                                                           and path are only updated if this is true.
    * @param {Property.<boolean>} pathVisibleProperty
    */
-  constructor( balls, centerOfMassVisibleProperty, pathVisibleProperty ) {
+  constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty, pathVisibleProperty ) {
+    assert && assert( isArray( prepopulatedBalls ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
-
-    // @public (read-only) {Vector2Property} - Property of the position of the ball, in meter coordinates. To be
-    //                                         updated later.
-    this.positionProperty = new Vector2Property( Vector2.ZERO );
-
-    // @public (read-only) {Vector2Property} - Property of the velocity of the ball, in meter per second. To be
-    //                                         updated later.
-    this.velocityProperty = new Vector2Property( Vector2.ZERO );
 
     // @public (read-only) {Path} - create the trailing 'Path' behind the CenterOfMass.
     this.path = new Path( pathVisibleProperty );
@@ -55,25 +50,48 @@ class CenterOfMass {
 
     //----------------------------------------------------------------------------------------
 
-    // Register the Balls that are already in the system.
-    balls.forEach( this.registerAddedBall.bind( this ) );
+    // Gather the massProperty, positionProperty, and velocityProperty of ALL possible balls into their respective
+    // arrays.
+    const ballMassProperties = prepopulatedBalls.map( ball => ball.massProperty );
+    const ballPositionProperties = prepopulatedBalls.map( ball => ball.positionProperty );
+    const ballVelocityProperties = prepopulatedBalls.map( ball => ball.velocityProperty );
 
-    // Observe when Balls are added to the system and register the added Ball. Listener is never removed as
-    // CenterOfMasses are never disposed.
-    balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
 
-    // Observe when the centerOfMassVisibleProperty is set to false to clear the Paths of the center of mass. Also
-    // observe when the centerOfMassVisibleProperty is set to true to re-update the position and velocity.
-    // Link lasts for the lifetime of the simulation.
-    centerOfMassVisibleProperty.lazyLink( centerOfMassVisible => {
-      if ( !centerOfMassVisible ) {
-        this.path.clear();
-      }
-      else {
-        this.updatePosition();
-        this.updateVelocity();
-      }
-    } );
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
+    //
+    // For the dependencies, we use:
+    //  - centerOfMassVisibleProperty; for performance reasons, the COM position isn't calculated if it isn't visible.
+    //  - The position Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - The mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - balls.lengthProperty, since removing or adding a Ball changes the position of the COM.
+    //
+    // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
+    this.positionProperty = new DerivedProperty(
+      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballPositionProperties, balls.lengthProperty ],
+      centerOfMassVisible => {
+        return centerOfMassVisible ? this.computePosition() : this.position; // Don't recompute if not visible.
+      }, {
+        valueType: Vector2
+      } );
+
+    //----------------------------------------------------------------------------------------
+
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the COM, in meters per second.
+    //
+    // For the dependencies, we use:
+    //  - centerOfMassVisibleProperty; for performance reasons, the COM velocity isn't calculated if it isn't visible.
+    //  - The velocity Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - The mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - balls.lengthProperty, since removing or adding a Ball changes the velocity of the COM.
+    //
+    // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
+    this.velocityProperty = new DerivedProperty(
+      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
+      centerOfMassVisible => {
+        return centerOfMassVisible ? this.computeVelocity() : this.velocity; // Don't recompute if not visible.
+      }, {
+        valueType: Vector2
+      } );
   }
 
   /**
@@ -83,6 +101,42 @@ class CenterOfMass {
   reset() {
     this.path.clear();
   }
+
+  /**
+   * Updates the path of the center of mass. If the path is not visible, nothing happens.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  updatePath( elapsedTime ) {
+    if ( this.centerOfMassVisibleProperty.value ) {
+      this.path.updatePath( this.position, elapsedTime );
+    }
+  }
+
+  /**
+   * Gets the position of the center of mass, in meter coordinates.
+   * @public
+   *
+   * @returns {Vector2} - in meter coordinates
+   */
+  get position() {
+    return this.positionProperty ? this.positionProperty.value : this.computePosition();
+  }
+
+  /**
+   * Gets the velocity of the center of mass, in meter per second.
+   * @public
+   *
+   * @returns {Vector2} - in meter per second
+   */
+  get velocity() {
+    return this.velocityProperty ? this.velocityProperty.value : this.computeVelocity();
+  }
+
+  /*----------------------------------------------------------------------------*
+   * Private facing.
+   *----------------------------------------------------------------------------*/
 
   /**
    * Computes the total mass of the Balls in the system.
@@ -100,57 +154,13 @@ class CenterOfMass {
   }
 
   /**
-   * Registers a new Ball by adding the appropriate links to update the CenterOfMass's position and velocity. This is
-   * generally invoked when Balls are added to the system, meaning the Center of Mass needs to be updated. Will also
-   * ensure that links are removed if the Ball is removed from the play-area system.
+   * Computes the position of the center of mass. Called when the position of one of the Balls in the system
+   * is changing or when Balls are added/removed from the system.
    * @private
    *
-   * @param {Ball} ball
+   * @returns {Vector2} - in meter coordinates.
    */
-  registerAddedBall( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-
-    // Observe when the ball's position or mass changes and update the position of the center-of-mass.
-    // Multilink is disposed when the Ball is removed from the system.
-    const updatePositionMultilink = Property.multilink( [ ball.positionProperty, ball.massProperty ], () => {
-      this.updatePosition();
-    } );
-
-    // Observe when the ball's velocity or mass changes and update the velocity of the center-of-mass.
-    // Multilink is disposed when the Ball is removed from the system.
-    const updateVelocityMultilink = Property.multilink( [ ball.velocityProperty, ball.massProperty ], () => {
-      this.updateVelocity();
-    } );
-
-    // Observe when the ball is removed from the system to unlink listeners.
-    const removeBallListener = removedBall => {
-      if ( ball === removedBall ) {
-
-        // Recompute the position and velocity of the center of mass now that there is one less Ball in the system.
-        this.updatePosition();
-        this.updateVelocity();
-
-        // Unlink listeners
-        Property.unmultilink( updatePositionMultilink );
-        Property.unmultilink( updateVelocityMultilink );
-        this.balls.removeItemRemovedListener( removeBallListener );
-      }
-    };
-    this.balls.addItemRemovedListener( removeBallListener );
-  }
-
-  /**
-   * Updates the position Property of the center of mass. Called when the position of one of the Balls in the system
-   * is changing or when Balls are added/removed from the system. For performance reasons, this is a no-op if the
-   * center-of-mass is not visible, but this should be called again when set back to true.
-   * @private
-   *
-   * @returns {number} - in kg.
-   */
-  updatePosition() {
-
-    // Do nothing if the center-of-mass is not visible.
-    if ( !this.centerOfMassVisibleProperty.value ) { return; /* do nothing */ }
+  computePosition() {
 
     // Determine the total first moment (mass * position) of the system.
     const totalFirstMoment = Vector2.ZERO.copy();
@@ -159,21 +169,17 @@ class CenterOfMass {
     } );
 
     // The position of the center of mass is the total first moment divided by the total mass.
-    this.positionProperty.value = totalFirstMoment.dividedScalar( this.computeTotalBallMasses() );
+    return totalFirstMoment.dividedScalar( this.computeTotalBallMasses() );
   }
 
   /**
-   * Updates the velocity Property of the center of mass. Called when the velocity of one of the Balls in the system
-   * is changing or when Balls are added/removed from the system. For performance reasons, this is a no-op if the
-   * center-of-mass is not visible, but this should be called again when set back to true.
+   * Computes the velocity of the center of mass. Called when the position of one of the Balls in the system
+   * is changing or when Balls are added/removed from the system.
    * @private
    *
-   * @returns {number} - in kg.
+   * @returns {Vector2} - in meter per second.
    */
-  updateVelocity() {
-
-    // Do nothing if the center-of-mass is not visible.
-    if ( !this.centerOfMassVisibleProperty.value ) { return; /* do nothing */ }
+  computeVelocity() {
 
     // Determine the total momentum of the system.
     const totalMomentum = this.balls.reduce( Vector2.ZERO.copy(), ( accumulator, ball ) => {
@@ -181,19 +187,7 @@ class CenterOfMass {
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
-    this.velocityProperty.value = totalMomentum.dividedScalar( this.computeTotalBallMasses() );
-  }
-
-  /**
-   * Updates the path of the center of mass. If the path is not visible, nothing happens.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
-   */
-  updatePath( elapsedTime ) {
-    if ( this.centerOfMassVisibleProperty.value ) {
-      this.path.updatePath( this.positionProperty.value, elapsedTime );
-    }
+    return totalMomentum.dividedScalar( this.computeTotalBallMasses() );
   }
 }
 
