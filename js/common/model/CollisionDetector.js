@@ -163,7 +163,7 @@ class CollisionDetector {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Set the position of the balls to the contactPosition.
-    if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 ) {
+    if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
       ball1.path.updatePath( r1, this.elapsedTimeProperty.value - overlappedTime );
       ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
     }
@@ -301,7 +301,7 @@ class CollisionDetector {
         //----------------------------------------------------------------------------------------
 
         // Set the position of the ball to the contactPosition.
-        if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 ) {
+        if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
           ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
         }
 
