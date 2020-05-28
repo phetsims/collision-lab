@@ -1,16 +1,17 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A Ball is the model for all Balls in all screens. A single Ball is a apart of a isolated system of multiple Balls
- * inside a PlayArea.
+ * A Ball is the model for a single moving object and appears in all screens. Each Ball is a apart of a isolated system
+ * of multiple Balls within a PlayArea.
  *
  * Primary responsibilities are:
- *  1. center position Property
- *  2. track the mass of the Ball in a Property
- *  3. velocity and momentum vector Properties
- *  4. radius Property to track the inner radius of the Ball
- *  5. track the kinetic energy of the Ball
- *  6. create the trailing path behind the Ball
+ *   1. center-position Property
+ *   2. track the mass of the Ball in a Property
+ *   3. velocity and momentum vector Properties
+ *   4. radius Property to track the inner radius of the Ball
+ *   5. track the kinetic energy of the Ball
+ *   6. create the trailing path behind the Ball
+ *   7. dragging, user-control, restarting, etc.
  *
  * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
