@@ -136,6 +136,7 @@ class PlayArea {
    */
   restart() {
     this.balls.forEach( ball => ball.restart() );
+    this.centerOfMass.path.clear();
   }
 
   /**
