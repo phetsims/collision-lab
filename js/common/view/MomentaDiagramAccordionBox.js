@@ -42,7 +42,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       contentWidth: CollisionLabConstants.MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH,
 
       // super-class options
-      titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.CONTROL_FONT } ),
+      titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),
       cornerRadius: PANEL_CORNER_RADIUS,
       contentXMargin: PANEL_X_MARGIN,
       contentYMargin: PANEL_Y_MARGIN,

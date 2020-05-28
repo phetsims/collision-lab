@@ -18,10 +18,9 @@ import CollisionLabColors from './CollisionLabColors.js';
 import BallState from './model/BallState.js';
 
 // For panel-like containers.
-const RIGHT_PANEL_WIDTH = 218; // Fixed width of panels and accordion boxes on right side of the screen.
-const PANEL_CORNER_RADIUS = 7;
 const PANEL_X_MARGIN = 13.5;
 const PANEL_Y_MARGIN = 10;
+const PANEL_CORNER_RADIUS = 7;
 
 //----------------------------------------------------------------------------------------
 
@@ -86,19 +85,17 @@ const CollisionLabConstants = {
   PANEL_X_MARGIN: PANEL_X_MARGIN,
   PANEL_Y_MARGIN: PANEL_Y_MARGIN,
   PANEL_CORNER_RADIUS: PANEL_CORNER_RADIUS,
+  CONTROL_PANEL_CONTENT_WIDTH: 218,
+
   PANEL_OPTIONS: merge( {
     xMargin: PANEL_X_MARGIN,
     yMargin: PANEL_Y_MARGIN,
     cornerRadius: PANEL_CORNER_RADIUS
   }, CollisionLabColors.PANEL_COLORS ),
 
-  CONTROL_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
-  MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH: RIGHT_PANEL_WIDTH,
-
   // Fonts
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),
   DISPLAY_FONT: new PhetFont( 15.5 ),
-  KEYPAD_FONT: new PhetFont( 15 ),
   CONTROL_FONT: new PhetFont( 16 ) // default font for controls (buttons, checkboxes, ...)
 };
 
