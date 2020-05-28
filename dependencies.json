@@ -1,11 +1,11 @@
 {
-  "comment": "# collision-lab 1.0.0-dev.7 Wed May 27 2020 10:13:56 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.0-dev.8 Wed May 27 2020 18:06:26 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "0b7a48c6b9ba48af48ae7419bd30c280c785f2cc",
     "branch": "master"
   },
   "axon": {
-    "sha": "beb73bf895aecc2d7aa1a39a68083c1b23aaf9bb",
+    "sha": "3876b6c6859ebfb06b96ec5122c8966ca4f47c83",
     "branch": "master"
   },
   "brand": {
@@ -13,11 +13,11 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "6c6ffe3296595908fd6efd86efe41af56c0cab04",
+    "sha": "9779d99ec9b9792ebec36d441d49c90aeda6d1be",
     "branch": "master"
   },
   "collision-lab": {
-    "sha": "cac5354aa7a98d928d492337b77854fb29e0ab8b",
+    "sha": "e1573fff103671ec49acd324559a81f1b186cf91",
     "branch": "master"
   },
   "dot": {
@@ -25,7 +25,7 @@
     "branch": "master"
   },
   "joist": {
-    "sha": "1cdef2807938c19ef901c4260b45edfb8c380b74",
+    "sha": "ef2525920199548c0ba5ecbff055703d8c883047",
     "branch": "master"
   },
   "kite": {
@@ -33,15 +33,15 @@
     "branch": "master"
   },
   "phet-core": {
-    "sha": "ac2b45191a873fcca8521b80c89c5e3f88dca1ee",
+    "sha": "bbaa6f8324c78f6ddd53b9a3129a9ccfb29e84d8",
     "branch": "master"
   },
   "phet-io": {
-    "sha": "a93b3d3edc4079278b2188b732ffb799f62a7446",
+    "sha": "5a383dcabdd4aff14c7d5fca6b435b27469a1794",
     "branch": "master"
   },
   "phet-io-wrappers": {
-    "sha": "dd54129b934f6243a4a24b5d2ab1859f725dacde",
+    "sha": "967397c2e9ee235df6585af2d9fa2c90f6d2a23c",
     "branch": "master"
   },
   "phetcommon": {
@@ -57,11 +57,11 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "2caa70a9f6e50e3eae14d601f5f454f713527052",
+    "sha": "d7fb773e4a12ff8a82dc7b5355f0a89f2c99d9ae",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "7ab4756ebbbfbbdee135187e6d5aa29284ab549c",
+    "sha": "200a65b8b58c66fa1c7fe9b9ee640819af24caea",
     "branch": "master"
   },
   "sherpa": {
@@ -69,19 +69,19 @@
     "branch": "master"
   },
   "studio": {
-    "sha": "e9e560b767fb84b710fc242b9b77f26bad4e1426",
+    "sha": "28ad2a31d295f87abb007abfd2d0b4f0c35bb45c",
     "branch": "master"
   },
   "sun": {
-    "sha": "33c44c1af7099403dac95c7591a33573ea5cdbc8",
+    "sha": "d887d54892c5db9e9385ca468626499e5267730c",
     "branch": "master"
   },
   "tambo": {
-    "sha": "01360c53a7847549434993047900161b5528ca75",
+    "sha": "9c5f674c027fca9278a229b322cc9b99a62e035e",
     "branch": "master"
   },
   "tandem": {
-    "sha": "4acb2982933cd9c8a06c841f381bad4aa3e4f685",
+    "sha": "b57ba27a8d8f8f9891fb8fc9528842029468323a",
     "branch": "master"
   },
   "utterance-queue": {
