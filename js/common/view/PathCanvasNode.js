@@ -24,7 +24,7 @@ import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import Path from '../model/Path.js';
+import CollisionLabPath from '../model/CollisionLabPath.js';
 
 // constants
 const LINE_WIDTH = 2.3; // lineWidth of the Path
@@ -32,13 +32,13 @@ const LINE_WIDTH = 2.3; // lineWidth of the Path
 class PathCanvasNode extends CanvasNode {
 
   /**
-   * @param {Path} path - the Path model that is rendered.
+   * @param {CollisionLabPath} path - the Path model that is rendered.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
   constructor( path, pathVisibleProperty, modelViewTransform, options ) {
-    assert && assert( path instanceof Path, `invalid path: ${path}` );
+    assert && assert( path instanceof CollisionLabPath, `invalid path: ${path}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
@@ -57,7 +57,7 @@ class PathCanvasNode extends CanvasNode {
 
     //----------------------------------------------------------------------------------------
 
-    // @private {Path} - reference the passed-in Path model.
+    // @private {CollisionLabPath} - reference the passed-in Path model.
     this.path = path;
 
     // @private {ModelViewTransform2} - reference the passed-in modelViewTransform.

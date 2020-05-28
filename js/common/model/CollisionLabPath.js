@@ -1,14 +1,15 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * Model for the trailing 'Path' behind a moving object, including Balls and the Center of Mass.
+ * Model for the trailing 'Path' behind a moving object, including Balls and the Center of Mass. Originally called
+ * 'Path' but changed to 'CollisionLabPath'. See https://github.com/phetsims/collision-lab/issues/79.
  *
  * Its main responsibility is to keep track of PathDataPoints that map out the trail of a Ball or a Center of Mass as
  * time progresses. This path is rendered if the 'Path' checkbox is checked, and only should be recorded in this case.
  * Path will also remove PathDataPoints that are past the set time period, which allows the trailing 'Path' to fade over
  * time. See https://github.com/phetsims/collision-lab/issues/61.
  *
- * Paths are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * CollisionLabPaths are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -24,7 +25,7 @@ import PathDataPoint from './PathDataPoint.js';
 // constants
 const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 
-class Path {
+class CollisionLabPath {
 
   /**
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is currently visible. PathDataPoints are
@@ -126,5 +127,5 @@ class Path {
   }
 }
 
-collisionLab.register( 'Path', Path );
-export default Path;
+collisionLab.register( 'CollisionLabPath', CollisionLabPath );
+export default CollisionLabPath;

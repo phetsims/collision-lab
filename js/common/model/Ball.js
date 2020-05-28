@@ -27,7 +27,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
-import Path from './Path.js';
+import CollisionLabPath from './CollisionLabPath.js';
 
 // constants
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
@@ -121,8 +121,8 @@ class Ball {
     //                                  view.
     this.userControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {Path} - create the trailing 'Path' behind the ball.
-    this.path = new Path( pathVisibleProperty );
+    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the ball.
+    this.path = new CollisionLabPath( pathVisibleProperty );
 
     // @private (read-only) {BallState} - reference the initialBallState, which will track our restarting state. See
     //                                    BallState.js for more context.

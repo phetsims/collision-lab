@@ -21,7 +21,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import isArray from '../../../../phet-core/js/isArray.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
-import Path from './Path.js';
+import CollisionLabPath from './CollisionLabPath.js';
 
 class CenterOfMass {
 
@@ -39,8 +39,8 @@ class CenterOfMass {
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
 
-    // @public (read-only) {Path} - create the trailing 'Path' behind the CenterOfMass.
-    this.path = new Path( pathVisibleProperty );
+    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the CenterOfMass.
+    this.path = new CollisionLabPath( pathVisibleProperty );
 
     // @private {ObservableArray.<Ball>} - reference the balls that were passed in.
     this.balls = balls;
