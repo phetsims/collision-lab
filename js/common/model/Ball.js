@@ -32,8 +32,7 @@ import Path from './Path.js';
 // constants
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
-const DENSITY = 70; // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
-const CONSTANT_RADIUS = 0.15; // radius of Balls if constant-radius is on, in meters.
+const BALL_CONSTANT_RADIUS = CollisionLabConstants.BALL_CONSTANT_RADIUS;
 
 class Ball {
 
@@ -107,7 +106,7 @@ class Ball {
     // Handle the changing radius of the Ball based on the mass
     // @public (read-only) - Property of the radius of the ball in meters. TODO #50
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
-      ( mass, constantRadius ) => constantRadius ? CONSTANT_RADIUS : Ball.calculateRadius( mass ),
+      ( mass, constantRadius ) => constantRadius ? BALL_CONSTANT_RADIUS : Ball.calculateRadius( mass ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 
     // @public (read-only) kineticEnergyProperty - Property of the kinetic energy of the ball, in J.
@@ -467,7 +466,7 @@ class Ball {
 
   /**
    * Calculates the radius of a Ball when constant-radius mode is off. This calculation comes from
-   * the mass and the density (uniform) of the Ball.
+   * the mass and the density (uniform) of the Ball, which is CollisionLabConstants.BALL_DEFAULT_DENSITY.
    *
    * Volume = 4/3 PI * Radius^3
    * => Density = Mass / Volume
@@ -479,7 +478,7 @@ class Ball {
   static calculateRadius( mass ) {
     assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
 
-    return Math.pow( ( 3 * mass / DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
+    return Math.pow( ( 3 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
   }
 }
 

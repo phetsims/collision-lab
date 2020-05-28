@@ -34,11 +34,11 @@ const CollisionLabConstants = {
 
   // Time
   TIME_STEP_DURATION: 0.03, // time step used when pressing the Step button, in seconds.
-  NORMAL_SPEED_SCALE: 1,
-  SLOW_SPEED_SCALE: 0.33,
+  NORMAL_SPEED_FACTOR: 1,
+  SLOW_SPEED_FACTOR: 0.33,
 
   // PlayArea
-  PLAY_AREA_BOUNDS: new Bounds2( -2, -1, 2, -1 ), // in meters
+  PLAY_AREA_BOUNDS: new Bounds2( -2, -1, 2, 1 ), // in meters
   MINOR_GRIDLINE_SPACING: 0.1,
   MAJOR_GRIDLINE_SPACING: 0.5,
 
@@ -47,7 +47,7 @@ const CollisionLabConstants = {
   ZERO_THRESHOLD: 1E-10,
 
   // Balls
-  BALL_DEFAULT_DENSITY: 70,   // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
+  BALL_DEFAULT_DENSITY: 35,   // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
   BALL_CONSTANT_RADIUS: 0.15, // Radius of Balls if constant-radius is on, in meters.
 
   INITIAL_BALL_STATES: [

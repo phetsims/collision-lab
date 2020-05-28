@@ -39,7 +39,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 
-      contentWidth: CollisionLabConstants.MOMENTA_DIAGRAM_PANEL_CONTENT_WIDTH,
+      contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
 
       // super-class options
       titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),

@@ -46,11 +46,16 @@ class CollisionLabModel {
 
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
     //                                        outside of the PlayArea in a Spinner.
-    this.numberOfBallsProperty = new NumberProperty( 2, { range: CollisionLabConstants.BALLS_RANGE } );
+    this.numberOfBallsProperty = new NumberProperty( CollisionLabConstants.NUMBER_OF_BALLS_RANGE.defaultValue, {
+      numberType: 'Integer',
+      range: CollisionLabConstants.NUMBER_OF_BALLS_RANGE
+    } );
 
     // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
     //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
-    this.elasticityPercentProperty = new NumberProperty( 100, { range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE } );
+    this.elasticityPercentProperty = new NumberProperty( CollisionLabConstants.ELASTICITY_PERCENT_RANGE.defaultValue, {
+      range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE
+    } );
 
     // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trailing paths are visible. In the model since
     //                                         Ball PathDataPoints are only recorded if this is true and are cleared when
@@ -147,8 +152,8 @@ class CollisionLabModel {
    */
   getTimeSpeedFactor() {
     return this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
-              CollisionLabConstants.NORMAL_SPEED_SCALE :
-              CollisionLabConstants.SLOW_SPEED_SCALE;
+              CollisionLabConstants.NORMAL_SPEED_FACTOR :
+              CollisionLabConstants.SLOW_SPEED_FACTOR;
   }
 
   /**
@@ -177,7 +182,7 @@ class CollisionLabModel {
     this.elapsedTimeProperty.value += dt;
 
     /**
-     * The position of the balls is
+     * The position of the balls are:
      * (1) updated based on the ballistic motion of individual balls
      * (2) corrected through collisionDetector, to take into account collisions between balls and walls
      */
@@ -196,8 +201,9 @@ class CollisionLabModel {
    * Called when the user presses the step-backward button.
    */
   stepBackward() {
-    // Step backwards the minimum of one step of the current elapsed time to ensure that elapsed time is never negative.
-    this.stepManual( -1 * Math.min( TIME_STEP_DURATION * this.getTimeSpeedFactor(), this.elapsedTimeProperty.value ) );
+
+    // Step backwards by the minimum of one step of the current elapsed time to ensure that elapsed time is positive.
+    this.stepManual( -1 * Math.min( TIME_STEP_DURATION, this.elapsedTimeProperty.value ) );
   }
 
   /**
@@ -206,7 +212,7 @@ class CollisionLabModel {
    *
    * Called when the user presses the step-forward button.
    */
-  stepForward() { this.stepManual( TIME_STEP_DURATION * this.getTimeSpeedFactor() ); }
+  stepForward() { this.stepManual( TIME_STEP_DURATION ); }
 }
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );

@@ -81,7 +81,7 @@ class PlayAreaControlSet extends VBox {
 
     // Create the NumberSpinner of the PlayAreaControlSet to allow the user to change the number of balls.
     const numberOfBallsSpinner = new NumberSpinner( numberOfBallsProperty,
-      new Property( CollisionLabConstants.BALLS_RANGE ),
+      new Property( CollisionLabConstants.NUMBER_OF_BALLS_RANGE ),
       options.numberSpinnerOptions );
 
     // Wrap the controls of the number of Balls in a separate VBox to give separate spacing.

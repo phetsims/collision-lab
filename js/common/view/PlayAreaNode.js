@@ -26,7 +26,7 @@ import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
-const MAJOR_GRIDLINE_SPACING = MINOR_GRIDLINE_SPACING * CollisionLabConstants.MINOR_GRIDLINES_PER_MAJOR_GRIDLINE; // model
+const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
 const MAJOR_GRID_LINE_WIDTH = 2; // view units
@@ -66,12 +66,12 @@ class PlayAreaNode extends Node {
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
 
     const majorGridLines = new GridLines( MAJOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
-      lineWidth: CollisionLabConstants.MAJOR_GRID_LINE_WIDTH,
+      lineWidth: MAJOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
     } );
 
     const minorGridLines = new GridLines( MINOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
-      lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
+      lineWidth: MINOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 

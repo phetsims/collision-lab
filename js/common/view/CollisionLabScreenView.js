@@ -27,7 +27,7 @@ import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
 
 // constants
-const MODEL_TO_VIEW_SCALE = 190; // meter to view coordinates (1 m = 200 coordinates)
+const MODEL_TO_VIEW_SCALE = 153; // meter to view coordinates (1 m = 200 coordinates)
 const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
