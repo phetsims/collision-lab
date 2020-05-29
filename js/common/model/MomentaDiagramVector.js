@@ -1,14 +1,16 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A model for a single Vector that appears in the 'Momenta Diagram' accordion box. A single MomentaDiagramVector
- * correlates to a single prepopulatedBalls Ball, which may or may not be in the PlayArea system.
+ * A model for a single Vector that appears in the 'Momenta Diagram' accordion box. This model is intended to be used by
+ * both the Momenta Vectors of the Balls and the total Momenta Vector.
  *
- * Extends MomentaDiagramBaseVector but it also keeps track of a whether or not its correlated Ball is currently in the
- * PlayArea system.
+ * Responsible for:
+ *   - Keeping track of the tail position of the Vector
+ *   - Keeping track of the tip position of the Vector
+ *   - Convenience methods for setting the tail, tip, components.
  *
- * MomentaDiagramVector's tails are positioned in MomentaDiagram.js. Since MomentaDiagramVectors correlate to a
- * prepopulatedBalls, which are never disposed, MomentaDiagramVectors are also never disposed.
+ * MomentaDiagramVectors should only be positioned in MomentaDiagram.js. Since Balls are never disposed,
+ * MomentaDiagramVectors are also never disposed, even when they are removed from the PlayArea. See MomentaDiagram.js.
  *
  * @author Brandon Li
  */
@@ -21,17 +23,31 @@ class MomentaDiagramVector {
 
   constructor() {
 
-
-    // @public (read-only) {Vector2Property} - the tail position of the Vector, in meter coordinates. Initialized at the
-    //                                         origin and to be updated later in MomentaDiagram.js
+    // @public {Vector2Property} - the tail position of the Vector, in meter coordinates. Initialized at the
+    //                             origin and to be updated later in MomentaDiagram.js
     this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
 
 
-    // @public (read-only) {Vector2Property} - the tip position of the Vector, in meter coordinates. Initialized at the
-    //                                         origin and to be updated later in MomentaDiagram.js
+    // @public {Vector2Property} - the tip position of the Vector, in meter coordinates. Initialized at the
+    //                             origin and to be updated later in MomentaDiagram.js
     this.tipPositionProperty = new Vector2Property( Vector2.ZERO );
   }
 
+  /**
+   * Resets the Vector. Called when the reset-all button is pressed.
+   * @public
+   *
+   * Technically, since the tail and tip are set externally, which depends on Balls momentums, this method isn't needed.
+   * However, he PhET convention is to completely reset when the reset all button is pressed, so we follow that here.
+   */
+  reset() {
+    this.tailPositionProperty.reset();
+    this.tipPositionProperty.reset();
+  }
+
+  /*----------------------------------------------------------------------------*
+   * Convenience setters/getters.
+   *----------------------------------------------------------------------------*/
 
   /**
    * Gets the tail position of the Vector, in meter coordinates.
