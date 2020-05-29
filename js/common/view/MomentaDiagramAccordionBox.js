@@ -7,7 +7,7 @@
  *
  * The MomentaDiagramAccordionBox displays the following:
  *   - a grid the contains momentum vectors of all the balls in the system.
- *   - a zoom-in and zoom-out button to change the scaling of the vectors/grid.
+ *   - a zoom-in and zoom-out button to change the scaling of the grid.
  *
  * MomentaDiagramAccordionBoxes are created at the start of the sim and are never disposed, so no dispose method is
  * necessary.
@@ -24,6 +24,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import MomentaDiagram from '../model/MomentaDiagram.js';
 
 // constants
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
@@ -33,9 +34,11 @@ const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
 class MomentaDiagramAccordionBox extends AccordionBox {
 
   /**
+   * @param {MomentaDiagram} momentaDiagram - the model for the MomentaDiagramAccordionBox.
    * @param {Object} [options]
    */
-  constructor( options ) {
+  constructor( momentaDiagram, options ) {
+    assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 

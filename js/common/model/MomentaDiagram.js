@@ -32,6 +32,7 @@ import MomentaDiagramVector from './MomentaDiagramVector.js';
 // constants
 const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
 const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
+const ZOOM_MULTIPLIER = 2;
 
 // @abstract
 class MomentaDiagram {
@@ -128,7 +129,6 @@ class MomentaDiagram {
     this.positionVectors();
   }
 
-
   /**
    * Positions the Momenta Vectors accordingly. This behavior is different for each screen. For instance, in
    * 'Explore 2D', the Vectors are placed tip-to-tail, while in `Explore 1D`, the Vectors are stacked on top of
@@ -154,6 +154,22 @@ class MomentaDiagram {
 
       vector.tail = previousVector.tip;
     }
+  }
+
+  /**
+   * Zooms the MomentaDiagram in. Called when the zoom-in button is pressed.
+   * @public
+   */
+  zoomIn() {
+    this.zoomProperty.value /= ZOOM_MULTIPLIER;
+  }
+
+  /**
+   * Zooms the MomentaDiagram out. Called when the zoom-out button is pressed.
+   * @public
+   */
+  zoomOut() {
+    this.zoomProperty.value *= ZOOM_MULTIPLIER;
   }
 }
 
