@@ -2,8 +2,9 @@
 
 /**
  * The Model representation for the 'Momenta Diagram' accordion box, which appears at the bottom right of each screen.
- * Features the momentum Vectors of each Ball in the PlayArea, along with a total momentum vector. However, the
- * positioning of the Vectors differ for each screen, so this is meant to be subclassed.
+ * Features the momentum Vectors of each Ball in the PlayArea, along with a total momentum vector, in a completely
+ * separate coordinate frame from the PlayArea. The positioning of the Vectors differ for each screen, so this is meant
+ * to be subclassed.
  *
  * Responsibilities are:
  *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes.

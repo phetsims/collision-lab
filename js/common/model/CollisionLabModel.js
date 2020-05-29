@@ -20,6 +20,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionDetector from './CollisionDetector.js';
+import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
 // constants
@@ -107,6 +108,9 @@ class CollisionLabModel {
       this.pathVisibleProperty,
       this.elapsedTimeProperty
     );
+
+    // @public (read-only) {MomentaDiagram}
+    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls );
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.

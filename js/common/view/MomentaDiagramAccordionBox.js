@@ -15,10 +15,15 @@
  * @author Brandon Li
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -30,6 +35,7 @@ import MomentaDiagram from '../model/MomentaDiagram.js';
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
 const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_Y_MARGIN;
 const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
+const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 
 class MomentaDiagramAccordionBox extends AccordionBox {
 
@@ -39,9 +45,11 @@ class MomentaDiagramAccordionBox extends AccordionBox {
    */
   constructor( momentaDiagram, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 
+      // {number} - the width of the content (grid) of the MomentaDiagramAccordionBox.
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
 
       // super-class options
@@ -69,8 +77,45 @@ class MomentaDiagramAccordionBox extends AccordionBox {
                                  - options.titleXSpacing
                                  - options.titleXMargin;
 
+    //----------------------------------------------------------------------------------------
 
-    super( new Rectangle(  new Bounds2( 0, 0, options.contentWidth, options.contentWidth * 11 / 14 ), { fill: 'white' } ), options );
+    // Compute the view Bounds of the GridNode.
+    const gridViewBounds = new Bounds2( 0, 0,
+      options.contentWidth,
+      options.contentWidth * MOMENTA_DIAGRAM_ASPECT_RATIO.height / MOMENTA_DIAGRAM_ASPECT_RATIO.width
+    );
+
+    // Create a separate modelViewTransform in a Property for mapping MomentaDiagramCoordinates to view coordinates.
+    const modelViewTransformProperty = new DerivedProperty( [ momentaDiagram.boundsProperty ], bounds => {
+      return ModelViewTransform2.createRectangleInvertedYMapping( bounds, gridViewBounds );
+    }, {
+      valueType: ModelViewTransform2
+    } );
+
+    //----------------------------------------------------------------------------------------
+
+    // Create the Border of the Grid.
+    const borderNode = new Rectangle( gridViewBounds, { stroke: Color.BLACK, lineWidth: 2.5 } );
+
+    // Create the Grid
+
+
+    //----------------------------------------------------------------------------------------
+
+
+
+
+    //----------------------------------------------------------------------------------------
+
+    // Create a container of the content of the MomentaDiagramAccordionBox.
+    const contentNode = new Node( {
+      children: [
+        borderNode
+
+      ]
+    } );
+
+    super( contentNode, options );
   }
 }
 
