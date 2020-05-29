@@ -103,6 +103,7 @@ class PlayAreaNode extends Node {
   }
 }
 
+// TODO: use GridNode when it is ready
 // Draws vertical and horizontal grid-lines with the given spacing. Used for major and minor axes. Handles visibility.
 class GridLines extends Path {
 

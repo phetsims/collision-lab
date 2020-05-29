@@ -57,10 +57,10 @@ class MomentaDiagram {
 
       // The center of the MomentaDiagram is the origin.
       return new Bounds2(
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 * zoomFactor,
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 * zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 * zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 * zoomFactor
+        -MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
+        -MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor,
+        MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
+        MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor
       );
     } );
 
@@ -162,7 +162,7 @@ class MomentaDiagram {
    * @public
    */
   zoomIn() {
-    this.zoomProperty.value /= ZOOM_MULTIPLIER;
+    this.zoomProperty.value *= ZOOM_MULTIPLIER;
   }
 
   /**
@@ -170,7 +170,7 @@ class MomentaDiagram {
    * @public
    */
   zoomOut() {
-    this.zoomProperty.value *= ZOOM_MULTIPLIER;
+    this.zoomProperty.value /= ZOOM_MULTIPLIER;
   }
 }
 

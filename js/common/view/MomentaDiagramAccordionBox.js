@@ -18,9 +18,13 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import ZoomButton from '../../../../scenery-phet/js/buttons/ZoomButton.js';
+import HBox from '../../../../scenery/js/nodes/HBox.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
@@ -105,6 +109,44 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     const borderNode = new Rectangle( gridViewBounds, { stroke: Color.BLACK, lineWidth: 2.5 } );
 
     // Create the Grid
+    const gridLines = new GridLines( modelViewTransformProperty, momentaDiagram.boundsProperty, {
+      lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
+      stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+    } );
+
+
+    const zoomOutButton = new ZoomButton( merge( {}, CollisionLabColors.ZOOM_BUTTON_COLORS, {
+      radius: 8,
+      xMargin: 3,
+      yMargin: 3,
+      in: false,
+      listener: () => {
+        momentaDiagram.zoomOut();
+      }
+    } ) );
+
+    const zoomInButton = new ZoomButton( merge( {}, CollisionLabColors.ZOOM_BUTTON_COLORS, {
+      radius: 8,
+      xMargin: 3,
+      yMargin: 3,
+      in: true,
+      listener: () => {
+        momentaDiagram.zoomIn();
+      }
+    } ) );
+
+    const zoomControl = new HBox( {
+      spacing: 5,
+      children: [ zoomOutButton, zoomInButton ],
+      bottom: gridViewBounds.maxY - 5,
+      right: gridViewBounds.maxX - 5
+    } );
+
+    // Watch the zoom Property and update disable buttons
+    momentaDiagram.zoomProperty.link( zoomFactor => {
+      zoomOutButton.enabled = zoomFactor > CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.min;
+      zoomInButton.enabled = zoomFactor < CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.max;
+    } );
 
 
     //----------------------------------------------------------------------------------------
@@ -128,15 +170,63 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     // Create a container of the content of the MomentaDiagramAccordionBox.
     const contentNode = new Node( {
       children: [
+        gridLines,
         borderNode,
-        momentaVectorContainer
-      ]
+        momentaVectorContainer,
+        zoomControl
+      ],
+      clipArea: Shape.bounds( gridViewBounds )
     } );
 
     super( contentNode, options );
   }
 }
 
+// TODO: use GridNode when it is ready
+class GridLines extends Path {
+
+  /**
+   * @param {Property.<ModelViewTransform2>}
+   * @param {Property.<Bounds2> - the bounds
+   * @param {Object} [options]
+   */
+  constructor( modelViewTransformProperty, boundsProperty, options ) {
+
+    options = merge( {
+      spacing: 1,
+      lineWidth: 1,
+      stroke: 'black'
+    }, options );
+
+    super( new Shape(), options );
+
+
+    modelViewTransformProperty.link( modelViewTransform => {
+
+      // Convenience variables
+      const minX = boundsProperty.value.minX;
+      const maxX = boundsProperty.value.maxX;
+      const minY = boundsProperty.value.minY;
+      const maxY = boundsProperty.value.maxY;
+
+      const shape = new Shape();
+
+      // Vertical lines
+      const firstX = minX - ( minX % options.spacing );
+      for ( let xValue = firstX; xValue <= maxX; xValue += options.spacing ) {
+        shape.moveTo( xValue, minY ).verticalLineTo( maxY );
+      }
+
+      // Horizontal lines
+      const firstY = minY - ( minY % options.spacing );
+      for ( let yValue = firstY; yValue <= maxY; yValue += options.spacing ) {
+        shape.moveTo( minX, yValue ).horizontalLineTo( maxX );
+      }
+
+      this.setShape( modelViewTransform.modelToViewShape( shape ) );
+    } );
+  }
+}
 
 collisionLab.register( 'MomentaDiagramAccordionBox', MomentaDiagramAccordionBox );
 export default MomentaDiagramAccordionBox;
