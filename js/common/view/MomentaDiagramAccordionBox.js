@@ -165,6 +165,17 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       } );
     } );
 
+    // sum
+    const sumMomentaVectorNode = new MomentaDiagramVectorNode( momentaDiagram.sumVector,
+      collisionLabStrings.total,
+      modelViewTransformProperty, {
+        arrowOptions: {
+          fill: CollisionLabColors.MOMENTA_SUM_VECTOR_FILL
+        }
+      } );
+    momentaVectorContainer.addChild( sumMomentaVectorNode );
+
+
     //----------------------------------------------------------------------------------------
 
     // Create a container of the content of the MomentaDiagramAccordionBox.

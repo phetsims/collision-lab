@@ -20,6 +20,9 @@
   "path": {
     "value": "Path"
   },
+  "total": {
+    "value": "Total"
+  },
   "elasticity": {
     "value": "Elasticity"
   },

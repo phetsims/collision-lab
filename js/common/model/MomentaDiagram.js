@@ -102,6 +102,19 @@ class MomentaDiagram {
         expanded && this.updateVectors(); // Only update if the MomentaDiagram is visible (expanded).
       }
     );
+
+    // One-time call to update the MomentaDiagramVectors for the fist time.
+    this.updateVectors();
+  }
+
+  /**
+   * Resets the MomentaDiagram. Called when the reset-all button is pressed.
+   * @public.
+   */
+  reset() {
+    this.zoomProperty.reset();
+    this.expandedProperty.reset();
+    this.updateVectors();
   }
 
   /**

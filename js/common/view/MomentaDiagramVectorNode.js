@@ -50,7 +50,7 @@ class MomentaDiagramVectorNode extends Node {
     //----------------------------------------------------------------------------------------
 
     // Create the ArrowNode that represents the Vector. Initialized at 0 for now. To be updated below.
-    const arrowNode = new ArrowNode( 0, 0, 0, 0, options );
+    const arrowNode = new ArrowNode( 0, 0, 0, 0, options.arrowOptions );
 
     // Observe.
     Property.multilink( [ modelViewTransformProperty,

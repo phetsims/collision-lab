@@ -136,6 +136,7 @@ class CollisionLabModel {
     this.gridVisibleProperty.reset();
     this.isStickyProperty.reset();
     this.playArea.reset();
+    this.momentaDiagram.reset();
   }
 
   /**
