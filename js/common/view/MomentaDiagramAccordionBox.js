@@ -41,11 +41,15 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
   /**
    * @param {MomentaDiagram} momentaDiagram - the model for the MomentaDiagramAccordionBox.
+   * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system.
    * @param {Object} [options]
    */
-  constructor( momentaDiagram, options ) {
+  constructor( momentaDiagram, balls, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
+    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
+
+    //----------------------------------------------------------------------------------------
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 
@@ -54,6 +58,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
       // super-class options
       titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),
+      expandedProperty: momentaDiagram.expandedProperty,
       cornerRadius: PANEL_CORNER_RADIUS,
       contentXMargin: PANEL_X_MARGIN,
       contentYMargin: PANEL_Y_MARGIN,
@@ -102,6 +107,26 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     //----------------------------------------------------------------------------------------
 
+    momentaDiagram.ballToMomentaVectorMap.keys.forEach( ball => {
+
+      const vectorNode = new VectorNode( ball.index, momentaVector );
+
+      this.addChild( vectorNode );
+
+      // @public (read-only) {DerivedProperty.<boolean>} - indicates if the correlated Ball (and thus, the Vector itself)   /**
+    //                                                   is in the PlayArea system. Never disposed since     * Sets the tip position, in meter coordinates.
+    //                                                   MomentaDiagramVectors are never disposed.     * @public
+    this.isInPlayAreaProperty = new DerivedProperty( [ balls.lengthProperty ], () => balls.contains( ball ), {
+      valueType: 'boolean'
+    } );
+
+      balls.lengthProperty.link( () => {
+        vectorNode.visible = balls.contains( ball )
+
+      }  )
+
+
+    } );
 
 
 

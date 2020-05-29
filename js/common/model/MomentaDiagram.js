@@ -75,7 +75,7 @@ class MomentaDiagram {
     this.ballToMomentaVectorMap = new Map();
 
     // Populate the Map with MomentaDiagramVectors.
-    balls.forEach( ball => {
+    prepopulatedBalls.forEach( ball => {
       this.ballToMomentaVectorMap.set( ball, new MomentaDiagramVector() );
     } );
 
