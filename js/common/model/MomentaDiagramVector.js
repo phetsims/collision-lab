@@ -13,33 +13,65 @@
  * @author Brandon Li
  */
 
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import collisionLab from '../../collisionLab.js';
-import Ball from './Ball.js';
-import MomentaDiagramBaseVector from './MomentaDiagramBaseVector.js';
 
-class MomentaDiagramVector extends MomentaDiagramBaseVector {
+class MomentaDiagramVector {
+
+  constructor() {
+
+
+    // @public (read-only) {Vector2Property} - the tail position of the Vector, in meter coordinates. Initialized at the
+    //                                         origin and to be updated later in MomentaDiagram.js
+    this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
+
+
+    // @public (read-only) {Vector2Property} - the tip position of the Vector, in meter coordinates. Initialized at the
+    //                                         origin and to be updated later in MomentaDiagram.js
+    this.tipPositionProperty = new Vector2Property( Vector2.ZERO );
+  }
+
 
   /**
-   * @param {Ball} ball - the Ball whose momentum is modeled. May or may not be in the PlayArea system.
-   * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system.
+   * Gets the tail position of the Vector, in meter coordinates.
+   * @public
+   *
+   * @returns {Vector2}
    */
-  constructor( ball, balls ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+  get tail() { return this.tailPositionProperty.value; }
 
-    //----------------------------------------------------------------------------------------
+  /**
+   * Sets the tail position, in meter coordinates.
+   * @public
+   *
+   * @param {Vector2} tail - in meter coordinates.
+   */
+  set tail( tail ) { this.tailPositionProperty.value = tail; }
 
-    super( ball.momentumProperty );
+  /**
+   * Gets the tip position of the Vector, in meter coordinates.
+   * @public
+   *
+   * @returns {Vector2}
+   */
+  get tip() { return this.tipPositionProperty.value; }
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the correlated Ball (and thus, the Vector itself)
-    //                                                   is in the PlayArea system. Never disposed since
-    //                                                   MomentaDiagramVectors are never disposed.
-    this.isInPlayAreaProperty = new DerivedProperty( [ balls.lengthProperty ], () => balls.contains( ball ), {
-      valueType: 'boolean'
-    } );
-  }
+  /**
+   * Sets the tip position, in meter coordinates.
+   * @public
+   *
+   * @param {Vector2} tip - in meter coordinates.
+   */
+  set tip( tip ) { this.tipPositionProperty.value = tip; }
+
+  /**
+   * Sets the components of the Vector.
+   * @public
+   *
+   * @param {Vector2} components - in meters.
+   */
+  set components( components ) { this.tip = this.tail.plus( components ); }
 }
 
 collisionLab.register( 'MomentaDiagramVector', MomentaDiagramVector );
