@@ -35,7 +35,7 @@ class CenterOfMassNode extends Node {
     super();
 
     const centerOfMassPathNode = new PathCanvasNode( centerOfMass.path, pathVisibleProperty, modelViewTransform, {
-      pathBaseColor: CollisionLabColors.X_MARKER_COLORS.fill
+      pathBaseColor: CollisionLabColors.CENTER_OF_MASS_COLORS.fill
     } );
     this.addChild( centerOfMassPathNode );
 

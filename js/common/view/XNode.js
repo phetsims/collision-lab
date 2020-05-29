@@ -24,7 +24,7 @@ class XNode extends PlusNode {
   constructor( options ) {
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
-    options = merge( {}, CollisionLabColors.X_MARKER_COLORS, {
+    options = merge( {}, CollisionLabColors.CENTER_OF_MASS_COLORS, {
 
       legThickness: 6, // {number} - thickness of the legs of the 'x'
       length: 22,      // {number} - the length of the diagonal of the 'x'

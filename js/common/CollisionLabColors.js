@@ -3,6 +3,7 @@
 /**
  * Colors for the 'Collision Lab' sim.
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -11,22 +12,25 @@ import collisionLab from '../collisionLab.js';
 
 const CollisionLabColors = {
 
-  //----------------------------------------------------------------------------------------
-  // General colors
+  // General
   SCREEN_BACKGROUND: 'rgb( 244, 250, 255 )',
 
-  // PlayArea background color
+  // PlayArea background
   PLAY_AREA_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
 
-  //----------------------------------------------------------------------------------------
-  // Grid colors
+  // Grid
   GRID_BACKGROUND_COLOR: 'rgb( 255, 254, 255 )',
   MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
   MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
   GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
 
-  //----------------------------------------------------------------------------------------
-  // Ball Colors
+  // Panel-like containers
+  PANEL_COLORS: {
+    stroke: 'rgb( 190, 190, 190 )',
+    fill: 'rgb( 240, 240, 240 )'
+  },
+
+  // Balls
   BALL_COLORS: [
     new Color( 255, 0, 0 ),
     new Color( 0, 155, 255 ),
@@ -35,49 +39,40 @@ const CollisionLabColors = {
     new Color( 255, 255, 0 )
   ],
 
-  //----------------------------------------------------------------------------------------
-  // Vector Colors
-  VELOCITY_VECTOR_COLORS: {
-    fill: 'rgb( 0, 255, 0 )',
-    stroke: 'black'
-  },
-  MOMENTUM_VECTOR_COLORS: {
-    fill: 'rgb( 255, 255, 0 )',
-    stroke: 'black'
+  // Center of mass
+  CENTER_OF_MASS_COLORS: {
+    fill: 'rgb( 251, 139, 65 )',
+    stroke: Color.BLACK
   },
 
-  KINETIC_ENERGY_DISPLAY_COLORS: {
-    backgroundFill: 'rgb( 255, 255, 255 )',
-    opacity: 0.60
-  },
+  // Leader lines, for when Balls are dragged
+  BALL_LEADER_LINES_COLOR: Color.BLACK,
 
-  BALL_DISPLAY_COLORS: {
-    backgroundFill: 'rgb( 255, 255, 255 )',
-    opacity: 0.60
-  },
 
-  TIME_DISPLAY_COLORS: {
-    backgroundFill: 'white',
-    stroke: 'black'
-  },
-
-  //----------------------------------------------------------------------------------------
-  // X Marker Colors
-  X_MARKER_COLORS: {
-    stroke: 'black',
-    fill: 'rgb( 251, 139, 65 )'
-  },
-
-  //----------------------------------------------------------------------------------------
-  // Panel-like container default colors
-  PANEL_COLORS: {
-    stroke: 'rgb( 190, 190, 190 )',
-    fill: 'rgb( 240, 240, 240 )'
-  },
-
+  // Keypad
   KEYPAD_TEXT_COLORS: {
     error: Color.RED,
     default: Color.BLACK
+  },
+
+
+
+  // Vector Colors
+  VELOCITY_VECTOR_COLORS: {
+    fill: 'rgb( 0, 255, 0 )',
+    stroke: Color.BLACK
+  },
+  MOMENTUM_VECTOR_COLORS: {
+    fill: 'rgb( 255, 255, 0 )',
+    stroke: Color.BLACK
+  },
+
+  KINETIC_ENERGY_DISPLAY_COLORS: {
+    backgroundFill: 'rgba( 255, 255, 255, 0.6 )'
+  },
+
+  BALL_DISPLAY_COLORS: {
+    backgroundFill: 'rgba( 255, 255, 255, 0.6 )'
   }
 };
 
