@@ -116,7 +116,7 @@ class MomentaDiagram {
 
     // First update the components of the Vectors.
     this.balls.forEach( ball => {
-      this.ballToMomentaVectorMap( ball ).components = ball.momentum;
+      this.ballToMomentaVectorMap.get( ball ).components = ball.momentum;
     } );
 
     // Update the components of the sum.
@@ -142,16 +142,16 @@ class MomentaDiagram {
     // TODO: For now, I'm going to implement the explore 2D behavior, in the future this should be removed.
 
     const firstBall = this.balls.get( 0 );
-    const firstVector = this.ballToVectorMap.get( firstBall );
+    const firstVector = this.ballToMomentaVectorMap.get( firstBall );
 
     // Set the first Vector's tail at the origin.
     firstVector.tail = Vector2.ZERO;
     this.sumVector.tail = firstVector.tail;
 
-    for ( let i = 0; i < this.balls.length; i++ ) {
+    for ( let i = 1; i < this.balls.length; i++ ) {
 
-      const vector = this.ballToVectorMap.get( this.balls.get( i ) );
-      const previousVector = this.ballToVectorMap.get( this.balls.get( i - 1 ) );
+      const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+      const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
 
       vector.tail = previousVector.tip;
     }

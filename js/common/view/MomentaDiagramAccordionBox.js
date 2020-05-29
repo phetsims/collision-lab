@@ -16,7 +16,7 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import Property from '../../../../axon/js/Property.js';
+import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -29,7 +29,9 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import Ball from '../model/Ball.js';
 import MomentaDiagram from '../model/MomentaDiagram.js';
+import MomentaDiagramVectorNode from './MomentaDiagramVectorNode.js';
 
 // constants
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
@@ -107,36 +109,27 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     //----------------------------------------------------------------------------------------
 
-    momentaDiagram.ballToMomentaVectorMap.keys.forEach( ball => {
+    const momentaVectorContainer = new Node();
 
-      const vectorNode = new VectorNode( ball.index, momentaVector );
+    momentaDiagram.ballToMomentaVectorMap.forEach( ( momentaVector, ball ) => {
 
-      this.addChild( vectorNode );
+      const momentaVectorNode = new MomentaDiagramVectorNode( momentaVector, ball.index, modelViewTransformProperty );
 
-      // @public (read-only) {DerivedProperty.<boolean>} - indicates if the correlated Ball (and thus, the Vector itself)   /**
-    //                                                   is in the PlayArea system. Never disposed since     * Sets the tip position, in meter coordinates.
-    //                                                   MomentaDiagramVectors are never disposed.     * @public
-    this.isInPlayAreaProperty = new DerivedProperty( [ balls.lengthProperty ], () => balls.contains( ball ), {
-      valueType: 'boolean'
-    } );
+      momentaVectorContainer.addChild( momentaVectorNode );
+
 
       balls.lengthProperty.link( () => {
-        vectorNode.visible = balls.contains( ball )
-
-      }  )
-
-
+        momentaVectorNode.visible = balls.contains( ball );
+      } );
     } );
-
-
 
     //----------------------------------------------------------------------------------------
 
     // Create a container of the content of the MomentaDiagramAccordionBox.
     const contentNode = new Node( {
       children: [
-        borderNode
-
+        borderNode,
+        momentaVectorContainer
       ]
     } );
 
