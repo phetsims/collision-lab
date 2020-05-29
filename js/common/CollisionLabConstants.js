@@ -8,6 +8,7 @@
  */
 
 import Bounds2 from '../../../dot/js/Bounds2.js';
+import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import RangeWithValue from '../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../dot/js/Vector2.js';
@@ -57,6 +58,10 @@ const CollisionLabConstants = {
     new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 ),
     new BallState( new Vector2( -0.8, 0.65 ), new Vector2( -1.1, 0 ), 1.0 )
   ],
+
+  // Momenta Diagram
+  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 2, 1 ),
+  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 14, 11 ),
 
   //----------------------------------------------------------------------------------------
 
