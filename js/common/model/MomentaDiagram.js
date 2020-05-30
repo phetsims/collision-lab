@@ -3,13 +3,13 @@
 /**
  * The Model representation for the 'Momenta Diagram' accordion box, which appears at the bottom right of each screen.
  * Features the momentum Vectors of each Ball in the PlayArea, along with a total momentum vector, in a completely
- * separate coordinate frame from the PlayArea. The positioning of the Vectors differ for each screen, so this is meant
- * to be subclassed.
+ * separate coordinate frame from the PlayArea.
  *
  * Responsibilities are:
  *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes in the view.
  *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector.
- *   - Update the tail positions and components of the Momentum Vectors when necessary.
+ *   - Update the tail positions and components of the Momentum Vectors when necessary. The positioning of the Vectors
+ *     differ depending on the dimensions of the screen.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -34,19 +34,21 @@ const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RA
 const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 const ZOOM_MULTIPLIER = 2;
 
-// @abstract
 class MomentaDiagram {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of ALL possible balls.
    * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system. All Balls must be apart of the
    *                                         prepopulatedBalls array.
-   * @param {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram
+   * @param {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram. Positioning of the
+   *                              Vectors are different depending on the dimensions.
    */
-  constructor( prepopulatedBalls, balls, dimension ) {
+  constructor( prepopulatedBalls, balls, dimensions ) {
     assert && assert( isArray( prepopulatedBalls ) && _.every( prepopulatedBalls, ball => ball instanceof Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( dimension === 1 || dimension === 2, `invalid dimension: ${ dimension }` );
+    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${ dimensions }` );
+
+    //----------------------------------------------------------------------------------------
 
     // @public {NumberProperty} - the zoom factor of the MomentaDiagram. This is set externally in the view.
     this.zoomProperty = new NumberProperty( MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue, {
@@ -67,9 +69,8 @@ class MomentaDiagram {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since
-    //                                         the positions and components of the MomentaDiagram are only updated if
-    //                                         this is true.
+    // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
+    //                             and components of the MomentaDiagram are only updated if this is true.
     this.expandedProperty = new BooleanProperty( false );
 
     // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBall to its associated Momenta Vector.
@@ -83,8 +84,11 @@ class MomentaDiagram {
     // @public (read-only) {MomentaDiagramSumVector} - the sum of the Momentum Vectors of the system.
     this.sumVector = new MomentaDiagramVector();
 
-    // @protected {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
+    // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
     this.balls = balls;
+
+    // @private {number} - reference to the passed-in dimensions of the Screen that the MomentaDiagram appears in.
+    this.dimensions = dimensions;
 
     //----------------------------------------------------------------------------------------
 
@@ -140,34 +144,47 @@ class MomentaDiagram {
     this.balls.forEach( ball => { totalMomentum.add( ball.momentum ); } );
     this.sumVector.components = totalMomentum;
 
-    // Call the positionVectors() abstract method to update the tail positions of the Vectors.
+    // Position the Vectors.
     this.positionVectors();
   }
 
   /**
-   * Positions the Momenta Vectors accordingly. This behavior is different for each screen. For instance, in
-   * 'Explore 2D', the Vectors are placed tip-to-tail, while in `Explore 1D`, the Vectors are stacked on top of
+   * Positions the Momenta Vectors accordingly. This behavior is different for each dimension. For instance, in
+   * 'Explore 2D', the Vectors are placed tip-to-tail, while in 'Explore 1D', the Vectors are stacked on top of
    * each other.
-   *
-   * @abstract
-   * @protected
+   * @private
    */
   positionVectors() {
-    // TODO: For now, I'm going to implement the explore 2D behavior, in the future this should be removed.
-
     const firstBall = this.balls.get( 0 );
     const firstVector = this.ballToMomentaVectorMap.get( firstBall );
 
-    // Set the first Vector's tail at the origin.
-    firstVector.tail = Vector2.ZERO;
-    this.sumVector.tail = firstVector.tail;
+    if ( this.dimensions === 1 ) {
 
-    for ( let i = 1; i < this.balls.length; i++ ) {
+      // Set the first Vector's tail, where the x is 0 and the y depends on the number of balls in the system.
+      firstVector.tail = new Vector2( 0, 1 + Math.floor( ( this.balls.length - 1 )  / 2 ) );
+      this.sumVector.tail = new Vector2( 0, firstVector.tail.y + this.balls.length );
 
-      const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-      const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+      for ( let i = 1; i < this.balls.length; i++ ) {
 
-      vector.tail = previousVector.tip;
+        const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+        const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+
+        vector.tail = previousVector.tip.minusXY( 0, 1 );
+      }
+    }
+    else {
+
+      // Set the first Vector's tail at the origin.
+      firstVector.tail = Vector2.ZERO;
+      this.sumVector.tail = firstVector.tail;
+
+      for ( let i = 1; i < this.balls.length; i++ ) {
+
+        const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+        const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+
+        vector.tail = previousVector.tip;
+      }
     }
   }
 
