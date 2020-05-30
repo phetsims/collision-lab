@@ -41,10 +41,12 @@ class MomentaDiagram {
    * @param {Balls[]} prepopulatedBalls - an array of ALL possible balls.
    * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system. All Balls must be apart of the
    *                                         prepopulatedBalls array.
+   * @param {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram
    */
-  constructor( prepopulatedBalls, balls ) {
+  constructor( prepopulatedBalls, balls, dimension ) {
     assert && assert( isArray( prepopulatedBalls ) && _.every( prepopulatedBalls, ball => ball instanceof Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+    assert && assert( dimension === 1 || dimension === 2, `invalid dimension: ${ dimension }` );
 
     // @public {NumberProperty} - the zoom factor of the MomentaDiagram. This is set externally in the view.
     this.zoomProperty = new NumberProperty( MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue, {

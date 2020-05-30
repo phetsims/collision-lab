@@ -29,7 +29,7 @@ class Explore2DModel extends CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( INITIAL_BALL_STATES, tandem );
+    super( INITIAL_BALL_STATES, {}, tandem );
   }
 }
 

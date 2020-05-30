@@ -16,6 +16,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import isArray from '../../../../phet-core/js/isArray.js';
+import merge from '../../../../phet-core/js/merge.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
@@ -33,11 +34,21 @@ class CollisionLabModel {
 
   /**
    * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
+   * @param {Object} [options]
    * @param {Tandem} tandem
    */
-  constructor( initialBallStates, tandem ) {
+  constructor( initialBallStates, options, tandem ) {
     assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    options = merge( {
+
+      // {number} - the dimensions of the collision Screen. Either 1 or 2.
+      dimensions: 2
+
+
+    }, options );
 
     //----------------------------------------------------------------------------------------
 
@@ -117,7 +128,7 @@ class CollisionLabModel {
     );
 
     // @public (read-only) {MomentaDiagram}
-    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls );
+    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls, options.dimensions );
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.
