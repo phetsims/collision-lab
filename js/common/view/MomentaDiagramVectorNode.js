@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * View for a single Vector that appears in the 'Momenta Diagram' accordion box at the bottom-right of each screen. This
