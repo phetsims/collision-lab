@@ -15,6 +15,7 @@
  * @author Brandon Li
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import collisionLab from '../../collisionLab.js';
@@ -23,14 +24,20 @@ class MomentaDiagramVector {
 
   constructor() {
 
-    // @public {Vector2Property} - the tail position of the Vector, in meter coordinates. Initialized at the
-    //                             origin and to be updated later in MomentaDiagram.js
+    // @public {Vector2Property} - the tail position of the Vector, in kg*(m/s). Initialized at the origin and to be
+    //                             updated later in MomentaDiagram.js
     this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
 
-
-    // @public {Vector2Property} - the tip position of the Vector, in meter coordinates. Initialized at the
+    // @public {Vector2Property} - the Momentum Vector's components, its x and y scalar values. Initialized at the
     //                             origin and to be updated later in MomentaDiagram.js
-    this.tipPositionProperty = new Vector2Property( Vector2.ZERO );
+    this.componentsProperty = new Vector2Property( Vector2.ZERO );
+
+    // @public {DerivedProperty.<Vector2>} - the tip position of the Vector. Never disposed since MomentaDiagramVectors
+    //                                       are never disposed.
+    this.tipPositionProperty = new DerivedProperty( [ this.tailPositionProperty, this.componentsProperty ],
+      ( tailPosition, components ) => tailPosition.plus( components ), {
+        valueType: Vector2
+      } );
   }
 
   /**
@@ -42,7 +49,7 @@ class MomentaDiagramVector {
    */
   reset() {
     this.tailPositionProperty.reset();
-    this.tipPositionProperty.reset();
+    this.componentsProperty.reset();
   }
 
   /*----------------------------------------------------------------------------*
@@ -50,7 +57,7 @@ class MomentaDiagramVector {
    *----------------------------------------------------------------------------*/
 
   /**
-   * Gets the tail position of the Vector, in meter coordinates.
+   * Gets the tail position of the Vector, in kg*(m/s) coordinates.
    * @public
    *
    * @returns {Vector2}
@@ -58,15 +65,15 @@ class MomentaDiagramVector {
   get tail() { return this.tailPositionProperty.value; }
 
   /**
-   * Sets the tail position, in meter coordinates.
+   * Sets the tail position, in kg*(m/s) coordinates.
    * @public
    *
-   * @param {Vector2} tail - in meter coordinates.
+   * @param {Vector2} tail - in kg*(m/s) coordinates.
    */
   set tail( tail ) { this.tailPositionProperty.value = tail; }
 
   /**
-   * Gets the tip position of the Vector, in meter coordinates.
+   * Gets the tip position of the Vector, in kg*(m/s) coordinates.
    * @public
    *
    * @returns {Vector2}
@@ -74,20 +81,12 @@ class MomentaDiagramVector {
   get tip() { return this.tipPositionProperty.value; }
 
   /**
-   * Sets the tip position, in meter coordinates.
-   * @public
-   *
-   * @param {Vector2} tip - in meter coordinates.
-   */
-  set tip( tip ) { this.tipPositionProperty.value = tip; }
-
-  /**
    * Sets the components of the Vector.
    * @public
    *
-   * @param {Vector2} components - in meters.
+   * @param {Vector2} components - in kg*(m/s).
    */
-  set components( components ) { this.tip = this.tail.plus( components ); }
+  set components( components ) { this.componentsProperty.value = components; }
 }
 
 collisionLab.register( 'MomentaDiagramVector', MomentaDiagramVector );
