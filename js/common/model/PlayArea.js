@@ -18,25 +18,29 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
+import isArray from '../../../../phet-core/js/isArray.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
+import BallState from './BallState.js';
 import CenterOfMass from './CenterOfMass.js';
 
 class PlayArea {
 
   /**
+   * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
    * @param {Property.<boolean>} constantRadiusProperty - indicates if Ball radii should be constant.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    */
-  constructor( numberOfBallsProperty,
+  constructor( initialBallStates,
+               numberOfBallsProperty,
                constantRadiusProperty,
                gridVisibleProperty,
                pathVisibleProperty,
                centerOfMassVisibleProperty ) {
+    assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
@@ -49,7 +53,7 @@ class PlayArea {
     //                      never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                      PlayArea system. That is determined by the `this.balls` declaration below. This is just used
     //                      so that the same Ball instances are added with the same number of balls.
-    this.prepopulatedBalls = CollisionLabConstants.INITIAL_BALL_STATES.map( ( ballState, index ) => new Ball(
+    this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
       constantRadiusProperty,
       gridVisibleProperty,

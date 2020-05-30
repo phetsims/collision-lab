@@ -15,10 +15,12 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import isArray from '../../../../phet-core/js/isArray.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import BallState from './BallState.js';
 import CollisionDetector from './CollisionDetector.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
@@ -30,10 +32,14 @@ const TIME_STEP_DURATION = CollisionLabConstants.TIME_STEP_DURATION;
 class CollisionLabModel {
 
   /**
+   * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {Tandem} tandem
    */
-  constructor( tandem ) {
+  constructor( initialBallStates, tandem ) {
+    assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {BooleanProperty} - indicates the play/pause state of the screen.
     this.playProperty = new BooleanProperty( false );
@@ -92,6 +98,7 @@ class CollisionLabModel {
 
     // @public (read-only) {PlayArea} - create the PlayArea of the screen.
     this.playArea = new PlayArea(
+      initialBallStates,
       this.numberOfBallsProperty,
       this.constantRadiusProperty,
       this.gridVisibleProperty,

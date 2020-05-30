@@ -43,7 +43,7 @@ class MomentaDiagram {
    *                                         prepopulatedBalls array.
    */
   constructor( prepopulatedBalls, balls ) {
-    assert && assert( isArray( prepopulatedBalls ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
+    assert && assert( isArray( prepopulatedBalls ) && _.every( prepopulatedBalls, ball => ball instanceof Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
 
     // @public {NumberProperty} - the zoom factor of the MomentaDiagram. This is set externally in the view.
