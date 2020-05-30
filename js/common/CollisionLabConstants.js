@@ -60,7 +60,7 @@ const CollisionLabConstants = {
   ],
 
   // Momenta Diagram
-  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 2, 2 ),
+  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 8, 2 ),
   MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 14, 11 ),
 
   //----------------------------------------------------------------------------------------
@@ -77,7 +77,9 @@ const CollisionLabConstants = {
     headWidth: 12,
     headHeight: 13,
     tailWidth: 3.5,
-    lineWidth: 1
+    lineWidth: 1,
+    isHeadDynamic: true,
+    fractionalHeadHeight: 0.5
   },
 
   // Checkboxes
