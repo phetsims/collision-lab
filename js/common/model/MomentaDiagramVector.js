@@ -28,8 +28,8 @@ class MomentaDiagramVector {
     //                             updated later in MomentaDiagram.js
     this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
 
-    // @public {Vector2Property} - the Momentum Vector's components, its x and y scalar values. Initialized at the
-    //                             origin and to be updated later in MomentaDiagram.js
+    // @public {Vector2Property} - the Momentum Vector's components, which are its x and y scalar values. Initialized
+    //                              at the origin and to be updated later in MomentaDiagram.js
     this.componentsProperty = new Vector2Property( Vector2.ZERO );
 
     // @public {DerivedProperty.<Vector2>} - the tip position of the Vector. Never disposed since MomentaDiagramVectors
@@ -45,7 +45,7 @@ class MomentaDiagramVector {
    * @public
    *
    * Technically, since the tail and tip are set externally, which depends on Balls momentums, this method isn't needed.
-   * However, he PhET convention is to completely reset when the reset all button is pressed, so we follow that here.
+   * However, the PhET convention is to completely reset when the reset all button is pressed, so we follow that here.
    */
   reset() {
     this.tailPositionProperty.reset();
@@ -57,7 +57,7 @@ class MomentaDiagramVector {
    *----------------------------------------------------------------------------*/
 
   /**
-   * Gets the tail position of the Vector, in kg*(m/s) coordinates.
+   * Gets the tail position of the Vector, in kg*(m/s).
    * @public
    *
    * @returns {Vector2}
@@ -65,15 +65,49 @@ class MomentaDiagramVector {
   get tail() { return this.tailPositionProperty.value; }
 
   /**
-   * Sets the tail position, in kg*(m/s) coordinates.
+   * Gets the tail's y coordinate, in kg*(m/s).
    * @public
    *
-   * @param {Vector2} tail - in kg*(m/s) coordinates.
+   * @returns {number}
+   */
+  get tailY() { return this.tail.y; }
+
+  /**
+   * Gets the tail's x coordinate, in kg*(m/s).
+   * @public
+   *
+   * @returns {number}
+   */
+  get tailX() { return this.tail.x; }
+
+  /**
+   * Sets the tail position, in kg*(m/s).
+   * @public
+   *
+   * @param {Vector2} tail - in kg*(m/s).
    */
   set tail( tail ) { this.tailPositionProperty.value = tail; }
 
   /**
-   * Gets the tip position of the Vector, in kg*(m/s) coordinates.
+   * Sets the tail's x coordinate, keeping the components constant.
+   * @public
+   *
+   * @param {number} tailX - in kg*(m/s).
+   */
+  set tailX( tailX ) { this.tail = new Vector2( tailX, this.tailY ); }
+
+  /**
+   * Sets the tail's y coordinate, keeping the components constant.
+   * @public
+   *
+   * @param {number} tailY - in kg*(m/s).
+   */
+  set tailY( tailY ) { this.tail = new Vector2( this.tailX, tailY ); }
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Gets the tip position of the Vector, in kg*(m/s).
    * @public
    *
    * @returns {Vector2}
@@ -83,41 +117,18 @@ class MomentaDiagramVector {
   /**
    * Gets the tip's x coordinate.
    * @public
-   * @returns {number}
+   *
+   * @returns {number} - in kg*(m/s)
    */
-  get tipX() { return this.tipPositionProperty.value.x; }
+  get tipX() { return this.tip.x; }
 
   /**
    * Gets the tip's y coordinate.
    * @public
-   * @returns {number}
+   *
+   * @returns {number} - in kg*(m/s)
    */
-  get tipY() { return this.tipPositionProperty.value.y; }
-
-  /**
-   * Sets the tail's x coordinate. Keeps the components constant.
-   * @public
-   * @param {number} tailX
-   */
-  set tailX( tailX ) {
-    this.tail = new Vector2( tailX, this.tail.y );
-  }
-
-  /**
-   * Sets the tail's y coordinate. Keeps the components constant.
-   * @public
-   * @param {number} tailY
-   */
-  set tailY( tailY ) {
-    this.tail = new Vector2( this.tail.x, tailY );
-  }
-
-  /**
-   * Gets the tail's y coordinate.
-   * @public
-   * @returns {number}
-   */
-  get tailY() { return this.tailPositionProperty.value.y; }
+  get tipY() { return this.tip.y; }
 
   /**
    * Sets the components of the Vector.
