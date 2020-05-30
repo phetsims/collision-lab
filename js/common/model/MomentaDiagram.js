@@ -7,10 +7,9 @@
  * to be subclassed.
  *
  * Responsibilities are:
- *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes.
- *   - Create a MomentaDiagramVector for each prepopulated Ball.
- *   - Create a MomentaDiagramSumVector.
- *   - Update the tail positions and components of the Vectors when necessary.
+ *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes in the view.
+ *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector.
+ *   - Update the tail positions and components of the Momentum Vectors when necessary.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
