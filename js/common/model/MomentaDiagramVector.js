@@ -81,6 +81,45 @@ class MomentaDiagramVector {
   get tip() { return this.tipPositionProperty.value; }
 
   /**
+   * Gets the tip's x coordinate.
+   * @public
+   * @returns {number}
+   */
+  get tipX() { return this.tipPositionProperty.value.x; }
+
+  /**
+   * Gets the tip's y coordinate.
+   * @public
+   * @returns {number}
+   */
+  get tipY() { return this.tipPositionProperty.value.y; }
+
+  /**
+   * Sets the tail's x coordinate. Keeps the components constant.
+   * @public
+   * @param {number} tailX
+   */
+  set tailX( tailX ) {
+    this.tail = new Vector2( tailX, this.tail.y );
+  }
+
+  /**
+   * Sets the tail's y coordinate. Keeps the components constant.
+   * @public
+   * @param {number} tailY
+   */
+  set tailY( tailY ) {
+    this.tail = new Vector2( this.tail.x, tailY );
+  }
+
+  /**
+   * Gets the tail's y coordinate.
+   * @public
+   * @returns {number}
+   */
+  get tailY() { return this.tailPositionProperty.value.y; }
+
+  /**
    * Sets the components of the Vector.
    * @public
    *

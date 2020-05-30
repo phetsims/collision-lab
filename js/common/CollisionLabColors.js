@@ -63,7 +63,7 @@ const CollisionLabColors = {
   },
 
 
-  MOMENTA_SUM_VECTOR_FILL: Color.BLACK,
+  TOTAL_MOMENTUM_VECTOR_FILL: Color.BLACK,
 
   // Vector Colors
   VELOCITY_VECTOR_COLORS: {

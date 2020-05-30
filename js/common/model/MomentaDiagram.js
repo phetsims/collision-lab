@@ -81,8 +81,8 @@ class MomentaDiagram {
       this.ballToMomentaVectorMap.set( ball, new MomentaDiagramVector() );
     } );
 
-    // @public (read-only) {MomentaDiagramSumVector} - the sum of the Momentum Vectors of the system.
-    this.sumVector = new MomentaDiagramVector();
+    // @public (read-only) {MomentaDiagramSumVector} - the total sum of the Momentum Vectors of the system.
+    this.totalMomentumVector = new MomentaDiagramVector();
 
     // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
     this.balls = balls;
@@ -97,8 +97,8 @@ class MomentaDiagram {
     // For the dependencies, we use:
     //  - expandedProperty; for performance reasons, the MomentaDiagram isn't updated it isn't visible.
     //  - The momentum Properties of the prepopulatedBalls. Only the balls in the play-area are positioned and used
-    //    the sum calculation.
-    //  - balls.lengthProperty, since removing or adding a Ball changes the sum.
+    //    the total momenta calculation.
+    //  - balls.lengthProperty, since removing or adding a Ball changes the total momenta.
     //
     // This Multilink is never disposed and lasts for the lifetime of the sim.
     Property.multilink(
@@ -123,12 +123,20 @@ class MomentaDiagram {
   }
 
   /**
-   * Updates the tail and components of the Vectors to match the Balls in the PlayArea. Only the Balls in the PlayArea
-   * are updated.
+   * Updates the components and positions of the momentum Vectors to match the Balls in the PlayArea. Only the Balls in
+   * the PlayArea are updated and used to calculate the totalMomentum.
    * @private
    *
-   * Since positioning of Vectors differs for different screens, this method will invoke a abstract method
-   * for the positioning of the Vectors.
+   * The positioning of the momentum Vectors are different for each dimension:
+   *   For 2D Screens:
+   *     - The first momentum Vector is placed at the origin.
+   *     - Momentum vectors are placed tip-to-tail
+   *     - The total momentum Vector is placed at the tail of the first vector.
+   *   For 1D screens:
+   *     - The momentum vectors are stacked vertically on top of each other, with the first vector on top and
+   *       where the tailY coordinates of the other vectors are one-off of each other.
+   *     - The first momentum Vector and the total momentum Vector's tailX are placed at x = 0. The vectors are then
+   *       placed tipX-to-tailX.
    */
   updateVectors() {
 
@@ -137,53 +145,55 @@ class MomentaDiagram {
       this.ballToMomentaVectorMap.get( ball ).components = ball.momentum;
     } );
 
-    // Update the components of the sum.
+    // Update the components of the total momenta Vector.
     const totalMomentum = Vector2.ZERO.copy();
 
     // Loop through and calculate the total momentum of the Balls in the PlayArea system.
     this.balls.forEach( ball => { totalMomentum.add( ball.momentum ); } );
-    this.sumVector.components = totalMomentum;
+    this.totalMomentumVector.components = totalMomentum;
 
-    // Position the Vectors.
-    this.positionVectors();
-  }
+    //----------------------------------------------------------------------------------------
 
-  /**
-   * Positions the Momenta Vectors accordingly. This behavior is different for each dimension. For instance, in
-   * 'Explore 2D', the Vectors are placed tip-to-tail, while in 'Explore 1D', the Vectors are stacked on top of
-   * each other.
-   * @private
-   */
-  positionVectors() {
-    const firstBall = this.balls.get( 0 );
-    const firstVector = this.ballToMomentaVectorMap.get( firstBall );
+    // Reference the Momenta Vector of the first Ball in the system.
+    const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( 0 ) );
 
-    if ( this.dimensions === 1 ) {
+    // Position the momentum Vectors in the correct position, which depends on the dimensions.
+    if ( this.dimensions === 2 ) {
 
-      // Set the first Vector's tail, where the x is 0 and the y depends on the number of balls in the system.
-      firstVector.tail = new Vector2( 0, 1 + Math.floor( ( this.balls.length - 1 )  / 2 ) );
-      this.sumVector.tail = new Vector2( 0, firstVector.tail.y - this.balls.length );
+      // Set the first momenta Vector's tail and the total momenta Vectors' tail at the origin.
+      firstMomentaVector.tail = Vector2.ZERO;
+      this.totalMomentumVector.tail = Vector2.ZERO;
 
+      // Position the Momentum vectors tip-to-tail. Loop in pairs.
       for ( let i = 1; i < this.balls.length; i++ ) {
+        const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+        const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
 
-        const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-        const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
-
-        vector.tail = new Vector2( previousVector.tip.x, previousVector.tail.y - 1 );
+        // tip-to-tail
+        momentaVector.tail = previousMomentaVector.tip;
       }
     }
     else {
 
-      // Set the first Vector's tail at the origin.
-      firstVector.tail = Vector2.ZERO;
-      this.sumVector.tail = firstVector.tail;
+      // Set the first momenta Vector's tail and the total momenta Vectors' tail at x = 0.
+      firstMomentaVector.tailX = 0;
+      this.totalMomentumVector.tailX = 0;
 
+      // Set the y-value of the first momenta Vector's tail and the total momenta Vector's tail which depends on the
+      // number of balls in the system.
+      firstMomentaVector.tailY = Math.floor( this.balls.length / 2 );
+      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length;
+
+      // Position the Momentum vectors tipX-to-tailX and stacked vertically on top of each other. Loop in pairs.
       for ( let i = 1; i < this.balls.length; i++ ) {
+        const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+        const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
 
-        const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-        const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+        // tipX-to-tailX
+        momentaVector.tailX = previousMomentaVector.tipX;
 
-        vector.tail = previousVector.tip;
+        // Stack vertically on top of each other by progressively decrementing the tipY by 1.
+        momentaVector.tailY = previousMomentaVector.tailY - 1;
       }
     }
   }
