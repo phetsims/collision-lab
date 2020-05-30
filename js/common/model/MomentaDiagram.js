@@ -8,7 +8,7 @@
  * Responsibilities are:
  *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes in the view.
  *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector.
- *   - Update the tail positions and components of the Momentum Vectors when necessary. The positioning of the Vectors
+ *   - Update the tail positions and components of the momenta Vectors when necessary. The positioning of the Vectors
  *     differ depending on the dimensions of the screen.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
@@ -55,7 +55,7 @@ class MomentaDiagram {
       range: MOMENTA_DIAGRAM_ZOOM_RANGE
     } );
 
-    // @public {DerivedProperty.<Bounds2>} - the Bounds of the MomentaDiagram, in meters. Derived from the zoom factor.
+    // @public {DerivedProperty.<Bounds2>} - the Bounds of the MomentaDiagram, in kg*(m/s). Derived from the zoom factor
     this.boundsProperty = new DerivedProperty( [ this.zoomProperty ], zoomFactor => {
 
       // The center of the MomentaDiagram is the origin.
@@ -70,10 +70,10 @@ class MomentaDiagram {
     //----------------------------------------------------------------------------------------
 
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
-    //                             and components of the MomentaDiagram are only updated if this is true.
+    //                             and components of the Momenta Vectors are only updated if this is true.
     this.expandedProperty = new BooleanProperty( false );
 
-    // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBall to its associated Momenta Vector.
+    // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBalls to its associated Momenta Vector.
     this.ballToMomentaVectorMap = new Map();
 
     // Populate the Map with MomentaDiagramVectors.
@@ -81,7 +81,7 @@ class MomentaDiagram {
       this.ballToMomentaVectorMap.set( ball, new MomentaDiagramVector() );
     } );
 
-    // @public (read-only) {MomentaDiagramSumVector} - the total sum of the Momentum Vectors of the system.
+    // @public (read-only) {MomentaDiagramSumVector} - the total sum of the Momenta Vectors of the system.
     this.totalMomentumVector = new MomentaDiagramVector();
 
     // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
@@ -92,11 +92,11 @@ class MomentaDiagram {
 
     //----------------------------------------------------------------------------------------
 
-    // Create a Multilink to update our positioning and components of our Vectors.
+    // Create a Multilink to update our positioning and components of our Momenta Vectors.
     //
     // For the dependencies, we use:
     //  - expandedProperty; for performance reasons, the MomentaDiagram isn't updated it isn't visible.
-    //  - The momentum Properties of the prepopulatedBalls. Only the balls in the play-area are positioned and used
+    //  - The momentum Properties of the prepopulatedBalls. Only the balls in the play-area are positioned and used in
     //    the total momenta calculation.
     //  - balls.lengthProperty, since removing or adding a Ball changes the total momenta.
     //
@@ -107,9 +107,6 @@ class MomentaDiagram {
         expanded && this.updateVectors(); // Only update if the MomentaDiagram is visible (expanded).
       }
     );
-
-    // One-time call to update the MomentaDiagramVectors for the fist time.
-    this.updateVectors();
   }
 
   /**
@@ -124,14 +121,15 @@ class MomentaDiagram {
 
   /**
    * Updates the components and positions of the momentum Vectors to match the Balls in the PlayArea. Only the Balls in
-   * the PlayArea are updated and used to calculate the totalMomentum.
+   * the PlayArea are updated and used to calculate the total momentum.
    * @private
    *
    * The positioning of the momentum Vectors are different for each dimension:
+   *
    *   For 2D Screens:
-   *     - The first momentum Vector is placed at the origin.
+   *     - The first momentum and the total momentum Vectors are placed at the origin.
    *     - Momentum vectors are placed tip-to-tail
-   *     - The total momentum Vector is placed at the tail of the first vector.
+   *
    *   For 1D screens:
    *     - The momentum vectors are stacked vertically on top of each other, with the first vector on top and
    *       where the tailY coordinates of the other vectors are one-off of each other.
@@ -145,7 +143,7 @@ class MomentaDiagram {
       this.ballToMomentaVectorMap.get( ball ).components = ball.momentum;
     } );
 
-    // Update the components of the total momenta Vector.
+    // Compute the components of the total Momenta Vector.
     const totalMomentum = Vector2.ZERO.copy();
 
     // Loop through and calculate the total momentum of the Balls in the PlayArea system.
@@ -154,41 +152,38 @@ class MomentaDiagram {
 
     //----------------------------------------------------------------------------------------
 
-    // Reference the Momenta Vector of the first Ball in the system.
+    // Reference the Momenta Vector associated with the first Ball in the system.
     const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( 0 ) );
 
-    // Position the momentum Vectors in the correct position, which depends on the dimensions.
+    // Position the first Momenta Vector and the total Momenta Vector in the correct position.
     if ( this.dimensions === 2 ) {
 
-      // Set the first momenta Vector's tail and the total momenta Vectors' tail at the origin.
+      // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
       firstMomentaVector.tail = Vector2.ZERO;
       this.totalMomentumVector.tail = Vector2.ZERO;
-
-      // Position the Momentum vectors tip-to-tail. Loop in pairs.
-      for ( let i = 1; i < this.balls.length; i++ ) {
-        const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-        const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
-
-        // tip-to-tail
-        momentaVector.tail = previousMomentaVector.tip;
-      }
     }
     else {
 
-      // Set the first momenta Vector's tail and the total momenta Vectors' tail at x = 0.
+      // Set the first Momenta Vector's tail and the total Momenta Vector's tail at x = 0.
       firstMomentaVector.tailX = 0;
       this.totalMomentumVector.tailX = 0;
 
-      // Set the y-value of the first momenta Vector's tail and the total momenta Vector's tail which depends on the
+      // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
       firstMomentaVector.tailY = Math.floor( this.balls.length / 2 );
       this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length;
+    }
 
-      // Position the Momentum vectors tipX-to-tailX and stacked vertically on top of each other. Loop in pairs.
-      for ( let i = 1; i < this.balls.length; i++ ) {
-        const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-        const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+    // Position the rest of the Momentum vectors. Loop in pairs.
+    for ( let i = 1; i < this.balls.length; i++ ) {
+      const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
+      const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
 
+      if ( this.dimensions === 2 ) {
+        // tip-to-tail
+        momentaVector.tail = previousMomentaVector.tip;
+      }
+      else {
         // tipX-to-tailX
         momentaVector.tailX = previousMomentaVector.tipX;
 
