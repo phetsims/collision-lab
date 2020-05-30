@@ -19,6 +19,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
+import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 
 // constants
 const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
@@ -29,11 +30,11 @@ class CollisionDetector {
    * @param {ObservableArray.<Ball>} balls - collections of balls
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} reflectingBorderProperty
-   * @param {Property.<boolean>} isStickyProperty - indicates if inelastic collisions stick or slide.
+   * @param {Property.<boolean>} inelasticCollisionTypeProperty - indicates if inelastic collisions stick or slide.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
    * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, isStickyProperty, pathVisibleProperty, elapsedTimeProperty ) {
+  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, inelasticCollisionTypeProperty, pathVisibleProperty, elapsedTimeProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( elasticityPercentProperty instanceof Property, `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
 
@@ -47,7 +48,7 @@ class CollisionDetector {
     this.reflectingBorderProperty = reflectingBorderProperty;
 
     // @private {Property.<boolean>}
-    this.isStickyProperty = isStickyProperty;
+    this.inelasticCollisionTypeProperty = inelasticCollisionTypeProperty;
 
     this.pathVisibleProperty = pathVisibleProperty;
 
@@ -145,7 +146,7 @@ class CollisionDetector {
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = this.elasticity === 0 && this.isStickyProperty.value;
+    const isSticky = this.elasticity === 0 && this.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
@@ -280,7 +281,7 @@ class CollisionDetector {
         const contactPosition = ball.getPreviousPosition( overlappedTime );
 
         // Update the velocity after the collision.
-        if ( elasticity === 0 && this.isStickyProperty.value ) {
+        if ( elasticity === 0 && this.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK ) {
 
           // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
           ball.velocity = Vector2.ZERO;

@@ -28,6 +28,7 @@ import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import InelasticCollisionTypes from '../model/InelasticCollisionTypes.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
@@ -37,12 +38,12 @@ class ElasticityControlSet extends VBox {
 
   /**
    * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<boolean>} isStickyProperty
+   * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Object} [options]
    */
-  constructor( elasticityPercentProperty, isStickyProperty, options ) {
+  constructor( elasticityPercentProperty, inelasticCollisionTypeProperty, options ) {
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
-    assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
+    assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
@@ -117,9 +118,9 @@ class ElasticityControlSet extends VBox {
     //----------------------------------------------------------------------------------------
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
-    const stickSlipSwitch = new ABSwitch( isStickyProperty,
-      true, stickLabel,
-      false, slipLabel, {
+    const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
+      InelasticCollisionTypes.STICK, stickLabel,
+      InelasticCollisionTypes.SLIP, slipLabel, {
         toggleSwitchOptions: { size: TOGGLE_SWITCH_SIZE }
       } );
 

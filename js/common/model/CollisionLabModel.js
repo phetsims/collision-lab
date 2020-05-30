@@ -20,6 +20,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionDetector from './CollisionDetector.js';
+import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
@@ -83,10 +84,9 @@ class CollisionLabModel {
     //                                         since the visibility of the grid affects the drag-snapping of Balls.
     this.gridVisibleProperty = new BooleanProperty( false );
 
-    // @public (read-only) {BooleanProperty} - determines if the balls are sticky or if they slide on inelastic collisions.
-    // TODO: this should be an EnumerationProperty of a Enum (stick vs slide).
-    // TODO: what is the state of the design of this feature.
-    this.isStickyProperty = new BooleanProperty( true );
+    // @public {EnumerationProperty.<InelasticCollisionTypes} - the type of collision for perfectly inelastic collisions
+    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
+      InelasticCollisionTypes.STICK );
 
     //----------------------------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ class CollisionLabModel {
       this.playArea.balls,
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
-      this.isStickyProperty,
+      this.inelasticCollisionTypeProperty,
       this.pathVisibleProperty,
       this.elapsedTimeProperty
     );
@@ -134,7 +134,7 @@ class CollisionLabModel {
     this.reflectingBorderProperty.reset();
     this.constantRadiusProperty.reset();
     this.gridVisibleProperty.reset();
-    this.isStickyProperty.reset();
+    this.inelasticCollisionTypeProperty.reset();
     this.playArea.reset();
     this.momentaDiagram.reset();
   }

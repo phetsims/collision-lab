@@ -18,6 +18,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import InelasticCollisionTypes from '../model/InelasticCollisionTypes.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
@@ -31,7 +32,7 @@ class CollisionLabControlPanel extends Panel {
    * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<boolean>} isStickyProperty
+   * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} constantRadiusProperty
    * @param {Object} [options]
    */
@@ -40,7 +41,7 @@ class CollisionLabControlPanel extends Panel {
                pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
-               isStickyProperty,
+               inelasticCollisionTypeProperty,
                constantRadiusProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
@@ -48,7 +49,7 @@ class CollisionLabControlPanel extends Panel {
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
-    assert && assert( isStickyProperty instanceof Property && typeof isStickyProperty.value === 'boolean', `invalid isStickyProperty: ${isStickyProperty}` );
+    assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -101,7 +102,7 @@ class CollisionLabControlPanel extends Panel {
       collisionLabStrings.reflectingBorder );
 
     // 'Elasticity' control
-    const elasticityControlSetNode = new ElasticityControlSet( elasticityPercentProperty, isStickyProperty );
+    const elasticityControlSetNode = new ElasticityControlSet( elasticityPercentProperty, inelasticCollisionTypeProperty );
 
     // 'Constant Radius' Checkbox
     const constantRadiusCheckbox = new CollisionLabCheckbox( constantRadiusProperty, collisionLabStrings.constantSize );

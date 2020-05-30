@@ -120,7 +120,7 @@ class CollisionLabScreenView extends ScreenView {
       model.pathVisibleProperty,
       model.reflectingBorderProperty,
       model.elasticityPercentProperty,
-      model.isStickyProperty,
+      model.inelasticCollisionTypeProperty,
       model.constantRadiusProperty,
       {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
