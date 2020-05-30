@@ -162,14 +162,14 @@ class MomentaDiagram {
 
       // Set the first Vector's tail, where the x is 0 and the y depends on the number of balls in the system.
       firstVector.tail = new Vector2( 0, 1 + Math.floor( ( this.balls.length - 1 )  / 2 ) );
-      this.sumVector.tail = new Vector2( 0, firstVector.tail.y + this.balls.length );
+      this.sumVector.tail = new Vector2( 0, firstVector.tail.y - this.balls.length );
 
       for ( let i = 1; i < this.balls.length; i++ ) {
 
         const vector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
         const previousVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
 
-        vector.tail = previousVector.tip.minusXY( 0, 1 );
+        vector.tail = new Vector2( previousVector.tip.x, previousVector.tail.y - 1 );
       }
     }
     else {
