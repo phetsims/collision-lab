@@ -1,13 +1,14 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * MomentaDiagramAccordionBox appears on the bottom-right side of all Screens. Its a feature ported from the flash
+ * MomentaDiagramAccordionBox appears on the bottom-right side of all Screens. It's a feature ported from the flash
  * version which displays a graph of the momentum vectors of all the balls that are currently in the system. The
  * AccordionBox is the same size as control panels.
  *
  * The MomentaDiagramAccordionBox displays the following:
- *   - a grid the contains momentum vectors of all the balls in the system.
- *   - a zoom-in and zoom-out button to change the scaling of the grid.
+ *   - a grid with a zoom-in and zoom-out button to change the scaling.
+ *   - momentum vectors of all the balls in the system.
+ *   - the total momenta vector of the system.
  *
  * MomentaDiagramAccordionBoxes are created at the start of the sim and are never disposed, so no dispose method is
  * necessary.
@@ -61,7 +62,10 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       // {number} - the width of the content (grid) of the MomentaDiagramAccordionBox.
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
 
-      // super-class options
+      // {number} - the margins between the edge of the Grid and the zoom controls
+      zoomControlMargin: 5,
+
+      // superclass options
       titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),
       expandedProperty: momentaDiagram.expandedProperty,
       cornerRadius: PANEL_CORNER_RADIUS,
@@ -104,38 +108,48 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     //----------------------------------------------------------------------------------------
 
-    // Create the Border of the Grid.
-    const borderNode = new Rectangle( gridViewBounds, { stroke: Color.BLACK, lineWidth: 2.5 } );
-
     // Create the Grid
     const gridLines = new GridLines( modelViewTransformProperty, momentaDiagram.boundsProperty, {
       lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
     } );
 
+    // Create the Border Rectangle of the Grid.
+    const borderNode = new Rectangle( gridViewBounds, {
+      stroke: Color.BLACK,
+      lineWidth: 2
+    } );
+
     // Create the Zoom Controls
     const zoomControlSet = new MomentaDiagramZoomControlSet( momentaDiagram, {
-      bottom: gridViewBounds.maxY - 5,
-      right: gridViewBounds.maxX - 5
+      bottom: gridViewBounds.maxY - options.zoomControlMargin,
+      right: gridViewBounds.maxX - options.zoomControlMargin
     } );
 
     //----------------------------------------------------------------------------------------
 
+    // Create the container for all Momenta Vector Nodes.
     const momentaVectorContainer = new Node();
 
+    // Loop through each possible Ball and its associated momentaVector. These Balls are NOT necessarily the Balls
+    // currently within the PlayArea system, so we are responsible for updating its visibility when necessary.
     momentaDiagram.ballToMomentaVectorMap.forEach( ( momentaVector, ball ) => {
 
+      // Create the momenta Vector Node for the momentaVector.
       const momentaVectorNode = new MomentaDiagramVectorNode( momentaVector, ball.index, modelViewTransformProperty );
 
+      // Add the Vector Node to the container.
       momentaVectorContainer.addChild( momentaVectorNode );
 
-
+      // Observe when Balls are added or removed from the PlayArea system and adjust the visibility of the momenta
+      // Vector, which is only visible if the ball is in the PlayArea system.
       balls.lengthProperty.link( () => {
         momentaVectorNode.visible = balls.contains( ball );
       } );
+
     } );
 
-    // sum
+    // Create the Momenta Vector Node for the 'total' sum of the momenta Vectors and add it to the container.
     const sumMomentaVectorNode = new MomentaDiagramVectorNode( momentaDiagram.totalMomentumVector,
       collisionLabStrings.total,
       modelViewTransformProperty, {
@@ -144,7 +158,6 @@ class MomentaDiagramAccordionBox extends AccordionBox {
         }
       } );
     momentaVectorContainer.addChild( sumMomentaVectorNode );
-
 
     //----------------------------------------------------------------------------------------
 
