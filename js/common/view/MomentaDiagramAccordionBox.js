@@ -21,8 +21,6 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import ZoomButton from '../../../../scenery-phet/js/buttons/ZoomButton.js';
-import HBox from '../../../../scenery/js/nodes/HBox.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
@@ -36,6 +34,7 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
 import MomentaDiagram from '../model/MomentaDiagram.js';
 import MomentaDiagramVectorNode from './MomentaDiagramVectorNode.js';
+import MomentaDiagramZoomControlSet from './MomentaDiagramZoomControlSet.js';
 
 // constants
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
@@ -114,40 +113,11 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
     } );
 
-
-    const zoomOutButton = new ZoomButton( merge( {}, CollisionLabColors.ZOOM_BUTTON_COLORS, {
-      radius: 8,
-      xMargin: 3,
-      yMargin: 3,
-      in: false,
-      listener: () => {
-        momentaDiagram.zoomOut();
-      }
-    } ) );
-
-    const zoomInButton = new ZoomButton( merge( {}, CollisionLabColors.ZOOM_BUTTON_COLORS, {
-      radius: 8,
-      xMargin: 3,
-      yMargin: 3,
-      in: true,
-      listener: () => {
-        momentaDiagram.zoomIn();
-      }
-    } ) );
-
-    const zoomControl = new HBox( {
-      spacing: 5,
-      children: [ zoomOutButton, zoomInButton ],
+    // Create the Zoom Controls
+    const zoomControlSet = new MomentaDiagramZoomControlSet( momentaDiagram, {
       bottom: gridViewBounds.maxY - 5,
       right: gridViewBounds.maxX - 5
     } );
-
-    // Watch the zoom Property and update disable buttons
-    momentaDiagram.zoomProperty.link( zoomFactor => {
-      zoomOutButton.enabled = zoomFactor > CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.min;
-      zoomInButton.enabled = zoomFactor < CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.max;
-    } );
-
 
     //----------------------------------------------------------------------------------------
 
@@ -184,7 +154,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
         gridLines,
         borderNode,
         momentaVectorContainer,
-        zoomControl
+        zoomControlSet
       ],
       clipArea: Shape.bounds( gridViewBounds )
     } );

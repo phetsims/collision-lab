@@ -17,7 +17,7 @@ import HBox from '../../../../scenery/js/nodes/HBox.js';
 import ColorConstants from '../../../../sun/js/ColorConstants.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import MomentaDiagram from './MomentaDiagram.js';
+import MomentaDiagram from '../model/MomentaDiagram.js';
 
 class MomentaDiagramZoomControlSet extends HBox {
 
@@ -34,21 +34,20 @@ class MomentaDiagramZoomControlSet extends HBox {
       // {Object} - passed to both ZoomButton instances.
       zoomButtonOptions: {
         baseColor: ColorConstants.LIGHT_BLUE,
-        disabledBaseColor: ColorConstants.LIGHT_GREY,
+        disabledBaseColor: ColorConstants.LIGHT_GRAY,
         radius: 8,
-        xMargin: 3,
+        xMargin: 5,
         yMargin: 3
       },
 
       // superclass options
-      spacing: 5
+      spacing: 10
 
     }, options );
 
     assert && assert( !options.zoomButtonOptions.in, 'MomentaDiagramZoomControlSet sets zoomButtonOptions.in' );
     assert && assert( !options.listener, 'MomentaDiagramZoomControlSet sets zoomButtonOptions.listener' );
-
-    super( options );
+    assert && assert( !options.children, 'MomentaDiagramZoomControlSet sets children' );
 
     //----------------------------------------------------------------------------------------
 
@@ -65,7 +64,7 @@ class MomentaDiagramZoomControlSet extends HBox {
     } ) );
 
     // Set the children of this Node in the correct rendering order.
-    this.children = [
+    options.children = [
       zoomOutButton,
       zoomInButton
     ];
@@ -78,6 +77,8 @@ class MomentaDiagramZoomControlSet extends HBox {
       zoomOutButton.enabled = zoomFactor > CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.min;
       zoomInButton.enabled = zoomFactor < CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE.max;
     } );
+
+    super( options );
   }
 }
 
