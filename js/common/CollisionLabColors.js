@@ -8,7 +8,6 @@
  */
 
 import Color from '../../../scenery/js/util/Color.js';
-import ColorConstants from '../../../sun/js/ColorConstants.js';
 import collisionLab from '../collisionLab.js';
 
 const CollisionLabColors = {
@@ -54,12 +53,6 @@ const CollisionLabColors = {
   KEYPAD_TEXT_COLORS: {
     error: Color.RED,
     default: Color.BLACK
-  },
-
-  // Zoom Buttons
-  ZOOM_BUTTON_COLORS: {
-    baseColor: ColorConstants.LIGHT_BLUE,
-    disabledBaseColor: '#EDEDED'
   },
 
 

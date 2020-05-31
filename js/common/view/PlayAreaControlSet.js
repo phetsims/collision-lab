@@ -69,7 +69,7 @@ class PlayAreaControlSet extends VBox {
     }, options );
 
     // Set the spacing super-class option.
-    assert && assert( !options.spacing, 'BallValuesPanelColumnNode sets spacing' );
+    assert && assert( !options.spacing, 'PlayAreaControlSet sets spacing' );
     options.spacing = options.numberSpinnerToGridCheckboxMargin;
 
     super( options );
