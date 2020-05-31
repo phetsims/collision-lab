@@ -100,9 +100,6 @@ class CollisionLabPath {
     // If the path is not visible, nothing happens.
     if ( !this.pathVisibleProperty.value ) { return; /* do nothing */ }
 
-    // Add a new PathDataPoint for the current position of the moving object.
-    this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
-
     //----------------------------------------------------------------------------------------
 
     // Remove any expired PathDataPoints that are not within the CollisionLabConstants.MAX_DATA_POINT_LIFETIME.
@@ -117,10 +114,15 @@ class CollisionLabPath {
     // Remove any PathDataPoints that are ahead of the total elapsedTime of the simulation. This occurs when the
     // step-backward button is pressed.
     const futurePathDataPoints = this.dataPoints.filter( dataPoint => {
-      return dataPoint.time > elapsedTime;
+      return dataPoint.time >= elapsedTime;
     } );
 
     futurePathDataPoints.forEach( futurePathDataPoint => { arrayRemove( this.dataPoints, futurePathDataPoint ); } );
+
+    //----------------------------------------------------------------------------------------
+
+    // Add a new PathDataPoint for the current position of the moving object.
+    this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
 
     // Signal that the trace 'Path' needs to be redrawn.
     this.redrawPathEmitter.emit();
