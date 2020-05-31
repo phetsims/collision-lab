@@ -141,7 +141,10 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     momentaDiagram.ballToMomentaVectorMap.forEach( ( momentaVector, ball ) => {
 
       // Create the momenta Vector Node for the momentaVector.
-      const momentaVectorNode = new MomentaDiagramVectorNode( momentaVector, ball.index, modelViewTransformProperty );
+      const momentaVectorNode = new MomentaDiagramVectorNode( momentaVector, ball.index, modelViewTransformProperty, {
+        dimensions: momentaDiagram.dimensions,
+        isTotalMomentaVector: false
+      } );
 
       // Add the Vector Node to the container.
       momentaVectorContainer.addChild( momentaVectorNode );
@@ -158,6 +161,8 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     const sumMomentaVectorNode = new MomentaDiagramVectorNode( momentaDiagram.totalMomentumVector,
       collisionLabStrings.total,
       modelViewTransformProperty, {
+        dimensions: momentaDiagram.dimensions,
+        isTotalMomentaVector: true,
         arrowOptions: {
           fill: CollisionLabColors.TOTAL_MOMENTUM_VECTOR_FILL
         }

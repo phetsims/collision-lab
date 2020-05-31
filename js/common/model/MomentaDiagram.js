@@ -87,7 +87,7 @@ class MomentaDiagram {
     // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
     this.balls = balls;
 
-    // @private {number} - reference to the passed-in dimensions of the Screen that the MomentaDiagram appears in.
+    // @public (read-only) {number} - reference to the passed-in dimensions of the Screen that has this MomentaDiagram.
     this.dimensions = dimensions;
 
     //----------------------------------------------------------------------------------------

@@ -19,6 +19,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class MomentaDiagramVector {
 
@@ -130,6 +131,16 @@ class MomentaDiagramVector {
    */
   get tipY() { return this.tip.y; }
 
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Gets the components of the Vector.
+   * @public
+   *
+   * @returns {Vector2} - in kg*(m/s).
+   */
+  get components() { return this.componentsProperty.value; }
+
   /**
    * Sets the components of the Vector.
    * @public
@@ -137,6 +148,33 @@ class MomentaDiagramVector {
    * @param {Vector2} components - in kg*(m/s).
    */
   set components( components ) { this.componentsProperty.value = components; }
+
+  /**
+   * Gets the center position of the Vector.
+   * @public
+   *
+   * @returns {Vector2} - in kg*(m/s).
+   */
+  get center() { return this.components.times( 0.5 ).add( this.tail ); }
+
+  /**
+   * Gets the magnitude of the MomentaDiagramVector, which is always positive.
+   * @public
+   *
+   * @returns {number} - in kg*(m/s).
+   */
+  get magnitude() { return this.components.magnitude; }
+
+  /**
+   * Gets the angle of the MomentaDiagramVector in radians, measured clockwise from the horizontal. Null when the
+   * vector has 0 magnitude.
+   * @public
+   *
+   * @returns {number|null}
+   */
+  get angle() {
+    return this.magnitude <= CollisionLabConstants.ZERO_THRESHOLD ? null : this.components.angle;
+  }
 }
 
 collisionLab.register( 'MomentaDiagramVector', MomentaDiagramVector );
