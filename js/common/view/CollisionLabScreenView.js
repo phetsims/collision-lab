@@ -31,7 +31,6 @@ import RestartButton from './RestartButton.js';
 const MODEL_TO_VIEW_SCALE = 153; // meter to view coordinates (1 m = 200 coordinates)
 const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class CollisionLabScreenView extends ScreenView {
 
@@ -53,7 +52,7 @@ class CollisionLabScreenView extends ScreenView {
     }, options );
 
     const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      PLAY_AREA_BOUNDS.leftBottom,
+      model.playArea.bounds.leftBottom,
       options.playAreaLeftTop,
       MODEL_TO_VIEW_SCALE
     );

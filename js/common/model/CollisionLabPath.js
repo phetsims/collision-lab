@@ -16,6 +16,7 @@
 
 import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import collisionLab from '../../collisionLab.js';
@@ -28,11 +29,16 @@ const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 class CollisionLabPath {
 
   /**
+   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is currently visible. PathDataPoints are
    *                                                   only recorded if this is true and are cleared when set to false.
    */
-  constructor( pathVisibleProperty ) {
+  constructor( playAreaBounds, pathVisibleProperty ) {
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
+
+    // @private {Bounds2} - reference to the playAreaBounds.
+    this.playAreaBounds = playAreaBounds;
 
     // @private {Property.<boolean>} - reference to the pathVisibleProperty passed in.
     this.pathVisibleProperty = pathVisibleProperty;
@@ -122,7 +128,9 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Add a new PathDataPoint for the current position of the moving object.
-    this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+    if ( this.playAreaBounds.containsPoint( position ) ) {
+      this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+    }
 
     // Signal that the trace 'Path' needs to be redrawn.
     this.redrawPathEmitter.emit();

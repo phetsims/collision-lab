@@ -27,7 +27,6 @@ import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
 const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
 const MAJOR_GRID_LINE_WIDTH = 2; // view units
 const MINOR_GRID_LINE_WIDTH = 1; // view units
@@ -61,16 +60,16 @@ class PlayAreaNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    const playAreaViewBounds = modelViewTransform.modelToViewBounds( PLAY_AREA_BOUNDS );
+    const playAreaViewBounds = modelViewTransform.modelToViewBounds( playArea.bounds );
 
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
 
-    const majorGridLines = new GridLines( MAJOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
+    const majorGridLines = new GridLines( playArea, MAJOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
       lineWidth: MAJOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
     } );
 
-    const minorGridLines = new GridLines( MINOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
+    const minorGridLines = new GridLines( playArea, MINOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
       lineWidth: MINOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
@@ -113,7 +112,7 @@ class GridLines extends Path {
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( spacing, gridVisibleProperty, modelViewTransform, options ) {
+  constructor( playArea, spacing, gridVisibleProperty, modelViewTransform, options ) {
     assert && assert( typeof spacing === 'number', `invalid spacing: ${spacing}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
@@ -122,10 +121,10 @@ class GridLines extends Path {
     //----------------------------------------------------------------------------------------
 
     // Convenience variables
-    const gridMinX = PLAY_AREA_BOUNDS.minX;
-    const gridMaxX = PLAY_AREA_BOUNDS.maxX;
-    const gridMinY = PLAY_AREA_BOUNDS.minY;
-    const gridMaxY = PLAY_AREA_BOUNDS.maxY;
+    const gridMinX = playArea.bounds.minX;
+    const gridMaxX = playArea.bounds.maxX;
+    const gridMinY = playArea.bounds.minY;
+    const gridMaxY = playArea.bounds.maxY;
 
     const gridLineShape = new Shape();
 

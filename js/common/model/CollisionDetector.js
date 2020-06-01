@@ -17,12 +17,8 @@ import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
-
-// constants
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 
 class CollisionDetector {
 
@@ -34,12 +30,15 @@ class CollisionDetector {
    * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
    * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( balls, elasticityPercentProperty, reflectingBorderProperty, inelasticCollisionTypeProperty, pathVisibleProperty, elapsedTimeProperty ) {
+  constructor( balls, playAreaBounds, elasticityPercentProperty, reflectingBorderProperty, inelasticCollisionTypeProperty, pathVisibleProperty, elapsedTimeProperty ) {
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
     assert && assert( elasticityPercentProperty instanceof Property, `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
 
     // @private {ObservableArray.<balls>}
     this.balls = balls;
+
+    // @private
+    this.playAreaBounds = playAreaBounds;
 
     // @private {Property.<number>}
     this.elasticityPercentProperty = elasticityPercentProperty;
@@ -268,10 +267,10 @@ class CollisionDetector {
     this.balls.forEach( ball => {
 
       // If the Ball is outside the bounds of the PlayArea, it is now colliding with the walls.
-      if ( ball.left <= PLAY_AREA_BOUNDS.minX ||
-           ball.right >= PLAY_AREA_BOUNDS.maxX ||
-           ball.top >= PLAY_AREA_BOUNDS.maxY ||
-           ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
+      if ( ball.left <= this.playAreaBounds.minX ||
+           ball.right >= this.playAreaBounds.maxX ||
+           ball.top >= this.playAreaBounds.maxY ||
+           ball.bottom <= this.playAreaBounds.minY ) {
 
         // When a collision is detected, the Ball has already overlapped, so the current positions isn't the exact
         // position when the balls first collided. Use the overlapped time to find the exact collision positions.
@@ -287,12 +286,12 @@ class CollisionDetector {
           ball.velocity = Vector2.ZERO;
         }
         else {
-          if ( ball.left <= PLAY_AREA_BOUNDS.minX || ball.right >= PLAY_AREA_BOUNDS.maxX ) {
+          if ( ball.left <= this.playAreaBounds.minX || ball.right >= this.playAreaBounds.maxX ) {
 
             // Left and Right Border wall collisions incur a flip in horizontal velocity.
             ball.flipHorizontalVelocity( elasticity );
           }
-          if ( ball.top >= PLAY_AREA_BOUNDS.maxY || ball.bottom <= PLAY_AREA_BOUNDS.minY ) {
+          if ( ball.top >= this.playAreaBounds.maxY || ball.bottom <= this.playAreaBounds.minY ) {
 
             // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
             ball.flipVerticalVelocity( elasticity );
@@ -330,7 +329,7 @@ class CollisionDetector {
     // Reference position difference between the current and previous position.
     const deltaR = ball.velocity.timesScalar( dt );
 
-    const erodedBounds = PLAY_AREA_BOUNDS.eroded( ball.radius );
+    const erodedBounds = this.playAreaBounds.eroded( ball.radius );
 
     const closestPoint = erodedBounds.closestPointTo( ball.position );
 

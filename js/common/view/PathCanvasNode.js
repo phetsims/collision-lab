@@ -23,7 +23,6 @@ import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabPath from '../model/CollisionLabPath.js';
 
 // constants
@@ -49,7 +48,7 @@ class PathCanvasNode extends CanvasNode {
       pathBaseColor: Color.BLACK,
 
       // super-class options
-      canvasBounds: modelViewTransform.modelToViewBounds( CollisionLabConstants.PLAY_AREA_BOUNDS )
+      canvasBounds: modelViewTransform.modelToViewBounds( path.playAreaBounds )
 
     }, options );
 

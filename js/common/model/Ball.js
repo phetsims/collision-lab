@@ -29,9 +29,9 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
 import CollisionLabPath from './CollisionLabPath.js';
+import PlayArea from './PlayArea.js';
 
 // constants
-const PLAY_AREA_BOUNDS = CollisionLabConstants.PLAY_AREA_BOUNDS;
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const BALL_CONSTANT_RADIUS = CollisionLabConstants.BALL_CONSTANT_RADIUS;
 
@@ -58,7 +58,10 @@ class Ball {
     options = merge( {
 
       // {number} dimensions - the dimensions of the Screen that contains the Ball.
-      dimensions: 2
+      dimensions: 2,
+
+      // {Bounds2} - the model bounds of the PlayArea, in meters.
+      bounds: PlayArea.DEFAULT_BOUNDS
 
     }, options );
 
@@ -132,7 +135,7 @@ class Ball {
     this.userControlledProperty = new BooleanProperty( false );
 
     // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the ball.
-    this.path = new CollisionLabPath( pathVisibleProperty );
+    this.path = new CollisionLabPath( options.playAreaBounds, pathVisibleProperty );
 
     // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
     this.restartState = initialBallState;
@@ -143,6 +146,9 @@ class Ball {
 
     // @public (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
     this.dimensions = options.dimensions;
+
+    // @private {Bounds} - reference to the passed-in PlayArea Bounds.
+    this.playAreaBounds = options.playAreaBounds;
 
     //----------------------------------------------------------------------------------------
 
@@ -205,7 +211,7 @@ class Ball {
 
       // Ensure that the ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
       // entire Ball is inside the PlayArea.
-      this.position = PLAY_AREA_BOUNDS.eroded( this.radius ).closestPointTo( position );
+      this.position = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
@@ -239,7 +245,7 @@ class Ball {
 
     // Compute the Bounds of the Ball's center position. The center must be within the roundedUpRadius meters of the
     // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea and on a grid-line.
-    return PLAY_AREA_BOUNDS.eroded( roundedUpRadius );
+    return this.playAreaBounds.eroded( roundedUpRadius );
   }
 
   /**

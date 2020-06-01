@@ -7,7 +7,6 @@
  * @author Martin Veillette
  */
 
-import Bounds2 from '../../../dot/js/Bounds2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import RangeWithValue from '../../../dot/js/RangeWithValue.js';
@@ -36,7 +35,6 @@ const CollisionLabConstants = {
   SLOW_SPEED_FACTOR: 0.33,
 
   // PlayArea
-  PLAY_AREA_BOUNDS: new Bounds2( -2, -1, 2, 1 ), // in meters
   MINOR_GRIDLINE_SPACING: 0.1,
   MAJOR_GRIDLINE_SPACING: 0.5,
 

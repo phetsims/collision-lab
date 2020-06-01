@@ -18,6 +18,7 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import isArray from '../../../../phet-core/js/isArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
@@ -53,12 +54,18 @@ class PlayArea {
 
     options = merge( {
 
-      // {number} dimensions - the dimensions of the Screen that contains the PlayArea.
-      dimensions: 2
+      // {number} the dimensions of the Screen that contains the PlayArea.
+      dimensions: 2,
+
+      // {Bounds2} - the model bounds of the PlayArea, in meters.
+      bounds: PlayArea.DEFAULT_BOUNDS
 
     }, options );
 
     //----------------------------------------------------------------------------------------
+
+    // @public (read-only) {Bounds2} - the model bounds of the PlayArea, in meters.
+    this.bounds = options.bounds;
 
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation and are
     //                                never disposed. However, these Balls are NOT necessarily the Balls currently within the
@@ -70,7 +77,8 @@ class PlayArea {
       gridVisibleProperty,
       pathVisibleProperty,
       index + 1, {
-        dimensions: options.dimensions
+        dimensions: options.dimensions,
+        playAreaBounds: options.bounds
       } ) );
 
     // @public (read-only) {ObservableArray.<Ball>} - an array of the system of Balls within the PlayArea. Balls
@@ -133,6 +141,7 @@ class PlayArea {
     this.centerOfMass = new CenterOfMass(
       this.prepopulatedBalls,
       this.balls,
+      this.bounds,
       centerOfMassVisibleProperty,
       pathVisibleProperty
     );
@@ -199,6 +208,9 @@ class PlayArea {
     this.centerOfMass.updatePath( elapsedTime );
   }
 }
+
+// @public (read-only) {Bounds2} - the default bounds of the PlayArea
+PlayArea.DEFAULT_BOUNDS = new Bounds2( -2, -1, 2, 1 );
 
 collisionLab.register( 'PlayArea', PlayArea );
 export default PlayArea;

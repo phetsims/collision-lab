@@ -134,6 +134,7 @@ class CollisionLabModel {
     // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.
     this.collisionDetector = new CollisionDetector(
       this.playArea.balls,
+      this.playArea.bounds,
       this.elasticityPercentProperty,
       this.reflectingBorderProperty,
       this.inelasticCollisionTypeProperty,
