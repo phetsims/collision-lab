@@ -121,15 +121,17 @@ class Ball {
       ( mass, speed ) => 0.5 * mass * Math.pow( speed, 2 ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
-    //----------------------------------------------------------------------------------------
-
-    // @public userControlledProperty - indicates if the Ball is currently being controlled by the user, either by
-    //                                  dragging or editing a value through the Keypad. This is set externally in the
-    //                                  view.
+    // @public {BooleanProperty} - indicates if the Ball is currently being controlled by the user, either by dragging
+    //                             or editing a value through the Keypad. This is set externally in the view.
     this.userControlledProperty = new BooleanProperty( false );
+
+    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the Ball.
     this.path = new CollisionLabPath( options.playAreaBounds, pathVisibleProperty );
+
+    // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
+    this.index = index;
 
     // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
     this.restartState = initialBallState;
@@ -138,10 +140,7 @@ class Ball {
     //                                Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
 
-    // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
-    this.index = index;
-
-    // @public (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
+    // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
     this.dimensions = options.dimensions;
 
     // @private {Bounds} - reference to the passed-in PlayArea Bounds.
@@ -149,11 +148,15 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the user is finished controlling the Ball to clear the trailing Path. Link lasts for the life-time
-    // of the sim as Balls are never disposed.
+    // Observe when the user is finished controlling the Ball, which clears the trailing 'Path'. Link lasts for the
+    // life-time of the sim as Balls are never disposed.
     this.userControlledProperty.lazyLink( userControlled => {
-      if ( !userControlled ) { this.path.clear(); }
+      !userControlled && this.path.clear();
     } );
+
+    // Ensure that our yPosition and yVelocity is always 0 for 1D screens.
+    assert && this.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
+    assert && this.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
   }
 
   /**
