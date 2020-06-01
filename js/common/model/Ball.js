@@ -40,7 +40,7 @@ class Ball {
 
   /**
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
-   * @param {Property.<boolean>} constantRadiusProperty - indicates if the ball has a radius independent of mass or not.
+   * @param {Property.<boolean>} isConstantSizeProperty - indicates if the ball has a radius independent of mass or not.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
@@ -48,9 +48,9 @@ class Ball {
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    * @param {Object} [options]
    */
-  constructor( initialBallState, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index, options ) {
+  constructor( initialBallState, isConstantSizeProperty, gridVisibleProperty, pathVisibleProperty, index, options ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( constantRadiusProperty, 'boolean' );
+    assert && CollisionLabUtils.assertPropertyTypeof( isConstantSizeProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( gridVisibleProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( pathVisibleProperty, 'boolean' );
     assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
@@ -116,7 +116,7 @@ class Ball {
 
     // Handle the changing radius of the Ball based on the mass
     // @public (read-only) - Property of the radius of the Ball, in meters.
-    this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
+    this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
       ( mass, constantRadius ) => constantRadius ? BALL_CONSTANT_RADIUS : Ball.calculateRadius( mass ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 

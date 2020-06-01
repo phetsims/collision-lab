@@ -31,7 +31,7 @@ class PlayArea {
   /**
    * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
-   * @param {Property.<boolean>} constantRadiusProperty - indicates if Ball radii should be constant.
+   * @param {Property.<boolean>} isConstantSizeProperty - indicates if Ball radii should be constant.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
@@ -39,14 +39,14 @@ class PlayArea {
    */
   constructor( initialBallStates,
                numberOfBallsProperty,
-               constantRadiusProperty,
+               isConstantSizeProperty,
                gridVisibleProperty,
                pathVisibleProperty,
                centerOfMassVisibleProperty,
                options ) {
     assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
-    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid constantRadiusProperty: ${constantRadiusProperty}` );
+    assert && assert( isConstantSizeProperty instanceof Property && typeof isConstantSizeProperty.value === 'boolean', `invalid isConstantSizeProperty: ${isConstantSizeProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
@@ -76,7 +76,7 @@ class PlayArea {
     //                                so that the same Ball instances are added with the same number of balls.
     this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
-      constantRadiusProperty,
+      isConstantSizeProperty,
       gridVisibleProperty,
       pathVisibleProperty,
       index + 1, {

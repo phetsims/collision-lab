@@ -56,7 +56,7 @@ class BallNode extends Node {
                valuesVisibleProperty,
                velocityVisibleProperty,
                momentumVisibleProperty,
-               constantRadiusProperty,
+               isConstantSizeProperty,
                playProperty,
                pathVisibleProperty,
                modelViewTransform,
@@ -83,8 +83,8 @@ class BallNode extends Node {
 
 
     // @public (read-only) {DerivedProperty.<PaintDef>} - the fill color of the Ball. The color of the Ball changes
-    //                                                    when constantRadiusProperty is true.
-    const fillProperty = new DerivedProperty( [ ball.massProperty, constantRadiusProperty ],
+    //                                                    when isConstantSizeProperty is true.
+    const fillProperty = new DerivedProperty( [ ball.massProperty, isConstantSizeProperty ],
       ( mass, constantRadius ) => {
         const brightnessFactor = constantRadius ? Utils.linear( MASS_RANGE.min, MASS_RANGE.max, 0.7, 0, mass ) : 0;
         return CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( brightnessFactor );

@@ -111,7 +111,7 @@ class CollisionLabModel {
 
     // @public (read-only) {BooleanProperty} - indicates if Ball radii are constant (i.e. independent of mass).
     //                                         This Property is manipulated outside of the PlayArea.
-    this.constantRadiusProperty = new BooleanProperty( false );
+    this.isConstantSizeProperty = new BooleanProperty( false );
 
     // @public (read-only) {BooleanProperty} - indicates if the grid of the PlayArea is visible. This Property is
     //                                         manipulated outside of the PlayArea. This is placed inside of the model
@@ -128,7 +128,7 @@ class CollisionLabModel {
     this.playArea = new PlayArea(
       initialBallStates,
       this.numberOfBallsProperty,
-      this.constantRadiusProperty,
+      this.isConstantSizeProperty,
       this.gridVisibleProperty,
       this.pathVisibleProperty,
       this.centerOfMassVisibleProperty, {
@@ -172,7 +172,7 @@ class CollisionLabModel {
     this.pathVisibleProperty.reset();
     this.centerOfMassVisibleProperty.reset();
     this.reflectingBorderProperty.reset();
-    this.constantRadiusProperty.reset();
+    this.isConstantSizeProperty.reset();
     this.gridVisibleProperty.reset();
     this.inelasticCollisionTypeProperty.reset();
     this.playArea.reset();
