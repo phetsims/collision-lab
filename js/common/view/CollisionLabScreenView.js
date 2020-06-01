@@ -4,8 +4,9 @@
  * @author Martin Veillette
  */
 
-import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
+import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -38,21 +39,23 @@ class CollisionLabScreenView extends ScreenView {
    * @param {CollisionLabModel} model
    * @param {Tandem} tandem
    */
-  constructor( model, tandem ) {
+  constructor( model, tandem, options ) {
 
     assert && assert( model instanceof CollisionLabModel, `invalid model: ${model}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     super();
 
-    const playAreaViewBounds = Bounds2.rect( SCREEN_VIEW_X_MARGIN,
-      SCREEN_VIEW_Y_MARGIN,
-      MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.width,
-      MODEL_TO_VIEW_SCALE * PLAY_AREA_BOUNDS.height );
+    options = merge( {
 
-    const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
-      PLAY_AREA_BOUNDS,
-      playAreaViewBounds
+      playAreaLeftTop: new Vector2( SCREEN_VIEW_X_MARGIN, SCREEN_VIEW_Y_MARGIN )
+
+    }, options );
+
+    const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      PLAY_AREA_BOUNDS.leftBottom,
+      options.playAreaLeftTop,
+      MODEL_TO_VIEW_SCALE
     );
 
     // create the view properties for the view
