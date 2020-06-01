@@ -46,7 +46,10 @@ class CollisionLabModel {
       dimensions: 2,
 
       // {RangeWithValue} - the range of the number of Balls in the Screen.
-      numberOfBallsRange: new RangeWithValue( 1, 5, 2 )
+      numberOfBallsRange: new RangeWithValue( 1, 5, 2 ),
+
+      // {Bounds2} - the model bounds of the PlayArea, in meters.
+      playAreaBounds: PlayArea.DEFAULT_BOUNDS
 
     }, options );
 
@@ -128,7 +131,8 @@ class CollisionLabModel {
       this.gridVisibleProperty,
       this.pathVisibleProperty,
       this.centerOfMassVisibleProperty, {
-        dimensions: options.dimensions
+        dimensions: options.dimensions,
+        bounds: options.playAreaBounds
       } );
 
     // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.

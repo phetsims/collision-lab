@@ -9,7 +9,9 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import BallState from '../../common/model/BallState.js';
+import PlayArea from '../../common/model/PlayArea.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
 // constants
@@ -31,7 +33,8 @@ class Explore1DModel extends CollisionLabModel {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     super( INITIAL_BALL_STATES, tandem, {
-      dimensions: 1
+      dimensions: 1,
+      playAreaBounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
     } );
   }
 }

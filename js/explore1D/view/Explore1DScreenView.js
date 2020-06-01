@@ -6,8 +6,10 @@
  * @author BrandonLi
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 
 class Explore1DScreenView extends CollisionLabScreenView {
@@ -20,7 +22,10 @@ class Explore1DScreenView extends CollisionLabScreenView {
 
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( model, tandem );
+    super( model, tandem, {
+      playAreaLeftTop: new Vector2( CollisionLabConstants.SCREEN_VIEW_X_MARGIN, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D )
+
+    } );
   }
 }
 

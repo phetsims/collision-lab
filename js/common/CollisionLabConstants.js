@@ -37,6 +37,8 @@ const CollisionLabConstants = {
   // PlayArea
   MINOR_GRIDLINE_SPACING: 0.1,
   MAJOR_GRIDLINE_SPACING: 0.5,
+  PLAY_AREA_1D_ERODED_Y: 0.5,
+  PLAY_AREA_VIEW_TOP_1D: 100,
 
   // Vectors with magnitudes smaller than this value are treated as effectively zero.
   // See https://github.com/phetsims/collision-lab/issues/51.
