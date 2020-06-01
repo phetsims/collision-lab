@@ -15,13 +15,13 @@ const CollisionLabUtils = {
 
   /**
    * Iterates through an array, or an ObservableArray, in pairs, passing the current value and the previous value to the
-   * iterator function. For instance, pairwise( [ 1, 2, 3, 4 ], $f ) would invoke $f( 2, 1 ), $f( 3, 2 ), $f( 4, 3 ).
+   * iterator function. For instance, forEachPair( [ 1, 2, 3, 4 ], $f ) would invoke $f( 2, 1 ), $f( 3, 2 ), $f( 4, 3 ).
    * @public
    *
    * @param {ObservableArray.<*>|*[]} collection
    * @param {function(value:*,previousValue:*)} iterator
    */
-  pairwise( collection, iterator ) {
+  forEachPair( collection, iterator ) {
     assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
@@ -46,12 +46,25 @@ const CollisionLabUtils = {
     // Flag that indicates if the array is sorted.
     let isSorted = true;
 
-    CollisionLabUtils.pairwise( array, ( value, previousValue ) => {
+    CollisionLabUtils.forEachPair( array, ( value, previousValue ) => {
       if ( isSorted ) {
         isSorted = ( value > previousValue );
       }
     } );
     return isSorted;
+  },
+
+  /**
+   * Indicates if every element of a array, or an ObservableArray, is of a given type.
+   * @public
+   *
+   * @param {ObservableArray.<*>|*[]} collection
+   * @param {constructor} type
+   * @returns {boolean}
+   */
+  consistsOf( collection, type ) {
+    assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
+    return !collection.some( value => !( value instanceof type ) );
   },
 
   /**
