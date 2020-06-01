@@ -24,6 +24,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
@@ -44,13 +45,22 @@ class Ball {
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
+   * @param {Object} [options]
    */
-  constructor( initialBallState, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index ) {
+  constructor( initialBallState, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index, options ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid initialVelocity: ${pathVisibleProperty}` );
     assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
+
+    options = merge( {
+
+      // {number} dimensions - the dimensions of the Screen that contains the Ball.
+      dimensions: 2
+
+    }, options );
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
@@ -132,6 +142,9 @@ class Ball {
     //                                            Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
 
+    // @private (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
+    this.dimensions = options.dimensions;
+
     //----------------------------------------------------------------------------------------
 
     // Observe when the user is finished controlling the Ball to clear the trailing Path. Link lasts for the life-time
@@ -202,6 +215,11 @@ class Ball {
         .dividedScalar( MINOR_GRIDLINE_SPACING )
         .roundSymmetric()
         .timesScalar( MINOR_GRIDLINE_SPACING );
+    }
+
+    // If the dimensions is 1D, ensure that the yPosition is 0.
+    if ( this.dimensions === 2 ) {
+      this.yPosition = 0;
     }
   }
 
