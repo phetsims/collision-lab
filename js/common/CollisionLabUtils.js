@@ -8,6 +8,7 @@
 
 import ObservableArray from '../../../axon/js/ObservableArray.js';
 import Property from '../../../axon/js/Property.js';
+import Bounds2 from '../../../dot/js/Bounds2.js';
 import isArray from '../../../phet-core/js/isArray.js';
 import collisionLab from '../collisionLab.js';
 
@@ -34,6 +35,30 @@ const CollisionLabUtils = {
   },
 
   /**
+   * Similar to Bounds2.prototype.roundedIn(), but instead of rounding in to the nearest whole number, it rounds in
+   * to the nearest of any multiple.
+   *
+   * For instance, roundedBoundsInToNearest( new Bounds2( -0.28, -0.25, 0.28, 0.25 ), 0.1 )
+   * would return new Bounds2( -0.2, -0.2, 0.2, 0.2 ).
+   * @public
+   *
+   * @param {Bounds2} bounds - will not be mutated.
+   * @param {number} multiple - the nearest multiple to round the Bounds in
+   * @returns {Bounds2}
+   */
+  roundedBoundsInToNearest( bounds, multiple ) {
+    assert && assert( bounds instanceof Bounds2, `invalid bounds: ${bounds}` );
+    assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
+
+    return new Bounds2(
+      Math.ceil( bounds.minX / multiple ) * multiple,
+      Math.ceil( bounds.minY / multiple ) * multiple,
+      Math.floor( bounds.maxX / multiple ) * multiple,
+      Math.floor( bounds.maxY / multiple ) * multiple
+    );
+  },
+
+  /**
    * Determines whether an array is strictly sorted in ascending order (non-inclusive).
    * @public
    *
@@ -54,8 +79,12 @@ const CollisionLabUtils = {
     return isSorted;
   },
 
+  /*----------------------------------------------------------------------------*
+   * Type Validation
+   *----------------------------------------------------------------------------*/
+
   /**
-   * Indicates if every element of a array, or an ObservableArray, is of a given type.
+   * Indicates if every element of a array, or an ObservableArray, is of a given type. Used for type-checking arguments.
    * @public
    *
    * @param {ObservableArray.<*>|*[]} collection
