@@ -55,7 +55,9 @@ class CollisionLabControlPanel extends Panel {
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      contentSpacing: 7 // {number} - the spacing between the content Nodes of the Panel
+      contentSpacing: 7,         // {number} - the spacing between the content Nodes of the Panel
+      includePathCheckbox: true, // {boolean} - indicates if the path checkbox is present
+      elasticityControlSetNodeOptions: null
 
     }, options );
 
@@ -67,6 +69,9 @@ class CollisionLabControlPanel extends Panel {
     options.maxWidth = panelWidth;
 
     //----------------------------------------------------------------------------------------
+
+    // Create the content Node of the Panel
+    const contentNode = new VBox( { spacing: options.contentSpacing } );
 
     // 'Velocity' visibility Checkbox
     const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVisibleProperty,
@@ -94,37 +99,43 @@ class CollisionLabControlPanel extends Panel {
     // 'Values' visibility Checkbox
     const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
-    // 'Path' visibility Checkbox
-    const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
+    contentNode.children = [
+      velocityCheckbox,
+      momentumCheckbox,
+      centerOfMassCheckbox,
+      kineticEnergyCheckbox,
+      valuesCheckbox
+    ];
+
+    if ( options.includePathCheckbox ) {
+
+      // 'Path' visibility Checkbox
+      const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
+      contentNode.addChild( pathCheckbox );
+    }
 
     // 'Reflecting Border' Checkbox
     const reflectingBorderCheckbox = new CollisionLabCheckbox( reflectingBorderProperty,
       collisionLabStrings.reflectingBorder );
 
     // 'Elasticity' control
-    const elasticityControlSetNode = new ElasticityControlSet( elasticityPercentProperty, inelasticCollisionTypeProperty );
+    const elasticityControlSetNode = new ElasticityControlSet(
+      elasticityPercentProperty,
+      inelasticCollisionTypeProperty,
+      options.elasticityControlSetNodeOptions );
 
     // 'Constant Radius' Checkbox
     const constantRadiusCheckbox = new CollisionLabCheckbox( constantRadiusProperty, collisionLabStrings.constantSize );
 
-    //----------------------------------------------------------------------------------------
+    contentNode.children = [
+      ...contentNode.children,
+      reflectingBorderCheckbox,
+      new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } ),
+      elasticityControlSetNode,
+      constantRadiusCheckbox
+    ];
 
-    // Create the content Node of the Panel
-    const contentNode = new VBox( {
-      spacing: options.contentSpacing,
-      children: [
-        velocityCheckbox,
-        momentumCheckbox,
-        centerOfMassCheckbox,
-        kineticEnergyCheckbox,
-        valuesCheckbox,
-        pathCheckbox,
-        reflectingBorderCheckbox,
-        new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } ),
-        elasticityControlSetNode,
-        constantRadiusCheckbox
-      ]
-    } );
+    //----------------------------------------------------------------------------------------
 
     super( contentNode, options );
   }

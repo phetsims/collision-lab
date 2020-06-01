@@ -26,6 +26,12 @@ class Explore1DScreenView extends CollisionLabScreenView {
       playAreaLeftTop: new Vector2( CollisionLabConstants.SCREEN_VIEW_X_MARGIN, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D ),
       playAreaControlSetOptions: {
         includeGridCheckbox: false
+      },
+      controlPanelOptions: {
+        includePathCheckbox: false,
+        elasticityControlSetNodeOptions: {
+          includeStickSlipSwitch: false
+        }
       }
     } );
   }

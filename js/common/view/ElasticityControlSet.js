@@ -60,6 +60,9 @@ class ElasticityControlSet extends VBox {
         maxWidth: 40 // constrain width for i18n, determined empirically
       },
 
+      // {boolean} - indicates if the stick-slip APSwitch is included
+      includeStickSlipSwitch: true,
+
       // {Object} - passed to the labels of the ABSwitch
       stickSlipTextOptions: {
         font: new PhetFont( 13 ),
@@ -115,28 +118,26 @@ class ElasticityControlSet extends VBox {
         titleNodeOptions: options.titleTextOptions
       } );
 
+    this.addChild( elasticityNumberControl );
+
     //----------------------------------------------------------------------------------------
 
-    // Create the 'Stick' vs 'Slip' ABSwitch.
-    const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
-      InelasticCollisionTypes.STICK, stickLabel,
-      InelasticCollisionTypes.SLIP, slipLabel, {
-        toggleSwitchOptions: { size: TOGGLE_SWITCH_SIZE }
+    if ( options.includeStickSlipSwitch ) {
+
+      // Create the 'Stick' vs 'Slip' ABSwitch.
+      const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
+        InelasticCollisionTypes.STICK, stickLabel,
+        InelasticCollisionTypes.SLIP, slipLabel, {
+          toggleSwitchOptions: { size: TOGGLE_SWITCH_SIZE }
+        } );
+      this.addChild( stickSlipSwitch );
+
+      // Observe when the elasticity is manipulated to disable the stickSlipSwitch if the elasticity isn't perfectly
+      // inelastic. Link is never disposed as ElasticityControlSets are never disposed.
+      elasticityPercentProperty.link( elasticity => {
+        stickSlipSwitch.enabled = ( elasticity === 0 );
       } );
-
-    // Set the children of this Node in the correct rendering order.
-    this.children = [
-      elasticityNumberControl,
-      stickSlipSwitch
-    ];
-
-    //----------------------------------------------------------------------------------------
-
-    // Observe when the elasticity is manipulated to disable the stickSlipSwitch if the elasticity isn't perfectly
-    // inelastic. Link is never disposed as ElasticityControlSets are never disposed.
-    elasticityPercentProperty.link( elasticity => {
-      stickSlipSwitch.enabled = ( elasticity === 0 );
-    } );
+    }
   }
 }
 

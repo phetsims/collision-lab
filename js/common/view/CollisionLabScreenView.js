@@ -1,6 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -50,7 +51,9 @@ class CollisionLabScreenView extends ScreenView {
       playAreaLeftTop: new Vector2( SCREEN_VIEW_X_MARGIN, SCREEN_VIEW_Y_MARGIN ),
 
       includePlayAreaControlSet: true,
-      playAreaControlSetOptions: null
+      playAreaControlSetOptions: null,
+
+      controlPanelOptions: null
 
     }, options );
 
@@ -130,10 +133,10 @@ class CollisionLabScreenView extends ScreenView {
       model.elasticityPercentProperty,
       model.inelasticCollisionTypeProperty,
       model.constantRadiusProperty,
-      {
+      merge( {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         top: SCREEN_VIEW_Y_MARGIN
-      } );
+      }, options.controlPanelOptions ) );
     this.addChild( playAreaControlPanel );
 
 
