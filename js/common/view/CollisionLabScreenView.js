@@ -169,7 +169,9 @@ class CollisionLabScreenView extends ScreenView {
 
     const keypad = new KeypadDialog();
 
-    const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad );
+    const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad, {
+      dimensions: model.dimensions
+    } );
     this.addChild( ballValuesDisplay );
     ballValuesDisplay.top = 420;
     ballValuesDisplay.left = SCREEN_VIEW_X_MARGIN;

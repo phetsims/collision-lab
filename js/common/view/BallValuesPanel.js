@@ -13,8 +13,9 @@
  *   - Masses of the Balls (kg)
  *   - A slider to change the mass
  *
- * The Panel is built into columns using BallValuesPanelColumnNode. Then, columns are grouped together (like the
- * x-position and the y-position column) and a title-label is placed above it (in this case "Position").
+ * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the screen that contains the
+ * Balls is 2D, the columns are grouped together (like the x-position and the y-position column) and a title-label is
+ * placed above it (in this case "Position").
  *
  * This panel exists for the entire sim and is never disposed.
  *
@@ -56,6 +57,7 @@ class BallValuesPanel extends Panel {
       componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
       columnGroupSpacing: 21,       // {number} - x-spacing between the major groups of NumberDisplay columns
       columnGroupsTopMargin: 0.5,   // {number} - y-margin between the columns and the title-labels above them
+      dimensions: 2,                // {number} - the dimensions of the screen that the Balls appears in.
 
       massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
       componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for 18n
@@ -72,21 +74,34 @@ class BallValuesPanel extends Panel {
     const labelAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
     const contentAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
-    // Create each BallValuesPanelColumnNode for each type of BallValuesPanelColumnNode.ColumnTypes
-    const ballIconsColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const massColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const xPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_POSITION, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const yPositionColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_POSITION, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const xVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const yVelocityColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const xMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const yMomentumColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM, contentAlignGroup, labelAlignGroup, keypadDialog );
-    const massSlidersColumnNode = new BallValuesPanelColumnNode( balls, BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS, contentAlignGroup, labelAlignGroup, keypadDialog );
+    // Convenience function to create a BallValuesPanelColumnNode
+    const createColumnNode = columnType => new BallValuesPanelColumnNode( balls, columnType, contentAlignGroup, labelAlignGroup, keypadDialog );
 
-    // Horizontally group the components of BallValuesPanelColumnNodes into groups.
-    const positionColumnGroup = new HBox( { children: [ xPositionColumnNode, yPositionColumnNode ], spacing: options.componentColumnsSpacing } );
-    const velocityColumnGroup = new HBox( { children: [ xVelocityColumnNode, yVelocityColumnNode ], spacing: options.componentColumnsSpacing } );
-    const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode, yMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
+    // Create each BallValuesPanelColumnNode for each 1D BallValuesPanelColumnNode.ColumnTypes first.
+    const ballIconsColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS );
+    const massColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.MASS );
+    const xPositionColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_POSITION );
+    const xVelocityColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY );
+    const xMomentumColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM );
+    const massSlidersColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS );
+
+    //----------------------------------------------------------------------------------------
+
+    // Wrap the component-specific column groups into a HBox. Children will be added if the dimensions is 2D.
+    const positionColumnGroup = new HBox( { children: [ xPositionColumnNode ], spacing: options.componentColumnsSpacing } );
+    const velocityColumnGroup = new HBox( { children: [ xVelocityColumnNode ], spacing: options.componentColumnsSpacing } );
+    const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
+
+    // For 2D screens, add the y-component Columns to their correlating group.
+    if ( options.dimensions === 2 ) {
+      const yPositionColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_POSITION );
+      const yVelocityColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY );
+      const yMomentumColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM );
+
+      positionColumnGroup.addChild( yPositionColumnNode );
+      velocityColumnGroup.addChild( yVelocityColumnNode );
+      momentumColumnGroup.addChild( yMomentumColumnNode );
+    }
 
     //----------------------------------------------------------------------------------------
 
