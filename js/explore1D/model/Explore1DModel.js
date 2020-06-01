@@ -11,8 +11,8 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import BallState from '../../common/model/BallState.js';
-import PlayArea from '../../common/model/PlayArea.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
+import PlayArea from '../../common/model/PlayArea.js';
 
 // constants
 const INITIAL_BALL_STATES = [

@@ -2,7 +2,7 @@
 
 /**
  * A Ball is the model for a single spherical moving object and appears in all screens. Each Ball is a apart of a
- * isolated system of multiple Balls within a PlayArea. Balls were implemented to work for both 1D and 2D screens.
+ * isolated system of multiple Balls within a PlayArea. Balls are implemented to work for both 1D and 2D screens.
  *
  * Primary responsibilities are:
  *   1. Center position Property
