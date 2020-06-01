@@ -127,8 +127,9 @@ class CollisionLabModel {
       this.constantRadiusProperty,
       this.gridVisibleProperty,
       this.pathVisibleProperty,
-      this.centerOfMassVisibleProperty
-    );
+      this.centerOfMassVisibleProperty, {
+        dimensions: options.dimensions
+      } );
 
     // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.
     this.collisionDetector = new CollisionDetector(

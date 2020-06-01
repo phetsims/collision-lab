@@ -134,15 +134,14 @@ class Ball {
     // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the ball.
     this.path = new CollisionLabPath( pathVisibleProperty );
 
-    // @private (read-only) {BallState} - reference the initialBallState, which will track our restarting state. See
-    //                                    BallState.js for more context.
+    // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
     this.restartState = initialBallState;
 
-    // @private (read-only) {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
-    //                                            Used in the model to determine Ball snapping functionality.
+    // @private {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
+    //                                Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
 
-    // @private (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
+    // @public (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
     this.dimensions = options.dimensions;
 
     //----------------------------------------------------------------------------------------
@@ -218,7 +217,7 @@ class Ball {
     }
 
     // If the dimensions is 1D, ensure that the yPosition is 0.
-    if ( this.dimensions === 2 ) {
+    if ( this.dimensions === 1 ) {
       this.yPosition = 0;
     }
   }
