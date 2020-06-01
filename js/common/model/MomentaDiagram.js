@@ -24,6 +24,7 @@ import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import isArray from '../../../../phet-core/js/isArray.js';
+import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
@@ -40,13 +41,20 @@ class MomentaDiagram {
    * @param {Balls[]} prepopulatedBalls - an array of ALL possible balls.
    * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system. All Balls must be apart of the
    *                                         prepopulatedBalls array.
-   * @param {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram. Positioning of the
-   *                              Vectors are different depending on the dimensions.
+   * @param {Object} [options]
    */
-  constructor( prepopulatedBalls, balls, dimensions ) {
+  constructor( prepopulatedBalls, balls, options ) {
     assert && assert( isArray( prepopulatedBalls ) && _.every( prepopulatedBalls, ball => ball instanceof Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${ dimensions }` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
+
+    options = merge( {
+
+      // {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram. Positioning of the
+      //                       Vectors are different depending on the dimensions.
+      dimensions: 2
+
+    }, options );
 
     //----------------------------------------------------------------------------------------
 
@@ -87,8 +95,8 @@ class MomentaDiagram {
     // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
     this.balls = balls;
 
-    // @public (read-only) {number} - reference to the passed-in dimensions of the Screen that has this MomentaDiagram.
-    this.dimensions = dimensions;
+    // @private {number} - reference to the passed-in dimensions of the Screen that has this MomentaDiagram.
+    this.dimensions = options.dimensions;
 
     //----------------------------------------------------------------------------------------
 

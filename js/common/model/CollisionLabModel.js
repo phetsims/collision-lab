@@ -141,7 +141,9 @@ class CollisionLabModel {
     );
 
     // @public (read-only) {MomentaDiagram}
-    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls, options.dimensions );
+    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls, {
+      dimensions: options.dimensions
+    } );
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.

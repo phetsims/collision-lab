@@ -130,6 +130,7 @@ class CollisionLabScreenView extends ScreenView {
 
 
     const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.playArea.balls, {
+      dimensions: model.dimensions,
       centerX: playAreaControlPanel.centerX,
       top: playAreaControlPanel.bottom + 8
     } );
