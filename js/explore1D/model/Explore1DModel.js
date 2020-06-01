@@ -36,6 +36,9 @@ class Explore1DModel extends CollisionLabModel {
       dimensions: 1,
       playAreaBounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
     } );
+
+    this.gridVisibleProperty.value = true;
+    assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
   }
 }
 

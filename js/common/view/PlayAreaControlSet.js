@@ -57,6 +57,9 @@ class PlayAreaControlSet extends VBox {
         yMargin: 4
       },
 
+      // {boolean} - indicates if a grid checkbox should be included.
+      includeGridCheckbox: true,
+
       // {Object} - options passed to the NumberSpinner instance
       gridCheckboxOptions: merge( {}, CollisionLabConstants.CHECKBOX_OPTIONS, {
         gridSize: 26
@@ -93,14 +96,17 @@ class PlayAreaControlSet extends VBox {
       spacing: options.titleToNumberSpinnerMargin
     } );
 
-    // Create the GridCheckbox instance.
-    const gridCheckbox = new GridCheckbox( gridVisibleProperty, options.gridCheckboxOptions );
+    this.addChild( ballControlBox );
 
-    // Set the children of this Node in the correct rendering order.
-    this.children = [
-      ballControlBox,
-      gridCheckbox
-    ];
+    //----------------------------------------------------------------------------------------
+
+    // Create and add a GridCheckbox instance if includeGridCheckbox is true.
+    if ( options.includeGridCheckbox ) {
+      this.addChild( new GridCheckbox( gridVisibleProperty, options.gridCheckboxOptions ) );
+    }
+
+    // Apply any additional Bounds mutators.
+    this.mutate( options );
   }
 }
 

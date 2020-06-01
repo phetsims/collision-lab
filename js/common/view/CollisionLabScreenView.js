@@ -47,7 +47,10 @@ class CollisionLabScreenView extends ScreenView {
 
     options = merge( {
 
-      playAreaLeftTop: new Vector2( SCREEN_VIEW_X_MARGIN, SCREEN_VIEW_Y_MARGIN )
+      playAreaLeftTop: new Vector2( SCREEN_VIEW_X_MARGIN, SCREEN_VIEW_Y_MARGIN ),
+
+      includePlayAreaControlSet: true,
+      playAreaControlSetOptions: null
 
     }, options );
 
@@ -60,9 +63,6 @@ class CollisionLabScreenView extends ScreenView {
     // create the view properties for the view
     const viewProperties = new CollisionLabViewProperties();
 
-    const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.numberOfBallsRange, model.gridVisibleProperty );
-    this.addChild( playAreaControlSet );
-
     // create the grid and border of the playArea
     const playAreaNode = new PlayAreaNode(
       model.playArea,
@@ -74,13 +74,19 @@ class CollisionLabScreenView extends ScreenView {
     );
     this.addChild( playAreaNode );
 
+    if ( options.includePlayAreaControlSet ) {
+      const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.numberOfBallsRange, model.gridVisibleProperty, merge( {
+        left: playAreaNode.right + 5,
+        top: modelViewTransform.modelToViewY( model.playArea.bounds.maxY ) + 5
+      }, options.playAreaControlSetOptions ) );
+
+      this.addChild( playAreaControlSet );
+    }
+
     const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
     this.addChild( timeDisplay );
     timeDisplay.left = SCREEN_VIEW_X_MARGIN;
     timeDisplay.top = playAreaNode.bottom + 10;
-
-    playAreaControlSet.left = playAreaNode.right + 5;
-    playAreaControlSet.top = 20;
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.playProperty,

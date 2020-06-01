@@ -23,8 +23,10 @@ class Explore1DScreenView extends CollisionLabScreenView {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     super( model, tandem, {
-      playAreaLeftTop: new Vector2( CollisionLabConstants.SCREEN_VIEW_X_MARGIN, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D )
-
+      playAreaLeftTop: new Vector2( CollisionLabConstants.SCREEN_VIEW_X_MARGIN, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D ),
+      playAreaControlSetOptions: {
+        includeGridCheckbox: false
+      }
     } );
   }
 }
