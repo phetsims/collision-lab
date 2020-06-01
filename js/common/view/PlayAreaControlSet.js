@@ -15,6 +15,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import GridCheckbox from '../../../../scenery-phet/js/GridCheckbox.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -29,11 +30,13 @@ class PlayAreaControlSet extends VBox {
 
   /**
    * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
+   * @param {Range} numberOfBallsRange - the range of the number of Balls
    * @param {Property.<boolean>} gridVisibleProperty
    * @param {Object} [options]
    */
-  constructor( numberOfBallsProperty, gridVisibleProperty, options ) {
+  constructor( numberOfBallsProperty, numberOfBallsRange, gridVisibleProperty, options ) {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
+    assert && assert( numberOfBallsRange instanceof Range, `invalid numberOfBallsRange: ${numberOfBallsRange}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
@@ -81,7 +84,7 @@ class PlayAreaControlSet extends VBox {
 
     // Create the NumberSpinner of the PlayAreaControlSet to allow the user to change the number of balls.
     const numberOfBallsSpinner = new NumberSpinner( numberOfBallsProperty,
-      new Property( CollisionLabConstants.NUMBER_OF_BALLS_RANGE ),
+      new Property( numberOfBallsRange ),
       options.numberSpinnerOptions );
 
     // Wrap the controls of the number of Balls in a separate VBox to give separate spacing.

@@ -52,14 +52,14 @@ class MomentaDiagramVectorNode extends Node {
       isTotalMomentaVector: false,
 
       // {number} - margin between the label and the arrow, in view coordinates.
-      labelArrowMargin: 5,
+      labelArrowMargin: 2,
 
       // {Object} - passed to the ArrowNode instance.
       arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS, CollisionLabColors.MOMENTUM_VECTOR_COLORS ),
 
       // {Object} - passed to the Text instance for the label.
       textOptions: {
-        font: new PhetFont( 13 )
+        font: new PhetFont( { size: 14, weight: 500 } )
       }
 
     }, options );

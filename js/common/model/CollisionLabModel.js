@@ -15,6 +15,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import isArray from '../../../../phet-core/js/isArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
@@ -38,17 +39,29 @@ class CollisionLabModel {
    * @param {Tandem} tandem
    */
   constructor( initialBallStates, options, tandem ) {
-    assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     options = merge( {
 
       // {number} - the dimensions of the collision Screen. Either 1 or 2.
-      dimensions: 2
+      dimensions: 2,
 
+      // {RangeWithValue} - the range of the number of Balls in the Screen.
+      numberOfBallsRange: new RangeWithValue( 1, 5, 2 )
 
     }, options );
+
+    assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+    assert && assert( options.dimensions === 1 || options.dimensions === 2, `invalid options.dimensions: ${ options.dimensions }` );
+    assert && assert( options.numberOfBallsRange instanceof RangeWithValue, `invalid options.numberOfBallsRange: ${options.numberOfBallsRange}` );
+    assert && assert( options.dimensions === 2 || _.every( initialBallStates, ballState => ballState.position.x === 0 && ballState.velocity.y === 0 ) );
+
+    // @public (read-only) {number} - reference to the number of dimensions for this collision Screen.
+    this.dimensions = options.dimensions;
+
+    // @public (read-only) {Range} - reference to the range of the number of balls.
+    this.numberOfBallsRange = options.numberOfBallsRange;
 
     //----------------------------------------------------------------------------------------
 
@@ -65,9 +78,9 @@ class CollisionLabModel {
 
     // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
     //                                        outside of the PlayArea in a Spinner.
-    this.numberOfBallsProperty = new NumberProperty( CollisionLabConstants.NUMBER_OF_BALLS_RANGE.defaultValue, {
+    this.numberOfBallsProperty = new NumberProperty( options.numberOfBallsRange.defaultValue, {
       numberType: 'Integer',
-      range: CollisionLabConstants.NUMBER_OF_BALLS_RANGE
+      range: options.numberOfBallsRange
     } );
 
     // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See

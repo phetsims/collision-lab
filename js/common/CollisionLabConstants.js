@@ -29,7 +29,6 @@ const CollisionLabConstants = {
   MASS_RANGE: new Range( 0.1, 3.0 ),
   VELOCITY_RANGE: new Range( -4, 4 ),
   ELASTICITY_PERCENT_RANGE: new RangeWithValue( 0, 100, 100 ),
-  NUMBER_OF_BALLS_RANGE: new RangeWithValue( 1, 5, 2 ),
 
   // Time
   TIME_STEP_DURATION: 0.03, // Seconds of real time per each press of the Step button.
@@ -51,7 +50,7 @@ const CollisionLabConstants = {
 
   // Momenta Diagram
   MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 4, 2 ),
-  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 14, 11 ),
+  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 10, 8 ),
 
   //----------------------------------------------------------------------------------------
 

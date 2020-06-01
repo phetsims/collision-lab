@@ -58,7 +58,7 @@ class CollisionLabScreenView extends ScreenView {
     // create the view properties for the view
     const viewProperties = new CollisionLabViewProperties();
 
-    const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.gridVisibleProperty );
+    const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.numberOfBallsRange, model.gridVisibleProperty );
     this.addChild( playAreaControlSet );
 
     // create the grid and border of the playArea
