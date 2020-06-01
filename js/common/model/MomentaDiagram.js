@@ -170,7 +170,7 @@ class MomentaDiagram {
 
       // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
-      firstMomentaVector.tailY = Math.floor( this.balls.length / 2 );
+      firstMomentaVector.tailY = 1 + Math.floor( ( this.balls.length - 1 ) / 2 );
       this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length;
     }
 

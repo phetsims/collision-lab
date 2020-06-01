@@ -6,9 +6,21 @@
  * @author Brandon Li
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
+import BallState from '../../common/model/BallState.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
+
+// constants
+const INITIAL_BALL_STATES = [
+  new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
+  new BallState( new Vector2( 0, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
+  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.0 ),
+  new BallState( new Vector2( 1.5, 0 ), new Vector2( 1.1, 0 ), 1.0 ),
+  new BallState( new Vector2( -1.5, 0 ), new Vector2( -1.1, 0 ), 1.0 )
+];
+assert && assert( _.every( INITIAL_BALL_STATES, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
 
 class Explore1DModel extends CollisionLabModel {
 
@@ -16,10 +28,11 @@ class Explore1DModel extends CollisionLabModel {
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( tandem );
+    super( INITIAL_BALL_STATES, tandem, {
+      dimensions: 1
+    } );
   }
 }
 

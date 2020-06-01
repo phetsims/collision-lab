@@ -35,10 +35,10 @@ class CollisionLabModel {
 
   /**
    * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
-   * @param {Object} [options]
    * @param {Tandem} tandem
+   * @param {Object} [options]
    */
-  constructor( initialBallStates, options, tandem ) {
+  constructor( initialBallStates, tandem, options ) {
 
     options = merge( {
 
@@ -55,7 +55,7 @@ class CollisionLabModel {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
     assert && assert( options.dimensions === 1 || options.dimensions === 2, `invalid options.dimensions: ${ options.dimensions }` );
     assert && assert( options.numberOfBallsRange instanceof RangeWithValue, `invalid options.numberOfBallsRange: ${options.numberOfBallsRange}` );
-    assert && assert( options.dimensions === 2 || _.every( initialBallStates, ballState => ballState.position.x === 0 && ballState.velocity.y === 0 ) );
+    assert && assert( options.dimensions === 2 || _.every( initialBallStates, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
 
     // @public (read-only) {number} - reference to the number of dimensions for this collision Screen.
     this.dimensions = options.dimensions;
