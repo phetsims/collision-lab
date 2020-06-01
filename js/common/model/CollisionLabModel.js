@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Root class (to be subclassed) for the top-level model of every screen.
+ * Root class (to be subclassed) for the top-level model of every screen in the 'Collision Lab' simulation.
  *
  * Mainly responsible for:
  *   - Time Control Properties and stepping the simulation.
@@ -10,6 +10,7 @@
  *   - Instantiation of the CollisionDetector collision engine.
  *
  * @author Brandon Li
+ * @author Martin Veillette
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';

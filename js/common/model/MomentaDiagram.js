@@ -124,7 +124,6 @@ class MomentaDiagram {
   reset() {
     this.zoomProperty.reset();
     this.expandedProperty.reset();
-    this.updateVectors();
   }
 
   /**
