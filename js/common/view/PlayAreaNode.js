@@ -64,14 +64,14 @@ class PlayAreaNode extends Node {
 
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
 
-    const majorGridLines = new GridLines( playArea, MAJOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
-      lineWidth: MAJOR_GRID_LINE_WIDTH,
+    const majorGridLines = new GridLines( playArea, MAJOR_GRIDLINE_SPACING, playArea.dimensions === 2 ? playArea.bounds.height : 0.09, playArea.dimensions === 2, gridVisibleProperty, modelViewTransform, {
+      lineWidth: playArea.dimensions === 2 ? MAJOR_GRID_LINE_WIDTH : MINOR_GRID_LINE_WIDTH,
       stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
     } );
 
-    const minorGridLines = new GridLines( playArea, MINOR_GRIDLINE_SPACING, gridVisibleProperty, modelViewTransform, {
+    const minorGridLines = new GridLines( playArea, MINOR_GRIDLINE_SPACING, playArea.dimensions === 2 ? playArea.bounds.height : 0.06, playArea.dimensions === 2, gridVisibleProperty, modelViewTransform, {
       lineWidth: MINOR_GRID_LINE_WIDTH,
-      stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+      stroke: playArea.dimensions === 1 ? CollisionLabColors.MAJOR_GRID_LINE_COLOR : CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
     const kineticEnergyDisplay = new KineticEnergyNumberDisplay( playArea.totalKineticEnergyProperty,
@@ -112,7 +112,7 @@ class GridLines extends Path {
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( playArea, spacing, gridVisibleProperty, modelViewTransform, options ) {
+  constructor( playArea, spacing, height, includeHorizontal, gridVisibleProperty, modelViewTransform, options ) {
     assert && assert( typeof spacing === 'number', `invalid spacing: ${spacing}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
@@ -130,12 +130,14 @@ class GridLines extends Path {
 
     // Vertical lines
     for ( let xValue = gridMinX; xValue <= gridMaxX; xValue += spacing ) {
-      gridLineShape.moveTo( xValue, gridMinY ).verticalLineTo( gridMaxY );
+      gridLineShape.moveTo( xValue, gridMinY ).verticalLineToRelative( height );
     }
 
-    // Horizontal lines
-    for ( let yValue = gridMinY; yValue <= gridMaxY; yValue += spacing ) {
-      gridLineShape.moveTo( gridMinX, yValue ).horizontalLineTo( gridMaxX );
+    if ( includeHorizontal ) {
+      // Horizontal lines
+      for ( let yValue = gridMinY; yValue <= gridMaxY; yValue += spacing ) {
+        gridLineShape.moveTo( gridMinX, yValue ).horizontalLineTo( gridMaxX );
+      }
     }
 
     super( modelViewTransform.modelToViewShape( gridLineShape ), options );
@@ -147,6 +149,7 @@ class GridLines extends Path {
     gridVisibleProperty.linkAttribute( this, 'visible' );
   }
 }
+
 
 collisionLab.register( 'PlayAreaNode', PlayAreaNode );
 export default PlayAreaNode;

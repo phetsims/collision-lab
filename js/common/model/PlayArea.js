@@ -67,6 +67,9 @@ class PlayArea {
     // @public (read-only) {Bounds2} - the model bounds of the PlayArea, in meters.
     this.bounds = options.bounds;
 
+    // @public (read-only) {number} - the dimensions of the PlayArea.
+    this.dimensions = options.dimensions;
+
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation and are
     //                                never disposed. However, these Balls are NOT necessarily the Balls currently within the
     //                                PlayArea system. That is determined by the `this.balls` declaration below. This is just used
