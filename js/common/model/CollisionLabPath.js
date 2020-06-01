@@ -21,6 +21,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import PathDataPoint from './PathDataPoint.js';
 
 // constants
@@ -130,6 +131,9 @@ class CollisionLabPath {
     // Add a new PathDataPoint for the current position of the moving object.
     if ( this.playAreaBounds.containsPoint( position ) ) {
       this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+
+      // Ensure that the dataPoints are strictly sorted by time.
+      assert && assert( CollisionLabUtils.isSorted( this.dataPoints.map( _.property( 'time' ) ) ) );
     }
 
     // Signal that the trace 'Path' needs to be redrawn.

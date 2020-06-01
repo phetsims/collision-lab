@@ -58,34 +58,34 @@ const CollisionLabUtils = {
    * Asserts that an object is a Property whose value satisfies a specified predicate. Used for type-checking arguments.
    * @public
    *
-   * @param {Property.<*>} object
+   * @param {Property.<*>} genericProperty
    * @param {function(value:*):boolean} predicate
    */
-  assertPropertyPredicate( object, predicate ) {
-    assert( object instanceof Property, `invalid object: ${ object }` );
-    assert( predicate( object.value ), 'Property.value failed predicate' );
+  assertPropertyPredicate( genericProperty, predicate ) {
+    assert( genericProperty instanceof Property, `invalid Property: ${ genericProperty }` );
+    assert( predicate( genericProperty.value ), `invalid Property.value: ${ genericProperty.value }` );
   },
 
   /**
    * Asserts that an object is a Property whose value is a specified primitive type. Used for type-checking arguments.
    * @public
    *
-   * @param {*} object
+   * @param {Property.<*>} genericProperty
    * @param {string} type
    */
-  assertPropertyTypeof( object, type ) {
-    CollisionLabUtils.assertPropertyPredicate( object, value => typeof value === type );
+  assertPropertyTypeof( genericProperty, type ) {
+    CollisionLabUtils.assertPropertyPredicate( genericProperty, value => typeof value === type );
   },
 
   /**
    * Asserts that an object is a Property whose value is an instance of a type. Used for type-checking arguments.
    * @public
    *
-   * @param {*} object
+   * @param {Property.<*>} genericProperty
    * @param {constructor} type
    */
-  assertPropertyInstanceof( object, type ) {
-    CollisionLabUtils.assertPropertyPredicate( object, value => value instanceof type );
+  assertPropertyInstanceof( genericProperty, type ) {
+    CollisionLabUtils.assertPropertyPredicate( genericProperty, value => value instanceof type );
   }
 };
 
