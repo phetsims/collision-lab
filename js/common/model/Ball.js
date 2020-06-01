@@ -33,16 +33,14 @@ import PlayArea from './PlayArea.js';
 
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
-const BALL_CONSTANT_RADIUS = CollisionLabConstants.BALL_CONSTANT_RADIUS;
-const BALL_DEFAULT_DENSITY = CollisionLabConstants.BALL_DEFAULT_DENSITY;
 
 class Ball {
 
   /**
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
-   * @param {Property.<boolean>} isConstantSizeProperty - indicates if the ball has a radius independent of mass or not.
-   * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
+   * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
+   * @param {Property.<boolean>} gridVisibleProperty - indicates if the PlayArea's grid is visible.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the Ball is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
@@ -68,38 +66,37 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into
-    //                                        components to individually display each component and to allow the user to
-    //                                        individually manipulate.
+    // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
+    //                            individually display each component and to allow the user to individually manipulate.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the ball, in meters.
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the Ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {NumberProperty} - Property of the mass of the ball, in kg. Manipulated in the view.
+    // @public (read-only) {NumberProperty} - Property of the mass of the Ball, in kg. Manipulated in the view.
     this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - the Ball's velocity, in m/s. Separated into components to individually
-    //                                        display each component and to allow the user to manipulate separately.
+    // @public {NumberProperty} - the Ball's velocity, in m/s. Separated into components to individually display each
+    //                            component and to allow the user to manipulate separately.
     this.xVelocityProperty = new NumberProperty( initialBallState.velocity.x );
     this.yVelocityProperty = new NumberProperty( initialBallState.velocity.y );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the ball, in m/s.
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the Ball, in m/s.
     this.velocityProperty = new DerivedProperty( [ this.xVelocityProperty, this.yVelocityProperty ],
       ( xVelocity, yVelocity ) => new Vector2( xVelocity, yVelocity ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the ball, in m/s.
+    // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ) );
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the ball, in kg*(m/s).
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
@@ -114,25 +111,24 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // Handle the changing radius of the Ball based on the mass
-    // @public (read-only) - Property of the radius of the Ball, in meters.
+    // @public (read-only) {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
-      ( mass, constantRadius ) => constantRadius ? BALL_CONSTANT_RADIUS : Ball.calculateRadius( mass ),
+      ( mass, isConstantSize ) => Ball.calculateRadius( mass, isConstantSize ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 
-    // @public (read-only) kineticEnergyProperty - Property of the kinetic energy of the ball, in J.
+    // @public (read-only) {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
-      ( mass, speed ) => 1 / 2 * mass * Math.pow( speed, 2 ),
-      { valueType: 'number' } );
+      ( mass, speed ) => 0.5 * mass * Math.pow( speed, 2 ),
+      { valueType: 'number', isValidValue: value => value >= 0 } );
 
     //----------------------------------------------------------------------------------------
 
-    // @public userControlledProperty - indicates if the ball is currently being controlled by the user, either by
+    // @public userControlledProperty - indicates if the Ball is currently being controlled by the user, either by
     //                                  dragging or editing a value through the Keypad. This is set externally in the
     //                                  view.
     this.userControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the ball.
+    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the Ball.
     this.path = new CollisionLabPath( options.playAreaBounds, pathVisibleProperty );
 
     // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
@@ -210,13 +206,13 @@ class Ball {
 
     if ( !this.gridVisibleProperty.value ) {
 
-      // Ensure that the ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
+      // Ensure that the Ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
       // entire Ball is inside the PlayArea.
       this.position = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
-      // Ensure that the ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
+      // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
       this.position = this.getGridSafeConstrainedBounds().closestPointTo( position )
         .dividedScalar( MINOR_GRIDLINE_SPACING )
         .roundSymmetric()
@@ -490,7 +486,7 @@ class Ball {
   get momentum() { return this.momentumProperty.value; }
 
   /**
-   * Calculates the radius of a Ball when constant-radius mode is off. This calculation comes from
+   * Calculates the radius of a Ball. If constant size mode is off, this calculation comes from
    * the mass and the density (uniform) of the Ball, which is CollisionLabConstants.BALL_DEFAULT_DENSITY.
    *
    * Volume = 4/3 PI * Radius^3
@@ -499,11 +495,16 @@ class Ball {
    * @public
    *
    * @param {number} mass - in kg
+   * @param {boolean} isConstantSize - indicates if constant size mode is on
+   * @returns {number} - in meters
    */
-  static calculateRadius( mass ) {
+  static calculateRadius( mass, isConstantSize ) {
     assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
+    assert && assert( typeof isConstantSize === 'boolean', `invalid isConstantSize: ${isConstantSize}` );
 
-    return Math.pow( ( 3 * mass / BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
+    return isConstantSize ?
+      CollisionLabConstants.BALL_CONSTANT_RADIUS :
+      Math.pow( ( 3 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
   }
 }
 
