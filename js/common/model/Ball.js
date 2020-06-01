@@ -1,16 +1,16 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A Ball is the model for a single moving object and appears in all screens. Each Ball is a apart of a isolated system
- * of multiple Balls within a PlayArea.
+ * A Ball is the model for a single spherical moving object and appears in all screens. Each Ball is a apart of a
+ * isolated system of multiple Balls within a PlayArea. Balls were implemented to work for both 1D and 2D screens.
  *
  * Primary responsibilities are:
- *   1. center-position Property
- *   2. track the mass of the Ball in a Property
- *   3. velocity and momentum vector Properties
- *   4. radius Property to track the inner radius of the Ball
- *   5. track the kinetic energy of the Ball
- *   6. create the trailing path behind the Ball
+ *   1. Center position Property
+ *   2. Track the Mass of the Ball in a Property
+ *   3. Velocity and Momentum vector Properties
+ *   4. Radius Property
+ *   5. Track the kinetic energy of the Ball
+ *   6. Create the trailing path behind the Ball
  *   7. dragging, user-control, restarting, etc.
  *
  * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
@@ -34,11 +34,12 @@ import PlayArea from './PlayArea.js';
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
 const BALL_CONSTANT_RADIUS = CollisionLabConstants.BALL_CONSTANT_RADIUS;
+const BALL_DEFAULT_DENSITY = CollisionLabConstants.BALL_DEFAULT_DENSITY;
 
 class Ball {
 
   /**
-   * @param {BallState} initialBallState - starting state of the Ball. Resetting sets to this state's current values.
+   * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
    * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
@@ -502,7 +503,7 @@ class Ball {
   static calculateRadius( mass ) {
     assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
 
-    return Math.pow( ( 3 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
+    return Math.pow( ( 3 * mass / BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
   }
 }
 
