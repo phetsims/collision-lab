@@ -45,7 +45,7 @@ class CollisionLabModel {
     options = merge( {
 
       // {number} - the dimensions of the collision Screen. Either 1 or 2.
-      dimensions: 1
+      dimensions: 2
 
 
     }, options );

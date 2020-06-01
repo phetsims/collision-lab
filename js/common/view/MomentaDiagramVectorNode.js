@@ -51,8 +51,8 @@ class MomentaDiagramVectorNode extends Node {
       // {boolean} - indicates if this vector Node represents the total Momenta Vector.
       isTotalMomentaVector: false,
 
-      // {number} - margin between the label and the arrow, in model units (kg * m/s)
-      labelArrowMargin: 0.1,
+      // {number} - margin between the label and the arrow, in view coordinates.
+      labelArrowMargin: 5,
 
       // {Object} - passed to the ArrowNode instance.
       arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS, CollisionLabColors.MOMENTUM_VECTOR_COLORS ),
@@ -88,39 +88,35 @@ class MomentaDiagramVectorNode extends Node {
       momentaDiagramVector.tipPositionProperty,
       modelViewTransformProperty ], ( tailPosition, tipPosition, modelViewTransform ) => {
 
-        // Get the position of the tail and tip in view coordinates.
+        // Get the position of the tail, center, and tip in view coordinates.
         const tailViewPosition = modelViewTransform.modelToViewPosition( tailPosition );
         const tipViewPosition = modelViewTransform.modelToViewPosition( tipPosition );
+        const centerViewPosition = modelViewTransform.modelToViewPosition( momentaDiagramVector.center );
 
         // Update the positioning of the ArrowNode to match the MomentaDiagramVector.
         arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
 
+        // Compute the adjusted offset of the label in view coordinates. It adds extra offset to consider the size
+        // of the label.
+        const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
+
         // Position the Label, which depends on the dimensions and whether or not this the total momenta Vector.
-        if ( options.dimensions === 2 ) {
+        if ( options.dimensions === 2 || options.isTotalMomentaVector ) {
 
-          // Add a flip if x is negative
-          const xFlip = ( momentaDiagramVector.components.x < 0 ) ? Math.PI : 0;
-          const offsetAngleAdjustment = ( options.isTotalMomentaVector ? -Math.PI / 2 - xFlip : Math.PI / 2 + xFlip );
+          // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
+          const yFlip = ( momentaDiagramVector.components.y < 0 ) ? Math.PI : 0;
+          const offsetAngleAdjustment = yFlip + ( options.isTotalMomentaVector ? Math.PI / 2 : -Math.PI / 2 );
 
-          // Add extra offset to consider the size of the label.
-          const labelSize = modelViewTransform.viewToModelDeltaX( Math.max( labelNode.height, labelNode.width ) / 2 );
-
-          // Create an offset that is perpendicular to the vector
-          const offset = Vector2.createPolar( options.labelArrowMargin + labelSize,
-            momentaDiagramVector.angle + offsetAngleAdjustment );
+          // Create an offset that is perpendicular to the vector. The angle is negative since the y-axis is inverted.
+          const offset = Vector2.createPolar( adjustedOffset, -( momentaDiagramVector.angle + offsetAngleAdjustment ) );
 
           // Position the label.
-          labelNode.center = modelViewTransform.modelToViewPosition( momentaDiagramVector.center.plus( offset ) );
+          labelNode.center = centerViewPosition.plus( offset );
         }
         else {
-          if ( options.isTotalMomentaVector ) {
 
-            // Position the label.
-            labelNode.centerTop = modelViewTransform.modelToViewPosition( momentaDiagramVector.center.minusXY( 0, options.labelArrowMargin ) );
-          }
-          else {
-            labelNode.center = modelViewTransform.modelToViewPosition( momentaDiagramVector.tip.plusXY( Utils.sign( momentaDiagramVector.components.x ) * options.labelArrowMargin, 0 ) );
-          }
+          // Position the label which depends on the sign of the x-component of the Momenta Vector.
+          labelNode.center = tipViewPosition.plusXY( Utils.sign( momentaDiagramVector.components.x ) * adjustedOffset, 0 );
         }
      } );
   }
