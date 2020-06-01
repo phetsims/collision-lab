@@ -7,7 +7,7 @@
  *   - Time Control Properties and stepping the simulation.
  *   - Keep track of the top-level user-manipulation Properties, like the number of Balls or the elasticity.
  *   - Instantiation of a single PlayArea.
- *   - Instantiation of the CollisionDetector collision engine.
+ *   - Instantiation of the CollisionEngine collision engine.
  *
  * @author Brandon Li
  * @author Martin Veillette
@@ -24,7 +24,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
-import CollisionDetector from './CollisionDetector.js';
+import CollisionEngine from './CollisionEngine.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
@@ -136,8 +136,8 @@ class CollisionLabModel {
         bounds: options.playAreaBounds
       } );
 
-    // @private {CollisionDetector} - the CollisionDetector of the simulation, which acts as the physics engine.
-    this.collisionDetector = new CollisionDetector(
+    // @private {CollisionEngine} - the CollisionEngine of the simulation, which acts as the physics engine.
+    this.collisionDetector = new CollisionEngine(
       this.playArea.balls,
       this.playArea.bounds,
       this.elasticityPercentProperty,

@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * CollisionDetector handles collision all detection and responses for all screens within a PlayArea. Our collision
+ * CollisionEngine handles collision all detection and responses for all screens within a PlayArea. Our collision
  * model involves rigid bodies. Once a collision is detected, the appropriate ball models are set to update their
  * new velocity and position.
  *
@@ -20,7 +20,7 @@ import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 
-class CollisionDetector {
+class CollisionEngine {
 
   /**
    * @param {ObservableArray.<Ball>} balls - collections of balls
@@ -357,5 +357,5 @@ class CollisionDetector {
   get elasticity() { return this.elasticityPercentProperty.value / 100; }
 }
 
-collisionLab.register( 'CollisionDetector', CollisionDetector );
-export default CollisionDetector;
+collisionLab.register( 'CollisionEngine', CollisionEngine );
+export default CollisionEngine;
