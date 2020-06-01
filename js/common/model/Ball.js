@@ -22,11 +22,11 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import CollisionLabPath from './CollisionLabPath.js';
 import PlayArea from './PlayArea.js';
@@ -40,7 +40,7 @@ class Ball {
 
   /**
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
-   * @param {Property.<boolean>} constantRadiusProperty - whether the ball has a radius independent of mass or not.
+   * @param {Property.<boolean>} constantRadiusProperty - indicates if the ball has a radius independent of mass or not.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the play-area has a grid.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the ball is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
@@ -50,37 +50,37 @@ class Ball {
    */
   constructor( initialBallState, constantRadiusProperty, gridVisibleProperty, pathVisibleProperty, index, options ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
-    assert && assert( constantRadiusProperty instanceof Property && typeof constantRadiusProperty.value === 'boolean', `invalid initialVelocity: ${constantRadiusProperty}` );
-    assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
-    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid initialVelocity: ${pathVisibleProperty}` );
-    assert && assert( typeof index === 'number' && index > 0, `invalid index: ${index}` );
+    assert && CollisionLabUtils.assertPropertyTypeof( constantRadiusProperty, 'boolean' );
+    assert && CollisionLabUtils.assertPropertyTypeof( gridVisibleProperty, 'boolean' );
+    assert && CollisionLabUtils.assertPropertyTypeof( pathVisibleProperty, 'boolean' );
+    assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 
-      // {number} dimensions - the dimensions of the Screen that contains the Ball.
+      // {number} - the dimensions of the PlayArea that contains the Ball. Either 1 or 2.
       dimensions: 2,
 
-      // {Bounds2} - the model bounds of the PlayArea, in meters.
-      bounds: PlayArea.DEFAULT_BOUNDS
+      // {Bounds2} - the bounds of the PlayArea, in meters.
+      playAreaBounds: PlayArea.DEFAULT_BOUNDS
 
     }, options );
 
-    // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
-    this.index = index;
-
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - Properties of the Ball's center coordinates, in meters coordinates.
-    //                                        Separated into components to individually display each component and to
-    //                                        allow the user to individually manipulate.
+    // @public (read-only) {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into
+    //                                        components to individually display each component and to allow the user to
+    //                                        individually manipulate.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the ball, in meter coordinates.
+    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
+
+    // @public (read-only) {NumberProperty} - Property of the mass of the ball, in kg. Manipulated in the view.
+    this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
 
     //----------------------------------------------------------------------------------------
 
@@ -99,18 +99,15 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - mass of the ball, in kg.
-    this.massProperty = new NumberProperty( initialBallState.mass, { isValidValue: value => value > 0 } );
-
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
-      ( mass, velocity ) => new Vector2( mass, mass ).componentMultiply( velocity ),
+      ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {DerivedProperty.<number>} momentumMagnitudeProperty - Property of the momentum, in kg*(m/s).
+    // @public (read-only) {DerivedProperty.<number>} - magnitude of this Balls momentum, kg*(m/s).
     this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ) );
 
-    // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*m/s. Separated into components to
+    // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
     //                                                  display individually.
     this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ) );
     this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ) );
@@ -118,7 +115,7 @@ class Ball {
     //----------------------------------------------------------------------------------------
 
     // Handle the changing radius of the Ball based on the mass
-    // @public (read-only) - Property of the radius of the ball in meters. TODO #50
+    // @public (read-only) - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, constantRadiusProperty ],
       ( mass, constantRadius ) => constantRadius ? BALL_CONSTANT_RADIUS : Ball.calculateRadius( mass ),
       { valueType: 'number', isValidValue: value => value > 0 } );
@@ -144,6 +141,9 @@ class Ball {
     // @private {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
     //                                Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
+
+    // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
+    this.index = index;
 
     // @public (read-only) {number} - reference to the dimensions of the Screen that contains the Ball
     this.dimensions = options.dimensions;
