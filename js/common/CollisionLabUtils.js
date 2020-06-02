@@ -16,13 +16,14 @@ const CollisionLabUtils = {
 
   /**
    * Iterates through an array, or an ObservableArray, in pairs, passing the current value and the previous value to the
-   * iterator function. For instance, forEachPair( [ 1, 2, 3, 4 ], f ) would invoke f( 2, 1 ), f( 3, 2 ), f( 4, 3 ).
+   * iterator function. For instance, forEachAdjacentPair( [ 1, 2, 3, 4 ], f ) would invoke f( 2, 1 ), f( 3, 2 ), and
+   * f( 4, 3 ).
    * @public
    *
    * @param {ObservableArray.<*>|*[]} collection
    * @param {function(value:*,previousValue:*)} iterator
    */
-  forEachPair( collection, iterator ) {
+  forEachAdjacentPair( collection, iterator ) {
     assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
@@ -32,6 +33,31 @@ const CollisionLabUtils = {
       }
       else {
         iterator( collection[ i ], collection[ i - 1 ] );
+      }
+    }
+  },
+
+  /**
+   * Iterates through an array, or an ObservableArray, for all possible pairs, without duplicating calls. For instance,
+   * forEachPossiblePair( [ 1, 2, 3 ], f ) would invoke f( 1 , 2 ), f( 1, 3 ), and f( 2, 3 ).
+   * @public
+   *
+   * @param {ObservableArray.<*>|*[]} collection
+   * @param {function(value1:*,value2:*)} iterator
+   */
+  forEachPossiblePair( collection, iterator ) {
+    assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
+    assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
+
+    for ( let i = 0; i < collection.length - 1; i++ ) {
+      const value1 = collection instanceof ObservableArray ? collection.get( i ) : collection[ i ];
+
+      for ( let j = i + 1; j < collection.length; j++ ) {
+
+        const value2 = collection instanceof ObservableArray ? collection.get( j ) : collection[ j ];
+        assert && assert( value1 !== value2 );
+
+        iterator( value1, value2 );
       }
     }
   },
@@ -73,7 +99,7 @@ const CollisionLabUtils = {
     // Flag that indicates if the array is sorted.
     let isSorted = true;
 
-    CollisionLabUtils.forEachPair( array, ( value, previousValue ) => {
+    CollisionLabUtils.forEachAdjacentPair( array, ( value, previousValue ) => {
       if ( isSorted ) {
         isSorted = ( value > previousValue );
       }

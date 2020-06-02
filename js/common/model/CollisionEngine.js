@@ -66,25 +66,19 @@ class CollisionEngine {
   handleAllBallToBallCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    for ( let i = 0; i < this.playArea.ballSystem.balls.length; i++ ) {
+    // Loop through each unique possible pair of Balls and check to see if they are colliding.
+    CollisionLabUtils.forEachPossiblePair( this.playArea.ballSystem.balls, ( ball1, ball2 ) => {
+      assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
-      const ball1 = this.playArea.ballSystem.balls.get( i );
+      // Use a distance approach to detect if the Balls are physically overlapping, meaning they are colliding.
+      const distanceBetweenBalls = ball1.position.distance( ball2.position );
+      const minimumSeparation = ball1.radius + ball2.radius;
 
-      for ( let j = i + 1; j < this.playArea.ballSystem.balls.length; j++ ) {
-
-        const ball2 = this.playArea.ballSystem.balls.get( j );
-
-        assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
-
-        const distanceBetweenBalls = ball1.position.distance( ball2.position );
-        const minimumSeparation = ball1.radius + ball2.radius;
-
-        // If two balls are on top of each other, process the collision.
-        if ( distanceBetweenBalls < minimumSeparation ) {
-          this.collideBalls( ball1, ball2, dt );
-        }
+      // If two balls are on top of each other, process the collision.
+      if ( distanceBetweenBalls < minimumSeparation ) {
+        this.collideBalls( ball1, ball2, dt );
       }
-    }
+    } );
   }
 
   /**

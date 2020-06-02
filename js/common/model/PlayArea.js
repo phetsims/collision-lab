@@ -10,8 +10,8 @@
  *   - Creating all possible Balls in prepopulatedBalls.
  *   - Keeping track of the number of Balls within the PlayArea system.
  *   - Tracking if there are any Balls that are being controlled by the user.
- *   - Visibility of Paths, Grids
- *   - Constant Size, Elasticity, Reflecting Border, and other PlayArea-specific Properties.
+ *   - Visibility of Paths
+ *   - Constant Size, Grid visibility, Elasticity, Reflecting Border, and other PlayArea-specific Properties.
  *
  * PlayAreas are created at the start of the sim and is never disposed, so no dispose method is necessary.
  *

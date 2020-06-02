@@ -183,7 +183,7 @@ class MomentaDiagram {
     }
 
     // Position the rest of the Momentum vectors. Loop in pairs.
-    CollisionLabUtils.forEachPair( this.balls, ( ball, previousBall ) => {
+    CollisionLabUtils.forEachAdjacentPair( this.balls, ( ball, previousBall ) => {
       const momentaVector = this.ballToMomentaVectorMap.get( ball );
       const previousMomentaVector = this.ballToMomentaVectorMap.get( previousBall );
 
