@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * CollisionLabUtils is a collection of utility functions used in this sim.
+ * CollisionLabUtils is a collection of general utility functions used in this sim.
  *
  * @author Brandon Li
  */

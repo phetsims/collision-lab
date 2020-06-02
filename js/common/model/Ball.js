@@ -140,7 +140,7 @@ class Ball {
     // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
     this.dimensions = options.dimensions;
 
-    // @private {Bounds} - reference to the passed-in PlayArea Bounds.
+    // @public (read-only) {Bounds} - reference to the passed-in PlayArea Bounds.
     this.bounds = options.bounds;
 
     //----------------------------------------------------------------------------------------
@@ -232,24 +232,6 @@ class Ball {
   }
 
   /**
-   * Compute the constrained Bounds of the center position of the Ball such that the position is both on a grid-line and
-   * inside the PlayArea bounds. This bounds is used when dragging with the grid visible to ensure that the Ball isn't
-   * snapped to a position that makes part of the Ball out of bounds. Also used for position ranges in the Keypad.
-   * @public
-   *
-   * @returns {Bounds2}
-   */
-  getGridSafeConstrainedBounds() {
-
-    // First get the constrainedBounds, which is the Bounds that ensure the Ball is completely inside the PlayArea.
-    const constrainedBounds = this.bounds.eroded( this.radius );
-
-    // Round the constrainedBounds in the nearest grid line to ensure the Ball is both on a grid-line and inside the
-    // fully PlayArea Bounds.
-    return CollisionLabUtils.roundedBoundsInToNearest( constrainedBounds, CollisionLabConstants.MINOR_GRIDLINE_SPACING );
-  }
-
-  /**
    * Saves the state of the Ball in our restartState reference for the next restart() call. This is called when the user
    * presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
    * @public
@@ -266,17 +248,6 @@ class Ball {
    */
   updatePath( elapsedTime ) {
     this.path.updatePath( this.position, elapsedTime );
-  }
-
-  /**
-   * Gets the position of the Ball at some time interval dt (assuming ballistic motion)
-   * @public
-   * @param {number} dt - time step
-   * @returns {Vector2}
-   */
-  getPreviousPosition( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    return this.position.minus( this.velocity.times( dt ) );
   }
 
   /*----------------------------------------------------------------------------*
@@ -438,28 +409,6 @@ class Ball {
    * @returns {Vector2} - in kg*(m/s).
    */
   get momentum() { return this.momentumProperty.value; }
-
-  /**
-   * Calculates the radius of a Ball. If constant size mode is off, this calculation comes from
-   * the mass and the density (uniform) of the Ball, which is CollisionLabConstants.BALL_DEFAULT_DENSITY.
-   *
-   * Volume = 4/3 PI * Radius^3
-   * => Density = Mass / Volume
-   * => Radius = (3 / 4 * Mass / Density / PI ) ^ 1/3
-   * @public
-   *
-   * @param {number} mass - in kg
-   * @param {boolean} isConstantSize - indicates if constant size mode is on
-   * @returns {number} - in meters
-   */
-  static calculateRadius( mass, isConstantSize ) {
-    assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
-    assert && assert( typeof isConstantSize === 'boolean', `invalid isConstantSize: ${isConstantSize}` );
-
-    return isConstantSize ?
-      CollisionLabConstants.BALL_CONSTANT_RADIUS :
-      Math.pow( ( 3 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
-  }
 }
 
 collisionLab.register( 'Ball', Ball );
