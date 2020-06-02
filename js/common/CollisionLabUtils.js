@@ -16,7 +16,7 @@ const CollisionLabUtils = {
 
   /**
    * Iterates through an array, or an ObservableArray, in pairs, passing the current value and the previous value to the
-   * iterator function. For instance, forEachPair( [ 1, 2, 3, 4 ], $f ) would invoke $f( 2, 1 ), $f( 3, 2 ), $f( 4, 3 ).
+   * iterator function. For instance, forEachPair( [ 1, 2, 3, 4 ], f ) would invoke f( 2, 1 ), f( 3, 2 ), f( 4, 3 ).
    * @public
    *
    * @param {ObservableArray.<*>|*[]} collection
