@@ -80,70 +80,17 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - Property of the number of Balls in a system. This Property is manipulated
-    //                                        outside of the PlayArea in a Spinner.
-    this.numberOfBallsProperty = new NumberProperty( options.numberOfBallsRange.defaultValue, {
-      numberType: 'Integer',
-      range: options.numberOfBallsRange
-    } );
-
-    // @public (read-only) {NumberProperty} - Property of the elasticity of all collisions, as a percentage. See
-    //                                        https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
-    this.elasticityPercentProperty = new NumberProperty( CollisionLabConstants.ELASTICITY_PERCENT_RANGE.defaultValue, {
-      range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE
-    } );
-
-    // @public (read-only) {BooleanProperty} - indicates if the Ball/COM trailing paths are visible. In the model since
-    //                                         Ball PathDataPoints are only recorded if this is true and are cleared when
-    //                                         set to false.
-    this.pathVisibleProperty = new BooleanProperty( false );
-
-    // @public (read-only) {BooleanProperty} - indicates if the center of mass is visible. This is in the model since
-    //                                         CenterOfMass PathDataPoints are only recorded if this is true and are
-    //                                         cleared when set to false.
-    this.centerOfMassVisibleProperty = new BooleanProperty( false );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public (read-only) {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds.
-    //                                         This Property is manipulated outside of the PlayArea.
-    this.reflectingBorderProperty = new BooleanProperty( true );
-
-    // @public (read-only) {BooleanProperty} - indicates if Ball radii are constant (i.e. independent of mass).
-    //                                         This Property is manipulated outside of the PlayArea.
-    this.isConstantSizeProperty = new BooleanProperty( false );
-
-    // @public (read-only) {BooleanProperty} - indicates if the grid of the PlayArea is visible. This Property is
-    //                                         manipulated outside of the PlayArea. This is placed inside of the model
-    //                                         since the visibility of the grid affects the drag-snapping of Balls.
-    this.gridVisibleProperty = new BooleanProperty( false );
-
-    // @public {EnumerationProperty.<InelasticCollisionTypes} - the type of collision for perfectly inelastic collisions
-    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
-      InelasticCollisionTypes.STICK );
-
-    //----------------------------------------------------------------------------------------
-
     // @public (read-only) {PlayArea} - create the PlayArea of the screen.
-    this.playArea = new PlayArea(
-      initialBallStates,
-      this.numberOfBallsProperty,
-      this.isConstantSizeProperty,
-      this.gridVisibleProperty,
-      this.pathVisibleProperty,
-      this.centerOfMassVisibleProperty, {
-        dimensions: options.dimensions,
-        bounds: options.playAreaBounds
-      } );
+    this.playArea = new PlayArea( initialBallStates, {
+      dimensions: options.dimensions,
+      bounds: options.playAreaBounds,
+      numberOfBallsRange: options.numberOfBallsRange
+    } );
 
     // @private {CollisionEngine} - the CollisionEngine of the simulation, which acts as the physics engine.
     this.collisionDetector = new CollisionEngine(
       this.playArea.balls,
       this.playArea.bounds,
-      this.elasticityPercentProperty,
-      this.reflectingBorderProperty,
-      this.inelasticCollisionTypeProperty,
-      this.pathVisibleProperty,
       this.elapsedTimeProperty
     );
 
@@ -167,14 +114,6 @@ class CollisionLabModel {
     this.isPlayingProperty.reset();
     this.elapsedTimeProperty.reset();
     this.timeSpeedProperty.reset();
-    this.numberOfBallsProperty.reset();
-    this.elasticityPercentProperty.reset();
-    this.pathVisibleProperty.reset();
-    this.centerOfMassVisibleProperty.reset();
-    this.reflectingBorderProperty.reset();
-    this.isConstantSizeProperty.reset();
-    this.gridVisibleProperty.reset();
-    this.inelasticCollisionTypeProperty.reset();
     this.playArea.reset();
     this.momentaDiagram.reset();
   }
@@ -236,9 +175,8 @@ class CollisionLabModel {
     this.playArea.step( dt );
     this.collisionDetector.step( dt );
 
-    if ( this.pathVisibleProperty.value ) {
-      this.playArea.updatePaths( this.elapsedTimeProperty.value );
-    }
+    //   this.playArea.updatePaths( this.elapsedTimeProperty.value );
+    // }
   }
 
   /**

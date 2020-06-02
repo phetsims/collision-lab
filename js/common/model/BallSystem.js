@@ -140,7 +140,7 @@ class BallSystem {
    */
   restart() {
     this.balls.forEach( ball => ball.restart() );
-    this.centerOfMass.path.clear();
+    this.clearCenterOfMassPath();
   }
 
   /**
@@ -169,6 +169,17 @@ class BallSystem {
 
     this.balls.forEach( ball => ball.updatePath( elapsedTime ) );
     this.centerOfMass.updatePath( elapsedTime );
+  }
+
+  /**
+   * Clears the trailing 'Path' of the CenterOfMass.
+   * @public
+   *
+   * Normally called when the user is finished manipulating a Ball. See
+   * https://github.com/phetsims/collision-lab/issues/61.
+   */
+  clearCenterOfMassPath() {
+    this.centerOfMass.path.clear();
   }
 }
 collisionLab.register( 'BallSystem', BallSystem );
