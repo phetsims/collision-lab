@@ -14,7 +14,7 @@
  *    - Sets the elapsed time to 0.
  *    - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
  *      is saved when the sim play button is pressed.
- *    - Only balls in the play area are restarted. Only balls in the play area have their state saved.
+ *    - Only balls in the BallSystem are restarted. Only balls in the BallSystem have their state saved.
  *
  * BallStates are given to each Ball, and since Balls are never disposed, BallStates are also never disposed.
  *
@@ -27,7 +27,7 @@ import collisionLab from '../../collisionLab.js';
 class BallState {
 
   /**
-   * @param {Vector2} position - position of the center of the ball, in meter coordinates.
+   * @param {Vector2} position - position of the center of the ball, in meters.
    * @param {Vector2} velocity - velocity of the center of mass of the ball, in m/s.
    * @param {number} mass - mass of the ball, in kg.
    */
@@ -36,13 +36,13 @@ class BallState {
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
     assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
 
-    // @public (read-only) {Vector2} - reference the passed-in position. Make a copy for when we have to mutate.
+    // @public (read-only) {Vector2} - reference to the passed-in position. Make a copy for when we have to mutate.
     this.position = position.copy();
 
-    // @public (read-only) {Vector2} - reference the passed-in velocity. Make a copy for when we have to mutate.
+    // @public (read-only) {Vector2} - reference to the passed-in velocity. Make a copy for when we have to mutate.
     this.velocity = velocity.copy();
 
-    // @public (read-only) {number} - reference the passed-in mass.
+    // @public (read-only) {number} - reference to the passed-in mass.
     this.mass = mass;
   }
 
@@ -51,7 +51,7 @@ class BallState {
    * paused to play). If the restart button is then pressed, the Ball is set to this state.
    * @public
    *
-   * @param {Vector2} position - position of the center of the ball, in meter coordinates.
+   * @param {Vector2} position - position of the center of the ball, in meters.
    * @param {Vector2} velocity - velocity of the center of mass of the ball, in m/s.
    * @param {number} mass - mass of the ball, in kg.
    */
