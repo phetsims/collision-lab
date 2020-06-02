@@ -155,8 +155,8 @@ class CollisionLabScreenView extends ScreenView {
 
       const addedBallNode = new BallNode( addedBall,
         viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVisibleProperty,
-        viewProperties.momentumVisibleProperty,
+        viewProperties.velocityVectorVisibleProperty,
+        viewProperties.momentumVectorVisibleProperty,
         model.playArea.isConstantSizeProperty,
         model.isPlayingProperty,
         model.playArea.pathVisibleProperty,

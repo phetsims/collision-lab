@@ -74,13 +74,13 @@ class CollisionLabControlPanel extends Panel {
     const contentNode = new VBox( { spacing: options.contentSpacing } );
 
     // 'Velocity' visibility Checkbox
-    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVisibleProperty,
+    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVectorVisibleProperty,
       collisionLabStrings.velocity, {
         icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS )
       } );
 
     // 'Momentum' visibility Checkbox
-    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVisibleProperty,
+    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVectorVisibleProperty,
       collisionLabStrings.momentum, {
         icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS )
       } );

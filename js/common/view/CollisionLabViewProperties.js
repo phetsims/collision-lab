@@ -14,10 +14,10 @@ class CollisionLabViewProperties {
   constructor() {
 
     // @public indicates if the velocity vector on each ball is visible
-    this.velocityVisibleProperty = new BooleanProperty( true );
+    this.velocityVectorVisibleProperty = new BooleanProperty( true );
 
     // @public indicates if the momentum vector on each ball is visible
-    this.momentumVisibleProperty = new BooleanProperty( false );
+    this.momentumVectorVisibleProperty = new BooleanProperty( false );
 
     // @public controls the visibility of the kinetic energy numberDisplay
     this.kineticEnergyVisibleProperty = new BooleanProperty( false );
@@ -40,8 +40,8 @@ class CollisionLabViewProperties {
    * @public
    */
   reset() {
-    this.velocityVisibleProperty.reset();
-    this.momentumVisibleProperty.reset();
+    this.velocityVectorVisibleProperty.reset();
+    this.momentumVectorVisibleProperty.reset();
     this.kineticEnergyVisibleProperty.reset();
     this.valuesVisibleProperty.reset();
     this.momentaDiagramExpandedProperty.reset();
