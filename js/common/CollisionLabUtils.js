@@ -37,7 +37,7 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Similar to Bounds2.prototype.roundedIn(), but instead of rounding in to the nearest whole number, it rounds in
+   * Similar to Bounds2.prototype.roundedIn(), but instead of rounding in to the nearest whole number, it rounds inwards
    * to the nearest of any multiple.
    *
    * For instance, roundedBoundsInToNearest( new Bounds2( -0.28, -0.25, 0.28, 0.25 ), 0.1 )
