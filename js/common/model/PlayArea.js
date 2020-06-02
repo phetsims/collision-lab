@@ -81,7 +81,7 @@ class PlayArea {
       pathVisibleProperty,
       index + 1, {
         dimensions: options.dimensions,
-        playAreaBounds: options.bounds
+        bounds: options.bounds
       } ) );
 
     // @public (read-only) {ObservableArray.<Ball>} - an array of the system of Balls within the PlayArea. Balls

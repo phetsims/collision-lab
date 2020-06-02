@@ -38,7 +38,7 @@ class Explore1DModel extends CollisionLabModel {
     } );
 
     this.gridVisibleProperty.value = true;
-    assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
+    // assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
 
     this.pathVisibleProperty.value = false;
     assert && this.pathVisibleProperty.link( pathVisible => assert( !pathVisible, 'paths must be not visible in Explore 1D' ) );
