@@ -19,7 +19,6 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
-import Utils from '../../../../dot/js/Utils.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
@@ -29,6 +28,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallUtils from '../model/BallUtils.js';
 import KeypadDialog from './KeypadDialog.js';
 
 // constants
@@ -93,39 +93,36 @@ class BallValuesNumberDisplay extends NumberDisplay {
     let fireListener; // reference to a FireListener if there is one.
 
     if ( canEdit ) {
-      let editRange; // The editing range of the Ball Property.
-      let unit; // The unit of the Ball Property that is being modified.
-
-      if ( ballQuantity === BallQuantities.MASS ) {
-        editRange = CollisionLabConstants.MASS_RANGE;
-        unit = collisionLabStrings.kg;
-      }
-      else if ( ballQuantity === BallQuantities.X_POSITION ) {
-        const gridSafeBounds = ball.getGridSafeConstrainedBounds();
-        editRange = new Range( Utils.toFixed( gridSafeBounds.minX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ),
-          Utils.toFixed( gridSafeBounds.maxX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ) );
-        unit = collisionLabStrings.m;
-      }
-      else if ( ballQuantity === BallQuantities.Y_POSITION ) {
-        const gridSafeBounds = ball.getGridSafeConstrainedBounds();
-        editRange = new Range( Utils.toFixed( gridSafeBounds.minY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ),
-          Utils.toFixed( gridSafeBounds.maxY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES ) );
-        unit = collisionLabStrings.m;
-      }
-      else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
-        editRange = CollisionLabConstants.VELOCITY_RANGE;
-        unit = collisionLabStrings.metersPerSecond;
-      }
-      else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
-        editRange = CollisionLabConstants.VELOCITY_RANGE;
-        unit = collisionLabStrings.metersPerSecond;
-      }
 
       // Create a FireListener that listens to presses and to fire the keypadDialog to allow the user to edit the
       // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
       fireListener = new FireListener( {
         fire: () => {
           this.backgroundFill = PhetColorScheme.BUTTON_YELLOW;
+
+          let editRange; // The editing range of the Ball Property.
+          let unit; // The unit of the Ball Property that is being modified.
+
+          if ( ballQuantity === BallQuantities.MASS ) {
+            editRange = CollisionLabConstants.MASS_RANGE;
+            unit = collisionLabStrings.kg;
+          }
+          else if ( ballQuantity === BallQuantities.X_POSITION ) {
+            editRange = BallUtils.getKeypadXPositionRange( ball );
+            unit = collisionLabStrings.m;
+          }
+          else if ( ballQuantity === BallQuantities.Y_POSITION ) {
+            editRange = BallUtils.getKeypadYPositionRange( ball );
+            unit = collisionLabStrings.m;
+          }
+          else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
+            editRange = CollisionLabConstants.VELOCITY_RANGE;
+            unit = collisionLabStrings.metersPerSecond;
+          }
+          else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
+            editRange = CollisionLabConstants.VELOCITY_RANGE;
+            unit = collisionLabStrings.metersPerSecond;
+          }
 
           // Indicate that the Ball is currently being user controlled.
           ball.userControlledProperty.value = true;

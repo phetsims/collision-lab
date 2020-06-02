@@ -6,11 +6,12 @@
  * @author Brandon Li
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
+import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
-import collisionLab from '../collisionLab.js';
 import Ball from './Ball.js';
 
 const BallUtils = {
@@ -47,14 +48,17 @@ const BallUtils = {
    * This Bounds is used when the Ball is dragged with the grid visible to ensure that the Ball isn't snapped to a
    * position that makes part of the Ball out of Bounds. Also used for position ranges in the Keypad.
    *
-   * @param {Ball} ball
+   * @param {Bounds2} bounds - the bounds of the PlayArea
+   * @param {number} radius - the radius of the Ball, in meters
    * @returns {Bounds2}
    */
-  getBallGridSafeConstrainedBounds( ball ) {
+  getBallGridSafeConstrainedBounds( bounds, radius ) {
+    assert && assert( bounds instanceof Bounds2, `invalid bounds: ${bounds}` );
+    assert && assert( typeof radius === 'number' && radius > 0, `invalid radius: ${radius}` );
 
     // First get the constrainedBounds, which is the Bounds that ensures the Ball is completely inside the PlayArea. It
     // is eroded by the radius of the ball since the Bounds is the bounding-box of the center of the Ball.
-    const constrainedBounds = ball.bounds.eroded( ball.radius );
+    const constrainedBounds = bounds.eroded( radius );
 
     // Round the constrainedBounds inwards the nearest grid-line to ensure that the Ball's center position is bounded
     // on an exact grid-line and is fully inside the PlayArea.
@@ -96,10 +100,10 @@ const BallUtils = {
   getKeypadXPositionRange( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    // First get the grid-safe constrained Bounds of the Ball. See getGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getGridSafeConstrainedBounds( ball );
+    // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.bounds, ball.radius );
 
-    // With the getGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
+    // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minX = Utils.toFixed( gridSafeConstrainedBounds.minX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
     const maxX = Utils.toFixed( gridSafeConstrainedBounds.maxX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
 
@@ -119,10 +123,10 @@ const BallUtils = {
   getKeypadYPositionRange( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    // First get the grid-safe constrained Bounds of the Ball. See getGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getGridSafeConstrainedBounds( ball );
+    // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.bounds, ball.radius );
 
-    // With the getGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
+    // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minY = Utils.toFixed( gridSafeConstrainedBounds.minY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
     const maxY = Utils.toFixed( gridSafeConstrainedBounds.maxY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
 
@@ -137,7 +141,7 @@ const BallUtils = {
    * @param {Ball} ball
    * @returns {number} - in Joules
    */
-  calculateKineticEnergy( ball ) {
+  calculateBallKineticEnergy( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     return 0.5 * ball.mass * ball.velocity.magnitudeSquared;

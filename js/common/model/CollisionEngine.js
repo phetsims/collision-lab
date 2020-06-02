@@ -18,6 +18,7 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
+import BallUtils from './BallUtils.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 
 class CollisionEngine {
@@ -121,8 +122,8 @@ class CollisionEngine {
     const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, dt );
 
     // Get exact positions when the Balls collided by rewinding.
-    const r1 = ball1.getPreviousPosition( overlappedTime );
-    const r2 = ball2.getPreviousPosition( overlappedTime );
+    const r1 = BallUtils.computeBallPosition( ball1, -overlappedTime );
+    const r2 = BallUtils.computeBallPosition( ball2, -overlappedTime );
 
     const deltaR = r1.minus( r2 );
     const normalizedDeltaR = deltaR.equals( Vector2.ZERO ) ? Vector2.X_UNIT : deltaR.normalized();
@@ -194,8 +195,8 @@ class CollisionEngine {
     let contactTime;
 
     // Get the position of the Balls in the last time step.
-    const r1 = ball1.getPreviousPosition( dt );
-    const r2 = ball2.getPreviousPosition( dt );
+    const r1 = BallUtils.computeBallPosition( ball1, -dt );
+    const r2 = BallUtils.computeBallPosition( ball2, -dt );
 
     // Convenience reference to the velocities of the Balls.
     const v1 = ball1.velocity;
@@ -277,7 +278,7 @@ class CollisionEngine {
         const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, dt );
 
         // Get exact position when the Ball collided by rewinding.
-        const contactPosition = ball.getPreviousPosition( overlappedTime );
+        const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
         if ( elasticity === 0 && this.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK ) {

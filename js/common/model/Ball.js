@@ -28,6 +28,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
+import BallUtils from './BallUtils.js';
 import CollisionLabPath from './CollisionLabPath.js';
 import PlayArea from './PlayArea.js';
 
@@ -110,12 +111,12 @@ class Ball {
 
     // @public (read-only) {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
-      ( mass, isConstantSize ) => Ball.calculateRadius( mass, isConstantSize ),
+      ( mass, isConstantSize ) => BallUtils.calculateBallRadius( mass, isConstantSize ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 
     // @public (read-only) {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
-      ( mass, speed ) => 0.5 * mass * Math.pow( speed, 2 ),
+      ( mass, speed ) => BallUtils.calculateBallKineticEnergy( this ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
     // @public {BooleanProperty} - indicates if the Ball is currently being controlled by the user, either by dragging
@@ -191,7 +192,7 @@ class Ball {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    this.position = this.position.plus( this.velocity.times( dt ) );
+    this.position = BallUtils.computeBallPosition( this, dt );
   }
 
   /**
@@ -218,7 +219,8 @@ class Ball {
     else {
 
       // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
-      correctedPosition = this.getGridSafeConstrainedBounds().closestPointTo( position )
+      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.bounds, this.radius )
+        .closestPointTo( position )
         .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
         .roundSymmetric()
         .timesScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING );
