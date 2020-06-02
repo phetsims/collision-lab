@@ -92,7 +92,7 @@ class CollisionLabScreenView extends ScreenView {
     timeDisplay.top = playAreaNode.bottom + 10;
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
-      model.playProperty,
+      model.isPlayingProperty,
       model.elasticityPercentProperty,
       model.elapsedTimeProperty,
       model.timeSpeedProperty,
@@ -158,7 +158,7 @@ class CollisionLabScreenView extends ScreenView {
         viewProperties.velocityVisibleProperty,
         viewProperties.momentumVisibleProperty,
         model.isConstantSizeProperty,
-        model.playProperty,
+        model.isPlayingProperty,
         model.pathVisibleProperty,
         modelViewTransform );
       this.ballLayerNode.addChild( addedBallNode );

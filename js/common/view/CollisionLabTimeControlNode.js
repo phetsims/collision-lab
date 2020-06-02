@@ -15,18 +15,18 @@ import collisionLab from '../../collisionLab.js';
 class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
-   * @param {Property.<boolean>} playProperty
+   * @param {Property.<boolean>} isPlayingProperty
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
    * @param {Property.<boolean>} playAreaUserControlledProperty
    * @param {Function} stepBackward
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( playProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, playAreaUserControlledProperty,
+  constructor( isPlayingProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, playAreaUserControlledProperty,
                stepBackward, stepForward, options ) {
 
 
-    super( playProperty, merge( {
+    super( isPlayingProperty, merge( {
 
       // property associated with the slow/normal radio buttons
       timeSpeedProperty: timeSpeedProperty,
@@ -45,7 +45,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
           // Workaround for https://github.com/phetsims/scenery-phet/issues/606.
           // Also see https://github.com/phetsims/scenery-phet/issues/563
-          isPlayingProperty: new DerivedProperty( [ playProperty, elasticityProperty, elapsedTimeProperty ], ( playing, elasticity, elapsedTimeProperty ) => {
+          isPlayingProperty: new DerivedProperty( [ isPlayingProperty, elasticityProperty, elapsedTimeProperty ], ( playing, elasticity, elapsedTimeProperty ) => {
             return elapsedTimeProperty === 0 || playing || elasticity < 100;
           } ),
           radius: 20
@@ -75,7 +75,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     //----------------------------------------------------------------------------------------
 
     // Flag that indicates whether the sim was playing before it was programmatically paused.
-    let wasPlaying = playProperty.value;
+    let wasPlaying = isPlayingProperty.value;
 
     playAreaUserControlledProperty.link( playAreaUserControlled => {
       // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
@@ -83,15 +83,15 @@ class CollisionLabTimeControlNode extends TimeControlNode {
       if ( playAreaUserControlled ) {
 
         // save playing state, pause the sim, and disable time controls
-        wasPlaying = playProperty.value;
-        playProperty.value = false;
+        wasPlaying = isPlayingProperty.value;
+        isPlayingProperty.value = false;
         this.enabledProperty.value = false;
       }
       else {
 
         // enable time controls and restore playing state
         this.enabledProperty.value = true;
-        playProperty.value = wasPlaying;
+        isPlayingProperty.value = wasPlaying;
       }
     } );
   }

@@ -47,7 +47,7 @@ class BallNode extends Node {
    * @param {Property.<boolean>} velocityVisibleProperty - is the velocity vector visible
    * @param {Property.<boolean>} momentumVisibleProperty - is the momentum vector visible
    * @param {Property.<boolean>} constantDadiusProperty - is the grid on the playArea visible
-   * @param {Property.<boolean>} playProperty - is simulation of the playArea on
+   * @param {Property.<boolean>} isPlayingProperty - is simulation of the playArea on
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
@@ -57,7 +57,7 @@ class BallNode extends Node {
                velocityVisibleProperty,
                momentumVisibleProperty,
                isConstantSizeProperty,
-               playProperty,
+               isPlayingProperty,
                pathVisibleProperty,
                modelViewTransform,
                options ) {
@@ -134,7 +134,7 @@ class BallNode extends Node {
       ball.velocityProperty,
       ball.userControlledProperty,
       velocityVisibleProperty,
-      playProperty,
+      isPlayingProperty,
       modelViewTransform,
       BALL_VELOCITY_VECTOR_OPTIONS );
     const ballMomentumVectorNode = new BallMomentumVectorNode(

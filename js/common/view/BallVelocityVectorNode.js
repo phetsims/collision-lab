@@ -30,11 +30,11 @@ class BallVelocityVectorNode extends BallVectorNode {
    * @param {Property.<Vector2>} velocityProperty
    * @param {Property.<boolean>} userControlledProperty
    * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
-   * @param {Property.<boolean>} playProperty
+   * @param {Property.<boolean>} isPlayingProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ball, velocityProperty, userControlledProperty, visibleProperty, playProperty, modelViewTransform, options ) {
+  constructor( ball, velocityProperty, userControlledProperty, visibleProperty, isPlayingProperty, modelViewTransform, options ) {
 
     assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -99,11 +99,11 @@ class BallVelocityVectorNode extends BallVectorNode {
     const playListener = play => { tipTargetNode.visible = !play; };
 
     //  make the tip invisible if the simulation is running
-    playProperty.link( playListener );
+    isPlayingProperty.link( playListener );
 
     // @private {function} disposeVelocityVectorNode - function to unlink listeners, called in dispose()
     this.disposeVelocityVectorNode = () => {
-      playProperty.unlink( playListener );
+      isPlayingProperty.unlink( playListener );
       velocityProperty.unlink( velocityListener );
       tipPositionProperty.unlink( tipPositionListener );
       tipTargetNode.removeInputListener( tipDragListener );

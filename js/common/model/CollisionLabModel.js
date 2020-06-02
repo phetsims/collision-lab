@@ -70,7 +70,7 @@ class CollisionLabModel {
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {BooleanProperty} - indicates the play/pause state of the screen.
-    this.playProperty = new BooleanProperty( false );
+    this.isPlayingProperty = new BooleanProperty( false );
 
     // @public {Property.<number>} elapsed time (in seconds) of the screen.
     this.elapsedTimeProperty = new NumberProperty( 0 );
@@ -154,7 +154,7 @@ class CollisionLabModel {
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.
-    this.playProperty.lazyLink( play => {
+    this.isPlayingProperty.lazyLink( play => {
       if ( play ) { this.playArea.saveBallStates(); }
     } );
   }
@@ -164,7 +164,7 @@ class CollisionLabModel {
    * @public
    */
   reset() {
-    this.playProperty.reset();
+    this.isPlayingProperty.reset();
     this.elapsedTimeProperty.reset();
     this.timeSpeedProperty.reset();
     this.numberOfBallsProperty.reset();
@@ -186,7 +186,7 @@ class CollisionLabModel {
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
   restart() {
-    this.playProperty.value = false;
+    this.isPlayingProperty.value = false;
     this.elapsedTimeProperty.reset();
     this.playArea.restart();
   }
@@ -213,7 +213,7 @@ class CollisionLabModel {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    if ( this.playProperty.value ) { this.stepManual( dt * this.getTimeSpeedFactor() ); }
+    if ( this.isPlayingProperty.value ) { this.stepManual( dt * this.getTimeSpeedFactor() ); }
   }
 
   /**
