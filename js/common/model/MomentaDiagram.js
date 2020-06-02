@@ -27,6 +27,7 @@ import isArray from '../../../../phet-core/js/isArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
 
@@ -182,9 +183,9 @@ class MomentaDiagram {
     }
 
     // Position the rest of the Momentum vectors. Loop in pairs.
-    for ( let i = 1; i < this.balls.length; i++ ) {
-      const momentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i ) );
-      const previousMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( i - 1 ) );
+    CollisionLabUtils.forEachPair( this.balls, ( ball, previousBall ) => {
+      const momentaVector = this.ballToMomentaVectorMap.get( ball );
+      const previousMomentaVector = this.ballToMomentaVectorMap.get( previousBall );
 
       if ( this.dimensions === 2 ) {
         // tip-to-tail
@@ -197,7 +198,7 @@ class MomentaDiagram {
         // Stack vertically on top of each other by progressively decrementing the tipY by 1.
         momentaVector.tailY = previousMomentaVector.tailY - 1;
       }
-    }
+    } );
   }
 
   /**

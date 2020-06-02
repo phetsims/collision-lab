@@ -26,12 +26,14 @@ const CollisionLabUtils = {
     assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
-    // Works for both ObservableArray and Arrays: Use the `reduce` accumulator to store the previous value.
-    collection.reduce( ( previous, current ) => {
-
-      iterator( current, previous );
-      return current;
-    } );
+    for ( let i = 1; i < collection.length; i++ ) {
+      if ( collection instanceof ObservableArray ) {
+        iterator( collection.get( i ), collection.get( i - 1 ) );
+      }
+      else {
+        iterator( collection[ i ], collection[ i - 1 ] );
+      }
+    }
   },
 
   /**
