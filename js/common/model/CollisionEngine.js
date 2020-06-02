@@ -289,12 +289,12 @@ class CollisionEngine {
           if ( ball.left <= this.playAreaBounds.minX || ball.right >= this.playAreaBounds.maxX ) {
 
             // Left and Right Border wall collisions incur a flip in horizontal velocity.
-            ball.flipHorizontalVelocity( elasticity );
+            ball.xVelocity *= -elasticity;
           }
           if ( ball.top >= this.playAreaBounds.maxY || ball.bottom <= this.playAreaBounds.minY ) {
 
             // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
-            ball.flipVerticalVelocity( elasticity );
+            ball.yVelocity *= -elasticity;
           }
         }
 

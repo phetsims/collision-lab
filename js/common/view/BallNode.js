@@ -73,7 +73,7 @@ class BallNode extends Node {
     super();
 
     // bounds of the play area in view coordinates
-    const viewPlayAreaBounds = modelViewTransform.modelToViewBounds( ball.playAreaBounds );
+    const viewPlayAreaBounds = modelViewTransform.modelToViewBounds( ball.bounds );
 
     // ball radius in view coordinates
     const ballRadius = modelViewTransform.modelToViewDeltaX( ball.radius );

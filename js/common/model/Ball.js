@@ -31,9 +31,6 @@ import BallState from './BallState.js';
 import CollisionLabPath from './CollisionLabPath.js';
 import PlayArea from './PlayArea.js';
 
-// constants
-const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING;
-
 class Ball {
 
   /**
@@ -60,7 +57,7 @@ class Ball {
       dimensions: 2,
 
       // {Bounds2} - the bounds of the PlayArea, in meters.
-      playAreaBounds: PlayArea.DEFAULT_BOUNDS
+      bounds: PlayArea.DEFAULT_BOUNDS
 
     }, options );
 
@@ -128,7 +125,7 @@ class Ball {
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the Ball.
-    this.path = new CollisionLabPath( options.playAreaBounds, pathVisibleProperty );
+    this.path = new CollisionLabPath( options.bounds, pathVisibleProperty );
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
@@ -144,7 +141,7 @@ class Ball {
     this.dimensions = options.dimensions;
 
     // @private {Bounds} - reference to the passed-in PlayArea Bounds.
-    this.playAreaBounds = options.playAreaBounds;
+    this.bounds = options.bounds;
 
     //----------------------------------------------------------------------------------------
 
@@ -160,7 +157,7 @@ class Ball {
   }
 
   /**
-   * Resets this Ball.
+   * Resets this Ball to factory settings. Called when the reset-all button is pressed.
    * @public
    */
   reset() {
@@ -174,7 +171,7 @@ class Ball {
   }
 
   /**
-   * Restarts this Ball.
+   * Restarts this Ball. Called when the restart button is pressed.
    * @public
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
@@ -184,99 +181,6 @@ class Ball {
     this.velocity = this.restartState.velocity;
     this.mass = this.restartState.mass;
     this.path.clear();
-  }
-
-  /**
-   * Saves the state of the Ball in our restartState for the next restart() call. This is called when the user presses
-   * the play button. See https://github.com/phetsims/collision-lab/issues/76.
-   * @public
-   */
-  saveState() {
-    this.restartState.saveState( this.position, this.velocity, this.mass );
-  }
-
-  /**
-   * Invoked from the view when the Ball is dragged. Attempts to position the Ball at the passed in position but
-   * ensures the Ball is inside the PlayArea's Bounds.
-   *
-   * If the grid is visible, the Ball will also snap to the nearest grid-line.
-   * @public
-   *
-   * @param {Vector} position - the position of the Center of the Ball to drag to
-   */
-  dragToPosition( position ) {
-    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-
-    if ( !this.gridVisibleProperty.value ) {
-
-      // Ensure that the Ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
-      // entire Ball is inside the PlayArea.
-      this.position = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
-    }
-    else {
-
-      // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
-      this.position = this.getGridSafeConstrainedBounds().closestPointTo( position )
-        .dividedScalar( MINOR_GRIDLINE_SPACING )
-        .roundSymmetric()
-        .timesScalar( MINOR_GRIDLINE_SPACING );
-    }
-
-    // If the dimensions is 1D, ensure that the yPosition is 0.
-    if ( this.dimensions === 1 ) {
-      this.yPosition = 0;
-    }
-  }
-
-  /**
-   * Compute the Bounds of the center position of the Ball such that the position is both on a grid-line and inside the
-   * PlayArea bounds. This bounds is used when dragging with the grid visible to ensure that the Ball isn't snapped to a
-   * position that makes part of the ball out of bounds. Also used for ranges in the Keypad.
-   * @public
-   *
-   * @returns {Bounds2}
-   */
-  getGridSafeConstrainedBounds() {
-
-    // Compute the constrainedRadius, which is the amount to erode the PlayArea Bounds to ensure that the Ball is fully
-    // inside of the PlayArea.T his value is the radius rounded up to the nearest grid-line spacing value. This is so
-    // that the minimum/maximum values of the constrainedBounds are on a grid-line.
-    const roundedUpRadius = Math.ceil( this.radius / MINOR_GRIDLINE_SPACING ) * MINOR_GRIDLINE_SPACING;
-
-    // Compute the Bounds of the Ball's center position. The center must be within the roundedUpRadius meters of the
-    // edges of the PlayArea's Bounds so that the entire Ball is inside of the PlayArea and on a grid-line.
-    return this.playAreaBounds.eroded( roundedUpRadius );
-  }
-
-  /**
-   * Flips the horizontal velocity of the ball up to a scaling factor
-   * @public
-   * @param {number} scaling
-   */
-  flipHorizontalVelocity( scaling ) {
-    assert && assert( typeof scaling === 'number' && scaling >= 0, `invalid scaling: ${scaling}` );
-    this.velocity = new Vector2( -this.velocity.x * scaling, this.velocity.y );
-  }
-
-  /**
-   * Flips the vertical velocity of the ball up to a scaling factor
-   * @public
-   * @param {number} scaling
-   */
-  flipVerticalVelocity( scaling ) {
-    assert && assert( typeof scaling === 'number' && scaling >= 0, `invalid scaling: ${scaling}` );
-    this.velocity = new Vector2( this.velocity.x, -this.velocity.y * scaling );
-  }
-
-  /**
-   * Gets the position of the ball at some time interval dt (assuming ballistic motion)
-   * @public
-   * @param {number} dt - time step
-   * @returns {Vector2}
-   */
-  getPreviousPosition( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    return this.position.minus( this.velocity.times( dt ) );
   }
 
   /**
@@ -291,6 +195,70 @@ class Ball {
   }
 
   /**
+   * Invoked from the view when the Ball is dragged to a different position. Attempts to position the Ball at the
+   * passed in position but ensures the Ball is inside the PlayArea's Bounds.
+   *
+   * If the grid is visible, the Ball will also snap to the nearest grid-line.
+   * @public
+   *
+   * @param {Vector} position - the position of the Center of the Ball to drag to
+   */
+  dragToPosition( position ) {
+    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+
+    // Reference to the corrected position to drag the Ball to.
+    let correctedPosition;
+
+    if ( !this.gridVisibleProperty.value ) {
+
+      // Ensure that the Ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
+      // entire Ball is inside the PlayArea.
+      correctedPosition = this.bounds.eroded( this.radius ).closestPointTo( position );
+    }
+    else {
+
+      // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
+      correctedPosition = this.getGridSafeConstrainedBounds().closestPointTo( position )
+        .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
+        .roundSymmetric()
+        .timesScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING );
+    }
+
+    // If the dimensions is 1D, ensure that the y-position of the Ball is 0.
+    ( this.dimensions === 1 ) && correctedPosition.setY( 0 );
+
+    // Set the position of the Ball to the correct position.
+    this.position = correctedPosition;
+  }
+
+  /**
+   * Compute the constrained Bounds of the center position of the Ball such that the position is both on a grid-line and
+   * inside the PlayArea bounds. This bounds is used when dragging with the grid visible to ensure that the Ball isn't
+   * snapped to a position that makes part of the Ball out of bounds. Also used for position ranges in the Keypad.
+   * @public
+   *
+   * @returns {Bounds2}
+   */
+  getGridSafeConstrainedBounds() {
+
+    // First get the constrainedBounds, which is the Bounds that ensure the Ball is completely inside the PlayArea.
+    const constrainedBounds = this.bounds.eroded( this.radius );
+
+    // Round the constrainedBounds in the nearest grid line to ensure the Ball is both on a grid-line and inside the
+    // fully PlayArea Bounds.
+    return CollisionLabUtils.roundedBoundsInToNearest( constrainedBounds, CollisionLabConstants.MINOR_GRIDLINE_SPACING );
+  }
+
+  /**
+   * Saves the state of the Ball in our restartState reference for the next restart() call. This is called when the user
+   * presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
+   * @public
+   */
+  saveState() {
+    this.restartState.saveState( this.position, this.velocity, this.mass );
+  }
+
+  /**
    * Updates the path of the Ball. Mainly here to have parallel structure with CenterOfMass.
    * @public
    *
@@ -298,6 +266,17 @@ class Ball {
    */
   updatePath( elapsedTime ) {
     this.path.updatePath( this.position, elapsedTime );
+  }
+
+  /**
+   * Gets the position of the Ball at some time interval dt (assuming ballistic motion)
+   * @public
+   * @param {number} dt - time step
+   * @returns {Vector2}
+   */
+  getPreviousPosition( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    return this.position.minus( this.velocity.times( dt ) );
   }
 
   /*----------------------------------------------------------------------------*
@@ -314,7 +293,7 @@ class Ball {
   /**
    * Sets the Ball's mass, in kg.
    * @public
-   * @param {number}  mass- in kg
+   * @param {number} mass - in kg
    */
   set mass( mass ) { this.massProperty.value = mass; }
 
@@ -373,98 +352,70 @@ class Ball {
   }
 
   /**
-   * Gets the x-coordinate of the left side of the ball.
+   * Gets the x-coordinate of the left side of the Ball.
    * @public
    * @returns {number} - in meter coordinates
    */
   get left() { return this.position.x - this.radius; }
 
   /**
-   * Sets the x-coordinate of the left side of the ball.
-   * @public
-   * @param {number} left - in meter coordinates
-   */
-  set left( left ) { this.xPosition = left + this.radius; }
-
-  /**
-   * Gets the x-coordinate of the right side of the ball.
+   * Gets the x-coordinate of the right side of the Ball.
    * @public
    * @returns {number} - in meter coordinates
    */
   get right() { return this.xPosition + this.radius; }
 
   /**
-   * Sets the x-coordinate of the right side of the ball.
-   * @public
-   * @param {number} right - in meter coordinates
-   */
-  set right( right ) { this.xPosition = right - this.radius; }
-
-  /**
-   * Gets the y-coordinate of the top side of the ball.
+   * Gets the y-coordinate of the top side of the Ball.
    * @public
    * @returns {number} - in meter coordinates
    */
   get top() { return this.yPosition + this.radius; }
 
   /**
-   * Sets the y-coordinate of the top side of the ball.
-   * @public
-   * @param {number} top - in meter coordinates
-   */
-  set top( top ) { this.yPosition = top - this.radius; }
-
-  /**
-   * Gets the y-coordinate of the bottom side of the ball.
+   * Gets the y-coordinate of the bottom side of the Ball.
    * @public
    * @returns {number} - in meter coordinates
    */
   get bottom() { return this.yPosition - this.radius; }
 
   /**
-   * Sets the y-coordinate of the bottom side of the ball.
-   * @public
-   * @param {number} bottom - in meter coordinates
-   */
-  set bottom( bottom ) { this.yPosition = bottom + this.radius; }
-
-  /**
-   * Gets the horizontal velocity of the ball, in m/s.
+   * Gets the horizontal velocity of the Ball, in m/s.
    * @public
    * @returns {number} xVelocity, in m/s.
    */
   get xVelocity() { return this.xVelocityProperty.value; }
 
   /**
-   * Sets the horizontal velocity of the ball, in m/s.
+   * Sets the horizontal velocity of the Ball, in m/s.
    * @public
    * @param {number} xVelocity, in m/s.
    */
   set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
 
   /**
-   * Sets the vertical velocity of the ball, in m/s.
+   * Sets the vertical velocity of the Ball, in m/s.
    * @public
    * @returns {number} yVelocity, in m/s.
    */
   get yVelocity() { return this.yVelocityProperty.value; }
 
   /**
-   * Sets the vertical velocity of the ball, in m/s.
+   * Sets the vertical velocity of the Ball, in m/s.
    * @public
    * @param {number} yVelocity, in m/s.
    */
   set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
 
   /**
-   * Gets the velocity of the ball, in m/s.
+   * Gets the velocity of the Ball, in m/s.
    * @public
    * @returns {Vector2} - in m/s.
    */
   get velocity() { return this.velocityProperty.value; }
 
   /**
-   * Sets the velocity of the ball, in m/s.
+   * Sets the velocity of the Ball, in m/s.
    * @public
    * @param {Vector2} velocity, in m/s.
    */
@@ -475,16 +426,16 @@ class Ball {
   }
 
   /**
-   * Gets the kinetic energy of this ball, in J.
+   * Gets the kinetic energy of this Ball, in J.
    * @public
    * @returns {number} - in J.
    */
   get kineticEnergy() { return this.kineticEnergyProperty.value; }
 
   /**
-   * Gets the linear momentum of this ball, in kg * (m/s).
+   * Gets the linear momentum of this Ball, in kg*(m/s).
    * @public
-   * @returns {Vector2} - in kg * (m/s).
+   * @returns {Vector2} - in kg*(m/s).
    */
   get momentum() { return this.momentumProperty.value; }
 
