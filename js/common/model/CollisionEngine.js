@@ -13,45 +13,28 @@
  * @author Martin Veillette
  */
 
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
-import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallUtils from './BallUtils.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
+import PlayArea from './PlayArea.js';
 
 class CollisionEngine {
 
   /**
-   * @param {ObservableArray.<Ball>} balls - collections of balls
-   * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<boolean>} reflectingBorderProperty
-   * @param {Property.<boolean>} inelasticCollisionTypeProperty - indicates if inelastic collisions stick or slide.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if trailing paths are visible.
+   * @param {PlayArea} playArea
    * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( balls, playAreaBounds, elasticityPercentProperty, reflectingBorderProperty, inelasticCollisionTypeProperty, pathVisibleProperty, elapsedTimeProperty ) {
-    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( elasticityPercentProperty instanceof Property, `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
+  constructor( playArea, elapsedTimeProperty ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && CollisionLabUtils.assertPropertyTypeof( elapsedTimeProperty, 'number' );
 
-    // @private {ObservableArray.<balls>}
-    this.balls = balls;
+    // @private {PlayArea} - reference to the passed-in PlayArea.
+    this.playArea;
 
-    // @private
-    this.playAreaBounds = playAreaBounds;
-
-    // @private {Property.<number>}
-    this.elasticityPercentProperty = elasticityPercentProperty;
-
-    // @private {Property.<boolean>}
-    this.reflectingBorderProperty = reflectingBorderProperty;
-
-    // @private {Property.<boolean>}
-    this.inelasticCollisionTypeProperty = inelasticCollisionTypeProperty;
-
-    this.pathVisibleProperty = pathVisibleProperty;
-
+    // @private {PRoperty.<number>} - reference to the passed-in elapsedTimeProperty.
     this.elapsedTimeProperty = elapsedTimeProperty;
   }
 
@@ -83,13 +66,13 @@ class CollisionEngine {
   handleAllBallToBallCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    for ( let i = 0; i < this.balls.length; i++ ) {
+    for ( let i = 0; i < this.playArea.ballSystem.balls.length; i++ ) {
 
-      const ball1 = this.balls.get( i );
+      const ball1 = this.playArea.ballSystem.balls.get( i );
 
-      for ( let j = i + 1; j < this.balls.length; j++ ) {
+      for ( let j = i + 1; j < this.playArea.ballSystem.balls.length; j++ ) {
 
-        const ball2 = this.balls.get( j );
+        const ball2 = this.playArea.ballSystem.balls.get( j );
 
         assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
@@ -146,7 +129,7 @@ class CollisionEngine {
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = this.elasticity === 0 && this.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
+    const isSticky = this.elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
@@ -164,7 +147,7 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Set the position of the balls to the contactPosition.
-    if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
+    if ( this.playArea.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
       ball1.path.updatePath( r1, this.elapsedTimeProperty.value - overlappedTime );
       ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
     }
@@ -265,13 +248,13 @@ class CollisionEngine {
       elasticity = 1 / this.elasticity;
     }
 
-    this.balls.forEach( ball => {
+    this.playArea.ballSystem.balls.forEach( ball => {
 
       // If the Ball is outside the bounds of the PlayArea, it is now colliding with the walls.
-      if ( ball.left <= this.playAreaBounds.minX ||
-           ball.right >= this.playAreaBounds.maxX ||
-           ball.top >= this.playAreaBounds.maxY ||
-           ball.bottom <= this.playAreaBounds.minY ) {
+      if ( ball.left <= this.playArea.bounds.minX ||
+           ball.right >= this.playArea.bounds.maxX ||
+           ball.top >= this.playArea.bounds.maxY ||
+           ball.bottom <= this.playArea.bounds.minY ) {
 
         // When a collision is detected, the Ball has already overlapped, so the current positions isn't the exact
         // position when the balls first collided. Use the overlapped time to find the exact collision positions.
@@ -281,18 +264,18 @@ class CollisionEngine {
         const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
-        if ( elasticity === 0 && this.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK ) {
+        if ( elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK ) {
 
           // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
           ball.velocity = Vector2.ZERO;
         }
         else {
-          if ( ball.left <= this.playAreaBounds.minX || ball.right >= this.playAreaBounds.maxX ) {
+          if ( ball.left <= this.playArea.bounds.minX || ball.right >= this.playArea.bounds.maxX ) {
 
             // Left and Right Border wall collisions incur a flip in horizontal velocity.
             ball.xVelocity *= -elasticity;
           }
-          if ( ball.top >= this.playAreaBounds.maxY || ball.bottom <= this.playAreaBounds.minY ) {
+          if ( ball.top >= this.playArea.bounds.maxY || ball.bottom <= this.playArea.bounds.minY ) {
 
             // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
             ball.yVelocity *= -elasticity;
@@ -302,7 +285,7 @@ class CollisionEngine {
         //----------------------------------------------------------------------------------------
 
         // Set the position of the ball to the contactPosition.
-        if ( this.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
+        if ( this.playArea.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
           ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
         }
 
@@ -330,7 +313,7 @@ class CollisionEngine {
     // Reference position difference between the current and previous position.
     const deltaR = ball.velocity.timesScalar( dt );
 
-    const erodedBounds = this.playAreaBounds.eroded( ball.radius );
+    const erodedBounds = this.playArea.bounds.eroded( ball.radius );
 
     const closestPoint = erodedBounds.closestPointTo( ball.position );
 
@@ -355,7 +338,7 @@ class CollisionEngine {
    *
    * @returns {number} elasticity
    */
-  get elasticity() { return this.elasticityPercentProperty.value / 100; }
+  get elasticity() { return this.playArea.elasticityPercentProperty.value / 100; }
 }
 
 collisionLab.register( 'CollisionEngine', CollisionEngine );

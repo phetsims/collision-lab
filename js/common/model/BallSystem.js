@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallSystem is a sub-model of PlayArea for a system of different Ball objects.
+ * BallSystem is a sub-model of PlayArea for a isolated system of different Ball objects.
  *
  * BallSystem is mainly responsible for:
  *   - Keeping track the Balls and the  number of Balls in the system.

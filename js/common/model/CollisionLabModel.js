@@ -5,7 +5,6 @@
  *
  * Mainly responsible for:
  *   - Time Control Properties and stepping the simulation.
- *   - Keep track of the top-level user-manipulation Properties, like the number of Balls or the elasticity.
  *   - Instantiation of a single PlayArea.
  *   - Instantiation of the CollisionEngine collision engine.
  *
@@ -16,16 +15,14 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
-import isArray from '../../../../phet-core/js/isArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import CollisionEngine from './CollisionEngine.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
@@ -40,74 +37,52 @@ class CollisionLabModel {
    * @param {Object} [options]
    */
   constructor( initialBallStates, tandem, options ) {
+    assert && assert( CollisionLabUtils.consistsOf( initialBallStates, BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 
-      // {number} - the dimensions of the collision Screen. Either 1 or 2.
-      dimensions: 2,
-
-      // {RangeWithValue} - the range of the number of Balls in the Screen.
-      numberOfBallsRange: new RangeWithValue( 1, 5, 2 ),
-
-      // {Bounds2} - the model bounds of the PlayArea, in meters.
-      playAreaBounds: PlayArea.DEFAULT_BOUNDS
+      // {Object} - passed to the PlayArea instance
+      playAreaOptions: null
 
     }, options );
 
-    assert && assert( isArray( initialBallStates ) && _.every( initialBallStates, ballState => ballState instanceof BallState ), `invalid initialBallStates: ${ initialBallStates }` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-    assert && assert( options.dimensions === 1 || options.dimensions === 2, `invalid options.dimensions: ${ options.dimensions }` );
-    assert && assert( options.numberOfBallsRange instanceof RangeWithValue, `invalid options.numberOfBallsRange: ${options.numberOfBallsRange}` );
-    assert && assert( options.dimensions === 2 || _.every( initialBallStates, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
-
-    // @public (read-only) {number} - reference to the number of dimensions for this collision Screen.
-    this.dimensions = options.dimensions;
-
-    // @public (read-only) {Range} - reference to the range of the number of balls.
-    this.numberOfBallsRange = options.numberOfBallsRange;
-
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {BooleanProperty} - indicates the play/pause state of the screen.
+    // @public {BooleanProperty} - indicates the play/pause state of the screen. Generally manipulated externally
+    //                             in the view.
     this.isPlayingProperty = new BooleanProperty( false );
 
-    // @public {Property.<number>} elapsed time (in seconds) of the screen.
+    // @public (read-only) {Property.<number>} - the total elapsed time (in seconds) of the simulation. Set internally.
     this.elapsedTimeProperty = new NumberProperty( 0 );
 
-    // @public (read-only) {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation.
+    // @public {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation. Set externally in the
+    //                                             view.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {PlayArea} - create the PlayArea of the screen.
-    this.playArea = new PlayArea( initialBallStates, {
-      dimensions: options.dimensions,
-      bounds: options.playAreaBounds,
-      numberOfBallsRange: options.numberOfBallsRange
-    } );
+    this.playArea = new PlayArea( initialBallStates, options.playAreaOptions );
 
-    // @private {CollisionEngine} - the CollisionEngine of the simulation, which acts as the physics engine.
-    this.collisionDetector = new CollisionEngine(
-      this.playArea.balls,
-      this.playArea.bounds,
-      this.elapsedTimeProperty
-    );
+    // @private {CollisionEngine} - the CollisionEngine of the simulation.
+    this.collisionDetector = new CollisionEngine( this.playArea, this.elapsedTimeProperty );
 
-    // @public (read-only) {MomentaDiagram}
-    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.balls, {
-      dimensions: options.dimensions
+    // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
+    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.ballSystem.balls, {
+      dimensions: this.playArea.dimensions
     } );
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.
-    this.isPlayingProperty.lazyLink( play => {
-      if ( play ) { this.playArea.saveBallStates(); }
+    this.isPlayingProperty.lazyLink( isPlaying => {
+      isPlaying && this.playArea.ballSystem.saveBallStates();
     } );
   }
 
   /**
-   * Resets the model.
+   * Resets the model. Called when the reset-all button is pressed.
    * @public
    */
   reset() {
@@ -127,7 +102,7 @@ class CollisionLabModel {
   restart() {
     this.isPlayingProperty.value = false;
     this.elapsedTimeProperty.reset();
-    this.playArea.restart();
+    this.playArea.ballSystem.restart();
   }
 
   /**
@@ -152,11 +127,11 @@ class CollisionLabModel {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    if ( this.isPlayingProperty.value ) { this.stepManual( dt * this.getTimeSpeedFactor() ); }
+    this.isPlayingProperty.value && this.stepManual( dt * this.getTimeSpeedFactor() );
   }
 
   /**
-   * Steps the simulation manually, as regardless if the sim is paused. Intended to be called by clients that step the
+   * Steps the simulation manually, regardless if the sim is paused. Intended to be called by clients that step the
    * simulation through step-buttons or used by the main step method when the sim isn't paused.
    * @private
    *
@@ -172,11 +147,8 @@ class CollisionLabModel {
      * (1) updated based on the ballistic motion of individual balls
      * (2) corrected through collisionDetector, to take into account collisions between balls and walls
      */
-    this.playArea.step( dt );
+    this.playArea.step( dt, this.elapsedTimeProperty.value );
     this.collisionDetector.step( dt );
-
-    //   this.playArea.updatePaths( this.elapsedTimeProperty.value );
-    // }
   }
 
   /**

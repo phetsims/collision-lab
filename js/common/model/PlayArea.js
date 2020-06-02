@@ -1,7 +1,8 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * PlayArea is the model for the main area of colliding Balls in the 'collision lab' simulation.
+ * PlayArea is the model for the main area of colliding Balls in the 'collision lab' simulation. It is a sub-model of
+ * the top-level model of each screen.
  *
  * PlayArea is mainly responsible for:
  *   - Handling Bounds, dimensions, and range differences between Screens.
@@ -177,12 +178,19 @@ class PlayArea {
    * @public
    *
    * @param {number} dt - in seconds
+   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
    */
-  step( dt ) {
+  step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Step the Balls in the system only.
     this.ballSystem.step( dt );
+
+    // Update the Paths inside the BallPaths only if paths are visible.
+    if ( this.pathVisibleProperty.value ) {
+      this.ballSystem.updatePaths( elapsedTime );
+    }
   }
 }
 
