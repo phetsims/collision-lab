@@ -69,16 +69,16 @@ class CollisionLabScreenView extends ScreenView {
     // create the grid and border of the playArea
     const playAreaNode = new PlayAreaNode(
       model.playArea,
-      model.gridVisibleProperty,
+      model.playArea.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
-      model.centerOfMassVisibleProperty,
-      model.pathVisibleProperty,
+      model.playArea.centerOfMassVisibleProperty,
+      model.playArea.pathVisibleProperty,
       modelViewTransform
     );
     this.addChild( playAreaNode );
 
     if ( options.includePlayAreaControlSet ) {
-      const playAreaControlSet = new PlayAreaControlSet( model.numberOfBallsProperty, model.numberOfBallsRange, model.gridVisibleProperty, merge( {
+      const playAreaControlSet = new PlayAreaControlSet( model.playArea.numberOfBallsProperty, model.playArea.numberOfBallsRange, model.playArea.gridVisibleProperty, merge( {
         left: playAreaNode.right + 5,
         top: modelViewTransform.modelToViewY( model.playArea.bounds.maxY ) + 5
       }, options.playAreaControlSetOptions ) );
@@ -93,7 +93,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
       model.isPlayingProperty,
-      model.elasticityPercentProperty,
+      model.playArea.elasticityPercentProperty,
       model.elapsedTimeProperty,
       model.timeSpeedProperty,
       model.playArea.playAreaUserControlledProperty,
@@ -127,12 +127,12 @@ class CollisionLabScreenView extends ScreenView {
 
 
     const playAreaControlPanel = new CollisionLabControlPanel( viewProperties,
-      model.centerOfMassVisibleProperty,
-      model.pathVisibleProperty,
-      model.reflectingBorderProperty,
-      model.elasticityPercentProperty,
-      model.inelasticCollisionTypeProperty,
-      model.isConstantSizeProperty,
+      model.playArea.centerOfMassVisibleProperty,
+      model.playArea.pathVisibleProperty,
+      model.playArea.reflectingBorderProperty,
+      model.playArea.elasticityPercentProperty,
+      model.playArea.inelasticCollisionTypeProperty,
+      model.playArea.isConstantSizeProperty,
       merge( {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         top: SCREEN_VIEW_Y_MARGIN
@@ -140,7 +140,7 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( playAreaControlPanel );
 
 
-    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.playArea.balls, {
+    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.playArea.ballSystem.balls, {
       dimensions: model.dimensions,
       centerX: playAreaControlPanel.centerX,
       top: playAreaControlPanel.bottom + 8
@@ -157,9 +157,9 @@ class CollisionLabScreenView extends ScreenView {
         viewProperties.valuesVisibleProperty,
         viewProperties.velocityVisibleProperty,
         viewProperties.momentumVisibleProperty,
-        model.isConstantSizeProperty,
+        model.playArea.isConstantSizeProperty,
         model.isPlayingProperty,
-        model.pathVisibleProperty,
+        model.playArea.pathVisibleProperty,
         modelViewTransform );
       this.ballLayerNode.addChild( addedBallNode );
 
@@ -168,19 +168,19 @@ class CollisionLabScreenView extends ScreenView {
         if ( removedBall === addedBall ) {
           this.ballLayerNode.removeChild( addedBallNode );
           addedBallNode.dispose();
-          model.playArea.balls.removeItemRemovedListener( removeBallListener );
+          model.playArea.ballSystem.balls.removeItemRemovedListener( removeBallListener );
         }
       };
-      model.playArea.balls.addItemRemovedListener( removeBallListener );
+      model.playArea.ballSystem.balls.addItemRemovedListener( removeBallListener );
     };
 
-    model.playArea.balls.forEach( addItemAddedBallListener );
-    model.playArea.balls.addItemAddedListener( addItemAddedBallListener );
+    model.playArea.ballSystem.balls.forEach( addItemAddedBallListener );
+    model.playArea.ballSystem.balls.addItemAddedListener( addItemAddedBallListener );
 
 
     const keypad = new KeypadDialog();
 
-    const ballValuesDisplay = new BallValuesPanel( model.playArea.balls, viewProperties.moreDataVisibleProperty, keypad, {
+    const ballValuesDisplay = new BallValuesPanel( model.playArea.ballSystem.balls, viewProperties.moreDataVisibleProperty, keypad, {
       dimensions: model.dimensions
     } );
     this.addChild( ballValuesDisplay );

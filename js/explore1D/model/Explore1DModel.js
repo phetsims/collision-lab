@@ -33,15 +33,17 @@ class Explore1DModel extends CollisionLabModel {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     super( INITIAL_BALL_STATES, tandem, {
-      dimensions: 1,
-      playAreaBounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
+      playAreaOptions: {
+        dimensions: 1,
+        bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
+      }
     } );
 
-    this.gridVisibleProperty.value = true;
-    // assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
+    // this.gridVisibleProperty.value = true;
+    // // assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
 
-    this.pathVisibleProperty.value = false;
-    assert && this.pathVisibleProperty.link( pathVisible => assert( !pathVisible, 'paths must be not visible in Explore 1D' ) );
+    // this.pathVisibleProperty.value = false;
+    // assert && this.pathVisibleProperty.link( pathVisible => assert( !pathVisible, 'paths must be not visible in Explore 1D' ) );
   }
 }
 

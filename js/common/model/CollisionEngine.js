@@ -32,7 +32,7 @@ class CollisionEngine {
     assert && CollisionLabUtils.assertPropertyTypeof( elapsedTimeProperty, 'number' );
 
     // @private {PlayArea} - reference to the passed-in PlayArea.
-    this.playArea;
+    this.playArea = playArea;
 
     // @private {PRoperty.<number>} - reference to the passed-in elapsedTimeProperty.
     this.elapsedTimeProperty = elapsedTimeProperty;
@@ -241,7 +241,7 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Do nothing if the border doesn't reflect Balls, meaning there are no collisions involving the Border.
-    if ( !this.reflectingBorderProperty.value ) { return; }
+    if ( !this.playArea.reflectingBorderProperty.value ) { return; }
 
     let elasticity = this.elasticity;
     if ( dt < 0 && this.elasticity > 0 ) {

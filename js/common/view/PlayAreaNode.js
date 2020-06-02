@@ -74,13 +74,13 @@ class PlayAreaNode extends Node {
       stroke: playArea.dimensions === 1 ? CollisionLabColors.MAJOR_GRID_LINE_COLOR : CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
-    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( playArea.totalKineticEnergyProperty,
+    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( playArea.ballSystem.totalKineticEnergyProperty,
       kineticEnergyVisibleProperty, {
         left: background.left + KINETIC_ENERGY_DISPLAY_MARGIN,
         bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
       } );
 
-    const centerOfMassNode = new CenterOfMassNode( playArea.centerOfMass,
+    const centerOfMassNode = new CenterOfMassNode( playArea.ballSystem.centerOfMass,
       centerOfMassVisibleProperty,
       pathVisibleProperty,
       modelViewTransform );

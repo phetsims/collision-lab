@@ -43,7 +43,7 @@ class BallSystem {
     assert && assert( CollisionLabUtils.consistsOf( prepopulatedBalls, Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && CollisionLabUtils.assertPropertyTypeof( numberOfBallsProperty, 'number' );
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( pathVisibleProperty, 'number' );
+    assert && CollisionLabUtils.assertPropertyTypeof( pathVisibleProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( centerOfMassVisibleProperty, 'boolean' );
 
     //----------------------------------------------------------------------------------------
@@ -66,14 +66,14 @@ class BallSystem {
         // Add the correct number of Balls, referencing an index of the prepopulatedBalls so that the same Balls are
         // added with the same numberOfBalls value.
         for ( let i = this.balls.length; i < numberOfBalls; i++ ) {
-          this.balls.push( this.prepopulatedBalls[ i ] );
+          this.balls.push( prepopulatedBalls[ i ] );
         }
       }
       else {
 
         // Otherwise, the number of balls in the system is greater than numberOfBalls, meaning Balls need to be removed.
         // Remove the correct number of Balls from the end of the Balls ObservableArray.
-        while ( this.balls !== numberOfBalls ) {
+        while ( this.balls.length !== numberOfBalls ) {
           this.balls.pop();
         }
       }
@@ -89,7 +89,7 @@ class BallSystem {
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty(
-      [ numberOfBallsProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
+      [ numberOfBallsProperty, ...prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
       () => {
         return _.sum( this.balls.map( ball => ball.kineticEnergy ) );
       }, {
