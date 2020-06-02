@@ -8,10 +8,10 @@
  *   - BallNodes for each Ball in the system.
  *   - Displaying the Center of Mass
  *
- * BallSystemNode takes advantage of the prepopulatedBalls in the PlayArea, which all Balls in the system must be
- * apart of. Instead of creating a BallNode each time a Ball is added to the system, it creates a BallNode for each
- * prepopulatedBall and adjusts its visibility based on whether or not it is the system. Thus, BallNodes and
- * BallSystemNodes are never disposed.
+ * BallSystemNode takes advantage of the prepopulatedBalls in the PlayArea, which all Balls in the system must be apart
+ * of. Instead of creating a BallNode each time a Ball is added to the system, it creates a BallNode for each
+ * prepopulatedBall and adjusts its visibility based on whether or not it is the system. There is no performance loss
+ * since Balls not in the BallSystem are not stepped or updated. Thus, BallNodes and BallSystemNodes are never disposed.
  *
  * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
  *
@@ -53,7 +53,6 @@ class BallSystemNode extends Node {
     assert && CollisionLabUtils.assertPropertyTypeof( velocityVectorVisibleProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( momentumVectorVisibleProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( isPlayingProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( modelViewTransform, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -92,7 +91,7 @@ class BallSystemNode extends Node {
     //----------------------------------------------------------------------------------------
 
     // Create the corresponding view for the Center of Mass.
-    const centerOfMassNode = new CenterOfMassNode( playArea.ballSystem.centerOfMass,
+    const centerOfMassNode = new CenterOfMassNode( ballSystem.centerOfMass,
       playArea.centerOfMassVisibleProperty,
       playArea.pathVisibleProperty,
       modelViewTransform );

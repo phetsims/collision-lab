@@ -21,7 +21,6 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from '../model/PlayArea.js';
-import CenterOfMassNode from './CenterOfMassNode.js';
 import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 
 // constants
@@ -37,22 +36,17 @@ class PlayAreaNode extends Node {
    * @param {PlayArea} playArea
    * @param {Property.<boolean>} gridVisibleProperty
    * @param {Property.<boolean>} kineticEnergyVisibleProperty
-   * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
   constructor( playArea,
                gridVisibleProperty,
                kineticEnergyVisibleProperty,
-               centerOfMassVisibleProperty,
-               pathVisibleProperty,
                modelViewTransform,
                options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( kineticEnergyVisibleProperty instanceof Property && typeof kineticEnergyVisibleProperty.value === 'boolean', `invalid kineticEnergyVisibleProperty: ${gridVisibleProperty}` );
-    assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${gridVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `Extra prototype on options: ${options}` );
 
@@ -80,11 +74,6 @@ class PlayAreaNode extends Node {
         bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
       } );
 
-    const centerOfMassNode = new CenterOfMassNode( playArea.ballSystem.centerOfMass,
-      centerOfMassVisibleProperty,
-      pathVisibleProperty,
-      modelViewTransform );
-
     const border = new Rectangle( playAreaViewBounds, {
       stroke: CollisionLabColors.GRID_BORDER_COLOR,
       lineWidth: 3
@@ -96,7 +85,6 @@ class PlayAreaNode extends Node {
       minorGridLines,
       majorGridLines,
       kineticEnergyDisplay,
-      centerOfMassNode,
       border
     ];
   }

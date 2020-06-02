@@ -10,12 +10,11 @@ import ScreenView from '../../../../joist/js/ScreenView.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
-import BallNode from './BallNode.js';
+import BallSystemNode from './BallSystemNode.js';
 import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabControlPanel from './CollisionLabControlPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
@@ -71,11 +70,20 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea,
       model.playArea.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
-      model.playArea.centerOfMassVisibleProperty,
-      model.playArea.pathVisibleProperty,
       modelViewTransform
     );
     this.addChild( playAreaNode );
+
+    const ballSystemNode = new BallSystemNode( model.playArea.ballSystem,
+        model.playArea,
+        viewProperties.valuesVisibleProperty,
+        viewProperties.velocityVectorVisibleProperty,
+        viewProperties.momentumVectorVisibleProperty,
+        model.isPlayingProperty,
+        modelViewTransform );
+    this.addChild( ballSystemNode );
+
+
 
     if ( options.includePlayAreaControlSet ) {
       const playAreaControlSet = new PlayAreaControlSet( model.playArea.numberOfBallsProperty, model.playArea.numberOfBallsRange, model.playArea.gridVisibleProperty, merge( {
@@ -146,36 +154,6 @@ class CollisionLabScreenView extends ScreenView {
       top: playAreaControlPanel.bottom + 8
     } );
     this.addChild( momentaDiagram );
-
-
-    this.ballLayerNode = new Node();
-    this.addChild( this.ballLayerNode );
-
-    const addItemAddedBallListener = addedBall => {
-
-      const addedBallNode = new BallNode( addedBall,
-        viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVectorVisibleProperty,
-        viewProperties.momentumVectorVisibleProperty,
-        model.playArea.isConstantSizeProperty,
-        model.isPlayingProperty,
-        model.playArea.pathVisibleProperty,
-        modelViewTransform );
-      this.ballLayerNode.addChild( addedBallNode );
-
-      // Observe when the ball is removed to unlink listeners
-      const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
-          this.ballLayerNode.removeChild( addedBallNode );
-          addedBallNode.dispose();
-          model.playArea.ballSystem.balls.removeItemRemovedListener( removeBallListener );
-        }
-      };
-      model.playArea.ballSystem.balls.addItemRemovedListener( removeBallListener );
-    };
-
-    model.playArea.ballSystem.balls.forEach( addItemAddedBallListener );
-    model.playArea.ballSystem.balls.addItemAddedListener( addItemAddedBallListener );
 
 
     const keypad = new KeypadDialog();
