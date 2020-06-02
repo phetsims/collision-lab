@@ -25,6 +25,7 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
 import BallNode from './BallNode.js';
+import CenterOfMassNode from './CenterOfMassNode.js';
 
 class BallSystemNode extends Node {
 
@@ -60,10 +61,15 @@ class BallSystemNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
+    // Create the container for all Ball Nodes.
+    const ballNodeContainer = new Node();
 
-    const addItemAddedBallListener = addedBall => {
+    // Loop through each possible Ball. These Balls are NOT necessarily the Balls currently within the BallSystem,
+    // so we are responsible for updating its visibility based on whether or not it is the system.
+    playArea.prepopulatedBalls.forEach( ball => {
 
-      const addedBallNode = new BallNode( addedBall,
+      // Create the corresponding BallNode for each prepopulatedBall.
+      const ballNode = new BallNode( ball,
         valuesVisibleProperty,
         velocityVectorVisibleProperty,
         momentumVectorVisibleProperty,
@@ -71,23 +77,31 @@ class BallSystemNode extends Node {
         isPlayingProperty,
         playArea.pathVisibleProperty,
         modelViewTransform );
-      this.ballLayerNode.addChild( addedBallNode );
 
-      // Observe when the ball is removed to unlink listeners
-      const removeBallListener = removedBall => {
-        if ( removedBall === addedBall ) {
-          this.ballLayerNode.removeChild( addedBallNode );
-          addedBallNode.dispose();
-          playArea.ballSystem.balls.removeItemRemovedListener( removeBallListener );
-        }
-      };
-      playArea.ballSystem.balls.addItemRemovedListener( removeBallListener );
-    };
+      // Add the BallNode to the container.
+      ballNodeContainer.addChild( ballNode );
 
-    playArea.ballSystem.balls.forEach( addItemAddedBallListener );
-    playArea.ballSystem.balls.addItemAddedListener( addItemAddedBallListener );
+      // Observe when Balls are added or removed from the BallSystem, meaning its visibility could change if it is
+      // added or removed from the system. It should only be visible if the ball is in the BallSystem.
+      playArea.numberOfBallsProperty.link( () => {
+        ballNode.visible = ballSystem.balls.contains( ball );
+      } );
 
+    } );
 
+    //----------------------------------------------------------------------------------------
+
+    // Create the corresponding view for the Center of Mass.
+    const centerOfMassNode = new CenterOfMassNode( playArea.ballSystem.centerOfMass,
+      playArea.centerOfMassVisibleProperty,
+      playArea.pathVisibleProperty,
+      modelViewTransform );
+
+    // Set the children of this Node to the correct rendering order.
+    this.children = [
+      centerOfMassNode,
+      ballNodeContainer
+    ];
   }
 }
 
