@@ -5,18 +5,26 @@
  * all screens in the 'Collision Lab' simulation.
  *
  * ## Collision detection:
+ *
  *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Collisions
  *     are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
  *     with the border of the PlayArea.
+ *
  *   - Since there are only a maximum of 5 Balls in a PlayArea at a time, there are a maximum of 10 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
+ *
  *   - Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
  *     have escaped the PlayArea when its border doesn't reflect.
  *
  * ## Collision response:
+ *
  *   - Collision response determines what affect a collision has on a Balls motion. When a collision has been detected,
  *     it is processed by first analytically determining the how long the Balls have been overlapping. Using this time,
  *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls.
+ *     The algorithms for finding the overlapping time of collisions can be found below:
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
+ *
  *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
  *     standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
@@ -72,11 +80,13 @@ class CollisionEngine {
    * Steps the Collision Detector, which will handle all collisions involving Balls.
    * @public
    *
-   * @param {number} dt - the time interval since the last step, in seconds.
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  step( dt ) {
-    this.handleBallToBallCollisions( dt );
-    this.handleBallToBorderCollisions( dt );
+  step( isReversing ) {
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+
+    this.handleBallToBallCollisions( isReversing );
+    this.playArea.reflectsBorder && this.handleBallToBorderCollisions( isReversing );
   }
 
   /*----------------------------------------------------------------------------*
@@ -91,11 +101,11 @@ class CollisionEngine {
    * Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
    * have escaped the PlayArea when its border doesn't reflect. See https://en.wikipedia.org/wiki/Collision_detection.
    *
-   * @public
-   * @param {number} dt - time interval since last step, in seconds.
+   * @private
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  handleBallToBallCollisions( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+  handleBallToBallCollisions( isReversing ) {
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
 
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
@@ -107,7 +117,7 @@ class CollisionEngine {
 
       // If two balls are on top of each other, process the collision.
       if ( distanceBetweenBalls < minimumSeparation ) {
-        this.collideBalls( ball1, ball2, dt < 0 );
+        this.collideBalls( ball1, ball2, isReversing );
       }
     } );
   }
@@ -240,42 +250,38 @@ class CollisionEngine {
    *----------------------------------------------------------------------------*/
 
   /**
-   * A time-discretization approach to detecting and processing ball-border collisions. This checks to see if a
-   * collision has occurred between any balls are overlapping with the border in the last time step, which means the
-   * Ball has collided with the border.
+   * A time-discretization approach to detecting and processing ball-border collisions. This checks to see if any balls
+   * are overlapping with the border in the last time step, which means the Ball has collided with the border.
    *
    * If a Ball is detected to have collided with the border, then the collision is processed and the velocity and the
-   * position of the Ball is updated.
-   * @public
+   * position of the Ball is updated. The collision algorithm follows the standard rigid-body collision model as
+   * described in
+   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
    *
-   * See https://en.wikipedia.org/wiki/Collision_detection
+   * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
-   * @param {number} dt - time interval since last step, in seconds.
+   * @private
+   *
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  handleBallToBorderCollisions( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+  handleBallToBorderCollisions( isReversing ) {
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
 
-    // Do nothing if the border doesn't reflect Balls, meaning there are no collisions involving the Border.
-    if ( !this.playArea.reflectingBorderProperty.value ) { return; }
+    // Convenience reference to the elasticity.
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
+    const elasticity = this.playArea.elasticity;
 
-    let elasticity = this.playArea.elasticity;
-    if ( dt < 0 && this.playArea.elasticity > 0 ) {
-      elasticity = 1 / this.playArea.elasticity;
-    }
-
+    // Loop through each Balls and check to see if it is colliding with the border.
     this.ballSystem.balls.forEach( ball => {
 
-      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the walls.
-      if ( ball.left <= this.playArea.bounds.minX ||
-           ball.right >= this.playArea.bounds.maxX ||
-           ball.top >= this.playArea.bounds.maxY ||
-           ball.bottom <= this.playArea.bounds.minY ) {
+      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
+      if ( !this.playArea.containsBall( ball ) ) {
 
-        // When a collision is detected, the Ball has already overlapped, so the current positions isn't the exact
-        // position when the balls first collided. Use the overlapped time to find the exact collision positions.
-        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, dt < 0 );
+        // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
+        // position when the ball first collided. Use the overlapped time to find the exact collision position.
+        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
 
-        // Get exact position when the Ball collided by rewinding.
+        // Get exact positions when the Balls collided by rewinding by the overlapped time.
         const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
@@ -285,12 +291,12 @@ class CollisionEngine {
           ball.velocity = Vector2.ZERO;
         }
         else {
-          if ( ball.left <= this.playArea.bounds.minX || ball.right >= this.playArea.bounds.maxX ) {
+          if ( !this.playArea.containsBallHorizontally( ball ) ) {
 
             // Left and Right Border wall collisions incur a flip in horizontal velocity.
             ball.xVelocity *= -elasticity;
           }
-          if ( ball.top >= this.playArea.bounds.maxY || ball.bottom <= this.playArea.bounds.minY ) {
+          if ( !this.playArea.containsBallVertically( ball ) ) {
 
             // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
             ball.yVelocity *= -elasticity;
@@ -304,7 +310,7 @@ class CollisionEngine {
           ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
         }
 
-        // Update the position after the collision.
+        // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
         ball.position = contactPosition.plus( ball.velocity.times( overlappedTime ) );
       }
     } );
