@@ -62,12 +62,9 @@ class CollisionEngine {
     this.mutableVectors = {
       deltaR: new Vector2( 0, 0 ),
       deltaV: new Vector2( 0, 0 ),
-
+      deltaS: new Vector2( 0, 0 ),
       normal: new Vector2( 0, 0 ),
-      tangent: new Vector2( 0, 0 ),
-      relativeVelocity: new Vector2( 0, 0 ),
-      pointOnLine: new Vector2( 0, 0 ),
-      reflectedPoint: new Vector2( 0, 0 )
+      tangent: new Vector2( 0, 0 )
     };
   }
 
@@ -212,7 +209,7 @@ class CollisionEngine {
     assert && assert( BallUtils.areBallsColliding( ball1, ball2 ), 'balls must be intersecting' );
 
     /*----------------------------------------------------------------------------*
-     * This calculations comes from the known fact that when the Balls are exactly colliding,
+     * This calculation comes from the known fact that when the Balls are exactly colliding,
      * their distance is exactly equal to the sum of their radii.
      *
      * Documenting the derivation was beyond the scope of code comments. Please reference
@@ -276,7 +273,7 @@ class CollisionEngine {
 
         // When a collision is detected, the Ball has already overlapped, so the current positions isn't the exact
         // position when the balls first collided. Use the overlapped time to find the exact collision positions.
-        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, dt );
+        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, dt < 0 );
 
         // Get exact position when the Ball collided by rewinding.
         const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
@@ -314,37 +311,43 @@ class CollisionEngine {
   }
 
   /**
-   * Reconstructs ballistic motion of a Ball that is overlapping with a border to compute the elapsed time that the
-   * colliding Ball was overlapping with the border.
-   *
-   * The contact time is positive if the contact time occurred in the past and negative if the contact time is in the
-   * future (which may happened if the simulation is ran in reverse).
+   * Reconstructs ballistic motion of a Ball that is currently overlapping with a border to compute the elapsed time
+   * from the when the Ball first exactly collided to its overlapped position. The contact time is positive if the
+   * contact time occurred in the past and negative if the contact time is in the future (which happens if the
+   * simulation is ran in reverse).
    * @private
    *
    * @param {Ball} ball - the ball involved in the collision
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   *
    * @returns {number} contactTime - in seconds
    */
-  getBallToBorderCollisionOverlapTime( ball, dt ) {
+  getBallToBorderCollisionOverlapTime( ball, isReversing ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
+    assert && assert( !this.playArea.containsBall( ball ), 'ball must be intersecting' );
 
-    // Reference position difference between the current and previous position.
-    const deltaR = ball.velocity.timesScalar( dt );
+    /*----------------------------------------------------------------------------*
+     * This calculation comes from the known fact that when the Ball's distance to the
+     * border is exactly equal to its radius when it collides with the border. It
+     * uses a dot-product projection to exploit this and solve the overlap time.
+     *
+     *
+     * Documenting the derivation was beyond the scope of code comments. Please reference
+     * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
+     *----------------------------------------------------------------------------*/
 
-    const erodedBounds = this.playArea.bounds.eroded( ball.radius );
+    // The position of a ball with the same radius as the Ball involved in the collision that is closest to the current
+    // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
+    // geometric representation.
+    const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
+    const deltaS = this.mutableVectors.deltaS.set( ball.position ).subtract( closestPoint );
 
-    const closestPoint = erodedBounds.closestPointTo( ball.position );
+    // Use the formula derived in the document above.
+    const contactTime = deltaS.magnitudeSquared / ball.velocity.dot( deltaS );
 
-    const offsetPoint = closestPoint.minus( ball.position );
-
-    let contactTime;
-    if ( deltaR.dot( offsetPoint ) === 0 ) {
-      contactTime = 0;
-    }
-    else {
-      contactTime = offsetPoint.magnitudeSquared / -deltaR.dot( offsetPoint ) * dt;
-    }
-    assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
+    assert && assert( isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ) );
     return contactTime;
   }
 }
