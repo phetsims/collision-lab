@@ -192,6 +192,7 @@ class BallSystem {
    * @public
    */
   reset() {
+    this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
     this.isBallConstantSizeProperty.reset();
     this.centerOfMassVisibleProperty.reset();
     this.pathVisibleProperty.reset();
