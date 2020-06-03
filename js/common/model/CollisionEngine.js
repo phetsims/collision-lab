@@ -63,7 +63,7 @@ class CollisionEngine {
       deltaR: new Vector2( 0, 0 ),
       deltaV: new Vector2( 0, 0 ),
 
-
+      normal: new Vector2( 0, 0 ),
       tangent: new Vector2( 0, 0 ),
       relativeVelocity: new Vector2( 0, 0 ),
       pointOnLine: new Vector2( 0, 0 ),
@@ -110,67 +110,73 @@ class CollisionEngine {
 
       // If two balls are on top of each other, process the collision.
       if ( distanceBetweenBalls < minimumSeparation ) {
-        this.collideBalls( ball1, ball2, dt );
+        this.collideBalls( ball1, ball2, dt < 0 );
       }
     } );
   }
 
   /**
-   * Processes and responds to collision between two balls. Will update the velocity and position of both Balls.
+   * Processes and responds to collision between two balls. Will update the velocity and position of both Balls. The
+   * collision algorithm follows the standard rigid-body collision model as described in
+   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+   *
+   * Our version deals with normalized dot product projections to switch coordinate frames. Please reference
+   * https://en.wikipedia.org/wiki/Dot_product.
+   *
    * @private
    *
    * @param {Ball} ball1 - the first Ball involved in the collision
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {number} dt  - time interval since last step, in seconds.
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  collideBalls( ball1, ball2, dt ) {
+  collideBalls( ball1, ball2, isReversing ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( BallUtils.areBallsColliding( ball1, ball2 ), 'balls must be intersecting' );
 
     // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
     // when the balls first collided. Use the overlapped time to find the exact collision positions.
-    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, dt < 0 );
+    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, isReversing );
 
-    // Get exact positions when the Balls collided by rewinding.
+    // Get exact positions when the Balls collided by rewinding by the overlapped time.
     const r1 = BallUtils.computeBallPosition( ball1, -overlappedTime );
     const r2 = BallUtils.computeBallPosition( ball2, -overlappedTime );
 
-    const deltaR = r1.minus( r2 );
-    const normalizedDeltaR = deltaR.equals( Vector2.ZERO ) ? Vector2.X_UNIT : deltaR.normalized();
-
+    // Convenience references to the other known Ball values.
     const m1 = ball1.mass;
     const m2 = ball2.mass;
     const v1 = ball1.velocity;
     const v2 = ball2.velocity;
 
-    // Reference the normal and tangential components of initial velocities.
-    const v1n = normalizedDeltaR.dot( v1 );
-    const v2n = normalizedDeltaR.dot( v2 );
-    const v1t = normalizedDeltaR.crossScalar( v1 );
-    const v2t = normalizedDeltaR.crossScalar( v2 );
+    // Normal vector, called the 'line of impact'.
+    this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize();
 
-    let e = this.playArea.elasticity;
-    if ( dt < 0 && e > 0 ) { e = 1 / e; }
+    // Tangential vector, called the 'plane of contact.
+    this.mutableVectors.tangent.setXY( this.mutableVectors.normal.y, -this.mutableVectors.normal.y );
 
-    // Normal components of velocities after collision (P for prime = after)
+    // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
+    const v1n = this.mutableVectors.normal.dot( v1 );
+    const v2n = this.mutableVectors.normal.dot( v2 );
+    const v1t = this.mutableVectors.tangent.dot( v1 );
+    const v2t = this.mutableVectors.tangent.dot( v2 );
+
+    // Convenience reference to the elasticity.
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
+    const e = this.playArea.elasticity;
+    const isSticky = e === 0 && this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK;
+
+    // Compute the 'normal' and 'tangential' components of velocities after collision (P for prime = after).
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
-
-    const isSticky = this.playArea.elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
-    // Normal and tangential component of the velocity after collision
-    const v1TN = new Vector2( v1tP, v1nP );
-    const v2TN = new Vector2( v2tP, v2nP );
-
-    // Velocity vectors after the collision in the x - y basis
-    const v1xP = normalizedDeltaR.crossScalar( v1TN );
-    const v1yP = normalizedDeltaR.dot( v1TN );
-    const v2xP = normalizedDeltaR.crossScalar( v2TN );
-    const v2yP = normalizedDeltaR.dot( v2TN );
-
+    // Change coordinate frames back into the standard x-y coordinate frame.
+    const v1xP = Vector2.X_UNIT.dotXY( v1nP, v1tP );
+    const v2xP = Vector2.X_UNIT.dotXY( v2nP, v2tP );
+    const v1yP = Vector2.Y_UNIT.dotXY( v1nP, v1tP );
+    const v2yP = Vector2.Y_UNIT.dotXY( v2nP, v2tP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
@@ -180,14 +186,14 @@ class CollisionEngine {
       ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
     }
 
-    // Don't allow balls to rebound after collision during time-step of collision. This seems to improve stability.
+    // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
     ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
     ball2.position = r2.plus( ball2.velocity.times( overlappedTime ) );
   }
 
   /**
    * Reconstructs ballistic motion of two colliding Balls that are currently overlapping to compute the elapsed time
-   * from the when the Balls first exactly colliding to their overlapped positions. The contact time is positive if the
+   * from the when the Balls first exactly collided to their overlapped positions. The contact time is positive if the
    * collision occurred in the past and negative if the contact time is in the future (which happens if the simulation
    * is ran in reverse).
    * @private
