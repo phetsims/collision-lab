@@ -239,7 +239,7 @@ class CollisionEngine {
     assert && assert( possibleRoots && possibleRoots.length <= 2 && possibleRoots.length >= 0 );
 
     // Pick the positive root for forward stepping and the negative root if isReversing is true.
-    const contactTime = _.find( possibleRoots, root => isReversing ? root < 0 : root >= 0 ) || 1;
+    const contactTime = _.find( possibleRoots, root => isReversing ? root < 0 : root >= 0 ) || 0;
 
     assert && assert( isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ) );
     return contactTime;

@@ -141,7 +141,7 @@ class CollisionLabModel {
    * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
    */
   stepManual( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
 
     this.elapsedTimeProperty.value += dt;
 
@@ -151,7 +151,7 @@ class CollisionLabModel {
      * (2) corrected through collisionEngine, to take into account collisions between balls and walls
      */
     this.ballSystem.step( dt, this.elapsedTimeProperty.value );
-    this.collisionEngine.step( dt );
+    this.collisionEngine.step( dt < 0 );
   }
 
   /**
