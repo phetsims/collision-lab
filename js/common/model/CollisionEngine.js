@@ -153,13 +153,13 @@ class CollisionEngine {
     this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize();
 
     // Tangential vector, called the 'plane of contact.
-    this.mutableVectors.tangent.setXY( this.mutableVectors.normal.y, -this.mutableVectors.normal.y );
+    this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = this.mutableVectors.normal.dot( v1 );
-    const v2n = this.mutableVectors.normal.dot( v2 );
-    const v1t = this.mutableVectors.tangent.dot( v1 );
-    const v2t = this.mutableVectors.tangent.dot( v2 );
+    const v1n = v1.dot( this.mutableVectors.normal );
+    const v2n = v2.dot( this.mutableVectors.normal );
+    const v1t = v1.dot( this.mutableVectors.tangent );
+    const v2t = v2.dot( this.mutableVectors.tangent );
 
     // Convenience reference to the elasticity.
     assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
@@ -173,10 +173,10 @@ class CollisionEngine {
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
     // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = Vector2.X_UNIT.dotXY( v1nP, v1tP );
-    const v2xP = Vector2.X_UNIT.dotXY( v2nP, v2tP );
-    const v1yP = Vector2.Y_UNIT.dotXY( v1nP, v1tP );
-    const v2yP = Vector2.Y_UNIT.dotXY( v2nP, v2tP );
+    const v1xP = this.mutableVectors.tangent.dotXY( v1tP, v1nP );
+    const v2xP = this.mutableVectors.tangent.dotXY( v2tP, v2nP );
+    const v1yP = this.mutableVectors.normal.dotXY( v1tP, v1nP );
+    const v2yP = this.mutableVectors.normal.dotXY( v2tP, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
