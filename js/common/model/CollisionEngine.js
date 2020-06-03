@@ -48,23 +48,16 @@ class CollisionEngine {
   /**
    * @param {PlayArea} playArea
    * @param {BallSystem} ballSystem
-   * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( playArea, ballSystem, elapsedTimeProperty ) {
+  constructor( playArea, ballSystem ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( elapsedTimeProperty, 'number' );
 
     // @private {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
 
     // @private {BallSystem} - reference to the passed-in BallSystem.
     this.ballSystem = ballSystem;
-
-    // @private {Property.<number>} - reference to the passed-in elapsedTimeProperty.
-    this.elapsedTimeProperty = elapsedTimeProperty;
-
-    //----------------------------------------------------------------------------------------
 
     // @private {Object} - mutable vectors, reused in critical code for a slight performance optimization.
     this.mutableVectors = {
@@ -87,6 +80,53 @@ class CollisionEngine {
 
     this.handleBallToBallCollisions( isReversing );
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( isReversing );
+  }
+
+  /**
+   * Registers the exact position of a ball-to-ball collision.
+   * This method is meant to be overriden in subclasses, but it isn't required. It's default behavior is to do nothing.
+   *
+   * When a collision between two balls occurs, its position and their overlapping time is taken into consideration,
+   * and Balls are set to a different position. See collideBall() for background. However, this brings up issues for
+   * sub-classes. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
+   * However, Ball positions are never set to the position where the collision actually occurred, and this separation
+   * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
+   *
+   * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
+   * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
+   * collision is detected and passes necessary information to determine when and where a collision occurred.
+   * @protected
+   *
+   * @param {Ball} ball1 - the first Ball involved in the collision.
+   * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
+   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
+   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
+   */
+  registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+    /** Do nothing. Override for functionality. */
+  }
+  /**
+   * Registers the exact position of a ball-to-border collision. This method is meant to be overriden in subclasses,
+   * but it isn't required. It's default behavior is to do nothing.
+   *
+   * Similar to the method above, when a Ball-border collision occurs, the Balls position and its overlapping time
+   * is taken into consideration, and its position is set to a different position. However, this brings up issues for
+   * sub-classes. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
+   * However, Ball positions are never set to the position where the collision actually occurred, and this separation
+   * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
+   *
+   * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
+   * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
+   * collision is detected and passes necessary information to determine when and where a collision occurred.
+   * @protected
+   *
+   * @param {Ball} ball - the Ball involved in the collision.
+   * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
+   * @param {number} overlappedTime - the time the Ball has been overlapping the border.
+   */
+  registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
+    /** Do nothing. Override for functionality. */
   }
 
   /*----------------------------------------------------------------------------*
@@ -187,11 +227,8 @@ class CollisionEngine {
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
-    // Set the position of the balls to the contactPosition.
-    if ( this.ballSystem.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
-      ball1.path.updatePath( r1, this.elapsedTimeProperty.value - overlappedTime );
-      ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
-    }
+    // Register the exact contact position of the collision for sub-classes.
+    this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
 
     // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
     ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
@@ -303,12 +340,8 @@ class CollisionEngine {
           }
         }
 
-        //----------------------------------------------------------------------------------------
-
-        // Set the position of the ball to the contactPosition.
-        if ( this.ballSystem.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
-          ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
-        }
+        // Register the exact contact position of the collision for sub-classes.
+        this.registerExactBallToBorderCollision( ball, contactPosition, overlappedTime );
 
         // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
         ball.position = contactPosition.plus( ball.velocity.times( overlappedTime ) );
