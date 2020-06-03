@@ -1,13 +1,28 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * CollisionEngine handles collision all detection and responses for all screens within a PlayArea. Our collision
- * model involves rigid bodies. Once a collision is detected, the appropriate ball models are set to update their
- * new velocity and position.
+ * CollisionEngine handles all collision detection and responses within a PlayArea. It is the physics engine for
+ * all screens in the 'Collision Lab' simulation.
  *
- * The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
- * standard rigid-body collision model as described in
- * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+ * ## Collision detection:
+ *   - The CollisionEngine deals with two types of collisions, ball-to-ball and ball-to-border. Collisions are detected
+ *     after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps the border
+ *     of the PlayArea.
+ *
+ *   - Since there are only a maximum of 5 Balls in a PlayArea at a time, there are a maximum of 10 unique pairs of
+ *     Balls to check, so spatial partitioning collision detection is not used.
+ *
+ *   - Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
+ *     have escaped the PlayArea when its border doesn't reflect.
+ *
+ * ## Collision response:
+ *   - Collision response determines what affect a collision has on a Balls motion. When a collision has been detected,
+ *     it is processed by first analytically determining the time of impact (TOI). Using the TOI, the collision is
+ *     reconstructed to the exact moment of contact to more accurately simulate colliding balls.
+ *
+ *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
+ *     standard rigid-body collision model as described in
+ *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
  * @author Brandon Li
  * @author Martin Veillette
@@ -123,7 +138,7 @@ class CollisionEngine {
     const v2t = normalizedDeltaR.crossScalar( v2 );
 
     let e = this.playArea.elasticity;
-    if ( dt < 0 && this.playArea.elasticity > 0 ) { e = 1 / this.playArea.elasticity; }
+    if ( dt < 0 && e > 0 ) { e = 1 / e; }
 
     // Normal components of velocities after collision (P for prime = after)
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
