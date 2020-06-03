@@ -298,7 +298,7 @@ class CollisionEngine {
           }
           if ( !this.playArea.containsBallVertically( ball ) ) {
 
-            // Top and Bottom Border wall collisions incur a flip in horizontal velocity.
+            // Top and Bottom Border wall collisions incur a flip in vertical velocity.
             ball.yVelocity *= -elasticity;
           }
         }
