@@ -6,6 +6,8 @@
  * Mainly responsible for:
  *   - Time Control Properties and stepping the simulation.
  *   - Instantiation of a single PlayArea.
+ *   - Instantiation of a single BallSystem.
+ *   - Instantiation of a MomentaDiagram.
  *   - Instantiation of the CollisionEngine collision engine.
  *
  * @author Brandon Li
@@ -22,7 +24,9 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
+import BallSystem from './BallSystem.js';
 import CollisionEngine from './CollisionEngine.js';
+import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
@@ -64,21 +68,25 @@ class CollisionLabModel {
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {PlayArea} - create the PlayArea of the screen.
-    this.playArea = new PlayArea( initialBallStates, options.playAreaOptions );
+    this.playArea = new PlayArea( options.playAreaOptions );
 
-    // @private {CollisionEngine} - the CollisionEngine of the simulation.
-    this.collisionDetector = new CollisionEngine( this.playArea, this.elapsedTimeProperty );
+    // @public (read-only) {BallSystem} - create the BallSystem of the screen.
+    this.ballSystem = new BallSystem( initialBallStates, this.playArea );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
     this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.ballSystem.balls, {
       dimensions: this.playArea.dimensions
     } );
 
-    // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
-    // restart() call. Link is never removed and lasts for the lifetime of the simulation.
-    this.isPlayingProperty.lazyLink( isPlaying => {
-      isPlaying && this.playArea.ballSystem.saveBallStates();
-    } );
+    //----------------------------------------------------------------------------------------
+
+    // @private {CollisionEngine} - the CollisionEngine of the simulation.
+    this.collisionDetector = new CollisionEngine( this.playArea,
+      this.ballSystem,
+      this.elasticityPercentProperty,
+      this.inelasticCollisionTypeProperty,
+      this.elapsedTimeProperty
+    );
   }
 
   /**
