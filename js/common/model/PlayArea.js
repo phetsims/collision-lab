@@ -142,7 +142,7 @@ class PlayArea {
     // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled by the user. Use
     //                                       the userControlledProperty of all possible Balls as dependencies to update
     //                                       but only the balls in the play-area are used in the calculation.
-    this.playAreaUserControlledProperty = new DerivedProperty(
+    this.ballSystemUserControlledProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.userControlledProperty ),
       () => this.ballSystem.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
@@ -151,7 +151,7 @@ class PlayArea {
     // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
     // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
     // the sim as PlayAreas are never disposed.
-    this.playAreaUserControlledProperty.lazyLink( playAreaUserControlled => {
+    this.ballSystemUserControlledProperty.lazyLink( playAreaUserControlled => {
       !playAreaUserControlled && this.ballSystem.clearCenterOfMassPath();
     } );
   }

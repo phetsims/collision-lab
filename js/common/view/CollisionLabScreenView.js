@@ -104,7 +104,7 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea.elasticityPercentProperty,
       model.elapsedTimeProperty,
       model.timeSpeedProperty,
-      model.playArea.playAreaUserControlledProperty,
+      model.playArea.ballSystemUserControlledProperty,
       model.stepBackward.bind( model ),
       model.stepForward.bind( model )
     );
@@ -140,7 +140,7 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.playArea.isConstantSizeProperty,
+      model.playArea.isBallConstantSizeProperty,
       merge( {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         top: SCREEN_VIEW_Y_MARGIN

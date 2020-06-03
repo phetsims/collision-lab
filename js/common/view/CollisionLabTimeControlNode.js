@@ -17,12 +17,12 @@ class CollisionLabTimeControlNode extends TimeControlNode {
   /**
    * @param {Property.<boolean>} isPlayingProperty
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
-   * @param {Property.<boolean>} playAreaUserControlledProperty
+   * @param {Property.<boolean>} ballSystemUserControlledProperty
    * @param {Function} stepBackward
    * @param {Function} stepForward
    * @param {Object} [options]
    */
-  constructor( isPlayingProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, playAreaUserControlledProperty,
+  constructor( isPlayingProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, ballSystemUserControlledProperty,
                stepBackward, stepForward, options ) {
 
 
@@ -77,7 +77,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // Flag that indicates whether the sim was playing before it was programmatically paused.
     let wasPlaying = isPlayingProperty.value;
 
-    playAreaUserControlledProperty.link( playAreaUserControlled => {
+    ballSystemUserControlledProperty.link( playAreaUserControlled => {
       // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
       // See https://github.com/phetsims/collision-lab/issues/49.
       if ( playAreaUserControlled ) {
