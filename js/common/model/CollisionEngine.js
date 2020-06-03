@@ -5,13 +5,11 @@
  * all screens in the 'Collision Lab' simulation.
  *
  * ## Collision detection:
- *   - The CollisionEngine deals with two types of collisions, ball-to-ball and ball-to-border. Collisions are detected
- *     after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps the border
- *     of the PlayArea.
- *
+ *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Collisions
+ *     are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
+ *     with the border of the PlayArea.
  *   - Since there are only a maximum of 5 Balls in a PlayArea at a time, there are a maximum of 10 unique pairs of
- *     Balls to check, so spatial partitioning collision detection is not used.
- *
+ *     Balls to check, so a spatial partitioning collision detection optimization is not used.
  *   - Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
  *     have escaped the PlayArea when its border doesn't reflect.
  *
@@ -19,7 +17,6 @@
  *   - Collision response determines what affect a collision has on a Balls motion. When a collision has been detected,
  *     it is processed by first analytically determining the time of impact (TOI). Using the TOI, the collision is
  *     reconstructed to the exact moment of contact to more accurately simulate colliding balls.
- *
  *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
  *     standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
