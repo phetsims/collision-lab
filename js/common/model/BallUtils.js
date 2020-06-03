@@ -145,6 +145,25 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     return 0.5 * ball.mass * ball.velocity.magnitudeSquared;
+  },
+
+  /**
+   * Returns a boolean that indicates if the passed-in balls are physically intersecting, meaning they are colliding.
+   * @public
+   *
+   * @param {Ball} ball1
+   * @param {Ball} ball2
+   */
+  areBallsColliding( ball1, ball2 ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
+
+    // Use a distance approach to detect if the Balls are physically overlapping.
+    const distanceBetweenBalls = ball1.position.distance( ball2.position );
+    const distanceThreshold = ball1.radius + ball2.radius;
+
+    // If the distance between the Balls is less or equal to than the sum of the radii, they are overlapping.
+    return distanceBetweenBalls <= distanceThreshold;
   }
 };
 

@@ -15,8 +15,8 @@
  *
  * ## Collision response:
  *   - Collision response determines what affect a collision has on a Balls motion. When a collision has been detected,
- *     it is processed by first analytically determining the time of impact (TOI). Using the TOI, the collision is
- *     reconstructed to the exact moment of contact to more accurately simulate colliding balls.
+ *     it is processed by first analytically determining the how long the Balls have been overlapping. Using this time,
+ *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls.
  *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
  *     standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
@@ -25,6 +25,7 @@
  * @author Martin Veillette
  */
 
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
@@ -52,8 +53,22 @@ class CollisionEngine {
     // @private {BallSystem} - reference to the passed-in BallSystem.
     this.ballSystem = ballSystem;
 
-    // @private {PRoperty.<number>} - reference to the passed-in elapsedTimeProperty.
+    // @private {Property.<number>} - reference to the passed-in elapsedTimeProperty.
     this.elapsedTimeProperty = elapsedTimeProperty;
+
+    //----------------------------------------------------------------------------------------
+
+    // @private {Object} - mutable vectors, reused in critical code for a slight performance optimization.
+    this.mutableVectors = {
+      deltaR: new Vector2( 0, 0 ),
+      deltaV: new Vector2( 0, 0 ),
+
+
+      tangent: new Vector2( 0, 0 ),
+      relativeVelocity: new Vector2( 0, 0 ),
+      pointOnLine: new Vector2( 0, 0 ),
+      reflectedPoint: new Vector2( 0, 0 )
+    };
   }
 
   /**
@@ -63,8 +78,8 @@ class CollisionEngine {
    * @param {number} dt - the time interval since the last step, in seconds.
    */
   step( dt ) {
-    this.handleAllBallToBallCollisions( dt );
-    this.handleAllBallToBorderCollisions( dt );
+    this.handleBallToBallCollisions( dt );
+    this.handleBallToBorderCollisions( dt );
   }
 
   /*----------------------------------------------------------------------------*
@@ -72,16 +87,17 @@ class CollisionEngine {
    *----------------------------------------------------------------------------*/
 
   /**
-   * A time-discretization approach to detecting and processing ball-ball collisions within a system.
-   * This checks to see if a collision has occurred between any two balls in the last time step. If Balls have collided,
-   * which is detected if any two balls are on top of each other, then the collision is processed using `collideBalls`.
+   * A time-discretization approach to detecting and processing ball-ball collisions within the BallSystem.Collisions
+   * are detected after the collision occurs by checking if any two Balls physically overlap and processed using the
+   * collideBalls() method.
+   *
+   * Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
+   * have escaped the PlayArea when its border doesn't reflect. See https://en.wikipedia.org/wiki/Collision_detection.
+   *
    * @public
-   *
-   * See https://en.wikipedia.org/wiki/Collision_detection
-   *
    * @param {number} dt - time interval since last step, in seconds.
    */
-  handleAllBallToBallCollisions( dt ) {
+  handleBallToBallCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
@@ -114,7 +130,7 @@ class CollisionEngine {
 
     // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
     // when the balls first collided. Use the overlapped time to find the exact collision positions.
-    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, dt );
+    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, dt < 0 );
 
     // Get exact positions when the Balls collided by rewinding.
     const r1 = BallUtils.computeBallPosition( ball1, -overlappedTime );
@@ -170,65 +186,49 @@ class CollisionEngine {
   }
 
   /**
-   * Reconstructs ballistic motion of two colliding Balls that are overlapping to compute the elapsed time that the
-   * 2 colliding Balls were overlapping each other.
-   *
-   * The contact time is positive if the contact time occurred in the past and negative if the contact time is in the
-   * future (which may happened if the simulation is ran in reverse).
+   * Reconstructs ballistic motion of two colliding Balls that are currently overlapping to compute the elapsed time
+   * from the when the Balls first exactly colliding to their overlapped positions. The contact time is positive if the
+   * collision occurred in the past and negative if the contact time is in the future (which happens if the simulation
+   * is ran in reverse).
    * @private
    *
    * @param {Ball} ball1 - the first Ball involved in the collision
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {number} dt  - time interval since last step, in seconds.
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   *
    * @returns {number} contactTime - in seconds
    */
-  getBallToBallCollisionOverlapTime( ball1, ball2, dt ) {
+  getBallToBallCollisionOverlapTime( ball1, ball2, isReversing ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
+    assert && assert( BallUtils.areBallsColliding( ball1, ball2 ), 'balls must be intersecting' );
 
-    let contactTime;
+    /*----------------------------------------------------------------------------*
+     * This calculations comes from the known fact that when the Balls are exactly colliding,
+     * their distance is exactly equal to the sum of their radii.
+     *
+     * Documenting the derivation was beyond the scope of code comments. Please reference
+     * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
+     *----------------------------------------------------------------------------*/
 
-    // Get the position of the Balls in the last time step.
-    const r1 = BallUtils.computeBallPosition( ball1, -dt );
-    const r2 = BallUtils.computeBallPosition( ball2, -dt );
+    const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
+    const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
+    const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
-    // Convenience reference to the velocities of the Balls.
-    const v1 = ball1.velocity;
-    const v2 = ball2.velocity;
+    // Solve for the roots of the quadratic outlined in the document above.
+    const possibleRoots = Utils.solveQuadraticRootsReal(
+                            deltaV.magnitudeSquared,
+                            -2 * deltaR.dot( deltaV ),
+                            deltaR.magnitudeSquared - sumOfRadiiSquared );
 
-    const deltaR = r2.minus( r1 );
-    const deltaV = v2.minus( v1 );
+    assert && assert( possibleRoots && possibleRoots.length <= 2 && possibleRoots.length >= 0 );
 
-    // The square of center-to-center separation of balls at contact.
-    const SRSquared = Math.pow( ball1.radius + ball2.radius, 2 );
+    // Pick the positive root for forward stepping and the negative root if isReversing is true.
+    const contactTime = _.find( possibleRoots, root => isReversing ? root < 0 : root >= 0 ) || 1;
 
-    const deltaVSquared = deltaV.magnitudeSquared;
-    const deltaRDotDeltaV = deltaR.dot( deltaV );
-    const deltaRSquared = deltaR.magnitudeSquared;
-
-    const underSquareRoot = deltaRDotDeltaV * deltaRDotDeltaV - deltaVSquared * ( deltaRSquared - SRSquared );
-
-    // If the collision is super slow, then set collision time equal to the half-way point since last time step
-    // of if tiny number precision causes number under square root to be negative.
-    if ( deltaVSquared < 1e-7 || underSquareRoot < 0 ) {
-      contactTime = 0.5 * ( dt );
-    }
-    else {
-
-      // the time interval that the collision occurred after the previous time step
-      let deltaTimeCorrection;
-
-      if ( dt < 0 ) {
-        deltaTimeCorrection = ( -deltaRDotDeltaV + Math.sqrt( underSquareRoot ) ) / deltaVSquared;
-      }
-      else {
-        deltaTimeCorrection = ( -deltaRDotDeltaV - Math.sqrt( underSquareRoot ) ) / deltaVSquared;
-      }
-      contactTime = dt - deltaTimeCorrection;
-    }
-
-    assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
+    assert && assert( isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ) );
     return contactTime;
   }
 
@@ -249,7 +249,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time interval since last step, in seconds.
    */
-  handleAllBallToBorderCollisions( dt ) {
+  handleBallToBorderCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Do nothing if the border doesn't reflect Balls, meaning there are no collisions involving the Border.
