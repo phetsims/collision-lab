@@ -21,6 +21,7 @@ import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
 import KeypadDialog from './KeypadDialog.js';
+import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
@@ -31,6 +32,7 @@ import RestartButton from './RestartButton.js';
 const MODEL_TO_VIEW_SCALE = 153; // meter to view coordinates (1 m = 200 coordinates)
 const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
 const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
+const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
 
 class CollisionLabScreenView extends ScreenView {
 
@@ -74,7 +76,7 @@ class CollisionLabScreenView extends ScreenView {
     );
     this.addChild( playAreaNode );
 
-    const ballSystemNode = new BallSystemNode( model.playArea.ballSystem,
+    const ballSystemNode = new BallSystemNode( model.ballSystem,
         model.playArea,
         viewProperties.valuesVisibleProperty,
         viewProperties.velocityVectorVisibleProperty,
@@ -84,9 +86,17 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( ballSystemNode );
 
 
+    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( model.ballSystem.totalKineticEnergyProperty,
+      viewProperties.kineticEnergyVisibleProperty, {
+        left: playAreaNode.left + KINETIC_ENERGY_DISPLAY_MARGIN,
+        bottom: playAreaNode.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
+      } );
+    this.addChild( kineticEnergyDisplay );
+
+
 
     if ( options.includePlayAreaControlSet ) {
-      const playAreaControlSet = new PlayAreaControlSet( model.playArea.numberOfBallsProperty, model.playArea.numberOfBallsRange, model.playArea.gridVisibleProperty, merge( {
+      const playAreaControlSet = new PlayAreaControlSet( model.ballSystem.numberOfBallsProperty, model.ballSystem.numberOfBallsRange, model.playArea.gridVisibleProperty, merge( {
         left: playAreaNode.right + 5,
         top: modelViewTransform.modelToViewY( model.playArea.bounds.maxY ) + 5
       }, options.playAreaControlSetOptions ) );
@@ -104,7 +114,7 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea.elasticityPercentProperty,
       model.elapsedTimeProperty,
       model.timeSpeedProperty,
-      model.playArea.ballSystemUserControlledProperty,
+      model.ballSystem.ballSystemUserControlledProperty,
       model.stepBackward.bind( model ),
       model.stepForward.bind( model )
     );
@@ -135,12 +145,12 @@ class CollisionLabScreenView extends ScreenView {
 
 
     const playAreaControlPanel = new CollisionLabControlPanel( viewProperties,
-      model.playArea.centerOfMassVisibleProperty,
-      model.playArea.pathVisibleProperty,
+      model.ballSystem.centerOfMassVisibleProperty,
+      model.ballSystem.pathVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.playArea.isBallConstantSizeProperty,
+      model.ballSystem.isBallConstantSizeProperty,
       merge( {
         right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
         top: SCREEN_VIEW_Y_MARGIN
@@ -148,7 +158,7 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( playAreaControlPanel );
 
 
-    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.playArea.ballSystem.balls, {
+    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.ballSystem.balls, {
       dimensions: model.dimensions,
       centerX: playAreaControlPanel.centerX,
       top: playAreaControlPanel.bottom + 8
@@ -158,7 +168,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const keypad = new KeypadDialog();
 
-    const ballValuesDisplay = new BallValuesPanel( model.playArea.ballSystem.balls, viewProperties.moreDataVisibleProperty, keypad, {
+    const ballValuesDisplay = new BallValuesPanel( model.ballSystem.balls, viewProperties.moreDataVisibleProperty, keypad, {
       dimensions: model.dimensions
     } );
     this.addChild( ballValuesDisplay );

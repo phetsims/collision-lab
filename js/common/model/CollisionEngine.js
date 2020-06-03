@@ -17,6 +17,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
+import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import PlayArea from './PlayArea.js';
@@ -25,14 +26,19 @@ class CollisionEngine {
 
   /**
    * @param {PlayArea} playArea
+   * @param {BallSystem} ballSystem
    * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( playArea, elapsedTimeProperty ) {
+  constructor( playArea, ballSystem, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && CollisionLabUtils.assertPropertyTypeof( elapsedTimeProperty, 'number' );
 
     // @private {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
+
+    // @private {BallSystem} - reference to the passed-in BallSystem.
+    this.ballSystem = ballSystem;
 
     // @private {PRoperty.<number>} - reference to the passed-in elapsedTimeProperty.
     this.elapsedTimeProperty = elapsedTimeProperty;
@@ -67,7 +73,7 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
-    CollisionLabUtils.forEachPossiblePair( this.playArea.ballSystem.balls, ( ball1, ball2 ) => {
+    CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
       // Use a distance approach to detect if the Balls are physically overlapping, meaning they are colliding.
@@ -116,14 +122,14 @@ class CollisionEngine {
     const v1t = normalizedDeltaR.crossScalar( v1 );
     const v2t = normalizedDeltaR.crossScalar( v2 );
 
-    let e = this.elasticity;
-    if ( dt < 0 && this.elasticity > 0 ) { e = 1 / this.elasticity; }
+    let e = this.playArea.elasticity;
+    if ( dt < 0 && this.playArea.elasticity > 0 ) { e = 1 / this.playArea.elasticity; }
 
     // Normal components of velocities after collision (P for prime = after)
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
-    const isSticky = this.elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
+    const isSticky = this.playArea.elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK;
     const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
@@ -141,7 +147,7 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Set the position of the balls to the contactPosition.
-    if ( this.playArea.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
+    if ( this.ballSystem.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
       ball1.path.updatePath( r1, this.elapsedTimeProperty.value - overlappedTime );
       ball2.path.updatePath( r2, this.elapsedTimeProperty.value - overlappedTime );
     }
@@ -237,12 +243,12 @@ class CollisionEngine {
     // Do nothing if the border doesn't reflect Balls, meaning there are no collisions involving the Border.
     if ( !this.playArea.reflectingBorderProperty.value ) { return; }
 
-    let elasticity = this.elasticity;
-    if ( dt < 0 && this.elasticity > 0 ) {
-      elasticity = 1 / this.elasticity;
+    let elasticity = this.playArea.elasticity;
+    if ( dt < 0 && this.playArea.elasticity > 0 ) {
+      elasticity = 1 / this.playArea.elasticity;
     }
 
-    this.playArea.ballSystem.balls.forEach( ball => {
+    this.ballSystem.balls.forEach( ball => {
 
       // If the Ball is outside the bounds of the PlayArea, it is now colliding with the walls.
       if ( ball.left <= this.playArea.bounds.minX ||
@@ -258,7 +264,7 @@ class CollisionEngine {
         const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
-        if ( elasticity === 0 && this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionTypes.STICK ) {
+        if ( elasticity === 0 && this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {
 
           // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
           ball.velocity = Vector2.ZERO;
@@ -279,7 +285,7 @@ class CollisionEngine {
         //----------------------------------------------------------------------------------------
 
         // Set the position of the ball to the contactPosition.
-        if ( this.playArea.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
+        if ( this.ballSystem.pathVisibleProperty.value && this.elapsedTimeProperty.value - overlappedTime >= 0 && overlappedTime !== 0 ) {
           ball.path.updatePath( contactPosition, this.elapsedTimeProperty.value - overlappedTime );
         }
 
@@ -323,16 +329,6 @@ class CollisionEngine {
     assert && assert( Number.isFinite( contactTime ), `contact time is not finite: ${contactTime}` );
     return contactTime;
   }
-
-  //----------------------------------------------------------------------------------------
-
-  /**
-   * Convenience method to get the elasticity of all collisions, as a decimal.
-   * @public
-   *
-   * @returns {number} elasticity
-   */
-  get elasticity() { return this.playArea.elasticityPercentProperty.value / 100; }
 }
 
 collisionLab.register( 'CollisionEngine', CollisionEngine );

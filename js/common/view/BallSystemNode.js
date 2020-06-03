@@ -65,16 +65,16 @@ class BallSystemNode extends Node {
 
     // Loop through each possible Ball. These Balls are NOT necessarily the Balls currently within the BallSystem,
     // so we are responsible for updating its visibility based on whether or not it is the system.
-    playArea.prepopulatedBalls.forEach( ball => {
+    ballSystem.prepopulatedBalls.forEach( ball => {
 
       // Create the corresponding BallNode for each prepopulatedBall.
       const ballNode = new BallNode( ball,
         valuesVisibleProperty,
         velocityVectorVisibleProperty,
         momentumVectorVisibleProperty,
-        playArea.isBallConstantSizeProperty,
+        ballSystem.isBallConstantSizeProperty,
         isPlayingProperty,
-        playArea.pathVisibleProperty,
+        ballSystem.pathVisibleProperty,
         modelViewTransform );
 
       // Add the BallNode to the container.
@@ -82,7 +82,7 @@ class BallSystemNode extends Node {
 
       // Observe when Balls are added or removed from the BallSystem, meaning its visibility could change if it is
       // added or removed from the system. It should only be visible if the ball is in the BallSystem.
-      playArea.numberOfBallsProperty.link( () => {
+      ballSystem.numberOfBallsProperty.link( () => {
         ballNode.visible = ballSystem.balls.contains( ball );
       } );
 
@@ -92,8 +92,8 @@ class BallSystemNode extends Node {
 
     // Create the corresponding view for the Center of Mass.
     const centerOfMassNode = new CenterOfMassNode( ballSystem.centerOfMass,
-      playArea.centerOfMassVisibleProperty,
-      playArea.pathVisibleProperty,
+      ballSystem.centerOfMassVisibleProperty,
+      ballSystem.pathVisibleProperty,
       modelViewTransform );
 
     // Set the children of this Node to the correct rendering order.

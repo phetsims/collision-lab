@@ -21,12 +21,10 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from '../model/PlayArea.js';
-import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
 const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
-const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
 const MAJOR_GRID_LINE_WIDTH = 2; // view units
 const MINOR_GRID_LINE_WIDTH = 1; // view units
 
@@ -68,11 +66,6 @@ class PlayAreaNode extends Node {
       stroke: playArea.dimensions === 1 ? CollisionLabColors.MAJOR_GRID_LINE_COLOR : CollisionLabColors.MINOR_GRID_LINE_COLOR
     } );
 
-    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( playArea.ballSystem.totalKineticEnergyProperty,
-      kineticEnergyVisibleProperty, {
-        left: background.left + KINETIC_ENERGY_DISPLAY_MARGIN,
-        bottom: background.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
-      } );
 
     const border = new Rectangle( playAreaViewBounds, {
       stroke: CollisionLabColors.GRID_BORDER_COLOR,
@@ -84,7 +77,6 @@ class PlayAreaNode extends Node {
       background,
       minorGridLines,
       majorGridLines,
-      kineticEnergyDisplay,
       border
     ];
   }

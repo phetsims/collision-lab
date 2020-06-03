@@ -50,6 +50,9 @@ class BallSystem {
 
     }, options );
 
+    // @public (read-only) {Range} - reference to the range of the number of balls.
+    this.numberOfBallsRange = options.numberOfBallsRange;
+
     //----------------------------------------------------------------------------------------
 
     // @public {BooleanProperty} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
@@ -152,7 +155,7 @@ class BallSystem {
     //                                       but only the Balls in the system are used in the calculation.
     this.ballSystemUserControlledProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.userControlledProperty ),
-      () => this.ballSystem.balls.some( ball => ball.userControlledProperty.value ), {
+      () => this.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
       } );
 

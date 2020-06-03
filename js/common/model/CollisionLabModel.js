@@ -26,7 +26,6 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import BallSystem from './BallSystem.js';
 import CollisionEngine from './CollisionEngine.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
@@ -74,19 +73,14 @@ class CollisionLabModel {
     this.ballSystem = new BallSystem( initialBallStates, this.playArea );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
-    this.momentaDiagram = new MomentaDiagram( this.playArea.prepopulatedBalls, this.playArea.ballSystem.balls, {
+    this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls, this.ballSystem.balls, {
       dimensions: this.playArea.dimensions
     } );
 
     //----------------------------------------------------------------------------------------
 
     // @private {CollisionEngine} - the CollisionEngine of the simulation.
-    this.collisionDetector = new CollisionEngine( this.playArea,
-      this.ballSystem,
-      this.elasticityPercentProperty,
-      this.inelasticCollisionTypeProperty,
-      this.elapsedTimeProperty
-    );
+    this.collisionEngine = new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 
   /**
@@ -98,6 +92,7 @@ class CollisionLabModel {
     this.elapsedTimeProperty.reset();
     this.timeSpeedProperty.reset();
     this.playArea.reset();
+    this.ballSystem.reset();
     this.momentaDiagram.reset();
   }
 
@@ -110,7 +105,7 @@ class CollisionLabModel {
   restart() {
     this.isPlayingProperty.value = false;
     this.elapsedTimeProperty.reset();
-    this.playArea.ballSystem.restart();
+    this.ballSystem.restart();
   }
 
   /**
@@ -153,10 +148,10 @@ class CollisionLabModel {
     /**
      * The position of the balls are:
      * (1) updated based on the ballistic motion of individual balls
-     * (2) corrected through collisionDetector, to take into account collisions between balls and walls
+     * (2) corrected through collisionEngine, to take into account collisions between balls and walls
      */
-    this.playArea.step( dt, this.elapsedTimeProperty.value );
-    this.collisionDetector.step( dt );
+    this.ballSystem.step( dt, this.elapsedTimeProperty.value );
+    this.collisionEngine.step( dt );
   }
 
   /**
