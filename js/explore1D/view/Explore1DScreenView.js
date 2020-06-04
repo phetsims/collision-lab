@@ -31,6 +31,7 @@ class Explore1DScreenView extends CollisionLabScreenView {
     } );
   }
 
+  // @protected
   createControlPanel( viewProperties, model ) {
     return new CollisionLabControlPanel( viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,

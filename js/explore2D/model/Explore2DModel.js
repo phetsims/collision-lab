@@ -34,10 +34,12 @@ class Explore2DModel extends CollisionLabModel {
     super( INITIAL_BALL_STATES, tandem );
   }
 
+  // @protected
   createCollisionEngine( playArea, ballSystem ) {
     return new Explore2DCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 
+  // @protected
   createBallSystem( initialBallStates, playArea ) {
     return new Explore2DBallSystem( INITIAL_BALL_STATES, playArea );
   }

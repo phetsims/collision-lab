@@ -168,6 +168,7 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( moreDataCheckbox );
   }
 
+  // @protected
   createControlPanel( viewProperties, model ) {
     return new CollisionLabControlPanel( viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
@@ -177,6 +178,7 @@ class CollisionLabScreenView extends ScreenView {
       model.ballSystem.isBallConstantSizeProperty );
   }
 
+  // @protected
   createBallSystemNode( model, viewProperties, modelViewTransform ) {
     return new BallSystemNode( model.ballSystem,
         model.playArea,

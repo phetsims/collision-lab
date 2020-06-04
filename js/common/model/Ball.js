@@ -38,7 +38,7 @@ class Ball {
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
    * @param {Bounds} playAreaBounds - the bounding Box of the entire Ball if the PlayArea's border doesn't reflect.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the PlayArea's grid is visible.
-   * @param {number} dimensions - the dimensions of the PlayArea, used for snap-to-grid purposes. Either 1 or 2.
+   * @param {number} dimensions - the dimensions of the PlayArea, used for snap-to-grid differences. Either 1 or 2.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
@@ -54,7 +54,7 @@ class Ball {
     //----------------------------------------------------------------------------------------
 
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
-    //                            individually display each component and to allow the user to individually manipulate.
+    //                            individually display each component and to allow the user to manipulate separately.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 

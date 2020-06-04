@@ -89,10 +89,11 @@ class CollisionLabModel {
     } );
   }
 
+  // @protected
   createCollisionEngine( playArea, ballSystem ) {
     return new CollisionEngine( this.playArea, this.ballSystem );
   }
-
+  // @protected
   createBallSystem( initialBallStates, playArea ) {
     return new BallSystem( initialBallStates, playArea );
   }

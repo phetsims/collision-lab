@@ -25,7 +25,7 @@ class Explore2DScreenView extends CollisionLabScreenView {
     super( model, tandem );
   }
 
-
+  // @protected
   createControlPanel( viewProperties, model ) {
     return new Explore2DControlPanel( viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
@@ -36,6 +36,7 @@ class Explore2DScreenView extends CollisionLabScreenView {
       model.ballSystem.isBallConstantSizeProperty );
   }
 
+  // @protected
   createBallSystemNode( model, viewProperties, modelViewTransform ) {
     return new Explore2DBallSystemNode( model.ballSystem,
         model.playArea,
