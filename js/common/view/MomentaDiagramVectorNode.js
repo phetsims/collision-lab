@@ -101,7 +101,7 @@ class MomentaDiagramVectorNode extends Node {
         const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
 
         // Position the Label, which depends on the dimensions and whether or not this the total momenta Vector.
-        if ( options.dimensions === 2 || options.isTotalMomentaVector ) {
+        if ( options.dimensions === 2 ) {
 
           // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
           const yFlip = ( momentaDiagramVector.components.y < 0 ) ? Math.PI : 0;
@@ -112,6 +112,11 @@ class MomentaDiagramVectorNode extends Node {
 
           // Position the label.
           labelNode.center = centerViewPosition.plus( offset );
+        }
+        else if ( options.isTotalMomentaVector ) {
+
+          // Position the label below the Momenta Vector.
+          labelNode.centerTop = centerViewPosition.plusXY( 0, adjustedOffset );
         }
         else {
 
