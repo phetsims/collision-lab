@@ -104,23 +104,6 @@ const CollisionLabUtils = {
       }
     } );
     return isSorted;
-  },
-
-  /*----------------------------------------------------------------------------*
-   * Type Validation Utilities
-   *----------------------------------------------------------------------------*/
-
-  /**
-   * Indicates if every element of a array, or an ObservableArray, is of a given type. Used for type-checking arguments.
-   * @public
-   *
-   * @param {ObservableArray.<*>|*[]} collection
-   * @param {constructor} type
-   * @returns {boolean}
-   */
-  consistsOf( collection, type ) {
-    assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
-    return !collection.some( value => !( value instanceof type ) );
   }
 };
 

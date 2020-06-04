@@ -23,8 +23,8 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallState from './BallState.js';
 import CenterOfMass from './CenterOfMass.js';
@@ -38,7 +38,7 @@ class BallSystem {
    * @param {Object} [options]
    */
   constructor( initialBallStates, playArea, options ) {
-    assert && assert( CollisionLabUtils.consistsOf( initialBallStates, BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
     assert && assert( !options || !options.numberOfBallsRange || options.numberOfBallsRange instanceof RangeWithValue );

@@ -18,11 +18,11 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import BallSystem from './BallSystem.js';
 import CollisionEngine from './CollisionEngine.js';
@@ -40,7 +40,7 @@ class CollisionLabModel {
    * @param {Object} [options]
    */
   constructor( initialBallStates, tandem, options ) {
-    assert && assert( CollisionLabUtils.consistsOf( initialBallStates, BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 

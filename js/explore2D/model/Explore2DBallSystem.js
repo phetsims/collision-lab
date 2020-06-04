@@ -15,8 +15,8 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import PlayArea from '../../common/model/PlayArea.js';
@@ -30,7 +30,7 @@ class Explore2DBallSystem extends BallSystem {
    * @param {Object} [options]
    */
   constructor( initialBallStates, playArea, options ) {
-    assert && assert( CollisionLabUtils.consistsOf( initialBallStates, BallState ), `invalid initialBallStates: ${ initialBallStates }` );
+    assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
