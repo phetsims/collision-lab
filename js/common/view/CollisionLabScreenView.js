@@ -76,13 +76,7 @@ class CollisionLabScreenView extends ScreenView {
     );
     this.addChild( playAreaNode );
 
-    const ballSystemNode = new BallSystemNode( model.ballSystem,
-        model.playArea,
-        viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVectorVisibleProperty,
-        viewProperties.momentumVectorVisibleProperty,
-        model.isPlayingProperty,
-        modelViewTransform );
+    const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
     this.addChild( ballSystemNode );
 
 
@@ -144,17 +138,9 @@ class CollisionLabScreenView extends ScreenView {
     this.addChild( resetAllButton );
 
 
-    const playAreaControlPanel = new CollisionLabControlPanel( viewProperties,
-      model.ballSystem.centerOfMassVisibleProperty,
-      model.ballSystem.pathVisibleProperty,
-      model.playArea.reflectingBorderProperty,
-      model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.isBallConstantSizeProperty,
-      merge( {
-        right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
-        top: SCREEN_VIEW_Y_MARGIN
-      }, options.controlPanelOptions ) );
+    const playAreaControlPanel = this.createControlPanel( viewProperties, model );
+    playAreaControlPanel.right = this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN;
+    playAreaControlPanel.top = SCREEN_VIEW_Y_MARGIN;
     this.addChild( playAreaControlPanel );
 
 
@@ -180,6 +166,25 @@ class CollisionLabScreenView extends ScreenView {
       left: SCREEN_VIEW_X_MARGIN
     } );
     this.addChild( moreDataCheckbox );
+  }
+
+  createControlPanel( viewProperties, model ) {
+    return new CollisionLabControlPanel( viewProperties,
+      model.ballSystem.centerOfMassVisibleProperty,
+      model.playArea.reflectingBorderProperty,
+      model.playArea.elasticityPercentProperty,
+      model.playArea.inelasticCollisionTypeProperty,
+      model.ballSystem.isBallConstantSizeProperty );
+  }
+
+  createBallSystemNode( model, viewProperties, modelViewTransform ) {
+    return new BallSystemNode( model.ballSystem,
+        model.playArea,
+        viewProperties.valuesVisibleProperty,
+        viewProperties.velocityVectorVisibleProperty,
+        viewProperties.momentumVectorVisibleProperty,
+        model.isPlayingProperty,
+        modelViewTransform );
   }
 
   // @public

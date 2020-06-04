@@ -28,7 +28,6 @@ import Ball from '../model/Ball.js';
 import BallLabelsNode from './BallLabelsNode.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
-import PathCanvasNode from './PathCanvasNode.js';
 
 // constants
 const BALL_VELOCITY_VECTOR_OPTIONS = merge(
@@ -48,7 +47,6 @@ class BallNode extends Node {
    * @param {Property.<boolean>} momentumVectorVisibleProperty - is the momentum vector visible
    * @param {Property.<boolean>} constantDadiusProperty - is the grid on the playArea visible
    * @param {Property.<boolean>} isPlayingProperty - is simulation of the playArea on
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
@@ -58,7 +56,6 @@ class BallNode extends Node {
                momentumVectorVisibleProperty,
                isConstantSizeProperty,
                isPlayingProperty,
-               pathVisibleProperty,
                modelViewTransform,
                options ) {
 
@@ -173,13 +170,6 @@ class BallNode extends Node {
     } );
     this.addChild( ballValuesDisplay );
 
-    const pathNode = new PathCanvasNode( ball.path, pathVisibleProperty, modelViewTransform, {
-      pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
-    } );
-    this.addChild( pathNode );
-    pathNode.moveToBack();
-
-
     const ballPositionListener = position => {
       const viewPosition = modelViewTransform.modelToViewPosition( position );
 
@@ -217,7 +207,6 @@ class BallNode extends Node {
       ballMomentumVectorNode.dispose();
       ballValuesDisplay.dispose();
       fillProperty.dispose();
-      pathNode.dispose();
     };
   }
 

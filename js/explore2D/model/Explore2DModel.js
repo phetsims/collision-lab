@@ -10,7 +10,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
-import PlayArea from '../../common/model/PlayArea.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
 import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13

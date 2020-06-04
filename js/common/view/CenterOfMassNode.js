@@ -12,9 +12,7 @@ import Property from '../../../../axon/js/Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CenterOfMass from '../model/CenterOfMass.js';
-import PathCanvasNode from './PathCanvasNode.js';
 import XNode from './XNode.js';
 
 class CenterOfMassNode extends Node {
@@ -22,23 +20,17 @@ class CenterOfMassNode extends Node {
    *
    * @param {CenterOfMass} centerOfMass
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    */
-  constructor( centerOfMass, centerOfMassVisibleProperty, pathVisibleProperty, modelViewTransform ) {
+  constructor( centerOfMass, centerOfMassVisibleProperty, modelViewTransform ) {
 
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
     assert && assert( centerOfMassVisibleProperty instanceof BooleanProperty,
       `Invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2 );
     //----------------------------------------------------------------------------------------
+
     super();
-
-    const centerOfMassPathNode = new PathCanvasNode( centerOfMass.path, pathVisibleProperty, modelViewTransform, {
-      pathBaseColor: CollisionLabColors.CENTER_OF_MASS_COLORS.fill
-    } );
-    this.addChild( centerOfMassPathNode );
-
 
     const xNode = new XNode();
     this.addChild( xNode );
