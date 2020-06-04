@@ -10,7 +10,6 @@
  *   3. Velocity and Momentum vector Properties
  *   4. Radius Property
  *   5. Track the kinetic energy of the Ball
- *   6. Create the trailing path behind the Ball
  *   7. dragging, user-control, restarting, etc.
  *
  * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
@@ -29,7 +28,6 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
-import CollisionLabPath from './CollisionLabPath.js';
 import PlayArea from './PlayArea.js';
 
 class Ball {
@@ -38,17 +36,15 @@ class Ball {
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the PlayArea's grid is visible.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing path behind the Ball is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    * @param {Object} [options]
    */
-  constructor( initialBallState, isConstantSizeProperty, gridVisibleProperty, pathVisibleProperty, index, options ) {
+  constructor( initialBallState, isConstantSizeProperty, gridVisibleProperty, index, options ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && CollisionLabUtils.assertPropertyTypeof( isConstantSizeProperty, 'boolean' );
     assert && CollisionLabUtils.assertPropertyTypeof( gridVisibleProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( pathVisibleProperty, 'boolean' );
     assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -125,9 +121,6 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the Ball.
-    this.path = new CollisionLabPath( options.bounds, pathVisibleProperty );
-
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
@@ -146,12 +139,6 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the user is finished controlling the Ball, which clears the trailing 'Path'. Link lasts for the
-    // life-time of the sim as Balls are never disposed.
-    this.userControlledProperty.lazyLink( userControlled => {
-      !userControlled && this.path.clear();
-    } );
-
     // Ensure that our yPosition and yVelocity is always 0 for 1D screens.
     assert && this.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
     assert && this.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
@@ -168,7 +155,6 @@ class Ball {
     this.yVelocityProperty.reset();
     this.massProperty.reset();
     this.userControlledProperty.reset();
-    this.path.clear();
   }
 
   /**
@@ -181,7 +167,6 @@ class Ball {
     this.position = this.restartState.position;
     this.velocity = this.restartState.velocity;
     this.mass = this.restartState.mass;
-    this.path.clear();
   }
 
   /**
@@ -240,16 +225,6 @@ class Ball {
    */
   saveState() {
     this.restartState.saveState( this.position, this.velocity, this.mass );
-  }
-
-  /**
-   * Updates the path of the Ball. Mainly here to have parallel structure with CenterOfMass.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
-   */
-  updatePath( elapsedTime ) {
-    this.path.updatePath( this.position, elapsedTime );
   }
 
   /*----------------------------------------------------------------------------*

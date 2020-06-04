@@ -63,10 +63,6 @@ class BallSystem {
     //                             PathDataPoints are only recorded if this is true and are cleared when set to false.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball/COM trailing paths are visible. In the model since Ball
-    //                             PathDataPoints are only recorded if this is true and are cleared when set to false.
-    this.pathVisibleProperty = new BooleanProperty( false );
-
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation
     //                                 and are never disposed. However, these Balls are NOT necessarily the Balls
     //                                 currently within the system. This is just used so that the same Ball
@@ -75,7 +71,6 @@ class BallSystem {
       ballState,
       this.isBallConstantSizeProperty,
       playArea.gridVisibleProperty,
-      this.pathVisibleProperty,
       index + 1, {
         dimensions: playArea.dimensions,
         bounds: playArea.bounds
@@ -127,9 +122,7 @@ class BallSystem {
     this.centerOfMass = new CenterOfMass(
       this.prepopulatedBalls,
       this.balls,
-      playArea.bounds,
-      this.centerOfMassVisibleProperty,
-      this.pathVisibleProperty
+      this.centerOfMassVisibleProperty
     );
 
     // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
@@ -158,13 +151,6 @@ class BallSystem {
       () => this.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
       } );
-
-    // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
-    // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
-    // the sim as PlayAreas are never disposed.
-    this.ballSystemUserControlledProperty.lazyLink( playAreaUserControlled => {
-      !playAreaUserControlled && this.clearCenterOfMassPath();
-    } );
   }
 
   /**
@@ -172,22 +158,14 @@ class BallSystem {
    * @public
    *
    * @param {number} dt - in seconds
-   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
    */
-  step( dt, elapsedTime ) {
+  step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Step each Ball in the BallSystem.
     this.balls.forEach( ball => {
       ball.step( dt );
     } );
-
-    // Update the Paths inside the BallPaths only if paths are visible.
-    if ( this.pathVisibleProperty.value ) {
-      this.balls.forEach( ball => ball.updatePath( elapsedTime ) );
-      this.centerOfMass.updatePath( elapsedTime );
-    }
   }
 
   /**
@@ -198,8 +176,6 @@ class BallSystem {
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
     this.isBallConstantSizeProperty.reset();
     this.centerOfMassVisibleProperty.reset();
-    this.pathVisibleProperty.reset();
-    this.centerOfMass.reset();
   }
 
   /**
@@ -210,7 +186,6 @@ class BallSystem {
    */
   restart() {
     this.balls.forEach( ball => ball.restart() );
-    this.clearCenterOfMassPath();
   }
 
   /**
@@ -226,17 +201,6 @@ class BallSystem {
     this.balls.forEach( ball => {
       ball.saveState();
     } );
-  }
-
-  /**
-   * Clears the trailing 'Path' of the CenterOfMass.
-   * @public
-   *
-   * Normally called when the user is finished manipulating a Ball. See
-   * https://github.com/phetsims/collision-lab/issues/61.
-   */
-  clearCenterOfMassPath() {
-    this.centerOfMass.path.clear();
   }
 }
 collisionLab.register( 'BallSystem', BallSystem );

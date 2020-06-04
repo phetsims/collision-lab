@@ -70,7 +70,7 @@ class CollisionLabModel {
     this.playArea = new PlayArea( options.playAreaOptions );
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = new BallSystem( initialBallStates, this.playArea );
+    this.ballSystem = this.createBallSystem( initialBallStates, this.playArea );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
     this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls, this.ballSystem.balls, {
@@ -80,9 +80,16 @@ class CollisionLabModel {
     //----------------------------------------------------------------------------------------
 
     // @private {CollisionEngine} - the CollisionEngine of the simulation.
-    this.collisionEngine = new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem );
   }
 
+  createCollisionEngine( playArea, ballSystem ) {
+    return new CollisionEngine( this.playArea, this.ballSystem );
+  }
+
+  createBallSystem( initialBallStates, playArea ) {
+    return new BallSystem( initialBallStates, playArea );
+  }
   /**
    * Resets the model. Called when the reset-all button is pressed.
    * @public
@@ -150,7 +157,7 @@ class CollisionLabModel {
      * (1) updated based on the ballistic motion of individual balls
      * (2) corrected through collisionEngine, to take into account collisions between balls and walls
      */
-    this.ballSystem.step( dt, this.elapsedTimeProperty.value );
+    this.ballSystem.step( dt );
     this.collisionEngine.step( dt < 0 );
   }
 

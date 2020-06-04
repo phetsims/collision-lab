@@ -6,7 +6,6 @@
  * Primary responsibilities are:
  *  1. Track the position of the center of mass.
  *  2. Track the velocity of the center of mass.
- *  3. Create the trailing path behind the center of mass.
  *
  * CenterOfMasses are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -17,33 +16,24 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import isArray from '../../../../phet-core/js/isArray.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
-import CollisionLabPath from './CollisionLabPath.js';
 
 class CenterOfMass {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
    * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
-   * @param {Bounds2} playAreaBounds - the model Bounds of the PlayArea
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           This is needed for performance; the position, velocity,
-   *                                                           and path are only updated if this is true.
-   * @param {Property.<boolean>} pathVisibleProperty
+   *                                                            are only updated if this is true.
    */
-  constructor( prepopulatedBalls, balls, playAreaBounds, centerOfMassVisibleProperty, pathVisibleProperty ) {
+  constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty ) {
     assert && assert( isArray( prepopulatedBalls ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
-    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
-
-    // @public (read-only) {CollisionLabPath} - create the trailing 'Path' behind the CenterOfMass.
-    this.path = new CollisionLabPath( playAreaBounds, pathVisibleProperty );
 
     // @private {ObservableArray.<Ball>} - reference the balls that were passed in.
     this.balls = balls;
@@ -94,26 +84,6 @@ class CenterOfMass {
       }, {
         valueType: Vector2
       } );
-  }
-
-  /**
-   * Resets this CenterOfMass (particularly its trailing Path).
-   * @public
-   */
-  reset() {
-    this.path.clear();
-  }
-
-  /**
-   * Updates the path of the center of mass. If the path is not visible, nothing happens.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
-   */
-  updatePath( elapsedTime ) {
-    if ( this.centerOfMassVisibleProperty.value ) {
-      this.path.updatePath( this.position, elapsedTime );
-    }
   }
 
   /**
