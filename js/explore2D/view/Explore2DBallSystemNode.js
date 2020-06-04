@@ -5,11 +5,11 @@
  * @author Brandon Li
  */
 
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
-import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import Explore2DBallSystem from '../model/Explore2DBallSystem.js';
@@ -37,10 +37,10 @@ class Explore2DBallSystemNode extends BallSystemNode {
                options ) {
     assert && assert( ballSystem instanceof Explore2DBallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( valuesVisibleProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( velocityVectorVisibleProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( momentumVectorVisibleProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( isPlayingProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( valuesVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( velocityVectorVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 

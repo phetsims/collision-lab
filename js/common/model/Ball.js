@@ -23,9 +23,9 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
 import PlayArea from './PlayArea.js';
@@ -43,8 +43,8 @@ class Ball {
    */
   constructor( initialBallState, isConstantSizeProperty, gridVisibleProperty, index, options ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( isConstantSizeProperty, 'boolean' );
-    assert && CollisionLabUtils.assertPropertyTypeof( gridVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( gridVisibleProperty, 'boolean' );
     assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 

@@ -21,8 +21,8 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 import PlayArea from '../../common/model/PlayArea.js';
@@ -38,7 +38,7 @@ class Explore2DCollisionEngine extends CollisionEngine {
   constructor( playArea, ballSystem, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof Explore2DBallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && CollisionLabUtils.assertPropertyTypeof( elapsedTimeProperty, 'number' );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
     super( playArea, ballSystem );
 

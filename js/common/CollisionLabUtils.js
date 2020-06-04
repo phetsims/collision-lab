@@ -7,7 +7,6 @@
  */
 
 import ObservableArray from '../../../axon/js/ObservableArray.js';
-import Property from '../../../axon/js/Property.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import isArray from '../../../phet-core/js/isArray.js';
 import collisionLab from '../collisionLab.js';
@@ -122,40 +121,6 @@ const CollisionLabUtils = {
   consistsOf( collection, type ) {
     assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     return !collection.some( value => !( value instanceof type ) );
-  },
-
-  /**
-   * Asserts that an object is a Property whose value satisfies a specified predicate. Used for type-checking arguments.
-   * @public
-   *
-   * @param {Property.<*>} genericProperty
-   * @param {function(value:*):boolean} predicate
-   */
-  assertPropertyPredicate( genericProperty, predicate ) {
-    assert( genericProperty instanceof Property, `invalid Property: ${ genericProperty }` );
-    assert( predicate( genericProperty.value ), `invalid Property.value: ${ genericProperty.value }` );
-  },
-
-  /**
-   * Asserts that an object is a Property whose value is a specified primitive type. Used for type-checking arguments.
-   * @public
-   *
-   * @param {Property.<*>} genericProperty
-   * @param {string} type
-   */
-  assertPropertyTypeof( genericProperty, type ) {
-    CollisionLabUtils.assertPropertyPredicate( genericProperty, value => typeof value === type );
-  },
-
-  /**
-   * Asserts that an object is a Property whose value is an instance of a type. Used for type-checking arguments.
-   * @public
-   *
-   * @param {Property.<*>} genericProperty
-   * @param {constructor} type
-   */
-  assertPropertyInstanceof( genericProperty, type ) {
-    CollisionLabUtils.assertPropertyPredicate( genericProperty, value => value instanceof type );
   }
 };
 
