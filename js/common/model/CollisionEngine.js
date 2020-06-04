@@ -196,17 +196,18 @@ class CollisionEngine {
     const v1 = ball1.velocity;
     const v2 = ball2.velocity;
 
-    // Normal vector, called the 'line of impact'.
-    this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize();
+    // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
+    // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
+    const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() : Vector2.X_UNIT;
 
     // Tangential vector, called the 'plane of contact.
-    this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
+    const tangent = this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = v1.dot( this.mutableVectors.normal );
-    const v2n = v2.dot( this.mutableVectors.normal );
-    const v1t = v1.dot( this.mutableVectors.tangent );
-    const v2t = v2.dot( this.mutableVectors.tangent );
+    const v1n = v1.dot( normal );
+    const v2n = v2.dot( normal );
+    const v1t = v1.dot( tangent );
+    const v2t = v2.dot( tangent );
 
     // Convenience reference to the elasticity.
     assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
@@ -220,10 +221,10 @@ class CollisionEngine {
     const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
 
     // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = this.mutableVectors.tangent.dotXY( v1tP, v1nP );
-    const v2xP = this.mutableVectors.tangent.dotXY( v2tP, v2nP );
-    const v1yP = this.mutableVectors.normal.dotXY( v1tP, v1nP );
-    const v2yP = this.mutableVectors.normal.dotXY( v2tP, v2nP );
+    const v1xP = tangent.dotXY( v1tP, v1nP );
+    const v2xP = tangent.dotXY( v2tP, v2nP );
+    const v1yP = normal.dotXY( v1tP, v1nP );
+    const v2yP = normal.dotXY( v2tP, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
