@@ -88,6 +88,10 @@ class MomentaDiagramVectorNode extends Node {
       momentaDiagramVector.tipPositionProperty,
       modelViewTransformProperty ], ( tailPosition, tipPosition, modelViewTransform ) => {
 
+        // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
+        this.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
+        if ( !this.visible ) { /** exit **/ return; }
+
         // Get the position of the tail, center, and tip in view coordinates.
         const tailViewPosition = modelViewTransform.modelToViewPosition( tailPosition );
         const tipViewPosition = modelViewTransform.modelToViewPosition( tipPosition );
@@ -96,12 +100,7 @@ class MomentaDiagramVectorNode extends Node {
         // Update the positioning of the ArrowNode to match the MomentaDiagramVector.
         arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
 
-
         //----------------------------------------------------------------------------------------
-
-        // Only display the label if the momentaDiagramVector has a magnitude that isn't effective 0.
-        labelNode.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
-        if ( !labelNode.visible ) { /** exit **/ return; }
 
         // Compute the adjusted offset of the label in view coordinates. It adds extra offset to consider the size
         // of the label.
