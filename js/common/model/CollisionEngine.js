@@ -384,7 +384,7 @@ class CollisionEngine {
     const deltaS = this.mutableVectors.deltaS.set( ball.position ).subtract( closestPoint );
 
     // Use the formula derived in the document above.
-    const contactTime = deltaS.magnitudeSquared / ball.velocity.dot( deltaS );
+    const contactTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
 
     assert && assert( isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ) );
     return contactTime;
