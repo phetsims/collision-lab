@@ -2,15 +2,15 @@
 
 /**
  * A Ball is the model for a single spherical moving object and appears in all screens. Each Ball is a apart of a
- * isolated system of multiple Balls within a PlayArea. Balls are implemented to work generally for both 1D and 2D
+ * isolated system of multiple Balls in BallSystem. Balls are implemented to work generally for both 1D and 2D
  * screens.
  *
  * Primary responsibilities are:
- *   1. Center-position Property
- *   2. Track the Mass of the Ball in a Property
- *   3. Velocity and Momentum vector Properties
- *   4. Radius Property
- *   5. Track the kinetic energy of the Ball
+ *   1. Center-position Property.
+ *   2. Track the Mass of the Ball in a Property.
+ *   3. Velocity and Momentum vector Properties.
+ *   4. Radius Property.
+ *   5. Track the kinetic energy of the Ball.
  *   6. Dragging, user-control, restarting, etc.
  *
  * Balls are created at the start of the sim and are never disposed, so no dispose method is necessary.
