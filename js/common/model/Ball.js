@@ -114,6 +114,12 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
+    // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
+    this.dimensions = dimensions;
+
+    // @public (read-only) {Bounds} - reference to the passed-in PlayArea Bounds.
+    this.playAreaBounds = playAreaBounds;
+
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
@@ -124,29 +130,23 @@ class Ball {
     //                                Used in the model to determine Ball snapping functionality.
     this.gridVisibleProperty = gridVisibleProperty;
 
-    // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
-    this.dimensions = dimensions;
-
-    // @public (read-only) {Bounds} - reference to the passed-in PlayArea Bounds.
-    this.playAreaBounds = playAreaBounds;
-
     //----------------------------------------------------------------------------------------
 
-    // Ensure that our yPosition and yVelocity is always 0 for 1D screens.
+    // Ensure that our yPosition and yVelocity is always 0 for 1D screens. Persists for the lifetime of the sim.
     assert && this.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
     assert && this.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
   }
 
   /**
-   * Resets this Ball to factory settings. Called when the reset-all button is pressed.
+   * Resets this Ball to its factory settings. Called when the reset-all button is pressed.
    * @public
    */
   reset() {
     this.xPositionProperty.reset();
     this.yPositionProperty.reset();
+    this.massProperty.reset();
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
-    this.massProperty.reset();
     this.userControlledProperty.reset();
   }
 
@@ -163,8 +163,10 @@ class Ball {
   }
 
   /**
-   * Moves this Ball by one time step (assuming ballistic motion).
+   * Moves this Ball by one time step, assuming it isn't accelerating or colliding with other Balls. If this isn't the
+   * case, its motion is corrected in CollisionEngine.js
    * @public
+   *
    * @param {number} dt - time in seconds
    */
   step( dt ) {
@@ -174,29 +176,39 @@ class Ball {
   }
 
   /**
+   * Saves the state of the Ball in our restartState reference for the next restart() call.
+   * @public
+   *
+   * This is called when the user presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
+   */
+  saveState() { this.restartState.saveState( this.position, this.velocity, this.mass ); }
+
+  /**
    * Invoked from the view when the Ball is dragged to a different position. Attempts to position the Ball at the
    * passed in position but ensures the Ball is inside the PlayArea's Bounds.
    *
    * If the grid is visible, the Ball will also snap to the nearest grid-line.
-   * @public
+   * If the PlayArea is 1D, the Ball's y-position will be set to 0.
    *
-   * @param {Vector} position - the position of the Center of the Ball to drag to
+   * @public
+   * @param {Vector} position - the attempted drag position, in model units, of the center of the Ball.
    */
   dragToPosition( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
 
-    // Reference to the corrected position to drag the Ball to.
+    // Flag that references the corrected position of the attempted drag position of the Ball.
     let correctedPosition;
 
     if ( !this.gridVisibleProperty.value ) {
 
-      // Ensure that the Ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
+      // Ensure that the Ball's position is inside of the PlayArea's bounds, eroded by the radius to ensure that the
       // entire Ball is inside the PlayArea.
       correctedPosition = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
-      // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
+      // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded inwards to the nearest
+      // grid-line to ensure that the Ball is both inside the PlayArea and snapped to a grid-line.
       correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.playAreaBounds, this.radius )
         .closestPointTo( position )
         .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
@@ -204,20 +216,11 @@ class Ball {
         .timesScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING );
     }
 
-    // If the dimensions is 1D, ensure that the y-position of the Ball is 0.
+    // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.
     ( this.dimensions === 1 ) && correctedPosition.setY( 0 );
 
-    // Set the position of the Ball to the correct position.
+    // Finally, set the position of the Ball to the corrected position.
     this.position = correctedPosition;
-  }
-
-  /**
-   * Saves the state of the Ball in our restartState reference for the next restart() call. This is called when the user
-   * presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
-   * @public
-   */
-  saveState() {
-    this.restartState.saveState( this.position, this.velocity, this.mass );
   }
 
   /*----------------------------------------------------------------------------*
@@ -227,6 +230,7 @@ class Ball {
   /**
    * Gets the Ball's mass, in kg.
    * @public
+   *
    * @returns {number} - in kg
    */
   get mass() { return this.massProperty.value; }
@@ -234,6 +238,7 @@ class Ball {
   /**
    * Sets the Ball's mass, in kg.
    * @public
+   *
    * @param {number} mass - in kg
    */
   set mass( mass ) { this.massProperty.value = mass; }
@@ -241,88 +246,68 @@ class Ball {
   /**
    * Gets the Ball's radius, in meters.
    * @public
+   *
    * @returns {number} - in meters
    */
   get radius() { return this.radiusProperty.value; }
 
   /**
-   * Gets the x-coordinate of the center position of the Ball, in meter coordinates.
+   * Gets the center position of the Ball, in meters.
    * @public
-   * @returns {number} - in meter coordinates
-   */
-  get xPosition() { return this.xPositionProperty.value; }
-
-  /**
-   * Sets the x-coordinate of the center position of the Ball, in meter coordinates.
-   * @public
-   * @param {number} xPosition - in meter coordinates
-   */
-  set xPosition( xPosition ) { this.xPositionProperty.value = xPosition; }
-
-  /**
-   * Gets the y-coordinate of the center position of the Ball, in meter coordinates.
-   * @public
-   * @returns {number} - in meter coordinates
-   */
-  get yPosition() { return this.yPositionProperty.value; }
-
-  /**
-   * Sets the y-coordinate of the center position of the Ball, in meter coordinates.
-   * @public
-   * @param {number} yPosition - in meter coordinates
-   */
-  set yPosition( yPosition ) { this.yPositionProperty.value = yPosition; }
-
-  /**
-   * Gets the center position of the Ball, in meter coordinates.
-   * @public
+   *
    * @override
-   * @returns {Vector2} - in meter coordinates
+   * @returns {Vector2} - in meters
    */
   get position() { return this.positionProperty.value; }
 
   /**
-   * Sets the center position of the Ball, in meter coordinates.
+   * Sets the center position of the Ball, in meters.
    * @public
-   * @param {Vector2} position - in meter coordinates
+   *
+   * @param {Vector2} position - in meters
    */
   set position( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-    this.xPosition = position.x;
-    this.yPosition = position.y;
+    this.xPositionProperty.value = position.x;
+    this.yPositionProperty.value = position.y;
   }
 
   /**
    * Gets the x-coordinate of the left side of the Ball.
    * @public
-   * @returns {number} - in meter coordinates
+   *
+   * @returns {number} - in meters
    */
   get left() { return this.position.x - this.radius; }
 
   /**
    * Gets the x-coordinate of the right side of the Ball.
    * @public
-   * @returns {number} - in meter coordinates
+   *
+   * @returns {number} - in meters
    */
-  get right() { return this.xPosition + this.radius; }
+  get right() { return this.position.x + this.radius; }
 
   /**
    * Gets the y-coordinate of the top side of the Ball.
    * @public
-   * @returns {number} - in meter coordinates
+   *
+   * @returns {number} - in meters
    */
-  get top() { return this.yPosition + this.radius; }
+  get top() { return this.position.y + this.radius; }
 
   /**
    * Gets the y-coordinate of the bottom side of the Ball.
    * @public
-   * @returns {number} - in meter coordinates
+   *
+   * @returns {number} - in meters
    */
-  get bottom() { return this.yPosition - this.radius; }
+  get bottom() { return this.position.y - this.radius; }
 
   /**
    * Gets the horizontal velocity of the Ball, in m/s.
    * @public
+   *
    * @returns {number} xVelocity, in m/s.
    */
   get xVelocity() { return this.xVelocityProperty.value; }
@@ -330,6 +315,7 @@ class Ball {
   /**
    * Sets the horizontal velocity of the Ball, in m/s.
    * @public
+   *
    * @param {number} xVelocity, in m/s.
    */
   set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
@@ -337,6 +323,7 @@ class Ball {
   /**
    * Sets the vertical velocity of the Ball, in m/s.
    * @public
+   *
    * @returns {number} yVelocity, in m/s.
    */
   get yVelocity() { return this.yVelocityProperty.value; }
@@ -344,6 +331,7 @@ class Ball {
   /**
    * Sets the vertical velocity of the Ball, in m/s.
    * @public
+   *
    * @param {number} yVelocity, in m/s.
    */
   set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
@@ -351,6 +339,7 @@ class Ball {
   /**
    * Gets the velocity of the Ball, in m/s.
    * @public
+   *
    * @returns {Vector2} - in m/s.
    */
   get velocity() { return this.velocityProperty.value; }
@@ -358,6 +347,7 @@ class Ball {
   /**
    * Sets the velocity of the Ball, in m/s.
    * @public
+   *
    * @param {Vector2} velocity, in m/s.
    */
   set velocity( velocity ) {
@@ -369,6 +359,7 @@ class Ball {
   /**
    * Gets the kinetic energy of this Ball, in J.
    * @public
+   *
    * @returns {number} - in J.
    */
   get kineticEnergy() { return this.kineticEnergyProperty.value; }
@@ -376,6 +367,7 @@ class Ball {
   /**
    * Gets the linear momentum of this Ball, in kg*(m/s).
    * @public
+   *
    * @returns {Vector2} - in kg*(m/s).
    */
   get momentum() { return this.momentumProperty.value; }
