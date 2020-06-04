@@ -100,7 +100,7 @@ class MomentaDiagramVectorNode extends Node {
         //----------------------------------------------------------------------------------------
 
         // Only display the label if the momentaDiagramVector has a magnitude that isn't effective 0.
-        labelNode.visible = ( momentaDiagramVector.magnitude < CollisionLabConstants.ZERO_THRESHOLD );
+        labelNode.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
         if ( !labelNode.visible ) { /** exit **/ return; }
 
         // Compute the adjusted offset of the label in view coordinates. It adds extra offset to consider the size
