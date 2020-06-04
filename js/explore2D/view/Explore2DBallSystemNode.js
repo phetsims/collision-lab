@@ -66,6 +66,10 @@ class Explore2DBallSystemNode extends BallSystemNode {
 
       // Add the BallNode to the container.
       ballPathsContainer.addChild( pathNode );
+
+      ballSystem.numberOfBallsProperty.link( () => {
+        pathNode.visible = ballSystem.balls.contains( ball );
+      } );
     } );
 
     //----------------------------------------------------------------------------------------
@@ -75,7 +79,7 @@ class Explore2DBallSystemNode extends BallSystemNode {
       pathBaseColor: CollisionLabColors.CENTER_OF_MASS_COLORS.fill
     } );
     ballPathsContainer.addChild( centerOfMassPath );
-    // Property.multilink( [ ballSystem.centerOfMassVisibleProperty, ballSystem.pathVisibleProperty])
+    ballSystem.centerOfMassVisibleProperty.linkAttribute( centerOfMassPath, 'visible' );
 
     this.addChild( ballPathsContainer );
     ballPathsContainer.moveToBack();
