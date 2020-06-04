@@ -77,10 +77,16 @@ class CollisionLabModel {
       dimensions: this.playArea.dimensions
     } );
 
-    //----------------------------------------------------------------------------------------
-
     // @private {CollisionEngine} - the CollisionEngine of the simulation.
     this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
+    // restart() call. Link is never removed and lasts for the lifetime of the simulation.
+    this.isPlayingProperty.lazyLink( isPlaying => {
+      isPlaying && this.ballSystem.saveBallStates();
+    } );
   }
 
   createCollisionEngine( playArea, ballSystem ) {
