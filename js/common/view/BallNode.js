@@ -154,6 +154,9 @@ class BallNode extends Node {
         ball.userControlledProperty.value = true;
         this.moveToFront();
       },
+      drag: () => {
+        ball.userControlledProperty.value = true;
+      },
       end: () => {
         ball.userControlledProperty.value = false;
       }

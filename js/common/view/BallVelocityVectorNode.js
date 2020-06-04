@@ -71,6 +71,9 @@ class BallVelocityVectorNode extends BallVectorNode {
       start: () => {
         userControlledProperty.value = true;
       },
+      drag: () => {
+        userControlledProperty.value = true;
+      },
       end: () => {
         userControlledProperty.value = false;
       }
