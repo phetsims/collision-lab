@@ -101,7 +101,7 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.bounds, ball.radius );
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playAreaBounds, ball.radius );
 
     // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minX = Utils.toFixed( gridSafeConstrainedBounds.minX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
@@ -124,7 +124,7 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.bounds, ball.radius );
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playAreaBounds, ball.radius );
 
     // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minY = Utils.toFixed( gridSafeConstrainedBounds.minY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );

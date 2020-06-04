@@ -22,42 +22,33 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
-import PlayArea from './PlayArea.js';
 
 class Ball {
 
   /**
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
+   * @param {Bounds} playAreaBounds - the bounding Box of the entire Ball if the PlayArea's border doesn't reflect.
    * @param {Property.<boolean>} gridVisibleProperty - indicates if the PlayArea's grid is visible.
+   * @param {number} dimensions - the dimensions of the PlayArea, used for snap-to-grid purposes. Either 1 or 2.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
-   * @param {Object} [options]
    */
-  constructor( initialBallState, isConstantSizeProperty, gridVisibleProperty, index, options ) {
+  constructor( initialBallState, isConstantSizeProperty, playAreaBounds, gridVisibleProperty, dimensions, index ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && AssertUtils.assertPropertyOf( gridVisibleProperty, 'boolean' );
+    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
     assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
-
-    options = merge( {
-
-      // {number} - the dimensions of the PlayArea that contains the Ball. Either 1 or 2.
-      dimensions: 2,
-
-      // {Bounds2} - the bounds of the PlayArea, in meters.
-      bounds: PlayArea.DEFAULT_BOUNDS
-
-    }, options );
 
     //----------------------------------------------------------------------------------------
 
@@ -133,10 +124,10 @@ class Ball {
     this.gridVisibleProperty = gridVisibleProperty;
 
     // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
-    this.dimensions = options.dimensions;
+    this.dimensions = dimensions;
 
     // @public (read-only) {Bounds} - reference to the passed-in PlayArea Bounds.
-    this.bounds = options.bounds;
+    this.playAreaBounds = playAreaBounds;
 
     //----------------------------------------------------------------------------------------
 
@@ -200,12 +191,12 @@ class Ball {
 
       // Ensure that the Ball's position is inside of the PlayArea bounds eroded by the radius, to ensure that the
       // entire Ball is inside the PlayArea.
-      correctedPosition = this.bounds.eroded( this.radius ).closestPointTo( position );
+      correctedPosition = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
       // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded to the nearest grid-line.
-      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.bounds, this.radius )
+      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.playAreaBounds, this.radius )
         .closestPointTo( position )
         .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
         .roundSymmetric()

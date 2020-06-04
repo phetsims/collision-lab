@@ -70,11 +70,11 @@ class BallSystem {
     this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
       this.isBallConstantSizeProperty,
+      playArea.bounds,
       playArea.gridVisibleProperty,
-      index + 1, {
-        dimensions: playArea.dimensions,
-        bounds: playArea.bounds
-      } ) );
+      playArea.dimensions,
+      index + 1
+    ) );
 
     //----------------------------------------------------------------------------------------
 
