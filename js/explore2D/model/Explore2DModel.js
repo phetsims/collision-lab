@@ -10,6 +10,9 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
+import PlayArea from '../../common/model/PlayArea.js';
+import Explore2DBallSystem from './Explore2DBallSystem.js';
+import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
 // constants
@@ -30,6 +33,29 @@ class Explore2DModel extends CollisionLabModel {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     super( INITIAL_BALL_STATES, tandem );
+  }
+
+  createCollisionEngine( playArea, ballSystem ) {
+    return new Explore2DCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+  }
+
+  createBallSystem( initialBallStates, playArea ) {
+    return new Explore2DBallSystem( INITIAL_BALL_STATES, playArea );
+  }
+  /**
+   * @override
+   * Steps the simulation manually, regardless if the sim is paused. Intended to be called by clients that step the
+   * simulation through step-buttons or used by the main step method when the sim isn't paused.
+   * @private
+   *
+   * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
+   */
+  stepManual( dt ) {
+    assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
+
+    super.stepManual( dt );
+
+    this.ballSystem.updatePaths( this.elapsedTimeProperty.value );
   }
 }
 
