@@ -151,21 +151,25 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( momentaDiagram );
 
+    const keypad = new KeypadDialog( {
+      layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
+        keypadDialog.leftBottom = this.localToGlobalPoint( ballValuesPanel.rightBottom.plusXY( 10, 0 ) ).times( 1 / scale );
+      }
+    } );
 
-    const keypad = new KeypadDialog();
-
-    const ballValuesDisplay = new BallValuesPanel( model.ballSystem.balls, viewProperties.moreDataVisibleProperty, keypad, {
+    const ballValuesPanel = new BallValuesPanel( model.ballSystem.balls, viewProperties.moreDataVisibleProperty, keypad, {
       dimensions: model.playArea.dimensions
     } );
-    this.addChild( ballValuesDisplay );
-    ballValuesDisplay.top = 420;
-    ballValuesDisplay.left = SCREEN_VIEW_X_MARGIN;
+    this.addChild( ballValuesPanel );
+    ballValuesPanel.top = 420;
+    ballValuesPanel.left = SCREEN_VIEW_X_MARGIN;
 
     const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
-      bottom: ballValuesDisplay.top - 4,
+      bottom: ballValuesPanel.top - 4,
       left: SCREEN_VIEW_X_MARGIN
     } );
     this.addChild( moreDataCheckbox );
+
   }
 
   // @protected
