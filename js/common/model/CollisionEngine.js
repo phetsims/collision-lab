@@ -10,7 +10,7 @@
  *     are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
  *     with the border of the PlayArea.
  *
- *   - Since there are only a maximum of 5 Balls in a PlayArea at a time, there are a maximum of 10 unique pairs of
+ *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
  *
  *   - Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
@@ -18,9 +18,10 @@
  *
  * ## Collision response:
  *
- *   - Collision response determines what affect a collision has on a Balls motion. When a collision has been detected,
+ *   - Collision response determines what affect a collision has on a Ball's motion. When a collision has been detected,
  *     it is processed by first analytically determining the how long the Balls have been overlapping. Using this time,
- *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls.
+ *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and
+ *     the position of Balls after the collision are updated to a more realistic position.
  *     The algorithms for finding the overlapping time of collisions can be found below:
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
@@ -82,19 +83,21 @@ class CollisionEngine {
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( isReversing );
   }
 
+  //----------------------------------------------------------------------------------------
+
   /**
    * Registers the exact position of a ball-to-ball collision.
    * This method is meant to be overriden in subclasses, but it isn't required. It's default behavior is to do nothing.
    *
    * When a collision between two balls occurs, its position and their overlapping time is taken into consideration,
    * and Balls are set to a different position. See collideBall() for background. However, this brings up issues for
-   * sub-classes. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
+   * some screens. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
    * However, Ball positions are never set to the position where the collision actually occurred, and this separation
    * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
    *
    * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
    * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
-   * collision is detected and passes necessary information to determine when and where a collision occurred.
+   * collision is detected and passes necessary information to determine exactly when and where a collision occurred.
    * @protected
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
@@ -106,19 +109,9 @@ class CollisionEngine {
   registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
     /** Do nothing. Override for functionality. */
   }
+
   /**
-   * Registers the exact position of a ball-to-border collision. This method is meant to be overriden in subclasses,
-   * but it isn't required. It's default behavior is to do nothing.
-   *
-   * Similar to the method above, when a Ball-border collision occurs, the Balls position and its overlapping time
-   * is taken into consideration, and its position is set to a different position. However, this brings up issues for
-   * sub-classes. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
-   * However, Ball positions are never set to the position where the collision actually occurred, and this separation
-   * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
-   *
-   * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
-   * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
-   * collision is detected and passes necessary information to determine when and where a collision occurred.
+   * Registers the exact position of a ball-to-border collision. See the documentation for the method above.
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
@@ -134,7 +127,7 @@ class CollisionEngine {
    *----------------------------------------------------------------------------*/
 
   /**
-   * A time-discretization approach to detecting and processing ball-ball collisions within the BallSystem.Collisions
+   * A time-discretization approach to detecting and processing ball-ball collisions within the BallSystem. Collisions
    * are detected after the collision occurs by checking if any two Balls physically overlap and processed using the
    * collideBalls() method.
    *
@@ -151,12 +144,8 @@ class CollisionEngine {
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
-      // Use a distance approach to detect if the Balls are physically overlapping, meaning they are colliding.
-      const distanceBetweenBalls = ball1.position.distance( ball2.position );
-      const minimumSeparation = ball1.radius + ball2.radius;
-
       // If two balls are on top of each other, process the collision.
-      if ( distanceBetweenBalls < minimumSeparation ) {
+      if ( BallUtils.areBallsColliding( ball1, ball2 ) ) {
         this.collideBalls( ball1, ball2, isReversing );
       }
     } );
@@ -200,7 +189,7 @@ class CollisionEngine {
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
     const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() : Vector2.X_UNIT;
 
-    // Tangential vector, called the 'plane of contact.
+    // Tangential vector, called the 'plane of contact'.
     const tangent = this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
@@ -299,7 +288,6 @@ class CollisionEngine {
    * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
    * @private
-   *
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBorderCollisions( isReversing ) {
@@ -319,7 +307,7 @@ class CollisionEngine {
         // position when the ball first collided. Use the overlapped time to find the exact collision position.
         const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
 
-        // Get exact positions when the Balls collided by rewinding by the overlapped time.
+        // Get exact position when the Ball collided by rewinding by the overlapped time.
         const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
