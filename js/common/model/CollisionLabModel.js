@@ -6,9 +6,9 @@
  * Mainly responsible for:
  *   - Time Control Properties and stepping the simulation.
  *   - Instantiation of a single PlayArea.
- *   - Instantiation of a single BallSystem.
+ *   - BallSystem creator abstract method.
  *   - Instantiation of a MomentaDiagram.
- *   - Instantiation of the CollisionEngine collision engine.
+ *   - CollisionEngine creator abstract method.
  *
  * @author Brandon Li
  * @author Martin Veillette
@@ -18,29 +18,24 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import BallState from './BallState.js';
-import BallSystem from './BallSystem.js';
-import CollisionEngine from './CollisionEngine.js';
 import MomentaDiagram from './MomentaDiagram.js';
 import PlayArea from './PlayArea.js';
 
 // constants
 const TIME_STEP_DURATION = CollisionLabConstants.TIME_STEP_DURATION;
 
+// @abstract
 class CollisionLabModel {
 
   /**
-   * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {Tandem} tandem
    * @param {Object} [options]
    */
-  constructor( initialBallStates, tandem, options ) {
-    assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
+  constructor( tandem, options ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -70,7 +65,7 @@ class CollisionLabModel {
     this.playArea = new PlayArea( options.playAreaOptions );
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = this.createBallSystem( initialBallStates, this.playArea );
+    this.ballSystem = this.createBallSystem( this.playArea );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
     this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls, this.ballSystem.balls, {
@@ -82,21 +77,38 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the sim goes from paused to playing to save the states of the Balls in the PlayArea for the next
+    // Observe when the sim goes from paused to playing to save the states of the Balls in the BallSystem for the next
     // restart() call. Link is never removed and lasts for the lifetime of the simulation.
     this.isPlayingProperty.lazyLink( isPlaying => {
       isPlaying && this.ballSystem.saveBallStates();
     } );
   }
 
-  // @protected
-  createCollisionEngine( playArea, ballSystem ) {
-    return new CollisionEngine( this.playArea, this.ballSystem );
-  }
-  // @protected
-  createBallSystem( initialBallStates, playArea ) {
-    return new BallSystem( initialBallStates, playArea );
-  }
+  /**
+   * @abstract
+   * Creates the BallSystem for the screen. Called in the constructor of the CollisionLabModel. This is an abstract
+   * method because some screens have different initial BallStates and some screens use sub-types of BallSystem, but
+   * all screens have a BallSystem.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @returns {BallSystem}
+   */
+  createBallSystem( playArea ) { assert && assert( false, 'abstract method must be overriden' ); }
+
+  /**
+   * @abstract
+   * Creates the CollisionEngine for the screen. Called in the constructor of the CollisionLabModel. This is an abstract
+   * method because some screens use sub-types of CollisionEngine and have different API's, but all screens have a
+   * CollisionEngine.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @param {BallSystem} ballSystem - the BallSystem instance of the sim.
+   * @returns {CollisionEngine}
+   */
+  createCollisionEngine( playArea, ballSystem ) { assert && assert( false, 'abstract method must be overriden' ); }
+
   /**
    * Resets the model. Called when the reset-all button is pressed.
    * @public
@@ -148,8 +160,8 @@ class CollisionLabModel {
   }
 
   /**
-   * Steps the simulation manually, regardless if the sim is paused. Intended to be called by clients that step the
-   * simulation through step-buttons or used by the main step method when the sim isn't paused.
+   * Steps the simulation manually, regardless of whether or not the sim is paused. Intended to be called by clients
+   * that step the simulation through step-buttons or used by the main step method when the sim isn't paused.
    * @private
    *
    * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
@@ -157,13 +169,11 @@ class CollisionLabModel {
   stepManual( dt ) {
     assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
 
+    // Update the elapsedTimeProperty.
     this.elapsedTimeProperty.value += dt;
 
-    /**
-     * The position of the balls are:
-     * (1) updated based on the ballistic motion of individual balls
-     * (2) corrected through collisionEngine, to take into account collisions between balls and walls
-     */
+    // First step the position of the balls based on a ballistic motion model, assuming no collisions occur.
+    // Then, step the collisionEngine after to detect if any collisions occurred and formulate a response.
     this.ballSystem.step( dt );
     this.collisionEngine.step( dt < 0 );
   }

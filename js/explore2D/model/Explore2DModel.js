@@ -6,43 +6,47 @@
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-import BallState from '../../common/model/BallState.js';
-import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
+import PlayArea from '../../common/model/PlayArea.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
 import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
-
-// constants
-const INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1.0, 0.00 ), new Vector2( 1.0, 0.3 ), 0.5 ),
-  new BallState( new Vector2( 0.0, 0.50 ), new Vector2( -0.5, -0.5 ), 1.5 ),
-  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.0 ),
-  new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 ),
-  new BallState( new Vector2( -0.8, 0.65 ), new Vector2( -1.1, 0 ), 1.0 )
-];
+import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
 class Explore2DModel extends CollisionLabModel {
 
   /**
-   * @param {Tandem} tandem
+   * @override
+   * Creates the BallSystem for the 'Explore 2D' screen. Called in the constructor of the super-class. For this screen,
+   * this method will instantiate a sub-type of BallSystem: Explore2DBallSystem. It also has its own custom
+   * initial BallStates.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @returns {Explore2DBallSystem}
    */
-  constructor( tandem ) {
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+  createBallSystem( playArea ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
-    super( INITIAL_BALL_STATES, tandem );
+    return new Explore2DBallSystem( playArea );
   }
 
-  // @protected
+  /**
+   * @override
+   * Creates the CollisionEngine for the 'Explore 2D' screen. Called in the constructor of the super-class. For this
+   * screen, this method will instantiate a sub-type of CollisionEngine: Explore2DCollisionEngine.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @param {Explore2DBallSystem} ballSystem - the BallSystem instance of the sim.
+   * @returns {CollisionEngine}
+   */
   createCollisionEngine( playArea, ballSystem ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof Explore2DBallSystem, `invalid ballSystem: ${ballSystem}` );
+
     return new Explore2DCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 
-  // @protected
-  createBallSystem( initialBallStates, playArea ) {
-    return new Explore2DBallSystem( INITIAL_BALL_STATES, playArea );
-  }
   /**
    * @override
    * Steps the simulation manually, regardless if the sim is paused. Intended to be called by clients that step the
@@ -56,6 +60,7 @@ class Explore2DModel extends CollisionLabModel {
 
     super.stepManual( dt );
 
+    // Update the paths of the Explore2DBallSystem on each step.
     this.ballSystem.updatePaths( this.elapsedTimeProperty.value );
   }
 }

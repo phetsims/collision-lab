@@ -1,28 +1,18 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Top level model for the 'Intro' screen.
+ * Top level model for the 'Explore 1D' screen.
  *
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
-import BallState from '../../common/model/BallState.js';
-import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
+import CollisionEngine from '../../common/model/CollisionEngine.js';
+import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import PlayArea from '../../common/model/PlayArea.js';
-
-// constants
-const INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
-  new BallState( new Vector2( 0, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
-  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.0 ),
-  new BallState( new Vector2( 1.5, 0 ), new Vector2( 1.1, 0 ), 1.0 ),
-  new BallState( new Vector2( -1.5, 0 ), new Vector2( -1.1, 0 ), 1.0 )
-];
-assert && assert( _.every( INITIAL_BALL_STATES, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
+import Explore1DBallSystem from './Explore1DBallSystem.js';
 
 class Explore1DModel extends CollisionLabModel {
 
@@ -32,18 +22,44 @@ class Explore1DModel extends CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( INITIAL_BALL_STATES, tandem, {
+    super( tandem, {
       playAreaOptions: {
         dimensions: 1,
         bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
       }
     } );
+  }
 
-    // this.gridVisibleProperty.value = true;
-    // // assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
+  /**
+   * @override
+   * Creates the BallSystem for the 'Explore 1D' screen. Called in the constructor of the super-class. For this screen,
+   * this method will instantiate a sub-type of BallSystem: Explore1DBallSystem. It also has its own custom
+   * initial BallStates.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @returns {Explore1DBallSystem}
+   */
+  createBallSystem( playArea ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
-    // this.pathVisibleProperty.value = false;
-    // assert && this.pathVisibleProperty.link( pathVisible => assert( !pathVisible, 'paths must be not visible in Explore 1D' ) );
+    return new Explore1DBallSystem( playArea );
+  }
+
+  /**
+   * @override
+   * Creates the CollisionEngine for the 'Explore 1D' screen. Called in the constructor of the super-class.
+   *
+   * @protected
+   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @param {Explore1DBallSystem} ballSystem - the BallSystem instance of the sim.
+   * @returns {CollisionEngine}
+   */
+  createCollisionEngine( playArea, ballSystem ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof Explore1DBallSystem, `invalid ballSystem: ${ballSystem}` );
+
+    return new CollisionEngine( this.playArea, this.ballSystem );
   }
 }
 

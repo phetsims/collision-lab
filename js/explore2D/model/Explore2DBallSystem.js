@@ -15,26 +15,33 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import CollisionLabPath from './CollisionLabPath.js';
 
+// constants
+const EXPLORE_2D_INITIAL_BALL_STATES = [
+  new BallState( new Vector2( -1.0, 0.00 ), new Vector2( 1.0, 0.3 ), 0.5 ),
+  new BallState( new Vector2( 0.0, 0.50 ), new Vector2( -0.5, -0.5 ), 1.5 ),
+  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.0 ),
+  new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 ),
+  new BallState( new Vector2( -0.8, 0.65 ), new Vector2( -1.1, 0 ), 1.0 )
+];
+
 class Explore2DBallSystem extends BallSystem {
 
   /**
-   * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {PlayArea} playArea
    * @param {Object} [options]
    */
-  constructor( initialBallStates, playArea, options ) {
-    assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
+  constructor( playArea, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
-    super( initialBallStates, playArea, options );
+    super( EXPLORE_2D_INITIAL_BALL_STATES, playArea, options );
 
     //----------------------------------------------------------------------------------------
 
