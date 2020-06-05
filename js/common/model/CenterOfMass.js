@@ -34,10 +34,9 @@ class CenterOfMass {
    *                                                           This is needed for performance; the position and velocity
    *                                                           are only updated if this is true.
    */
-  constructor( prepopulatedBalls, balls, numberOfBallsProperty, centerOfMassVisibleProperty ) {
+  constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-    assert && AssertUtils.assertPropertyOf( numberOfBallsProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
 
     //----------------------------------------------------------------------------------------
@@ -63,11 +62,11 @@ class CenterOfMass {
     //  - centerOfMassVisibleProperty - for performance reasons, the COM position isn't calculated if it isn't visible.
     //  - position Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
-    //  - numberOfBallsProperty - since removing or adding a Ball changes the position of the COM.
+    //  - balls.lengthProperty - since removing or adding a Ball changes the position of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
     this.positionProperty = new DerivedProperty(
-      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballPositionProperties, numberOfBallsProperty ],
+      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballPositionProperties, balls.lengthProperty ],
       centerOfMassVisible => {
         return centerOfMassVisible ? this.computePosition() : this.position; // Don't recompute if not visible.
       }, {
@@ -82,11 +81,11 @@ class CenterOfMass {
     //  - centerOfMassVisibleProperty - for performance reasons, the COM velocity isn't calculated if it isn't visible.
     //  - velocity Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
-    //  - numberOfBallsProperty - since removing or adding a Ball changes the velocity of the COM.
+    //  - balls.lengthProperty - since removing or adding a Ball changes the velocity of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
     this.velocityProperty = new DerivedProperty(
-      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballVelocityProperties, numberOfBallsProperty ],
+      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
       centerOfMassVisible => {
         return centerOfMassVisible ? this.computeVelocity() : this.velocity; // Don't recompute if not visible.
       }, {
