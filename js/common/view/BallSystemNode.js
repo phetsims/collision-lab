@@ -73,6 +73,7 @@ class BallSystemNode extends Node {
         velocityVectorVisibleProperty,
         momentumVectorVisibleProperty,
         ballSystem.ballsConstantSizeProperty,
+        playArea.elasticityPercentProperty,
         isPlayingProperty,
         modelViewTransform );
 

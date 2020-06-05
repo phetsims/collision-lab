@@ -55,6 +55,7 @@ class BallNode extends Node {
                velocityVectorVisibleProperty,
                momentumVectorVisibleProperty,
                isConstantSizeProperty,
+               elasticityPercentProperty,
                isPlayingProperty,
                modelViewTransform,
                options ) {
@@ -190,20 +191,17 @@ class BallNode extends Node {
     // make the crosshair visible if ball is userControlled
     const isUserControlledHandle = ball.userControlledProperty.linkAttribute( graticule, 'visible' );
 
-    const ballRadiusListener = radius => {
+    Property.multilink( [ ball.radiusProperty, elasticityPercentProperty ], ( radius, elasticity ) => {
+      diskNode.lineWidth = Utils.linear( 0, 100, 1, 3, elasticity );
 
-      // update the radius of the ball
-      diskNode.radius = modelViewTransform.modelToViewDeltaX( radius );
-    };
 
-    // updates the radius of the ball
-    ball.radiusProperty.link( ballRadiusListener );
+      diskNode.radius = modelViewTransform.modelToViewDeltaX( radius ) - diskNode.lineWidth / 2;
+    } );
 
     // @private {function} disposeBallNode - function to unlink listeners, called in dispose()
     this.disposeBallNode = () => {
       ball.positionProperty.unlink( ballPositionListener );
       ball.userControlledProperty.unlinkAttribute( isUserControlledHandle );
-      ball.radiusProperty.unlink( ballRadiusListener );
       diskLayer.removeInputListener( diskLayerDragListener );
       diskLayerDragListener.dispose();
       ballVelocityVectorNode.dispose();
