@@ -42,7 +42,10 @@ class PlayArea {
       dimensions: 2,
 
       // {Bounds2} - the model bounds of the PlayArea, in meters.
-      bounds: PlayArea.DEFAULT_BOUNDS
+      bounds: PlayArea.DEFAULT_BOUNDS,
+
+      // {boolean} - indicates if the Grid is visible initially.
+      isGridVisibleInitially: false
 
     }, options );
 
@@ -60,7 +63,7 @@ class PlayArea {
 
     // @public {BooleanProperty} - indicates if the grid of the PlayArea is visible. This is placed inside of the model
     //                             since the visibility of the grid affects the drag-snapping of Balls.
-    this.gridVisibleProperty = new BooleanProperty( false );
+    this.gridVisibleProperty = new BooleanProperty( options.isGridVisibleInitially );
 
     //----------------------------------------------------------------------------------------
 

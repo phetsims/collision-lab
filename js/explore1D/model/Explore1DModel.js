@@ -25,9 +25,14 @@ class Explore1DModel extends CollisionLabModel {
     super( tandem, {
       playAreaOptions: {
         dimensions: 1,
+        isGridVisibleInitially: true,
         bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
       }
     } );
+
+    //----------------------------------------------------------------------------------------
+
+    assert && this.playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
   }
 
   /**

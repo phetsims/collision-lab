@@ -46,14 +46,6 @@ class Explore1DBallSystem extends BallSystem {
     } ), 'balls in explore 1d must have yVelocity and yPosition as 0' );
 
     assert && assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
-
-    //----------------------------------------------------------------------------------------
-
-    // this.gridVisibleProperty.value = true;
-    // // assert && this.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Explore 1D' ) );
-
-    // this.pathVisibleProperty.value = false;
-    // assert && this.pathVisibleProperty.link( pathVisible => assert( !pathVisible, 'paths must be not visible in Explore 1D' ) );
   }
 }
 
