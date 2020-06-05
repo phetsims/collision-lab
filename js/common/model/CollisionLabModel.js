@@ -68,9 +68,10 @@ class CollisionLabModel {
     this.ballSystem = this.createBallSystem( this.playArea );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
-    this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls, this.ballSystem.balls, {
-      dimensions: this.playArea.dimensions
-    } );
+    this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls,
+      this.ballSystem.balls,
+      this.playArea.dimensions
+    );
 
     // @private {CollisionEngine} - the CollisionEngine of the simulation.
     this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem );

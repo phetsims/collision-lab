@@ -2,14 +2,18 @@
 
 /**
  * The Model representation for the 'Momenta Diagram' accordion box, which appears at the bottom right of each screen.
- * Features the momentum Vectors of each Ball in the PlayArea, along with a total momentum vector, in a completely
+ * Features the momentum Vectors of each Ball in the BallSystem, along with a 'total' momentum vector, in a completely
  * separate coordinate frame from the PlayArea.
  *
  * Responsibilities are:
- *   - Keeping track of the zoom and Bounds of the MomentaDiagram, which changes in the view.
- *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector.
- *   - Update the tail positions and components of the momenta Vectors when necessary. The positioning of the Vectors
- *     differ depending on the dimensions of the screen.
+ *   - Keeping track of the zoom and Bounds of the MomentaDiagram.
+ *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector. Momenta Diagram takes
+ *     advantage of the prepopulatedBalls, which all Balls in the system must be apart of. Instead of creating a
+ *     MomentaDiagramVector each time a Ball is added to the system, it creates one for each prepopulatedBall and
+ *     only updates it if its associated Ball is in the system, meaning there is no performance loss and eliminates
+ *     the necessity to dispose MomentaDiagramVectors.
+ *   - Update the tail positions and components of the MomentaDiagramVectors when necessary. The positioning
+ *     differs depending on the dimensions of the PlayArea.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -19,12 +23,10 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import isArray from '../../../../phet-core/js/isArray.js';
-import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
@@ -42,20 +44,14 @@ class MomentaDiagram {
    * @param {Balls[]} prepopulatedBalls - an array of ALL possible balls.
    * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system. All Balls must be apart of the
    *                                         prepopulatedBalls array.
+   * @param {number} dimensions - the dimensions of the PlayArea, used for positioning differences. Either 1 or 2.
    * @param {Object} [options]
    */
-  constructor( prepopulatedBalls, balls, options ) {
-    assert && assert( isArray( prepopulatedBalls ) && _.every( prepopulatedBalls, ball => ball instanceof Ball ), `invalid prepopulatedBalls: ${ prepopulatedBalls }` );
-    assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
+  constructor( prepopulatedBalls, balls, dimensions, options ) {
+    assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
+    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
-
-    options = merge( {
-
-      // {number} dimensions - the dimensions of the Screen that contains the MomentaDiagram. Positioning of the
-      //                       Vectors are different depending on the dimensions.
-      dimensions: 2
-
-    }, options );
 
     //----------------------------------------------------------------------------------------
 
@@ -90,24 +86,24 @@ class MomentaDiagram {
       this.ballToMomentaVectorMap.set( ball, new MomentaDiagramVector() );
     } );
 
-    // @public (read-only) {MomentaDiagramSumVector} - the total sum of the Momenta Vectors of the system.
+    // @public (read-only) {MomentaDiagramVector} - the total sum of the Momenta Vectors of the system.
     this.totalMomentumVector = new MomentaDiagramVector();
 
-    // @private {ObservableArray.<Balls>} - reference to the Balls in the PlayArea system.
+    // @private {ObservableArray.<Balls>} - reference to the Balls in the BallSystem.
     this.balls = balls;
 
-    // @private {number} - reference to the passed-in dimensions of the Screen that has this MomentaDiagram.
+    // @private {number} - reference to the passed-in dimensions of the PlayArea.
     this.dimensions = options.dimensions;
 
     //----------------------------------------------------------------------------------------
 
-    // Create a Multilink to update our positioning and components of our Momenta Vectors.
+    // Create a Multilink to update the positioning and components of the Momenta Vectors.
     //
     // For the dependencies, we use:
     //  - expandedProperty; for performance reasons, the MomentaDiagram isn't updated it isn't visible.
-    //  - The momentum Properties of the prepopulatedBalls. Only the balls in the play-area are positioned and used in
-    //    the total momenta calculation.
-    //  - balls.lengthProperty, since removing or adding a Ball changes the total momenta.
+    //  - The momentum Properties of the prepopulatedBalls. Only the balls in the BallSystem are positioned and used in
+    //    the total momentum calculation.
+    //  - balls.lengthProperty, since removing or adding a Ball changes the total momentum.
     //
     // This Multilink is never disposed and lasts for the lifetime of the sim.
     Property.multilink(
@@ -119,17 +115,21 @@ class MomentaDiagram {
   }
 
   /**
-   * Resets the MomentaDiagram. Called when the reset-all button is pressed.
-   * @public.
+   * Resets the MomentaDiagram.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
    */
   reset() {
     this.zoomProperty.reset();
     this.expandedProperty.reset();
+    this.ballToMomentaVectorMap.forEach( momentaVector => { momentaVector.reset(); } );
+    this.totalMomentumVector.reset();
   }
 
   /**
-   * Updates the components and positions of the momentum Vectors to match the Balls in the PlayArea. Only the Balls in
-   * the PlayArea are updated and used to calculate the total momentum.
+   * Updates the components and positions of the momentum Vectors to match the Balls in the BallSystem. Only the Balls
+   * in the BallSystem are updated and used to calculate the total momentum.
    * @private
    *
    * The positioning of the momentum Vectors are different for each dimension:
@@ -154,7 +154,7 @@ class MomentaDiagram {
     // Compute the components of the total Momenta Vector.
     const totalMomentum = Vector2.ZERO.copy();
 
-    // Loop through and calculate the total momentum of the Balls in the PlayArea system.
+    // Loop through and calculate the total momentum of the Balls in the BallSystem.
     this.balls.forEach( ball => { totalMomentum.add( ball.momentum ); } );
     this.totalMomentumVector.components = totalMomentum;
 
