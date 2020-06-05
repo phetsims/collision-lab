@@ -92,6 +92,7 @@ class BallSystemNode extends Node {
     // Create the corresponding view for the Center of Mass.
     const centerOfMassNode = new CenterOfMassNode( ballSystem.centerOfMass,
       ballSystem.centerOfMassVisibleProperty,
+      valuesVisibleProperty,
       modelViewTransform );
 
     // Set the children of this Node to the correct rendering order.

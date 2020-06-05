@@ -7,12 +7,13 @@
  * @author Alex Schor
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Property from '../../../../axon/js/Property.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CenterOfMass from '../model/CenterOfMass.js';
+import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 import XNode from './XNode.js';
 
 class CenterOfMassNode extends Node {
@@ -22,26 +23,38 @@ class CenterOfMassNode extends Node {
    * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    */
-  constructor( centerOfMass, centerOfMassVisibleProperty, modelViewTransform ) {
+  constructor( centerOfMass, centerOfMassVisibleProperty, valuesVisibleProperty, modelViewTransform ) {
 
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
-    assert && assert( centerOfMassVisibleProperty instanceof BooleanProperty,
-      `Invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
+    assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2 );
     //----------------------------------------------------------------------------------------
 
     super();
 
     const xNode = new XNode();
-    this.addChild( xNode );
 
-    Property.multilink( [ centerOfMass.positionProperty, centerOfMassVisibleProperty ],
-      ( position, centerOfMassVisible ) => {
-        this.visible = centerOfMassVisible;
-        if ( this.visible ) {
-          xNode.center = modelViewTransform.modelToViewPosition( position );
-        }
-      } );
+    // create number display for speed, located above the COM
+    const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
+      valuePattern: collisionLabStrings.speedPattern
+    } );
+
+
+    this.children = [
+      xNode,
+      speedNumberDisplay
+    ];
+
+
+    centerOfMassVisibleProperty.linkAttribute( this, 'visible' );
+    valuesVisibleProperty.linkAttribute( speedNumberDisplay, 'visible' );
+
+    centerOfMass.positionProperty.link( position => {
+      xNode.center = modelViewTransform.modelToViewPosition( position );
+      speedNumberDisplay.centerBottom = xNode.centerTop.subtractXY( 0, 10 );
+    } );
+
+
   }
 }
 
