@@ -48,19 +48,19 @@ const BallUtils = {
    * This Bounds is used when the Ball is dragged with the grid visible to ensure that the Ball isn't snapped to a
    * position that makes part of the Ball out of Bounds. Also used for position ranges in the Keypad.
    *
-   * @param {Bounds2} bounds - the bounds of the PlayArea
+   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea
    * @param {number} radius - the radius of the Ball, in meters
    * @returns {Bounds2}
    */
-  getBallGridSafeConstrainedBounds( bounds, radius ) {
-    assert && assert( bounds instanceof Bounds2, `invalid bounds: ${bounds}` );
+  getBallGridSafeConstrainedBounds( playAreaBounds, radius ) {
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( typeof radius === 'number' && radius > 0, `invalid radius: ${radius}` );
 
     // First get the constrainedBounds, which is the Bounds that ensures the Ball is completely inside the PlayArea. It
     // is eroded by the radius of the ball since the Bounds is the bounding-box of the center of the Ball.
-    const constrainedBounds = bounds.eroded( radius );
+    const constrainedBounds = playAreaBounds.eroded( radius );
 
-    // Round the constrainedBounds inwards the nearest grid-line to ensure that the Ball's center position is bounded
+    // Round the constrainedBounds inwards to the nearest grid-line to ensure that the Ball's center position is bounded
     // on an exact grid-line and is fully inside the PlayArea.
     return CollisionLabUtils.roundedBoundsInToNearest(
       constrainedBounds,
@@ -144,6 +144,7 @@ const BallUtils = {
   calculateBallKineticEnergy( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
+    // K=1/2*m*|v|^2
     return 0.5 * ball.mass * ball.velocity.magnitudeSquared;
   },
 
