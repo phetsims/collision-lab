@@ -25,8 +25,6 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
     assert && AssertUtils.assertPropertyOf( kineticEnergyVisibleProperty, 'boolean' );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
-    //----------------------------------------------------------------------------------------
-
     options = merge( {
 
       valuePattern: collisionLabStrings.kineticEnergyJ,
