@@ -43,7 +43,6 @@ class KineticEnergyNumberDisplay extends NumberDisplay {
     // link visibility of this display to the visibleProperty
     // present for the lifetime of the simulation
     visibleProperty.linkAttribute( this, 'visible' );
-
   }
 }
 
