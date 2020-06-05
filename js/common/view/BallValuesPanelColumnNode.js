@@ -34,7 +34,7 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallMassSlider from './BallMassSlider.js';
-import BallValuesNumberDisplay from './BallValuesNumberDisplay.js';
+import BallValuesPanelNumberDisplay from './BallValuesPanelNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import KeypadDialog from './KeypadDialog.js';
 
@@ -136,8 +136,8 @@ class BallValuesPanelColumnNode extends VBox {
     if ( this.columnType === ColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
     else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball ); }
     else {
-      contentNode = new BallValuesNumberDisplay( ball,
-        BallValuesNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
+      contentNode = new BallValuesPanelNumberDisplay( ball,
+        BallValuesPanelNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
         this.keypadDialog
       );
     }
@@ -151,7 +151,7 @@ class BallValuesPanelColumnNode extends VBox {
       if ( ball === removedBall ) {
         this.contentAlignGroup.removeAlignBox( contentAlignBox );
         this.contentContainerNode.removeChild( contentAlignBox );
-        if ( contentNode instanceof BallValuesNumberDisplay ) {
+        if ( contentNode instanceof BallValuesPanelNumberDisplay ) {
           contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
         }
         this.balls.removeItemRemovedListener( removeBallListener );

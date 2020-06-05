@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallValuesNumberDisplay is a subclass of NumberDisplay for displaying a value that is associated with a Ball.
+ * BallValuesPanelNumberDisplay is a subclass of NumberDisplay for displaying a value that is associated with a Ball.
  * Instances appear in the BallValuesPanel.
  *
  * Displays a single component of a Ball Vector (i.e. x-position | x-velocity ... ) of a single Ball that is currently
@@ -13,7 +13,7 @@
  *    - Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadLayer is fired,
  *      allowing the user to edit the value of the Ball quantity.
  *
- * The BallValuesNumberDisplay should be disposed if the Ball is removed from the PlayArea.
+ * The BallValuesPanelNumberDisplay should be disposed if the Ball is removed from the PlayArea.
  *
  * @author Brandon Li
  */
@@ -43,7 +43,7 @@ const BallQuantities = Enumeration.byKeys( [
   'Y_MOMENTUM'
 ] );
 
-class BallValuesNumberDisplay extends NumberDisplay {
+class BallValuesPanelNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Ball} ball - the Ball model
@@ -141,7 +141,7 @@ class BallValuesNumberDisplay extends NumberDisplay {
     //----------------------------------------------------------------------------------------
 
     // @private {function} - function that removes listeners. This is called in the dispose() method.
-    this.disposeBallValuesNumberDisplay = () => {
+    this.disposeBallValuesPanelNumberDisplay = () => {
       if ( this.hasInputListener( fireListener ) ) {
         this.removeInputListener( fireListener );
       }
@@ -149,20 +149,20 @@ class BallValuesNumberDisplay extends NumberDisplay {
   }
 
   /**
-   * Disposes the BallValuesNumberDisplay, releasing all links that it maintained.
+   * Disposes the BallValuesPanelNumberDisplay, releasing all links that it maintained.
    * @public
    * @override
    *
    * Called when the Ball is removed from the PlayArea.
    */
   dispose() {
-    this.disposeBallValuesNumberDisplay();
+    this.disposeBallValuesPanelNumberDisplay();
     super.dispose();
   }
 }
 
 // @public {BallQuantities} - possible quantities to display and/or allow the user to edit.
-BallValuesNumberDisplay.BallQuantities = BallQuantities;
+BallValuesPanelNumberDisplay.BallQuantities = BallQuantities;
 
-collisionLab.register( 'BallValuesNumberDisplay', BallValuesNumberDisplay );
-export default BallValuesNumberDisplay;
+collisionLab.register( 'BallValuesPanelNumberDisplay', BallValuesPanelNumberDisplay );
+export default BallValuesPanelNumberDisplay;
