@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * Number Displays for the speed and momentum of a  ball. The Number Display for speed is above the ball
+ * Number Displays for the speed and momentum of a Ball. The Number Display for speed is above the ball
  * whereas the Number Display for momentum is below the ball
  *
  * @author Martin Veillette

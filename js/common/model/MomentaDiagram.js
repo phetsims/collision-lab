@@ -93,7 +93,7 @@ class MomentaDiagram {
     this.balls = balls;
 
     // @private {number} - reference to the passed-in dimensions of the PlayArea.
-    this.dimensions = options.dimensions;
+    this.dimensions = dimensions;
 
     //----------------------------------------------------------------------------------------
 
