@@ -1,48 +1,47 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- *  numerical display for the total kinetic energy
+ * The numerical display for the total kinetic energy.
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
-import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
-import CollisionLabColors from '../CollisionLabColors.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
+import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 
-// constant
-const SUM_RANGE = new Range( 0, 10 ); // range for the kinetic energy values
-
-const kineticEnergyJString = collisionLabStrings.kineticEnergyJ;
-
-class KineticEnergyNumberDisplay extends NumberDisplay {
+class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
   /**
    * @param {Property.<number>} totalKineticEnergyProperty
-   * @param {Property.<boolean>} visibleProperty
+   * @param {Property.<boolean>} kineticEnergyVisibleProperty
    */
-  constructor( totalKineticEnergyProperty, visibleProperty, options ) {
+  constructor( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options ) {
+    assert && AssertUtils.assertPropertyOf( totalKineticEnergyProperty, 'number' );
+    assert && AssertUtils.assertPropertyOf( kineticEnergyVisibleProperty, 'boolean' );
+    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
-    super( totalKineticEnergyProperty,
-      SUM_RANGE,
-      merge( {}, CollisionLabColors.KINETIC_ENERGY_DISPLAY_COLORS, {
-        align: 'left',
-        backgroundLineWidth: 0,
-        valuePattern: kineticEnergyJString,
-        maxWidth: 300, // determined empirically,
-        textOptions: {
-          font: CollisionLabConstants.DISPLAY_FONT
-        },
-        decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
-      }, options ) );
+    //----------------------------------------------------------------------------------------
 
-    // link visibility of this display to the visibleProperty
+    options = merge( {
+
+      valuePattern: collisionLabStrings.kineticEnergyJ,
+      maxWidth: 300, // constrain width for i18n, determined empirically.
+      displayRange: new Range( 0, 10 ) // Range for determining width, determined empirically.
+
+    }, options );
+
+    super( totalKineticEnergyProperty, options );
+
+    //----------------------------------------------------------------------------------------
+
+    // link visibility of this display to the kineticEnergyVisibleProperty
     // present for the lifetime of the simulation
-    visibleProperty.linkAttribute( this, 'visible' );
+    kineticEnergyVisibleProperty.linkAttribute( this, 'visible' );
   }
 }
 

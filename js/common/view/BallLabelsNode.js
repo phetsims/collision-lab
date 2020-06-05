@@ -42,7 +42,6 @@ class BallLabelsNode extends Node {
       },
       {
         numberDisplayOptions: merge(
-          CollisionLabColors.BALL_DISPLAY_COLORS,
           {
             align: 'left',
             backgroundLineWidth: 0,
