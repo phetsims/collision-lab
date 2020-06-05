@@ -279,7 +279,7 @@ class CollisionEngine {
     // Pick the positive root for forward stepping and the negative root if isReversing is true.
     const contactTime = _.find( possibleRoots, root => isReversing ? root < 0 : root >= 0 ) || 0;
 
-    assert && assert( isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ), contactTime );
+    assert && assert( Number.isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ), contactTime );
     return contactTime;
   }
 
@@ -387,7 +387,7 @@ class CollisionEngine {
     // Use the formula derived in the document above.
     const contactTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
 
-    assert && assert( isFinite( contactTime ), `invalid contactTime: ${ contactTime }` );
+    assert && assert( Number.isFinite( contactTime ), `invalid contactTime: ${ contactTime }` );
     return contactTime;
   }
 }

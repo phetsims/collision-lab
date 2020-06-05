@@ -93,7 +93,7 @@ const CollisionLabUtils = {
    * @returns {boolean}
    */
   isSorted( array ) {
-    assert && assert( isArray( array ) && _.every( array, number => isFinite( number ) ), `invalid array: ${ array }` );
+    assert && assert( isArray( array ) && _.every( array, number => Number.isFinite( number ) ), `invalid array: ${ array }` );
 
     // Flag that indicates if the array is sorted.
     let isSorted = true;

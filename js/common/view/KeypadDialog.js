@@ -186,7 +186,7 @@ class KeypadDialog extends Dialog {
     const value = this.keypad.valueProperty.value;
 
     // If the edit is valid, the valueProperty is set and the edit.
-    if ( isFinite( value ) && this.valueRange.contains( value ) ) {
+    if ( Number.isFinite( value ) && this.valueRange.contains( value ) ) {
       this.valueProperty.value = value;
       this.finishEdit();
     }
