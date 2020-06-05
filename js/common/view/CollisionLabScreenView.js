@@ -175,7 +175,7 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.isBallConstantSizeProperty );
+      model.ballSystem.ballsConstantSizeProperty );
   }
 
   // @protected

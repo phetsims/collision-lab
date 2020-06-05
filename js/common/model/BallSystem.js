@@ -5,8 +5,9 @@
  * of Balls, both inside and outside the PlayArea.
  *
  * BallSystem is mainly responsible for:
- *   - Creating a reference to all possible Balls in prepopulatedBalls.
  *   - Keeping track of the Balls and the number of Balls in the system.
+ *   - Creating a reference to all possible Balls in prepopulatedBalls. The same Ball instances are used with the same
+ *     number of Balls, so Balls are created here at the start of the sim.
  *   - CenterOfMass model instantiation for the system of Balls.
  *   - Keeping track of the total kinetic energy of the system.
  *   - Tracking if there are any Balls that are being controlled by the user.
@@ -25,6 +26,7 @@ import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallState from './BallState.js';
 import CenterOfMass from './CenterOfMass.js';
@@ -50,26 +52,27 @@ class BallSystem {
 
     }, options );
 
-    // @public (read-only) {Range} - reference to the range of the number of balls.
-    this.numberOfBallsRange = options.numberOfBallsRange;
-
     //----------------------------------------------------------------------------------------
+
+    // @public (read-only) {Range} - reference to the numeric Range of the number of balls.
+    this.numberOfBallsRange = options.numberOfBallsRange;
 
     // @public {BooleanProperty} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
     //                             is manipulated externally in the view.
-    this.isBallConstantSizeProperty = new BooleanProperty( false );
+    this.ballsConstantSizeProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model since CenterOfMass
-    //                             PathDataPoints are only recorded if this is true and are cleared when set to false.
+    // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model for performance as
+    //                             the position and the velocity of the CenterOfMass is only updated if this is true.
+    //                             Also used in sub-classes for performance optimization.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation
     //                                 and are never disposed. However, these Balls are NOT necessarily the Balls
     //                                 currently within the system. This is just used so that the same Ball
-    //                                 instances are added with the same number of balls.
+    //                                 instances are used with the same number of balls.
     this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
-      this.isBallConstantSizeProperty,
+      this.ballsConstantSizeProperty,
       playArea.bounds,
       playArea.gridVisibleProperty,
       playArea.dimensions,
@@ -109,11 +112,14 @@ class BallSystem {
       else {
 
         // Otherwise, the number of balls in the system is greater than numberOfBalls, meaning Balls need to be removed.
-        // Remove the correct number of Balls from the end of the Balls ObservableArray.
+        // Remove the correct number of Balls from the end of the system.
         while ( this.balls.length !== numberOfBalls ) {
           this.balls.pop();
         }
       }
+
+      // Ensure Balls are in ascending order by their indices if assertions are enabled.
+      assert && assert( CollisionLabUtils.isSorted( this.balls.map( _.property( 'index' ) ) ) );
     } );
 
     //----------------------------------------------------------------------------------------
@@ -125,10 +131,10 @@ class BallSystem {
       this.centerOfMassVisibleProperty
     );
 
-    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
+    // @public (read-only) {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
     //
     // For the dependencies, we use:
-    //  - The KE Properties of the prepopulatedBalls. Only the balls in the system are used in the calculation.
+    //  - The KE Properties of the prepopulatedBalls. However, only the balls in the system are used in the calculation.
     //  - numberOfBallsProperty, since removing or adding a Ball changes the total kinetic energy of the system.
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
@@ -143,14 +149,36 @@ class BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled by the user. Use
-    //                                       the userControlledProperty of all possible Balls as dependencies to update
-    //                                       but only the Balls in the system are used in the calculation.
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled. Use
+    //                                                   the userControlledProperty of all possible Balls as
+    //                                                   dependencies but only the Balls in the system are used.
     this.ballSystemUserControlledProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.userControlledProperty ),
       () => this.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
       } );
+  }
+
+  /**
+   * Resets the BallSystem.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
+   */
+  reset() {
+    this.ballsConstantSizeProperty.reset();
+    this.centerOfMassVisibleProperty.reset();
+    this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
+  }
+
+  /**
+   * Restarts the BallSystem.
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    this.balls.forEach( ball => ball.restart() );
   }
 
   /**
@@ -169,28 +197,8 @@ class BallSystem {
   }
 
   /**
-   * Resets the BallSystem.
-   * @public
-   */
-  reset() {
-    this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
-    this.isBallConstantSizeProperty.reset();
-    this.centerOfMassVisibleProperty.reset();
-  }
-
-  /**
-   * Restarts the BallSystem.
-   * @public
-   *
-   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
-   */
-  restart() {
-    this.balls.forEach( ball => ball.restart() );
-  }
-
-  /**
-   * Saves the states of All of the Balls in the system for the next restart() call. This is called when the user
-   * presses the play button
+   * Saves the states of all of the Balls in the system for the next restart() call. This is called when the user
+   * presses the play button.
    * @public
    *
    * See https://github.com/phetsims/collision-lab/issues/76.

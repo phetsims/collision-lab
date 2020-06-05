@@ -22,7 +22,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
-   * @param {Property.<boolean>} isBallConstantSizeProperty
+   * @param {Property.<boolean>} ballsConstantSizeProperty
    * @param {Object} [options]
    */
   constructor( viewProperties,
@@ -31,7 +31,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
-               isBallConstantSizeProperty,
+               ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
@@ -39,7 +39,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
-    assert && assert( isBallConstantSizeProperty instanceof Property && typeof isBallConstantSizeProperty.value === 'boolean', `invalid isBallConstantSizeProperty: ${isBallConstantSizeProperty}` );
+    assert && assert( ballsConstantSizeProperty instanceof Property && typeof ballsConstantSizeProperty.value === 'boolean', `invalid ballsConstantSizeProperty: ${ballsConstantSizeProperty}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
 
@@ -48,7 +48,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,
-           isBallConstantSizeProperty,
+           ballsConstantSizeProperty,
            options );
 
     // 'Path' visibility Checkbox

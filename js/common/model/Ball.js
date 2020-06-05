@@ -255,7 +255,6 @@ class Ball {
    * Gets the center position of the Ball, in meters.
    * @public
    *
-   * @override
    * @returns {Vector2} - in meters
    */
   get position() { return this.positionProperty.value; }
