@@ -4,10 +4,7 @@
  * Explore1DBallSystem is a BallSystem sub-type for the 'Explore 1D' screen.
  *
  * It adds no additional Properties to the super class, but is provided for symmetry in the model-view type hierarchy.
- * It also ensures a correct configuration of initialBallStates and visibility Properties.
- *
- * Explore1DBallSystems are created at the start of the sim and are never disposed, so no dispose method is necessary
- * and links are left as-is.
+ * It also ensures a correct configuration of initialBallStates.
  *
  * @author Brandon Li
  */
@@ -43,7 +40,7 @@ class Explore1DBallSystem extends BallSystem {
 
     assert && assert( _.every( EXPLORE_1D_INITIAL_BALL_STATES, ballState => {
       return ballState.position.y === 0 && ballState.velocity.y === 0;
-    } ), 'balls in explore 1d must have yVelocity and yPosition as 0' );
+    } ), 'balls in explore 1D must have yVelocity and yPosition equal to 0.' );
 
     assert && assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
   }
