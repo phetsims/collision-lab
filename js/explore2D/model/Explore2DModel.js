@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Top level model for the 'Intro' screen.
+ * Top level model for the 'Explore 2D' screen.
  *
  * @author Brandon Li
  */
