@@ -11,12 +11,16 @@ import collisionLab from '../../collisionLab.js';
 
 const InelasticCollisionTypes = Enumeration.byKeys( [
 
-  // TODO: Document this
-  'STICK',
+  // This is the behavior of the flash simulation, where the component of velocity along the 'Plane of Contact'
+  // is equal before and after the collision. This is described in
+  // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+  'SLIP',
 
+  // This is a new feature of the HTML5 version of the simulation, where Balls stick together and rotate around
+  // the center of mass in a perfectly inelastic collision that isn't head-on. See
+  // https://github.com/phetsims/collision-lab/issues/3.
+  'STICK'
 
-  // TODO: Document this
-  'SLIP'
 ] );
 
 collisionLab.register( 'InelasticCollisionTypes', InelasticCollisionTypes );
