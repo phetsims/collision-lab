@@ -191,8 +191,10 @@ class BallNode extends Node {
       },
 
       // Set the userControlledProperty of the ball and the visibility of the leader-lines to true when dragging.
-      start: () => {
+      start: ( event, listener ) => {
+        ball.dragToPosition( listener.modelPoint );
         leaderLinesNode.reticle = ballCircle.center;
+
         leaderLinesNode.visible = true;
         ball.userControlledProperty.value = true;
       },
@@ -222,7 +224,7 @@ class BallNode extends Node {
     // the positioning of the speed and momentum NumberDisplays. Link persists for the lifetime of the simulation.
     Property.multilink( [ valuesVisibleProperty, ball.positionProperty, ball.radiusProperty ], valuesVisible => {
 
-      if ( valuesVisible ) { // Only update positioning if they are visible.
+      if ( valuesVisible ) { // Only update positioning if the NumberDisplays are visible.
 
         // Update the position of the velocity and momentum NumberDisplays.
         speedNumberDisplay.centerBottom = ballCircle.centerTop.minusXY( 0, VALUE_DISPLAY_MARGIN );
