@@ -33,13 +33,7 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
     }, options );
 
-    super( totalKineticEnergyProperty, options );
-
-    //----------------------------------------------------------------------------------------
-
-    // link visibility of this display to the kineticEnergyVisibleProperty
-    // present for the lifetime of the simulation
-    kineticEnergyVisibleProperty.linkAttribute( this, 'visible' );
+    super( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options );
   }
 }
 

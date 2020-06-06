@@ -7,6 +7,7 @@
  *  - Keeping the tail of the ArrowNode at the center of the Ball
  *  - Creating an API to update the direction and magnitude of the ArrowNode
  *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
@@ -14,7 +15,13 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallVectorNode from './BallVectorNode.js';
+
+const BALL_MOMENTUM_VECTOR_OPTIONS = merge(
+  CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
+);
 
 class BallMomentumVectorNode extends BallVectorNode {
 
@@ -34,12 +41,7 @@ class BallMomentumVectorNode extends BallVectorNode {
 
     //----------------------------------------------------------------------------------------
 
-    options = merge( {
-
-      arrowOptions: {} // TODO
-    }, options );
-
-    super( momentumProperty, visibleProperty, modelViewTransform, options );
+    super( momentumProperty, visibleProperty, modelViewTransform, BALL_MOMENTUM_VECTOR_OPTIONS );
 
   }
 }

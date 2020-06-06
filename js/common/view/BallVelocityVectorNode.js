@@ -15,6 +15,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
+import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DragListener from '../../../../scenery/js/listeners/DragListener.js';
@@ -22,7 +23,13 @@ import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallVectorNode from './BallVectorNode.js';
+
+const BALL_VELOCITY_VECTOR_OPTIONS = merge(
+  CollisionLabColors.VELOCITY_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
+);
 
 class BallVelocityVectorNode extends BallVectorNode {
 
@@ -44,7 +51,7 @@ class BallVelocityVectorNode extends BallVectorNode {
 
     //----------------------------------------------------------------------------------------
 
-    super( velocityProperty, visibleProperty, modelViewTransform, options );
+    super( velocityProperty, visibleProperty, modelViewTransform, BALL_VELOCITY_VECTOR_OPTIONS );
 
     // create label for the tip of velocity vector
     const tipLabelText = new Text( 'V', {
@@ -69,9 +76,6 @@ class BallVelocityVectorNode extends BallVectorNode {
     const tipDragListener = new DragListener( {
       positionProperty: tipPositionProperty,
       start: () => {
-        userControlledProperty.value = true;
-      },
-      drag: () => {
         userControlledProperty.value = true;
       },
       end: () => {

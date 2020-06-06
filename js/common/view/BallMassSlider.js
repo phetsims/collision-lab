@@ -48,7 +48,6 @@ class BallMassSlider extends HSlider {
     // Set the userControlledProperty of the Ball to true when dragging. See
     // https://github.com/phetsims/collision-lab/issues/76
     options.startDrag = () => { ball.userControlledProperty.value = true; };
-    options.drag = () => { ball.userControlledProperty.value = true; }; // For Multi-touch.
     options.endDrag = () => { ball.userControlledProperty.value = false; };
 
     //----------------------------------------------------------------------------------------

@@ -35,7 +35,7 @@ class CenterOfMassNode extends Node {
     const xNode = new XNode();
 
     // create number display for speed, located above the COM
-    const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
+    const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, valuesVisibleProperty, {
       valuePattern: collisionLabStrings.speedPattern
     } );
 
@@ -47,7 +47,6 @@ class CenterOfMassNode extends Node {
 
 
     centerOfMassVisibleProperty.linkAttribute( this, 'visible' );
-    valuesVisibleProperty.linkAttribute( speedNumberDisplay, 'visible' );
 
     centerOfMass.positionProperty.link( position => {
       xNode.center = modelViewTransform.modelToViewPosition( position );

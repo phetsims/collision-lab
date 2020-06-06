@@ -27,10 +27,12 @@ class PlayAreaNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Property.<number>} numberProperty
+   * @param {Property.<boolean<} visibleProperty
    * @param {Object} [options]
    */
-  constructor( numberProperty, options ) {
+  constructor( numberProperty, visibleProperty, options ) {
     assert && AssertUtils.assertPropertyOf( numberProperty, 'number' );
+    assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     //----------------------------------------------------------------------------------------
@@ -40,10 +42,14 @@ class PlayAreaNumberDisplay extends NumberDisplay {
       // {Range} - display range for the NumberDisplay, for determining the width.
       displayRange: new Range( 0, 999 ),
 
+      // {null|Property.<boolean>} - optional visibility property, which toggles the visibility of this Node.
+      visibleProperty: null,
+
       // superclass options
       align: 'left',
       backgroundFill: CollisionLabColors.PLAY_AREA_NUMBER_DISPLAY_FILL,
       backgroundLineWidth: 0,
+      maxWidth: 150,
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT
@@ -51,6 +57,12 @@ class PlayAreaNumberDisplay extends NumberDisplay {
     }, options );
 
     super( numberProperty, options.displayRange, options );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the visibleProperty changes to update the visibility of this Node.
+    // Link is never unlinked since PlayAreaNumberDisplays are never disposed.
+    visibleProperty.linkAttribute( this, 'visible' );
   }
 }
 
