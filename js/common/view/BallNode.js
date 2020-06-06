@@ -5,12 +5,12 @@
  * simulation. BallNodes are implemented to work for both 1D and 2D screens, so no sub-types are needed.
  *
  * Primary responsibilities are:
- *  - Create a Circle that represents the visual Ball object with a label that displays its index.
- *  - Update the Circle's center location when the Ball's position changes.
- *  - Update the Circle's radius when the Ball's radius changes.
- *  - Handling drag requests to change the position of the Ball and show leader-lines.
- *  - Creating and position displays for the speed and momentum values.
- *  - Creating BallVectorNodes to allow the user to see/manipulate the momentum and velocity vectors.
+ *  - Creating a Circle that represents the visual Ball object with a label that displays its index.
+ *  - Updating the Circle's center location when the Ball's position changes.
+ *  - Updating the Circle's radius when the Ball's radius changes.
+ *  - Handling drag requests to change the position of the Ball and showing leader-lines.
+ *  - Creating and positioning NumberDisplays for the speed and momentum values of the Ball.
+ *  - Creating BallVectorNodes to allow the user to see/manipulate the momentum and velocity vectors of the Ball.
  *
  * For the 'Collision Lab' sim, Balls are instantiated at the start and the same Balls are used with the same
  * number of Balls in the system. They are never disposed even if they aren't in the system. Thus, BallNodes
@@ -56,7 +56,7 @@ class BallNode extends Node {
 
   /**
    * @param {Ball} ball - the Ball model
-   * @param {Property.<boolean>} valuesVisibleProperty - indicates if the momentum and speed displays are visible.
+   * @param {Property.<boolean>} valuesVisibleProperty - indicates if the momentum and speed NumberDisplays are visible.
    * @param {Property.<boolean>} velocityVectorVisibleProperty - indicates if the velocity vector is visible.
    * @param {Property.<boolean>} momentumVectorVisibleProperty - indicates if the momentum vector is visible.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is constant size.
@@ -94,7 +94,7 @@ class BallNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    // Create the Circle Node that represents the visual aspect of a Ball. Radius to be updated later.
+    // Create the Circle Node that represents the visual aspect of a Ball. Radius and position to be updated later.
     const ballCircle = new Circle( {
       fill: fillProperty,
       stroke: Color.BLACK,
@@ -108,22 +108,18 @@ class BallNode extends Node {
       fill: Color.WHITE
     } );
 
-    // Create the Vector Node for the velocity vector. To be positioned later.
-    const velocityVectorNode = new BallVelocityVectorNode(
-      ball,
+    // Create the Vector Node for the velocity vector of the Ball. To be positioned later.
+    const velocityVectorNode = new BallVelocityVectorNode( ball,
       ball.velocityProperty,
       ball.userControlledProperty,
       velocityVectorVisibleProperty,
       isPlayingProperty,
-      modelViewTransform
-    );
+      modelViewTransform );
 
-    // Create the Vector Node for the momentum vector. To be positioned later.
-    const momentumVectorNode = new BallMomentumVectorNode(
-      ball.momentumProperty,
+    // Create the Vector Node for the momentum vector of the Ball. To be positioned later.
+    const momentumVectorNode = new BallMomentumVectorNode( ball.momentumProperty,
       momentumVectorVisibleProperty,
-      modelViewTransform
-    );
+      modelViewTransform );
 
     // Create the number display for the speed of the Ball, which appears above the ball. To be positioned later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( ball.speedProperty, valuesVisibleProperty, {
@@ -143,8 +139,9 @@ class BallNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    // Wrap the BallCircle and the Label in a Node and apply a ClipArea so that the Ball doesn't appear outside
-    // of the PlayArea. Note that this clip-area doesn't apply to any of the NumberDisplays or VectorNodes.
+    // Wrap the BallCircle and the Label in a Node and apply a local ClipArea so that the Ball doesn't appear outside
+    // of the PlayArea. This container is not translated so its local Bounds is the same as the parent bounds of the
+    // BallCircle and Label. Note that this clip-area doesn't apply to any of the NumberDisplays or VectorNodes.
     const ballCircleAndLabelContainer = new Node( {
       children: [ ballCircle, labelNode ],
       clipArea: Shape.bounds( playAreaViewBounds )
@@ -156,7 +153,6 @@ class BallNode extends Node {
     // Set the children of the Ball Node in the correct rendering order.
     this.children = [
       ballCircleAndLabelContainer,
-      momentumVectorNode,
       vectorNodeContainer,
       speedNumberDisplay,
       momentumNumberDisplay,
@@ -166,17 +162,16 @@ class BallNode extends Node {
     //----------------------------------------------------------------------------------------
 
     // Listen to when the when the Ball's radius changes and update the radius of the ballCircle. It was decided
-    // to increase the line-width with elasticity. A thicker stroke could indicate a rubbery coating which would be
+    // to increase the line-width with elasticity; a thicker stroke could indicate a rubbery coating which would be
     // elastic. See https://github.com/phetsims/collision-lab/issues/38. Link persists for the lifetime of the sim.
     Property.multilink( [ ball.radiusProperty, elasticityPercentProperty ], ( radius, elasticity ) => {
 
-      // Update the line-width based on the ballCircle using a linear mapping.
-      ballCircle.lineWidth = Utils.linear(
-        ELASTICITY_PERCENT_RANGE.min,
+      // Update the line-width based on the elasticity using a linear mapping.
+      ballCircle.lineWidth = Utils.linear( ELASTICITY_PERCENT_RANGE.min,
         ELASTICITY_PERCENT_RANGE.max,
         LINE_WIDTH_RANGE.min,
-        LINE_WIDTH_RANGE.max, elasticity
-      );
+        LINE_WIDTH_RANGE.max,
+        elasticity );
 
       // Update the radius of the Ball, subtracting half of the line-width so that the stroke is directed 'inwards'.
       ballCircle.radius = modelViewTransform.modelToViewDeltaX( radius ) - ballCircle.lineWidth / 2;
@@ -207,10 +202,9 @@ class BallNode extends Node {
       }
     } ) );
 
-
     //----------------------------------------------------------------------------------------
 
-    // Observe when the Ball's position to update the positioning of the BallCircle and the Vector Nodes.
+    // Observe when the Ball's position changes to update the positioning of the BallCircle and the Vector Nodes.
     // Link persists for the lifetime of the simulation.
     ball.positionProperty.link( position => {
       const viewPosition = modelViewTransform.modelToViewPosition( position );
@@ -220,15 +214,17 @@ class BallNode extends Node {
       labelNode.center = viewPosition;
       vectorNodeContainer.translation = viewPosition;
 
-      // Set the VectorNodes to visible if the Ball's center is inside the PlayArea.
+      // Set the VectorNodes container to visible if the Ball's center is inside the PlayArea.
       vectorNodeContainer.visible = playAreaViewBounds.containsPoint( viewPosition );
     } );
 
     // Observe when either the position of the Ball changes or when the radius of the Ball changes, which changes
-    // the positioning of the speed and momentum number displays. Link persists for the lifetime of the simulation.
+    // the positioning of the speed and momentum NumberDisplays. Link persists for the lifetime of the simulation.
     Property.multilink( [ valuesVisibleProperty, ball.positionProperty, ball.radiusProperty ], valuesVisible => {
+
       if ( valuesVisible ) { // Only update positioning if they are visible.
-        // Update the position of the velocity and momentum number displays.
+
+        // Update the position of the velocity and momentum NumberDisplays.
         speedNumberDisplay.centerBottom = ballCircle.centerTop.minusXY( 0, VALUE_DISPLAY_MARGIN );
         momentumNumberDisplay.centerTop = ballCircle.centerBottom.addXY( 0, VALUE_DISPLAY_MARGIN );
       }
