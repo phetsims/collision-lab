@@ -92,7 +92,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     velocityProperty.link( velocityListener );
 
     const tipPositionListener = velocity => {
-      if ( ball.dimensions === 2 ) {
+      if ( ball.playArea.dimensions === 2 ) {
         ball.velocity = modelViewTransform.viewToModelDelta( velocity );
       }
       else {

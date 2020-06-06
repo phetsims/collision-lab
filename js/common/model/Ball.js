@@ -23,32 +23,28 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
+import PlayArea from './PlayArea.js';
 
 class Ball {
 
   /**
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
-   * @param {Bounds} playAreaBounds - the bounding Box of the entire Ball if the PlayArea's border doesn't reflect.
-   * @param {Property.<boolean>} gridVisibleProperty - indicates if the PlayArea's grid is visible.
-   * @param {number} dimensions - the dimensions of the PlayArea, used for snap-to-grid differences. Either 1 or 2.
+   * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialBallState, isConstantSizeProperty, playAreaBounds, gridVisibleProperty, dimensions, index ) {
+  constructor( initialBallState, isConstantSizeProperty, playArea, index ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
-    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
-    assert && AssertUtils.assertPropertyOf( gridVisibleProperty, 'boolean' );
-    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
 
     //----------------------------------------------------------------------------------------
@@ -112,13 +108,16 @@ class Ball {
     //                             or editing a value through the Keypad. This is set externally in the view.
     this.userControlledProperty = new BooleanProperty( false );
 
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball's is fully contained by the PlayArea,
+    //                                                   regardless of whether or not the Ball is in the BallSystem.
+    this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ], () => playArea.containsBall( this ), {
+      valueType: 'boolean'
+    } );
+
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {number} - reference to the dimensions of the PlayArea that contains the Ball.
-    this.dimensions = dimensions;
-
-    // @public (read-only) {Bounds} - reference to the passed-in PlayArea Bounds.
-    this.playAreaBounds = playAreaBounds;
+    // @public (read-only) {PlayArea} - reference to the passed-in PlayArea
+    this.playArea = playArea;
 
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
@@ -126,15 +125,9 @@ class Ball {
     // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
     this.restartState = initialBallState;
 
-    // @private {Property.<number>} - reference to the gridVisibleProperty for use in `dragToPosition()`.
-    //                                Used in the model to determine Ball snapping functionality.
-    this.gridVisibleProperty = gridVisibleProperty;
-
-    //----------------------------------------------------------------------------------------
-
     // Ensure that our yPosition and yVelocity is always 0 for 1D screens. Persists for the lifetime of the sim.
-    assert && this.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
-    assert && this.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
+    assert && this.playArea.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
+    assert && this.playArea.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
   }
 
   /**
@@ -199,17 +192,17 @@ class Ball {
     // Flag that references the corrected position of the attempted drag position of the Ball.
     let correctedPosition;
 
-    if ( !this.gridVisibleProperty.value ) {
+    if ( !this.playArea.gridVisibleProperty.value ) {
 
       // Ensure that the Ball's position is inside of the PlayArea's bounds, eroded by the radius to ensure that the
       // entire Ball is inside the PlayArea.
-      correctedPosition = this.playAreaBounds.eroded( this.radius ).closestPointTo( position );
+      correctedPosition = this.playArea.bounds.eroded( this.radius ).closestPointTo( position );
     }
     else {
 
       // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded inwards to the nearest
       // grid-line to ensure that the Ball is both inside the PlayArea and snapped to a grid-line.
-      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.playAreaBounds, this.radius )
+      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.playArea.bounds, this.radius )
         .closestPointTo( position )
         .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
         .roundSymmetric()
@@ -217,7 +210,7 @@ class Ball {
     }
 
     // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.
-    ( this.dimensions === 1 ) && correctedPosition.setY( 0 );
+    ( this.playArea.dimensions === 1 ) && correctedPosition.setY( 0 );
 
     // Finally, set the position of the Ball to the corrected position.
     this.position = correctedPosition;

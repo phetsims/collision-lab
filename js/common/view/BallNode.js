@@ -132,7 +132,7 @@ class BallNode extends Node {
     } );
 
     // Reference the bounds of the PlayArea in view coordinates.
-    const playAreaViewBounds = modelViewTransform.modelToViewBounds( ball.playAreaBounds );
+    const playAreaViewBounds = modelViewTransform.modelToViewBounds( ball.playArea.bounds );
 
     // Create the 'leader lines', which are displayed when the Ball is being dragged. To be drawn and positioned later.
     const leaderLinesNode = new LeaderLinesNode( playAreaViewBounds );
