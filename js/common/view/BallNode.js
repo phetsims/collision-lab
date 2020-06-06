@@ -33,7 +33,6 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DragListener from '../../../../scenery/js/listeners/DragListener.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import Path from '../../../../scenery/js/nodes/Path.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
@@ -43,13 +42,13 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
+import LeaderLinesNode from './LeaderLinesNode.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 
 // constants
 const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 const LABEL_FONT = new PhetFont( 20 );
-const LEADER_LINES_DASH = [ 10, 2 ];
 const LINE_WIDTH_RANGE = new Range( 1, 3 );
 const VALUE_DISPLAY_MARGIN = 2;
 
@@ -136,16 +135,13 @@ class BallNode extends Node {
       valuePattern: collisionLabStrings.momentumPattern
     } );
 
-    // Create the 'leader lines', which are displayed when the Ball is being dragged. To be drawn and positioned later.
-    const leaderLinesPath = new Path( new Shape().makeImmutable(), {
-      stroke: Color.BLACK,
-      lineDash: LEADER_LINES_DASH
-    } );
-
-    //----------------------------------------------------------------------------------------
-
     // Reference the bounds of the PlayArea in view coordinates.
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( ball.playAreaBounds );
+
+    // Create the 'leader lines', which are displayed when the Ball is being dragged. To be drawn and positioned later.
+    const leaderLinesNode = new LeaderLinesNode( playAreaViewBounds );
+
+    //----------------------------------------------------------------------------------------
 
     // Wrap the BallCircle and the Label in a Node and apply a ClipArea so that the Ball doesn't appear outside
     // of the PlayArea. Note that this clip-area doesn't apply to any of the NumberDisplays or VectorNodes.
@@ -164,7 +160,7 @@ class BallNode extends Node {
       vectorNodeContainer,
       speedNumberDisplay,
       momentumNumberDisplay,
-      leaderLinesPath
+      leaderLinesNode
     ];
 
     //----------------------------------------------------------------------------------------
@@ -194,18 +190,23 @@ class BallNode extends Node {
       transform: modelViewTransform,
       drag: ( event, listener ) => {
         ball.dragToPosition( listener.modelPoint );
+
+        // Now that the user is dragging the Ball, update the leader-lines.
+        leaderLinesNode.reticle = ballCircle.center;
       },
 
-      // Set the userControlledProperty and leader-line visibility to true when dragging.
+      // Set the userControlledProperty of the ball and the visibility of the leader-lines to true when dragging.
       start: () => {
-        leaderLinesPath.visible = true;
+        leaderLinesNode.reticle = ballCircle.center;
+        leaderLinesNode.visible = true;
         ball.userControlledProperty.value = true;
       },
       end: () => {
-        leaderLinesPath.visible = false;
+        leaderLinesNode.visible = false;
         ball.userControlledProperty.value = false;
       }
     } ) );
+
 
     //----------------------------------------------------------------------------------------
 
