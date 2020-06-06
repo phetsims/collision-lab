@@ -53,7 +53,7 @@ class LeaderLinesNode extends Path {
    */
   set reticle( reticle ) {
     assert && assert( reticle instanceof Vector2 && reticle.isFinite(), `invalid reticle: ${reticle}` );
-    assert && assert( this.leaderLinesBounds.contains( reticle ), `reticle out of bounds: ${reticle}` );
+    assert && assert( this.leaderLinesBounds.containsPoint( reticle ), `reticle out of bounds: ${reticle}` );
 
     // Update the shape.
     this.shape = new Shape()

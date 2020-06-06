@@ -163,8 +163,8 @@ const BallUtils = {
     const distanceBetweenBalls = ball1.position.distance( ball2.position );
     const distanceThreshold = ball1.radius + ball2.radius;
 
-    // If the distance between the Balls is less or equal to than the sum of the radii, they are overlapping.
-    return distanceBetweenBalls <= distanceThreshold;
+    // If the distance between the Balls is less the sum of the radii, they are overlapping.
+    return distanceBetweenBalls < distanceThreshold;
   }
 };
 
