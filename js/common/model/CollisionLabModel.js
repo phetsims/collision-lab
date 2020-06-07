@@ -136,16 +136,12 @@ class CollisionLabModel {
   }
 
   /**
-   * Gets the time speed factor, which is set externally by the user and is based off the timeSpeedProperty.
+   * Called when the 'Return Masses' button is pressed.
    * @public
    *
-   * @returns {number} - the speedFactor, from 1 (normal) to less than one (slow)
+   * Currently, it does the same thing as restarting. See https://github.com/phetsims/collision-lab/issues/90.
    */
-  getTimeSpeedFactor() {
-    return this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
-              CollisionLabConstants.NORMAL_SPEED_FACTOR :
-              CollisionLabConstants.SLOW_SPEED_FACTOR;
-  }
+  returnMasses() { this.restart(); }
 
   /**
    * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the
@@ -157,7 +153,11 @@ class CollisionLabModel {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    this.isPlayingProperty.value && this.stepManual( dt * this.getTimeSpeedFactor() );
+    const timeSpeedFactor = this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
+                              CollisionLabConstants.NORMAL_SPEED_FACTOR :
+                              CollisionLabConstants.SLOW_SPEED_FACTOR;
+
+    this.isPlayingProperty.value && this.stepManual( dt * timeSpeedFactor );
   }
 
   /**

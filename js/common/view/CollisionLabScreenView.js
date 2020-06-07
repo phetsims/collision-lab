@@ -27,6 +27,7 @@ import MoreDataCheckbox from './MoreDataCheckbox.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import RestartButton from './RestartButton.js';
+import ReturnMassesButton from './ReturnMassesButton.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 153; // meter to view coordinates (1 m = 200 coordinates)
@@ -169,6 +170,12 @@ class CollisionLabScreenView extends ScreenView {
       left: SCREEN_VIEW_X_MARGIN
     } );
     this.addChild( moreDataCheckbox );
+
+    const returnMassesButton = new ReturnMassesButton( model.ballSystem.ballsNotInsidePlayAreaProperty, {
+      center: modelViewTransform.modelToViewPosition( model.playArea.bounds.center ),
+      listener: () => { model.returnMasses(); }
+    } );
+    this.addChild( returnMassesButton );
 
   }
 

@@ -11,7 +11,7 @@
  *   - CenterOfMass model instantiation for the system of Balls.
  *   - Keeping track of the total kinetic energy of the system.
  *   - Tracking if there are any Balls that are being controlled by the user.
- *   - Tracking if all of the Balls in the system are inside of the PlayArea.
+ *   - Tracking if the Balls in the system are inside of the PlayArea.
  *
  * BallSystems are created at the start of the sim and are never disposed, so no dispose method is necessary and links
  * are left as-is.
@@ -157,12 +157,12 @@ class BallSystem {
         valueType: 'boolean'
       } );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are inside of the
-    //                                                   PlayArea. Uses the insidePlayAreaProperty of all possible Balls
-    //                                                   but only the Balls in the system are used in the derivation.
-    this.ballsInsidePlayAreaProperty = new DerivedProperty(
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are not inside of
+    //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
+    //                                                   Balls but only the Balls in the system are used.
+    this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ),
-      () => ( this.balls.count( ball => ball.insidePlayAreaProperty.value ) === this.balls.length ), {
+      () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
         valueType: 'boolean'
       } );
   }
@@ -187,16 +187,6 @@ class BallSystem {
    */
   restart() {
     this.balls.forEach( ball => ball.restart() );
-  }
-
-  /**
-   * Called when the 'Return Masses' button is pressed.
-   * @public
-   *
-   * Currently, it does the same thing as restarting. See https://github.com/phetsims/collision-lab/issues/90.
-   */
-  returnMasses() {
-    this.restart();
   }
 
   /**

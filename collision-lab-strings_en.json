@@ -115,5 +115,8 @@
   },
   "symbol.v": {
     "value": "v"
+  },
+  "returnMasses": {
+    "value": "Return Masses"
   }
 }

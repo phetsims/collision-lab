@@ -108,11 +108,11 @@ class Ball {
     //                             or editing a value through the Keypad. This is set externally in the view.
     this.userControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball's is fully contained by the PlayArea,
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if any part of the Ball is inside the PlayArea,
     //                                                   regardless of whether or not the Ball is in the BallSystem.
-    this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ], () => playArea.containsBall( this ), {
-      valueType: 'boolean'
-    } );
+    this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
+      () => playArea.containsAnyPartOfBall( this ),
+      { valueType: 'boolean' } );
 
     //----------------------------------------------------------------------------------------
 

@@ -301,7 +301,7 @@ class CollisionEngine {
     this.ballSystem.balls.forEach( ball => {
 
       // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
-      if ( !this.playArea.containsBall( ball ) ) {
+      if ( !this.playArea.fullyContainsBall( ball ) ) {
 
         // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
         // position when the ball first collided. Use the overlapped time to find the exact collision position.
@@ -317,12 +317,12 @@ class CollisionEngine {
           ball.velocity = Vector2.ZERO;
         }
         else {
-          if ( !this.playArea.containsBallHorizontally( ball ) ) {
+          if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
 
             // Left and Right Border wall collisions incur a flip in horizontal velocity.
             ball.xVelocity *= -elasticity;
           }
-          if ( !this.playArea.containsBallVertically( ball ) ) {
+          if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
 
             // Top and Bottom Border wall collisions incur a flip in vertical velocity.
             ball.yVelocity *= -elasticity;
@@ -354,7 +354,7 @@ class CollisionEngine {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
     assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
-    assert && assert( !this.playArea.containsBall( ball ), 'ball must be intersecting' );
+    assert && assert( !this.playArea.fullyContainsBall( ball ), 'ball must be intersecting' );
 
     /*----------------------------------------------------------------------------*
      * This calculation comes from the known fact that when the Ball's distance to the
