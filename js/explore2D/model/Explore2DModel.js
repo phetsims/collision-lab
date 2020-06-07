@@ -7,10 +7,10 @@
  */
 
 import collisionLab from '../../collisionLab.js';
+import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 import PlayArea from '../../common/model/PlayArea.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
 import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
-import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
 class Explore2DModel extends CollisionLabModel {
 

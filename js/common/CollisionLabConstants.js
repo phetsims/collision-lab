@@ -16,7 +16,7 @@ import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
 
 // For panel-like containers.
-const PANEL_X_MARGIN = 13.5;
+const PANEL_X_MARGIN = 14;
 const PANEL_Y_MARGIN = 10;
 const PANEL_CORNER_RADIUS = 7;
 
