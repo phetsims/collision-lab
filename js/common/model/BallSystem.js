@@ -161,7 +161,7 @@ class BallSystem {
     //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
     //                                                   Balls but only the Balls in the system are used.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
-      this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ),
+      [ ...this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ), this.balls.lengthProperty ],
       () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
         valueType: 'boolean'
       } );
