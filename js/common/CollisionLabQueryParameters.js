@@ -22,6 +22,31 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
     type: 'number',
     isValidValue: value => ( value > 0 ),
     defaultValue: 3
+  },
+
+  /**
+   * The max time period that the 'Change in Momentum' Vectors are FULLY opaque in the 'Intro' screen.
+   *
+   * See https://github.com/phetsims/collision-lab/issues/85.
+   * For internal use only.
+   */
+  changeInMomentumVisiblePeriod: {
+    type: 'number',
+    isValidValue: value => ( value >= 0 ),
+    defaultValue: 0.5
+  },
+
+  /**
+   * The max time period that the 'Change In Momentum' Vectors linearly fade in opacity in the 'Intro' screen, after the
+   * CollisionLabQueryParameters.changeInMomentumVisiblePeriod is over.
+   *
+   * See https://github.com/phetsims/collision-lab/issues/85.
+   * For internal use only.
+   */
+  changeInMomentumFadePeriod: {
+    type: 'number',
+    isValidValue: value => ( value >= 0 ),
+    defaultValue: 0.5
   }
 
 } );
