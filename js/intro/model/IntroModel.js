@@ -48,7 +48,7 @@ class IntroModel extends CollisionLabModel {
   createBallSystem( playArea ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
-    return new IntroBallSystem( playArea );
+    return new IntroBallSystem( playArea, this.elapsedTimeProperty );
   }
 
   /**

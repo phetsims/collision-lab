@@ -9,6 +9,7 @@
  * @author Brandon Li
  */
 
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -16,6 +17,7 @@ import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import PlayArea from '../../common/model/PlayArea.js';
+import ChangeInMomentumVector from './ChangeInMomentumVector.js';
 
 // constants
 const INTRO_INITIAL_BALL_STATES = [
@@ -29,7 +31,7 @@ class IntroBallSystem extends BallSystem {
    * @param {PlayArea} playArea
    * @param {Object} [options]
    */
-  constructor( playArea, options ) {
+  constructor( playArea, elapsedTimeProperty, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
@@ -43,6 +45,17 @@ class IntroBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
+    // @public {BooleanProperty}
+    this.changeInMomentVectorVisibleProperty = new BooleanProperty( false );
+
+
+    // @public (read-only)
+    this.ballToChangeInMomentumVector = new Map();
+
+    // Populate the Map with Paths.
+    this.prepopulatedBalls.forEach( ball => {
+      this.ballToChangeInMomentumVector.set( ball, new ChangeInMomentumVector( ball.momentumProperty, this.changeInMomentVectorVisibleProperty, elapsedTimeProperty ) );
+    } );
 
   }
 }
