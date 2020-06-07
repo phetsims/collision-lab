@@ -12,8 +12,7 @@ import Tandem from '../../tandem/js/Tandem.js';
 import collisionLabStrings from './collisionLabStrings.js';
 import Explore1DScreen from './explore1D/Explore1DScreen.js';
 import Explore2DScreen from './explore2D/Explore2DScreen.js';
-
-// import IntroScreen from './intro/IntroScreen.js';
+import IntroScreen from './intro/IntroScreen.js';
 
 const collisionLabTitleString = collisionLabStrings[ 'collision-lab' ].title;
 
@@ -34,7 +33,7 @@ const simOptions = {
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
   const sim = new Sim( collisionLabTitleString, [
-    // new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) ),
+    new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) ),
     new Explore1DScreen( Tandem.ROOT.createTandem( 'explore1DScreen' ) ),
     new Explore2DScreen( Tandem.ROOT.createTandem( 'explore2DScreen' ) )
   ], simOptions );
