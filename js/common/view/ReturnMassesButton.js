@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * ReturnMassesButton is RectangularPushButton sub-type that displays 'Return Masses'. It appears when the
