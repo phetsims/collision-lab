@@ -11,6 +11,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
+import IntroBallSystemNode from './IntroBallSystemNode.js';
 import IntroControlPanel from './IntroControlPanel.js';
 
 class IntroScreenView extends CollisionLabScreenView {
@@ -44,6 +45,18 @@ class IntroScreenView extends CollisionLabScreenView {
           includeStickSlipSwitch: false
         }
       } );
+  }
+
+
+  // @protected
+  createBallSystemNode( model, viewProperties, modelViewTransform ) {
+    return new IntroBallSystemNode( model.ballSystem,
+        model.playArea,
+        viewProperties.valuesVisibleProperty,
+        viewProperties.velocityVectorVisibleProperty,
+        viewProperties.momentumVectorVisibleProperty,
+        model.isPlayingProperty,
+        modelViewTransform );
   }
 }
 

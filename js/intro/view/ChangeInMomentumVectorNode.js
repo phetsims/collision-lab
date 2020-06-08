@@ -9,13 +9,14 @@ import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import ChangeInMomentumVector from '../model/ChangeInMomentumVector.js';
 
-const Y = 100;
+const Y = 40;
 
 class ChangeInMomentumVectorNode extends Node {
 
@@ -55,7 +56,7 @@ class ChangeInMomentumVectorNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    Property.multilink( [ ball.psitionProperty,
+    Property.multilink( [ ball.positionProperty,
       changeInMomentumVector.componentsProperty  ], ( position, components ) => {
 
         // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
@@ -65,13 +66,18 @@ class ChangeInMomentumVectorNode extends Node {
         const ballViewPosition = modelViewTransform.modelToViewPosition( position );
 
         const tailViewPosition = ballViewPosition.copy().setY( Y );
-        const tipViewPosition = modelViewTransform.modelToViewPosition( position.plus( components ) );
+        const tipViewPosition = tailViewPosition.plus(  modelViewTransform.modelToViewDelta( components ) );
 
         // Update the positioning of the ArrowNode to match the MomentaDiagramVector.
         arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
 
         line.setLine( ballViewPosition.x, ballViewPosition.y, tailViewPosition.x, tailViewPosition.y );
      } );
+
+
+    changeInMomentumVector.opacityProperty.link( opacity => {
+      this.opacity = opacity;
+    } );
   }
 }
 

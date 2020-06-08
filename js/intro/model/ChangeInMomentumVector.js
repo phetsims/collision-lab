@@ -73,8 +73,8 @@ class ChangeInMomentumVector {
       if ( this.opacityProperty.value ) {
 
         const dt = elapsedTime - this.setTime;
-        if ( dt > CHANGE_IN_MOMENTUM_VISIBLE_PERIOD &&
-            dt < ( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD ) ) {
+        if ( dt >= CHANGE_IN_MOMENTUM_VISIBLE_PERIOD &&
+            dt <= ( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD ) ) {
 
           this.opacityProperty.value = Utils.linear( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD,
             CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD,

@@ -11,8 +11,8 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
-import ChangeInMomentumVector from '../model/ChangeInMomentumVector.js';
 import IntroBallSystem from '../model/IntroBallSystem.js';
+import ChangeInMomentumVectorNode from './ChangeInMomentumVectorNode.js';
 
 class IntroBallSystemNode extends BallSystemNode {
 
@@ -60,7 +60,7 @@ class IntroBallSystemNode extends BallSystemNode {
     ballSystem.ballToChangeInMomentumVector.forEach( ( changeInMomentumVector, ball ) => {
 
       // Create the corresponding BallNode for each prepopulatedBall.
-      const changeInMomentumVectorNode = new ChangeInMomentumVector( changeInMomentumVector, ball, modelViewTransform );
+      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumVector, ball, modelViewTransform );
 
       // Add the BallNode to the container.
       changeInMomentumContainer.addChild( changeInMomentumVectorNode );
