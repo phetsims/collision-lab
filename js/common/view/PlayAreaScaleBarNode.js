@@ -5,8 +5,8 @@
  * @author Brandon Li
  */
 
-import Orientation from '../../../../phet-core/js/Orientation.js';
 import merge from '../../../../phet-core/js/merge.js';
+import Orientation from '../../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
 
