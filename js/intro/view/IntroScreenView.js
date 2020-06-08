@@ -10,8 +10,8 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
-import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
+import IntroControlPanel from './IntroControlPanel.js';
 
 class IntroScreenView extends CollisionLabScreenView {
 
@@ -33,8 +33,9 @@ class IntroScreenView extends CollisionLabScreenView {
 
   // @protected
   createControlPanel( viewProperties, model ) {
-    return new CollisionLabControlPanel( viewProperties,
+    return new IntroControlPanel( viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
+      model.ballSystem.changeInMomentVectorVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
