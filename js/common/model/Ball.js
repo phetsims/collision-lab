@@ -13,8 +13,9 @@
  *   - Track the kinetic energy of the Ball.
  *   - Dragging, user-control, restarting, etc.
  *
- * For the 'Collision Lab' sim, the same Ball instances are used with the same number of Balls. Thus, Balls are created
- * at the start of the sim and persist for the lifetime of the sim, so no dispose method is necessary.
+ * For the 'Collision Lab' sim, the same Ball instances are used with the same number of Balls. See BallSystem for more
+ * context. Thus, Balls are created at the start of the sim and persist for the lifetime of the sim, so no dispose
+ * method is necessary.
  *
  * @author Brandon Li
  * @author Martin Veillette
