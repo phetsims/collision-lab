@@ -53,26 +53,31 @@ class ChangeInMomentumVector {
     // @public (read-only)
     this.setTime = 0;
 
+    this.isDefined = false;
+
     ballMomentumProperty.link( ( ballMomentum, previousBallMomentum ) => {
       if ( previousBallMomentum && changeInMomentVectorVisibleProperty.value ) {
         this.componentsProperty.value = ballMomentum.minus( previousBallMomentum );
         this.setTime = elapsedTimeProperty.value;
         this.opacityProperty.value = 1;
+        this.isDefined = true;
       }
     } );
 
     changeInMomentVectorVisibleProperty.link( changeInMomentVectorVisible => {
       if ( !changeInMomentVectorVisible ) {
-        this.componentsProperty.value = Vector2.ZERO;
-        this.opacityProperty.value = 0;
+        this.clear();
       }
     } );
 
 
     elapsedTimeProperty.link( elapsedTime => {
-      if ( this.opacityProperty.value ) {
-
+      if ( this.isDefined ) {
         const dt = elapsedTime - this.setTime;
+
+        if ( dt <= 0 ) {
+          this.clear();
+        }
         if ( dt >= CHANGE_IN_MOMENTUM_VISIBLE_PERIOD &&
             dt <= ( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD ) ) {
 
@@ -83,12 +88,19 @@ class ChangeInMomentumVector {
             dt );
 
           if ( this.opacityProperty.value === 0 ) {
-            this.componentsProperty.value = Vector2.ZERO;
+            this.clear();
           }
         }
       }
     } );
 
+  }
+
+  // @public
+  clear() {
+    this.componentsProperty.value = Vector2.ZERO;
+    this.opacityProperty.value = 0;
+    this.isDefined = false;
   }
 }
 
