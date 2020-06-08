@@ -46,7 +46,7 @@ class Ball {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( typeof index === 'number' && index > 0 && index % 1 === 0, `invalid index: ${index}` );
+    assert && AssertUtils.assertPositiveInteger( index );
 
     //----------------------------------------------------------------------------------------
 
