@@ -48,8 +48,6 @@ class Ball {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPositiveInteger( index );
 
-    //----------------------------------------------------------------------------------------
-
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
     //                            individually display each component and to allow the user to manipulate separately.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
@@ -76,7 +74,10 @@ class Ball {
       { valueType: Vector2 } );
 
     // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
-    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ) );
+    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ), {
+      isValidValue: value => value >= 0,
+      valueType: 'number'
+    } );
 
     //----------------------------------------------------------------------------------------
 
@@ -85,8 +86,11 @@ class Ball {
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {DerivedProperty.<number>} - magnitude of this Balls momentum, kg*(m/s).
-    this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ) );
+    // @public (read-only) {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
+    this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ), {
+      isValidValue: value => value >= 0,
+      valueType: 'number'
+    } );
 
     // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
     //                                                  display individually.
