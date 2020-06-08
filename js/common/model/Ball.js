@@ -6,12 +6,12 @@
  * screens.
  *
  * Primary responsibilities are:
- *   1. Center-position Property.
- *   2. Track the Mass of the Ball in a Property.
- *   3. Velocity and Momentum vector Properties.
- *   4. Radius Property.
- *   5. Track the kinetic energy of the Ball.
- *   6. Dragging, user-control, restarting, etc.
+ *   - Center-position Property.
+ *   - Track the Mass of the Ball in a Property.
+ *   - Velocity and Momentum vector Properties.
+ *   - Radius Property.
+ *   - Track the kinetic energy of the Ball.
+ *   - Dragging, user-control, restarting, etc.
  *
  * For the 'Collision Lab' sim, the same Ball instances are used with the same number of Balls. Thus, Balls are created
  * at the start of the sim and persist for the lifetime of the sim, so no dispose method is necessary.
