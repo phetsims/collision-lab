@@ -101,6 +101,9 @@
   "m": {
     "value": "m"
   },
+  "pattern.m": {
+    "value": "{{value}} m"
+  },
   "metersPerSecond": {
     "value": "m/s"
   },

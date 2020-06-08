@@ -7,6 +7,7 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
+import Orientation from '../../../../phet-core/js/Orientation.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
@@ -26,6 +27,7 @@ import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
 import PlayAreaControlSet from './PlayAreaControlSet.js';
 import PlayAreaNode from './PlayAreaNode.js';
+import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
 import RestartButton from './RestartButton.js';
 import ReturnMassesButton from './ReturnMassesButton.js';
 
@@ -80,6 +82,16 @@ class CollisionLabScreenView extends ScreenView {
     const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
     this.addChild( ballSystemNode );
 
+    const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
+      scaleBarOrientation: model.playArea.dimensions === 1 ? Orientation.HORIZONTAL : Orientation.VERTICAL
+    } );
+    if ( model.playArea.dimensions === 1 ) {
+      scaleBar.leftBottom = modelViewTransform.modelToViewPosition( model.playArea.leftTop ).minusXY( 0, 5 );
+    }
+    else {
+      scaleBar.rightTop = modelViewTransform.modelToViewPosition( model.playArea.leftTop ).minusXY( 5, 0 );
+    }
+    this.addChild( scaleBar );
 
     const kineticEnergyDisplay = new KineticEnergyNumberDisplay( model.ballSystem.totalKineticEnergyProperty,
       viewProperties.kineticEnergyVisibleProperty, {
