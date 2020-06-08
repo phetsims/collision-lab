@@ -52,7 +52,7 @@ class CollisionLabScreenView extends ScreenView {
 
     options = merge( {
 
-      playAreaLeftTop: new Vector2( SCREEN_VIEW_X_MARGIN, SCREEN_VIEW_Y_MARGIN ),
+      playAreaLeftTop: new Vector2( CollisionLabConstants.PLAY_AREA_LEFT, SCREEN_VIEW_Y_MARGIN ),
 
       includePlayAreaControlSet: true,
       playAreaControlSetOptions: null,
@@ -113,7 +113,7 @@ class CollisionLabScreenView extends ScreenView {
 
     const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
     this.addChild( timeDisplay );
-    timeDisplay.left = SCREEN_VIEW_X_MARGIN;
+    timeDisplay.left = ( options.playAreaLeftTop.x );
     timeDisplay.top = playAreaNode.bottom + 10;
 
     const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
@@ -175,11 +175,11 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( ballValuesPanel );
     ballValuesPanel.top = 420;
-    ballValuesPanel.left = SCREEN_VIEW_X_MARGIN;
+    ballValuesPanel.left = ( options.playAreaLeftTop.x );
 
     const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
       bottom: ballValuesPanel.top - 4,
-      left: SCREEN_VIEW_X_MARGIN
+      left: ( options.playAreaLeftTop.x )
     } );
     this.addChild( moreDataCheckbox );
 

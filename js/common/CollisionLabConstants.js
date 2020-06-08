@@ -39,6 +39,7 @@ const CollisionLabConstants = {
   MAJOR_GRIDLINE_SPACING: 0.5,
   PLAY_AREA_1D_ERODED_Y: 0.5,
   PLAY_AREA_VIEW_TOP_1D: 100,
+  PLAY_AREA_LEFT: 55,
 
   // Vectors with magnitudes smaller than this value are treated as effectively zero.
   // See https://github.com/phetsims/collision-lab/issues/51.
@@ -55,7 +56,7 @@ const CollisionLabConstants = {
   //----------------------------------------------------------------------------------------
 
   // ScreenViews
-  SCREEN_VIEW_X_MARGIN: 28,
+  SCREEN_VIEW_X_MARGIN: 15,
   SCREEN_VIEW_Y_MARGIN: 10.5,
 
   // Rounding

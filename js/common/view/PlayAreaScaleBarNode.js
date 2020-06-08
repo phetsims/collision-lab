@@ -58,11 +58,11 @@ class PlayAreaScaleBarNode extends LayoutBox {
       },
 
       // Side-bar
-      sideBarLength: 12,   // {number} - the length of the bars on the side of the ArrowNode
+      sideBarLength: 8,    // {number} - the length of the bars on the side of the ArrowNode
       sideBarLineWidth: 1, // {number} - the line-width of the bars on the side of the ArrowNode
 
       // Label
-      labelMargin: 5, // {number} - margin between the label and the arrow.
+      labelMargin: 0, // {number} - margin between the label and the arrow.
       labelFont: CollisionLabConstants.DISPLAY_FONT
     }, options );
 
