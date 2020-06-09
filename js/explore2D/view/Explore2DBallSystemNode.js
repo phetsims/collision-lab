@@ -3,7 +3,7 @@
 /**
  * Explore2DBallSystemNode is a BallSystemNode sub-type for the 'Explore 2D' screen. See BallSystemNode for context.
  *
- * Adds the following functionality to BallSystem:
+ * Adds the following functionality to BallSystemNode:
  *   - Create a PathCanvasNode for all possible Balls.
  *   - Create a PathCanvasNode for the center of mass.
  *
@@ -93,7 +93,7 @@ class Explore2DBallSystemNode extends BallSystemNode {
     this.addChild( ballPathsContainer );
     this.addChild( centerOfMassPath );
 
-    // Move the Paths to the back of this Nodes children so that the Balls in the super class are rendered above the
+    // Move the Paths to the back of this Node's children so that the Balls in the super class are rendered above the
     // Paths. Order here matters: the centerOfMassPath should be on top of the Paths of the Balls.
     centerOfMassPath.moveToBack();
     ballPathsContainer.moveToBack();
