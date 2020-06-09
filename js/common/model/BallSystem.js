@@ -53,12 +53,13 @@ class BallSystem {
 
     }, options );
 
+    //----------------------------------------------------------------------------------------
+
+    // Ensure a consistent configuration of initialBallStates and numberOfBallsRange.
     assert && assert( options.numberOfBallsRange.max === initialBallStates.length );
     assert && playArea.dimensions === 1 && assert( _.every( initialBallStates, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
 
-    //----------------------------------------------------------------------------------------
-
-    // @public (read-only) {Range} - reference to the numeric Range of the number of balls.
+    // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
     this.numberOfBallsRange = options.numberOfBallsRange;
 
     // @public {BooleanProperty} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
@@ -66,8 +67,8 @@ class BallSystem {
     this.ballsConstantSizeProperty = new BooleanProperty( false );
 
     // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model for performance as
-    //                             the position and the velocity of the CenterOfMass is only updated if this is true.
-    //                             Also used in sub-classes for performance optimization.
+    //                             the position and the velocity of the CenterOfMass are only updated if this is true.
+    //                             Also used in sub-classes for other performance optimizations.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation
@@ -95,11 +96,11 @@ class BallSystem {
     //                                                match the numberOfBallsProperty's value.
     this.balls = new ObservableArray();
 
-    // Observe when the number of Balls is manipulated by the user and if so, add or remove the correct number of Balls
+    // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
     // to match the numberOfBallsProperty's value.
     //
-    // The same Balls are added with the same numberOfBalls value. Link is never disposed as BallSystems's are never
-    // disposed.
+    // The same Balls are in the system with the same numberOfBalls value. Link is never disposed as BallSystems
+    // are never disposed.
     this.numberOfBallsProperty.link( numberOfBalls => {
 
       // If the numberOfBalls is greater than the balls in the system, Balls need to be added to the system.
@@ -142,27 +143,25 @@ class BallSystem {
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty(
       [ this.numberOfBallsProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
-      () => {
-        return _.sum( this.balls.map( ball => ball.kineticEnergy ) );
-      }, {
+      () =>  _.sum( this.balls.map( ball => ball.kineticEnergy ) ), {
         valueType: 'number',
         isValidValue: value => value >= 0
       } );
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled. Use
-    //                                                   the userControlledProperty of all possible Balls as
-    //                                                   dependencies but only the Balls in the system are used.
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled.
+    //                                                   Uses the userControlledProperty of all possible Balls as
+    //                                                   dependencies but only the Balls in the system are considered.
     this.ballSystemUserControlledProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.userControlledProperty ),
       () => this.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
       } );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are not inside of
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of
     //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
-    //                                                   Balls but only the Balls in the system are used.
+    //                                                   Balls but only the Balls in the system are considered.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
       [ ...this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ), this.balls.lengthProperty ],
       () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
@@ -179,6 +178,7 @@ class BallSystem {
   reset() {
     this.ballsConstantSizeProperty.reset();
     this.centerOfMassVisibleProperty.reset();
+    this.numberOfBallsProperty.reset();
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
   }
 
@@ -189,7 +189,9 @@ class BallSystem {
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
   restart() {
-    this.balls.forEach( ball => ball.restart() );
+    this.balls.forEach( ball => {
+      ball.restart();
+    } );
   }
 
   /**
