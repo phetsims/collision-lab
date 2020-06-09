@@ -69,10 +69,10 @@ class Explore2DBallSystem extends BallSystem {
         playArea.bounds
       ) );
 
-      // Observe when the user is finished controlling the Ball, which clears the trailing 'Path'. Link lasts for the
+      // Observe when the user is controlling the Ball, which clears the trailing 'Path'. Link lasts for the
       // life-time of the sim as Balls are never disposed.
       ball.userControlledProperty.lazyLink( userControlled => {
-        !userControlled && this.ballToPathMap.get( ball ).clear();
+        userControlled && this.ballToPathMap.get( ball ).clear();
       } );
     } );
 
@@ -102,11 +102,11 @@ class Explore2DBallSystem extends BallSystem {
       this.ballToPathMap.get( ball ).clear();
     } );
 
-    // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
-    // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
+    // Observe when the user is controlling any of the Balls to clear the trailing Path of the CenterOfMass. See
+    // https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
     // the sim as PlayAreas are never disposed.
-    this.ballSystemUserControlledProperty.lazyLink( playAreaUserControlled => {
-      !playAreaUserControlled && this.centerOfMassPath.clear();
+    this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
+      ballSystemUserControlled && this.centerOfMassPath.clear();
     } );
   }
 
