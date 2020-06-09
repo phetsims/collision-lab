@@ -17,8 +17,7 @@ class Explore2DModel extends CollisionLabModel {
   /**
    * @override
    * Creates the BallSystem for the 'Explore 2D' screen. Called in the constructor of the super-class. For this screen,
-   * this method will instantiate a sub-type of BallSystem: Explore2DBallSystem. It also has its own custom
-   * initial BallStates.
+   * this method will instantiate a sub-type of BallSystem: Explore2DBallSystem.
    *
    * @protected
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
