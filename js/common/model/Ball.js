@@ -219,6 +219,7 @@ class Ball {
 
     // Finally, set the position of the Ball to the corrected position.
     this.position = correctedPosition;
+    assert && assert( this.playArea.fullyContainsBall( this ) );
   }
 
   /*----------------------------------------------------------------------------*
