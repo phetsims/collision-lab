@@ -113,24 +113,24 @@ class Ball {
     //                             or editing a value through the Keypad. This is set externally in the view.
     this.userControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if any part of the Ball is inside the PlayArea,
-    //                                                   regardless of whether or not the Ball is in the BallSystem.
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
+    //                                                   PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {PlayArea} - reference to the passed-in PlayArea
-    this.playArea = playArea;
-
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
+
+    // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
+    this.playArea = playArea;
 
     // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
     this.restartState = initialBallState;
 
-    // Ensure that our yPosition and yVelocity is always 0 for 1D screens. Persists for the lifetime of the sim.
+    // Ensure that our yPosition and yVelocity are always 0 for 1D screens. Persists for the lifetime of the sim.
     assert && this.playArea.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
     assert && this.playArea.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
   }
@@ -161,8 +161,8 @@ class Ball {
   }
 
   /**
-   * Moves this Ball by one time step, assuming it isn't accelerating or colliding with other Balls. If this isn't the
-   * case, its motion is corrected in CollisionEngine.js
+   * Moves this Ball by one time step, assuming that the Ball isn't accelerating or colliding with other Balls. If this
+   * isn't the case, its motion is corrected in CollisionEngine.js
    * @public
    *
    * @param {number} dt - time in seconds
@@ -186,7 +186,7 @@ class Ball {
    * passed in position but ensures the Ball is inside the PlayArea's Bounds.
    *
    * If the grid is visible, the Ball will also snap to the nearest grid-line.
-   * If the PlayArea is 1D, the Ball's y-position will be set to 0.
+   * If the PlayArea is 1D, the Ball's y-position will be kept at 0.
    *
    * @public
    * @param {Vector} position - the attempted drag position, in model units, of the center of the Ball.
