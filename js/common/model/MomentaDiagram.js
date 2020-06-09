@@ -51,7 +51,6 @@ class MomentaDiagram {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     //----------------------------------------------------------------------------------------
 

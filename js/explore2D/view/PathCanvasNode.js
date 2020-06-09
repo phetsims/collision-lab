@@ -39,7 +39,6 @@ class PathCanvasNode extends CanvasNode {
     assert && assert( path instanceof CollisionLabPath, `invalid path: ${path}` );
     // assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

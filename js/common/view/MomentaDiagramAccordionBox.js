@@ -53,7 +53,6 @@ class MomentaDiagramAccordionBox extends AccordionBox {
   constructor( momentaDiagram, balls, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
     assert && assert( balls instanceof ObservableArray && balls.count( ball => ball instanceof Ball ) === balls.length, `invalid balls: ${balls}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     //----------------------------------------------------------------------------------------
 

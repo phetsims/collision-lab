@@ -37,7 +37,6 @@ class CollisionLabModel {
    */
   constructor( tandem, options ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

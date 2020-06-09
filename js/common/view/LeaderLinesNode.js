@@ -28,7 +28,6 @@ class LeaderLinesNode extends Path {
    */
   constructor( leaderLinesBounds, options ) {
     assert && assert( leaderLinesBounds instanceof Bounds2, `invalid leaderLinesBounds: ${leaderLinesBounds}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

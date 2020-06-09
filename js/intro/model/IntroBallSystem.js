@@ -33,7 +33,6 @@ class IntroBallSystem extends BallSystem {
    */
   constructor( playArea, elapsedTimeProperty, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

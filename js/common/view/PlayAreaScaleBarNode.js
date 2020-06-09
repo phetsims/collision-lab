@@ -39,7 +39,6 @@ class PlayAreaScaleBarNode extends LayoutBox {
   constructor( length, modelViewTransform, options ) {
     assert && assert( typeof length === 'number' && length > 0, `invalid length: ${length}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

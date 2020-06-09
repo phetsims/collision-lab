@@ -27,7 +27,6 @@ class ChangeInMomentumVectorNode extends Node {
    */
   constructor( changeInMomentumVector, ball, modelViewTransform, options ) {
     assert && assert( changeInMomentumVector instanceof ChangeInMomentumVector, `invalid changeInMomentumVector: ${changeInMomentumVector}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

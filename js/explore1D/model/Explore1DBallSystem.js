@@ -31,7 +31,6 @@ class Explore1DBallSystem extends BallSystem {
    */
   constructor( playArea, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     super( EXPLORE_1D_INITIAL_BALL_STATES, playArea, options );
 

@@ -41,7 +41,6 @@ class MomentaDiagramVectorNode extends Node {
     assert && assert( momentaDiagramVector instanceof MomentaDiagramVector, `invalid momentaDiagramVector: ${momentaDiagramVector}` );
     assert && assert( typeof label === 'number' || typeof label === 'string', `invalid label: ${label}` );
     assert && assert( modelViewTransformProperty instanceof Property && modelViewTransformProperty.value instanceof ModelViewTransform2, `invalid modelViewTransformProperty: ${modelViewTransformProperty}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

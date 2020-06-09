@@ -43,7 +43,6 @@ class BallSystem {
   constructor( initialBallStates, playArea, options ) {
     assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
     assert && assert( !options || !options.numberOfBallsRange || options.numberOfBallsRange instanceof RangeWithValue );
 
     options = merge( {

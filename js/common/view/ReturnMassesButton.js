@@ -29,7 +29,6 @@ class ReturnMassesButton extends RectangularPushButton {
    */
   constructor( ballsNotInsidePlayAreaProperty, options ) {
     assert && AssertUtils.assertPropertyOf( ballsNotInsidePlayAreaProperty, 'boolean' );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

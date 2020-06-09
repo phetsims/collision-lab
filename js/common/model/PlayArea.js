@@ -32,7 +32,6 @@ class PlayArea {
    * @param {Object} [options]
    */
   constructor( options ) {
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
     assert && assert( !options || !options.dimensions || options.dimensions === 1 || options.dimensions === 2 );
     assert && assert( !options || !options.bounds || options.bounds instanceof Bounds2 );
 

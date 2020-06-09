@@ -54,7 +54,6 @@ class BallSystemNode extends Node {
     assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     super( options );
 

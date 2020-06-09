@@ -24,7 +24,6 @@ class MoreDataCheckbox extends CollisionLabCheckbox {
    */
   constructor( moreDataVisibleProperty, options ) {
     assert && assert( moreDataVisibleProperty instanceof Property && typeof moreDataVisibleProperty.value === 'boolean', `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

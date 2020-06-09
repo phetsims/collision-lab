@@ -23,7 +23,6 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
   constructor( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options ) {
     assert && AssertUtils.assertPropertyOf( totalKineticEnergyProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( kineticEnergyVisibleProperty, 'boolean' );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 

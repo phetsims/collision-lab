@@ -28,7 +28,6 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
    */
   constructor( elapsedTimeProperty, options ) {
     assert && assert( elapsedTimeProperty instanceof Property && typeof elapsedTimeProperty.value === 'number', `invalid elapsedTimeProperty: ${elapsedTimeProperty}` );
-    assert && assert( !options || Object.getPrototypeOf( options === Object.prototype ), `invalid options: ${options}` );
 
     options = merge( {
 
