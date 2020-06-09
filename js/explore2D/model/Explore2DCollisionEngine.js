@@ -2,10 +2,8 @@
 
 /**
  * Explore2DCollisionEngine is a CollisionEngine sub-type that handles recording the trailing 'Paths' of the Balls
- * in the BallSystem at the exact moment of collision.
- *
- * It uses the `registerExactBallToBallCollision` and `registerExactBallToBorderCollision` methods to registers the
- * exact position of ball collisions.
+ * in the BallSystem at the exact moment of collision. It uses the `registerExactBallCollision` to record the
+ * exact position of a ball when it collides with another ball or with the border.
  *
  * When a collision involving balls occurs, its position and the overlapping time is taken into consideration,
  * and Balls are set to a different position. See CollisionEngine for background. However, this brings up issues for
@@ -13,9 +11,9 @@
  * However, Ball positions are never set to the position where the collision actually occurred, and this separation
  * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
  *
- * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
- * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
- * collision is detected and passes necessary information to determine when and where a collision occurred.
+ * Instead of setting the position of the Ball to the exact collision position, which brought performance issues and
+ * doesn't take the overlapping time into consideration of the PathDataPoints, this method is our fix for this issue,
+ * which doesn't require a re-rendering of Balls in the view.
  *
  * @author Brandon Li
  */
@@ -48,50 +46,16 @@ class Explore2DCollisionEngine extends CollisionEngine {
 
   /**
    * @override
-   * Registers the exact position of a ball-to-ball collision in the respective Ball Paths. See
-   * https://github.com/phetsims/collision-lab/issues/75.
-   * Also see the super class method declaration for full context and background.
-   * @protected
-   *
-   * @param {Ball} ball1 - the first Ball involved in the collision.
-   * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
-   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
-   */
-  registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
-    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
-    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
-
-    // Only record Path's of the Balls if Paths are visible, and the overlapped time is non-zero.
-    if ( this.ballSystem.pathVisibleProperty.value &&
-        this.elapsedTimeProperty.value - overlappedTime >= 0 &&
-        overlappedTime !== 0 ) {
-
-      // Reference the corresponding Paths of the Balls involved in the collision.
-      const path1 = this.ballSystem.ballToPathMap.get( ball1 );
-      const path2 = this.ballSystem.ballToPathMap.get( ball2 );
-
-      path1.updatePath( collisionPosition1, this.elapsedTimeProperty.value - overlappedTime );
-      path2.updatePath( collisionPosition2, this.elapsedTimeProperty.value - overlappedTime );
-    }
-  }
-
-  /**
-   * @override
-   * Registers the exact position of a ball-to-border collision in the respective Ball Path. See
-   * https://github.com/phetsims/collision-lab/issues/75.
-   * Also see the super class method declaration for full context and background.
+   * Registers the exact position of a both ball-to-ball collisions and ball-to-border collisions in the respective Ball
+   * Paths. See https://github.com/phetsims/collision-lab/issues/75. Also see the super class method declaration for
+   * full context and background.
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
    * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
    * @param {number} overlappedTime - the time the Ball has been overlapping the border.
    */
-  registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
+  registerExactBallCollision( ball, collisionPosition, overlappedTime ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );

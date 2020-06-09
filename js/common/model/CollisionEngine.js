@@ -80,42 +80,27 @@ class CollisionEngine {
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( isReversing );
   }
 
-  //----------------------------------------------------------------------------------------
-
   /**
-   * Registers the exact position of a ball-to-ball collision.
+   * Registers the exact position of a ball for both ball-to-ball and ball-to-border collisions.
    * This method is meant to be overriden in subclasses, but it isn't required. It's default behavior is to do nothing.
    *
-   * When a collision between two balls occurs, its position and their overlapping time is taken into consideration,
+   * When a collision with balls occurs, its position and the overlapping time is taken into consideration,
    * and Balls are set to a different position. See collideBall() for background. However, this brings up issues for
    * some screens. For instance, Ball Paths in the 'Explore 2D' screen work by recording the position of a Ball.
    * However, Ball positions are never set to the position where the collision actually occurred, and this separation
    * becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
    *
-   * Instead of setting the position of the Ball to the exact collision position, which brought performance issues, this
-   * method is our fix for this issue, which doesn't require a re-rendering of Balls in the view. It is invoked when a
-   * collision is detected and passes necessary information to determine exactly when and where a collision occurred.
-   * @protected
-   *
-   * @param {Ball} ball1 - the first Ball involved in the collision.
-   * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
-   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
-   */
-  registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    /** Do nothing. Override for functionality. */
-  }
-
-  /**
-   * Registers the exact position of a ball-to-border collision. See the documentation for the method above.
+   * Instead of setting the position of the Ball to the exact collision position, which brought performance issues and
+   * doesn't take the overlapping time into consideration of the PathDataPoints, this method is our fix for this issue,
+   * which doesn't require a re-rendering of Balls in the view. It is invoked when a collision is detected and passes
+   * necessary information to determine exactly when and where a collision occurred.
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
    * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
    * @param {number} overlappedTime - the time the Ball has been overlapping the border.
    */
-  registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
+  registerExactBallCollision( ball, collisionPosition, overlappedTime ) {
     /** Do nothing. Override for functionality. */
   }
 
@@ -212,7 +197,8 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Register the exact contact position of the collision for sub-classes.
-    this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
+    this.registerExactBallCollision( ball1, r1, overlappedTime );
+    this.registerExactBallCollision( ball2, r2, overlappedTime );
 
     // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
     ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
@@ -324,7 +310,7 @@ class CollisionEngine {
         }
 
         // Register the exact contact position of the collision for sub-classes.
-        this.registerExactBallToBorderCollision( ball, contactPosition, overlappedTime );
+        this.registerExactBallCollision( ball, contactPosition, overlappedTime );
 
         // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
         ball.position = contactPosition.plus( ball.velocity.times( overlappedTime ) );
