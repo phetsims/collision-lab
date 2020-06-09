@@ -90,8 +90,8 @@ class CollisionLabPath {
    *   - the reset all button is pressed.
    *   - the restart button is pressed.
    *   - when the 'Path' checkbox is un-checked.
-   *   - when the Ball is user-manipulated, either by dragging or from the Keypad.
-   *   - when the Ball is removed from the system.
+   *   - when the Ball (if the moving object is a ball) is user-manipulated, either by dragging or from the Keypad.
+   *   - when the Ball (if the moving object is a ball) is removed from the system.
    */
   clear() {
     while ( this.dataPoints.length ) {
