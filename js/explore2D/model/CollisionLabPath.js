@@ -5,7 +5,10 @@
  * 'Path' but changed to 'CollisionLabPath'. See https://github.com/phetsims/collision-lab/issues/79.
  *
  * Its main responsibility is to keep track of PathDataPoints that map out the trail of a Ball or a Center of Mass as
- * time progresses. PathDataPoints are only recorded if the 'Path' checkbox is checked and are empty otherwise.
+ * time progresses. In the design, the trailing 'Paths' only shows the recent path of the moving object AFTER the
+ * visibility checkbox is checked, meaning the Path is always empty if the checkbox isn't checked and PathDataPoints
+ * are only recorded if the checkbox is checked.
+ *
  * CollisionLabPath will also remove PathDataPoints that are past the set time period, which allows the trailing 'Path'
  * to fade over time. See https://github.com/phetsims/collision-lab/issues/61.
  *
@@ -60,14 +63,10 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Observe when the position of the moving object changes and record a new PathDataPoint at the current elapsedTime
-    // if paths are visible and the position is inside of the PlayArea's bounds. This link persists for the lifetime of
-    // the simulation since CollisionLabPaths are never disposed.
+    // if paths are visible. This link persists for the lifetime of the simulation since CollisionLabPaths are never
+    // disposed.
     positionProperty.link( position => {
-
-      // Update this 'Path' if it's visible and inside of the PlayArea's bounds.
-      if ( pathVisibleProperty.value && playAreaBounds.containsPoint( position ) ) {
-        this.updatePath( position, elapsedTimeProperty.value );
-      }
+      pathVisibleProperty.value && this.updatePath( position, elapsedTimeProperty.value );
     } );
 
     // Observe when the pathVisibleProperty is manipulated to clear the 'Path' when set to false.
@@ -79,7 +78,7 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Bounds2} - reference to the playAreaBounds. PathDataPoints are only recorded if the
-    //                                 position is inside this bounds. It is also used for the view canvas bounds.
+    //                                 position is inside this bounds. It is also used for the view's canvas bounds.
     this.playAreaBounds = playAreaBounds;
   }
 
@@ -92,6 +91,7 @@ class CollisionLabPath {
    *   - the restart button is pressed.
    *   - when the 'Path' checkbox is un-checked.
    *   - when the Ball is user-manipulated, either by dragging or from the Keypad.
+   *   - when the Ball is removed from the system.
    */
   clear() {
     while ( this.dataPoints.length ) {
@@ -110,7 +110,7 @@ class CollisionLabPath {
    *     step-backward button is pressed.
    * @public
    *
-   * NOTE: if this is invoked, the path must be visible and the position must be inside the PlayArea.
+   * NOTE: if this is invoked, the path must be visible.
    *
    * @param {Vector2} position - the position of the moving object, in meter coordinates.
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
@@ -118,7 +118,6 @@ class CollisionLabPath {
   updatePath( position, elapsedTime ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    assert && assert( this.playAreaBounds.containsPoint( position ) );
 
     // Remove any expired PathDataPoints that are not within the MAX_DATA_POINT_LIFETIME.
     const expiredPathDataPoints = this.dataPoints.filter( dataPoint => {
@@ -140,7 +139,9 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Add a new PathDataPoint for the current position of the moving object.
-    this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+    if ( this.playAreaBounds.containsPoint( position ) ) {
+      this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+    }
 
     // Ensure that the dataPoints are strictly sorted by time.
     assert && assert( CollisionLabUtils.isSorted( this.dataPoints.map( _.property( 'time' ) ) ) );

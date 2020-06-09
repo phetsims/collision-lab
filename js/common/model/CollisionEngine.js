@@ -13,9 +13,6 @@
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
  *
- *   - Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
- *     have escaped the PlayArea when its border doesn't reflect.
- *
  * ## Collision response:
  *
  *   - Collision response determines what affect a collision has on a Ball's motion. When a collision has been detected,
@@ -130,9 +127,6 @@ class CollisionEngine {
    * A time-discretization approach to detecting and processing ball-ball collisions within the BallSystem. Collisions
    * are detected after the collision occurs by checking if any two Balls physically overlap and processed using the
    * collideBalls() method.
-   *
-   * Collision detection occurs only within the PlayArea. There is no collision detection performed for Balls that
-   * have escaped the PlayArea when its border doesn't reflect. See https://en.wikipedia.org/wiki/Collision_detection.
    *
    * @private
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
