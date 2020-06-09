@@ -7,7 +7,7 @@
  * IMPORTANT: Restarting is different from resetting:
  *
  *  'Reset All':
- *    - Like a traditional sim, this resets the all model Properties back to the values that they were initialized to.
+ *    - Like a traditional sim, this resets all model Properties back to the values that they were initialized to.
  *
  *  'Restart':
  *    - Pauses the sim.
