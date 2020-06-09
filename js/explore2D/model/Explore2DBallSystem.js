@@ -1,11 +1,12 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * Explore2DBallSystem is a BallSystem sub-type for the 'Explore 2D' screen.
+ * Explore2DBallSystem is a BallSystem sub-type for the 'Explore 2D' screen. See BallSystem for context.
  *
- * 'Is a' relationship with BallSystem, but adds:
- *   - Tracking the visibility of trailing 'Paths' in a Property.
- *   - Create a Path for all possible Balls and one for the center of mass.
+ * Adds the following functionality to BallSystem:
+ *   - Tracks the visibility of trailing 'Paths' in a Property.
+ *   - Create a Path for all possible Balls.
+ *   - Create a Path for the center of mass.
  *   - Other methods to update and clear Paths when needed.
  *
  * Explore2DBallSystems are created at the start of the sim and are never disposed, so no dispose method is necessary
@@ -26,10 +27,10 @@ import CollisionLabPath from './CollisionLabPath.js';
 
 // constants
 const EXPLORE_2D_INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1.0, 0.00 ), new Vector2( 1.0, 0.3 ), 0.5 ),
-  new BallState( new Vector2( 0.0, 0.50 ), new Vector2( -0.5, -0.5 ), 1.5 ),
-  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.0 ),
-  new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 )
+  new BallState( new Vector2( -1.00, 0.00 ), new Vector2( 1.00, 0.30 ), 0.50 ),
+  new BallState( new Vector2( 0.00, 0.50 ), new Vector2( -0.50, -0.50 ), 1.50 ),
+  new BallState( new Vector2( -1.00, -0.50 ), new Vector2( -0.50, -0.25 ), 1.00 ),
+  new BallState( new Vector2( 0.20, -0.65 ), new Vector2( 1.10, 0.20 ), 1.00 )
 ];
 
 class Explore2DBallSystem extends BallSystem {
@@ -43,29 +44,30 @@ class Explore2DBallSystem extends BallSystem {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-
     super( EXPLORE_2D_INITIAL_BALL_STATES, playArea, options );
+
+    // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
+    //                             model since paths only show the path of the moving object after the visibility
+    //                             checkbox is checked and are empty when false.
+    this.pathVisibleProperty = new BooleanProperty( false );
+
+    // @public (read-only) {Map.<Ball, CollisionLabPath>} - a Map of a Ball to its associated trailing 'Path'.
+    this.ballToPathMap = new Map();
 
     //----------------------------------------------------------------------------------------
 
-    // @public {BooleanProperty} - indicates if the Ball/COM trailing paths are visible. In the model since Ball
-    //                             PathDataPoints are only recorded if this is true and are cleared when set to false.
-    this.pathVisibleProperty = new BooleanProperty( false );
-
-
-    // @public (read-only) {Map.<Ball, CollisionLabPath>} - Map prepopulatedBalls to its associated trailing 'Path'.
-    this.ballToPathMap = new Map();
-
-    // Populate the Map with Paths.
+    // Populate the Map This takes advantage of the prepopulatedBalls, which all Balls in the system must be apart of,
+    // by creating a Path or all possible Balls and never having to dispose them. There is no performance loss
+    // since Balls not in the BallSystem are not stepped or updated, meaning their paths are not updated.
     this.prepopulatedBalls.forEach( ball => {
-      const path = new CollisionLabPath(
+
+      // Map the ball to the a trailing Path.
+      this.ballToPathMap.set( ball, new CollisionLabPath(
         ball.positionProperty,
         this.pathVisibleProperty,
         elapsedTimeProperty,
         playArea.bounds
-      );
-
-      this.ballToPathMap.set( ball, path );
+      ) );
 
       // Observe when the user is finished controlling the Ball, which clears the trailing 'Path'. Link lasts for the
       // life-time of the sim as Balls are never disposed.
@@ -74,71 +76,69 @@ class Explore2DBallSystem extends BallSystem {
       } );
     } );
 
-    this.balls.lengthProperty.link( () => {
-      this.prepopulatedBalls.forEach( ball => {
-        !this.balls.contains( ball ) && this.ballToPathMap.get( ball ).clear();
+    //----------------------------------------------------------------------------------------
+
+    // Get the Property that indicates if the center-of-mass Path is visible, which occurs when both the CenterOfMass
+    // and Paths are visible. DerivedProperty is never disposed since Explore2DBallSystems are never disposed.
+    const centerOfMassPathVisibleProperty = new DerivedProperty(
+      [ this.pathVisibleProperty, this.centerOfMassVisibleProperty ],
+      ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible, {
+        valueType: 'boolean'
       } );
-    } );
 
     // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the center of mass.
     this.centerOfMassPath = new CollisionLabPath(
       this.centerOfMass.positionProperty,
-      new DerivedProperty(
-        [ this.pathVisibleProperty, this.centerOfMassVisibleProperty ],
-        ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible
-      ),
+      centerOfMassPathVisibleProperty,
       elapsedTimeProperty,
       playArea.bounds
     );
 
     //----------------------------------------------------------------------------------------
 
+    // Observe when Balls are removed from the system and clear their trailing Paths. Listener lasts for the life-time
+    // of the simulation.
+    this.balls.addItemRemovedListener( ball => {
+      this.ballToPathMap.get( ball ).clear();
+    } );
+
     // Observe when the user is finished controlling any of the Balls to clear the trailing Path of the CenterOfMass.
     // See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
     // the sim as PlayAreas are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( playAreaUserControlled => {
-      !playAreaUserControlled && this.clearCenterOfMassPath();
+      !playAreaUserControlled && this.centerOfMassPath.clear();
     } );
   }
 
   /**
-   * @override
    * Resets the Explore2DBallSystem.
    * @public
+   * @override
    */
   reset() {
-    super.reset();
+
+    // Reset Paths first.
     this.pathVisibleProperty.reset();
-    this.ballToPathMap.forEach( path => {
-      path.clear();
-    } );
-    this.clearCenterOfMassPath();
+    this.ballToPathMap.forEach( path => { path.clear(); } );
+    this.centerOfMassPath.clear();
+
+    super.reset();
   }
 
   /**
-   * @override
    * Restarts the Explore2DBallSystem.
    * @public
+   * @override
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
   restart() {
-    super.restart();
-    this.ballToPathMap.forEach( path => {
-      path.clear();
-    } );
-    this.clearCenterOfMassPath();
-  }
 
-  /**
-   * Clears the trailing 'Path' of the CenterOfMass.
-   * @public
-   *
-   * Normally called when the user is finished manipulating a Ball. See
-   * https://github.com/phetsims/collision-lab/issues/61.
-   */
-  clearCenterOfMassPath() {
+    // Clear the 'Paths' on restart.
+    this.ballToPathMap.forEach( path => { path.clear(); } );
     this.centerOfMassPath.clear();
+
+    super.restart();
   }
 }
 
