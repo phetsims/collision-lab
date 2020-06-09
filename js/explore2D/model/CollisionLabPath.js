@@ -5,11 +5,12 @@
  * 'Path' but changed to 'CollisionLabPath'. See https://github.com/phetsims/collision-lab/issues/79.
  *
  * Its main responsibility is to keep track of PathDataPoints that map out the trail of a Ball or a Center of Mass as
- * time progresses. This path is rendered if the 'Path' checkbox is checked, and only should be recorded in this case.
- * Path will also remove PathDataPoints that are past the set time period, which allows the trailing 'Path' to fade over
- * time. See https://github.com/phetsims/collision-lab/issues/61.
+ * time progresses. PathDataPoints are only recorded if the 'Path' checkbox is checked and are empty otherwise.
+ * CollisionLabPath will also remove PathDataPoints that are past the set time period, which allows the trailing 'Path'
+ * to fade over time. See https://github.com/phetsims/collision-lab/issues/61.
  *
- * CollisionLabPaths are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * CollisionLabPaths are created for each Ball, which are never disposed, meaning CollisionLabPaths are
+ * also never disposed and internal links are left as-is.
  *
  * @author Brandon Li
  */
@@ -33,6 +34,7 @@ class CollisionLabPath {
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is currently visible. PathDataPoints are
    *                                                   only recorded if this is true and are cleared when set to false.
+   * @param {Property.<number>} elapsedTimeProperty
    */
   constructor( playAreaBounds, pathVisibleProperty ) {
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
