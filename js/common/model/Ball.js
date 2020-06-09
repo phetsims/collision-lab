@@ -319,7 +319,7 @@ class Ball {
   set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
 
   /**
-   * Sets the vertical velocity of the Ball, in m/s.
+   * Gets the vertical velocity of the Ball, in m/s.
    * @public
    *
    * @returns {number} yVelocity, in m/s.
