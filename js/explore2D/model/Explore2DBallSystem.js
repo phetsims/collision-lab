@@ -27,8 +27,7 @@ const EXPLORE_2D_INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1.0, 0.00 ), new Vector2( 1.0, 0.3 ), 0.5 ),
   new BallState( new Vector2( 0.0, 0.50 ), new Vector2( -0.5, -0.5 ), 1.5 ),
   new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.0 ),
-  new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 ),
-  new BallState( new Vector2( -0.8, 0.65 ), new Vector2( -1.1, 0 ), 1.0 )
+  new BallState( new Vector2( 0.2, -0.65 ), new Vector2( 1.1, 0.2 ), 1.0 )
 ];
 
 class Explore2DBallSystem extends BallSystem {

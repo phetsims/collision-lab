@@ -49,9 +49,12 @@ class BallSystem {
     options = merge( {
 
       // {RangeWithValue} - the range of the number of Balls in the system.
-      numberOfBallsRange: new RangeWithValue( 1, 5, 2 )
+      numberOfBallsRange: new RangeWithValue( 1, 4, 2 )
 
     }, options );
+
+    assert && assert( options.numberOfBallsRange.max === initialBallStates.length );
+    assert && playArea.dimensions === 1 && assert( _.every( initialBallStates, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
 
     //----------------------------------------------------------------------------------------
 
