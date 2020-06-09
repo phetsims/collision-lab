@@ -100,8 +100,8 @@ class BallSystemNode extends Node {
 
     // Set the children of this Node to the correct rendering order.
     this.children = [
-      centerOfMassNode,
-      ballNodeContainer
+      ballNodeContainer,
+      centerOfMassNode
     ];
   }
 }
