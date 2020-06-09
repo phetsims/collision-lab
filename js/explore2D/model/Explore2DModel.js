@@ -27,7 +27,7 @@ class Explore2DModel extends CollisionLabModel {
   createBallSystem( playArea ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
-    return new Explore2DBallSystem( playArea );
+    return new Explore2DBallSystem( playArea, this.elapsedTimeProperty );
   }
 
   /**
@@ -45,23 +45,6 @@ class Explore2DModel extends CollisionLabModel {
     assert && assert( ballSystem instanceof Explore2DBallSystem, `invalid ballSystem: ${ballSystem}` );
 
     return new Explore2DCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
-  }
-
-  /**
-   * @override
-   * Steps the simulation manually, regardless if the sim is paused. Intended to be called by clients that step the
-   * simulation through step-buttons or used by the main step method when the sim isn't paused.
-   * @private
-   *
-   * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
-   */
-  stepManual( dt ) {
-    assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
-
-    super.stepManual( dt );
-
-    // Update the paths of the Explore2DBallSystem on each step.
-    this.ballSystem.updatePaths( this.elapsedTimeProperty.value );
   }
 }
 

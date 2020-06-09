@@ -15,7 +15,9 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
@@ -34,10 +36,13 @@ class Explore2DBallSystem extends BallSystem {
 
   /**
    * @param {PlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @param {Object} [options]
    */
-  constructor( playArea, options ) {
+  constructor( playArea, elapsedTimeProperty, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+
 
     super( EXPLORE_2D_INITIAL_BALL_STATES, playArea, options );
 
@@ -53,8 +58,14 @@ class Explore2DBallSystem extends BallSystem {
 
     // Populate the Map with Paths.
     this.prepopulatedBalls.forEach( ball => {
-      this.ballToPathMap.set( ball, new CollisionLabPath( playArea.bounds, this.pathVisibleProperty ) );
+      const path = new CollisionLabPath(
+        ball.positionProperty,
+        this.pathVisibleProperty,
+        elapsedTimeProperty,
+        playArea.bounds
+      );
 
+      this.ballToPathMap.set( ball, path );
 
       // Observe when the user is finished controlling the Ball, which clears the trailing 'Path'. Link lasts for the
       // life-time of the sim as Balls are never disposed.
@@ -63,8 +74,22 @@ class Explore2DBallSystem extends BallSystem {
       } );
     } );
 
+    this.balls.lengthProperty.link( () => {
+      this.prepopulatedBalls.forEach( ball => {
+        !this.balls.contains( ball ) && this.ballToPathMap.get( ball ).clear();
+      } );
+    } );
+
     // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the center of mass.
-    this.centerOfMassPath = new CollisionLabPath( playArea.bounds, this.pathVisibleProperty);
+    this.centerOfMassPath = new CollisionLabPath(
+      this.centerOfMass.positionProperty,
+      new DerivedProperty(
+        [ this.pathVisibleProperty, this.centerOfMassVisibleProperty ],
+        ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible
+      ),
+      elapsedTimeProperty,
+      playArea.bounds
+    );
 
     //----------------------------------------------------------------------------------------
 
@@ -74,28 +99,6 @@ class Explore2DBallSystem extends BallSystem {
     this.ballSystemUserControlledProperty.lazyLink( playAreaUserControlled => {
       !playAreaUserControlled && this.clearCenterOfMassPath();
     } );
-  }
-
-  /**
-   * Updates the trailing 'Path' of the Balls currently in the system and the center of mass.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
-   */
-  updatePaths( elapsedTime ) {
-    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-
-    // Update the Paths inside the BallPaths only if paths are visible.
-    if ( this.pathVisibleProperty.value ) {
-
-      this.ballToPathMap.forEach( ( path, ball ) => {
-        path.updatePath( ball.position, elapsedTime );
-      } );
-
-      if ( this.centerOfMassVisibleProperty.value ) {
-        this.centerOfMassPath.updatePath( this.centerOfMass.position, elapsedTime );
-      }
-    }
   }
 
   /**
