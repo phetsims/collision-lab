@@ -85,7 +85,8 @@ class BallSystemNode extends Node {
         ballNode.visible = ballSystem.balls.contains( ball );
       } );
 
-      // Observe when the user controls.
+      // Observe when the user controls the Ball and move the BallNode to the front of its layer. Link is never
+      // unlinked since Balls are never disposed.
       ball.userControlledProperty.link( userControlled => { userControlled && ballNode.moveToFront(); } );
     } );
 

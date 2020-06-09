@@ -56,8 +56,8 @@ class Explore2DBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    // Populate the Map This takes advantage of the prepopulatedBalls, which all Balls in the system must be apart of,
-    // by creating a Path or all possible Balls and never having to dispose them. There is no performance loss
+    // Populate the Map. This takes advantage of the prepopulatedBalls, which all Balls in the system must be apart of,
+    // by creating a Path of all possible Balls and never having to dispose them. There is no performance loss
     // since Balls not in the BallSystem are not stepped or updated, meaning their paths are not updated.
     this.prepopulatedBalls.forEach( ball => {
 
