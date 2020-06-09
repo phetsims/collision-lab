@@ -14,7 +14,7 @@
  *    - Sets the elapsed time to 0.
  *    - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
  *      is saved when the sim play button is pressed.
- *    - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their state saved.
+ *    - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their states saved.
  *
  * BallStates are given to each Ball, and since Balls are never disposed, BallStates are also never disposed.
  *
@@ -28,7 +28,7 @@ class BallState {
 
   /**
    * @param {Vector2} position - position of the center of the ball, in meters.
-   * @param {Vector2} velocity - velocity of the center of mass of the ball, in m/s.
+   * @param {Vector2} velocity - velocity of the ball, in m/s.
    * @param {number} mass - mass of the ball, in kg.
    */
   constructor( position, velocity, mass ) {
@@ -52,7 +52,7 @@ class BallState {
    * @public
    *
    * @param {Vector2} position - position of the center of the ball, in meters.
-   * @param {Vector2} velocity - velocity of the center of mass of the ball, in m/s.
+   * @param {Vector2} velocity - velocity of the ball, in m/s.
    * @param {number} mass - mass of the ball, in kg.
    */
   saveState( position, velocity, mass ) {
