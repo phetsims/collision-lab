@@ -5,7 +5,7 @@
  * of Balls, both inside and outside the PlayArea.
  *
  * BallSystem is mainly responsible for:
- *   - Keeping track of the Balls and the number of Balls in the system.
+ *   - Keeping track of the system of Balls and the number of Balls in the system.
  *   - Creating a reference to all possible Balls in prepopulatedBalls. The same Ball instances are used with the same
  *     number of Balls, so Balls are created here at the start of the sim.
  *   - CenterOfMass model instantiation for the system of Balls.
