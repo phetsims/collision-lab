@@ -2,7 +2,18 @@
 
 /**
  * Control Panel at the upper-right corner of each screen that allows the user to manipulate certain Properties of
- * the simulation. It exists for the lifetime of the sim and is not intended to be disposed.
+ * the simulation.
+ *
+ * All screens have a control-panel in the same location with similar components. However, some components vary for
+ * specific screens. This includes (which appear in some screens, not in other screens):
+ *    - stick vs slip ABSwitch
+ *    - change in momentum Checkbox
+ *    - path Checkbox
+ *    - reflecting border Checkbox
+ *
+ * Since many screens have similar control-panels, this was implemented to work generally for all screens, but can be
+ * subclassed to add extra components that are specific to a screen. It also contains an options API to un-include
+ * components that are normally common to all screens.
  *
  * @author Brandon Li
  * @author Alex Schor
