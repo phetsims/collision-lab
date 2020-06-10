@@ -2,15 +2,18 @@
 
 /**
  * A view that renders the trailing 'Path' behind a moving object, including Balls and the Center of Mass, using
- * its recent PathDataPoints.
+ * its PathDataPoints array.
  *
- * It is a sub-type of CanvasNode to linearly reduce the stroke-alpha to give a "fade over-time" illusion. See
- * https://github.com/phetsims/collision-lab/issues/61 for context on the decision to use CanvasNode.
- * PathCanvasNodes are also only visible and updated if the 'Path' checkbox is checked.
+ * It is a sub-type of CanvasNode to linearly reduce the stroke-alpha to give a "fade over-time" illusion. Opacity is
+ * determined by how long ago the PathDataPoint was recorded. See https://github.com/phetsims/collision-lab/issues/61
+ * for context on the decision to use CanvasNode. There is no need to adjust the visibility of PathCanvasNodes since
+ * Paths are empty in the model when they are not visible.
  *
- * If the path represents the trail of a Ball, then the PathCanvasNodes should be disposed when the Ball is removed
- * from the PlayArea. Otherwise, the path is trailing a center of mass and is never disposed since CenterOfMasses
- * last for the lifetime of the sim.
+ * PathCanvasNodes are created for each Ball, which are never disposed, meaning PathCanvasNodes are also never disposed
+ * disposed and internal links are left as-is. This doesn't negatively impact performance since Balls that aren't in the
+ * system aren't stepped and their positions don't change. See Explore2DBallSystem for more context.
+ *
+ * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
  *
  * @author Brandon Li
  */
@@ -22,6 +25,7 @@ import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import CollisionLabPath from '../model/CollisionLabPath.js';
 
 // constants
@@ -31,21 +35,19 @@ class PathCanvasNode extends CanvasNode {
 
   /**
    * @param {CollisionLabPath} path - the Path model that is rendered.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
   constructor( path, modelViewTransform, options ) {
     assert && assert( path instanceof CollisionLabPath, `invalid path: ${path}` );
-    // assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     options = merge( {
 
-      // {PaintDef} the color of the Path of the Path. Alpha will be linearly reduced.
+      // {PaintDef} - the base color of the Path. Alpha will be linearly reduced.
       pathBaseColor: Color.BLACK,
 
-      // super-class options
+      // superclass options
       canvasBounds: modelViewTransform.modelToViewBounds( path.playAreaBounds )
 
     }, options );
@@ -65,32 +67,11 @@ class PathCanvasNode extends CanvasNode {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the Path trail of the MovingObject should be redrawn. Listener is removed in the dispose method.
-    const redrawPathEmitter = () => {
+    // Observe when the Path trail of the MovingObject should be redrawn. This is never removed since
+    // PathCanvasNodes are never disposed and persist for the lifetime of the simulation.
+    path.redrawPathEmitter.addListener( () => {
       this.invalidatePaint();
-    };
-    path.redrawPathEmitter.addListener( redrawPathEmitter );
-
-    // Observe when the pathVisibleProperty changes to update our visibility. Link removed in the dispose method.
-    // const updateVisibilityListener = pathVisibleProperty.linkAttribute( this, 'visible' );
-
-    // @private {function} - function that removes listeners. This is called in the dispose() method.
-    this.disposeMovingObjectPathNode = () => {
-      path.redrawPathEmitter.removeListener( redrawPathEmitter );
-      // pathVisibleProperty.unlinkAttribute( updateVisibilityListener );
-    };
-  }
-
-  /**
-   * Disposes the MovingObjectPathNode, releasing all links that it maintained.
-   * @public
-   * @override
-   *
-   * Called when the MovingObject is a Ball that removed from the PlayArea.
-   */
-  dispose() {
-    this.disposeMovingObjectPathNode();
-    super.dispose();
+    } );
   }
 
   /**
@@ -109,31 +90,27 @@ class PathCanvasNode extends CanvasNode {
     const firstPathDataPointTime = this.path.dataPoints[ 0 ].time;
     const lastPathDataPointTime = _.last( this.path.dataPoints ).time;
 
-    // Draw the segments that connect each of the PathDataPoints.
-    for ( let i = 1; i < this.path.dataPoints.length; i++ ) {
+    // Draw the segments that connect each of the PathDataPoints by iterating pairwise.
+    CollisionLabUtils.forEachAdjacentPair( this.path.dataPoints, ( dataPoint, previousDataPoint ) => {
 
       // Each segment of the dataPoint path needs a new canvas path to create the gradient effect.
       context.beginPath();
 
-      // Get the current and the previous dataPoint.
-      const previousPathDataPoint = this.path.dataPoints[ i - 1 ];
-      const currentPathDataPoint = this.path.dataPoints[ i ];
-
       // Get the start and end positions of the line-segment.
-      const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousPathDataPoint.position );
-      const segmentEndPosition = this.modelViewTransform.modelToViewPosition( currentPathDataPoint.position );
+      const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousDataPoint.position );
+      const segmentEndPosition = this.modelViewTransform.modelToViewPosition( dataPoint.position );
 
       // Draw the line-segment that connects the start and end positions.
       context.moveTo( segmentStartPosition.x, segmentStartPosition.y );
       context.lineTo( segmentEndPosition.x, segmentEndPosition.y );
 
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
-      const alpha = Utils.linear( firstPathDataPointTime, lastPathDataPointTime, 0, 1, currentPathDataPoint.time );
+      const alpha = Utils.linear( firstPathDataPointTime, lastPathDataPointTime, 0, 1, dataPoint.time );
       context.strokeStyle = this.baseColor.setAlpha( alpha ).toCSS();
       context.lineWidth = LINE_WIDTH;
       context.stroke();
       context.closePath();
-    }
+    } );
   }
 }
 
