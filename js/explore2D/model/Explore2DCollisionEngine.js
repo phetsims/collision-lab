@@ -76,8 +76,8 @@ class Explore2DCollisionEngine extends CollisionEngine {
    * respective Ball paths. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
    * declaration for full context and background.
    *
-   * @protected
    * @override
+   * @protected
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
@@ -96,8 +96,8 @@ class Explore2DCollisionEngine extends CollisionEngine {
    * colliding Ball's path. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
    * declaration for full context and background.
    *
-   * @protected
    * @override
+   * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
    * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.

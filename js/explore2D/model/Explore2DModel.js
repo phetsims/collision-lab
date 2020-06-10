@@ -15,11 +15,12 @@ import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
 class Explore2DModel extends CollisionLabModel {
 
   /**
-   * @override
    * Creates the BallSystem for the 'Explore 2D' screen. Called in the constructor of the super-class. For this screen,
    * this method will instantiate a sub-type of BallSystem: Explore2DBallSystem.
    *
+   * @override
    * @protected
+   *
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
    * @returns {Explore2DBallSystem}
    */
@@ -30,11 +31,12 @@ class Explore2DModel extends CollisionLabModel {
   }
 
   /**
-   * @override
    * Creates the CollisionEngine for the 'Explore 2D' screen. Called in the constructor of the super-class. For this
    * screen, this method will instantiate a sub-type of CollisionEngine: Explore2DCollisionEngine.
    *
+   * @override
    * @protected
+   *
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
    * @param {Explore2DBallSystem} ballSystem - the BallSystem instance of the sim.
    * @returns {CollisionEngine}
