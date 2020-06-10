@@ -1,19 +1,36 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen.
+ * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen. See BallSystem for context. IntroBallSystems
+ * only have 2 fixed and the numberOfBalls cannot be mutated.
  *
+ * In the 'Intro' screen, there are 'Change in Momentum' vectors that appear 'briefly' when the momentum of a Ball
+ * collides and changes momentum with another Ball. IntroBallSystem will keep track the momentum of the two Balls
+ * and compute the change in momentum vector. The vector is rendered out-of-bounds of the PlayArea to reduce clutter.
+ * After a collision, the change in momentum vectors are fully opaque for a set time-period. Then, after this
+ * time-period, the opacity linearly reduces for another set period of time. The opacity of the vectors is also
+ * modeled in this class.
+ *
+ * In the design, the 'Change in Momentum' vectors only appear AFTER the visibility checkbox is checked, meaning the
+ * components of the change in momentum vector are always 0 if the checkbox isn't checked and is only updated if and
+ * only if the checkbox ix checked. Thus, the changeInMomentumVisibleProperty is in the model.
+ *
+ * Additionally, the view renders a 'Change in Momentum' string over where the two Balls collided, (there are no
+ * ball-to-border collisions in 'Intro'). This collision point can only be computed inside of IntroCollisionEngine.js,
+ * which will signal to the IntroBallSystem that a collision between the two balls has occurred, passing the collision
+ * point. This will trigger changes in the changeInMomentumOpacityProperty over time.
  *
  * @author Brandon Li
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Property from '../../../../axon/js/Property.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
-import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
 import BallState from '../../common/model/BallState.js';
@@ -21,126 +38,186 @@ import BallSystem from '../../common/model/BallSystem.js';
 import PlayArea from '../../common/model/PlayArea.js';
 
 // constants
+const CHANGE_IN_MOMENTUM_VISIBLE_PERIOD = CollisionLabQueryParameters.changeInMomentumVisiblePeriod;
+const CHANGE_IN_MOMENTUM_FADE_PERIOD = CollisionLabQueryParameters.changeInMomentumFadePeriod;
+const NUMBER_OF_BALLS_RANGE = new RangeWithValue( 2, 2, 2 );
 const INTRO_INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
   new BallState( new Vector2( 0, 0 ), new Vector2( -0.5, 0 ), 1.5 )
 ];
-const CHANGE_IN_MOMENTUM_VISIBLE_PERIOD = CollisionLabQueryParameters.changeInMomentumVisiblePeriod;
-const CHANGE_IN_MOMENTUM_FADE_PERIOD = CollisionLabQueryParameters.changeInMomentumFadePeriod;
-
 
 class IntroBallSystem extends BallSystem {
 
   /**
    * @param {PlayArea} playArea
-   * @param {Object} [options]
+   * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( playArea, elapsedTimeProperty, options ) {
+  constructor( playArea, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+    assert && assert( !playArea.reflectsBorder, 'PlayArea cannot have a reflecting border in Intro' );
 
-    options = merge( {
+    super( INTRO_INITIAL_BALL_STATES, playArea, { numberOfBallsRange: NUMBER_OF_BALLS_RANGE } );
 
-      numberOfBallsRange: new RangeWithValue( 2, 2, 2 )
-
-    }, options );
-
-    super( INTRO_INITIAL_BALL_STATES, playArea, options );
+    assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS_RANGE.max ) );
 
     //----------------------------------------------------------------------------------------
 
-    // @public {BooleanProperty}
+    // @public {BooleanProperty} - indicates if the 'Change in Momentum' vectors are visible. This is in the model since
+    //                             the change in momentum vectors are only updated after the visibility checkbox is
+    //                             checked and are zero when false. Set externally in the view.
     this.changeInMomentumVisibleProperty = new BooleanProperty( false );
 
-    // @public (read-only)
+    // @public (read-only) {Property.<number>} - the opacity of the 'Change in Momentum' vectors. Set internally in this
+    //                                           class but can be read by the view.
     this.changeInMomentumOpacityProperty = new NumberProperty( 0 );
 
-    // @public (read-only)
-    this.collisionPointProperty = new Vector2Property( Vector2.ZERO );
-
-    // @public (read-only)
-    this.collisionTime = 0;
-
-    // @private
-    this.changeInMomentumDefined = false;
-
-    elapsedTimeProperty.link( elapsedTime => {
-      if ( this.changeInMomentumDefined ) {
-        const dt = elapsedTime - this.collisionTime;
-
-        if ( dt <= 0 ) {
-          this.clear();
-        }
-        if ( dt >= CHANGE_IN_MOMENTUM_VISIBLE_PERIOD &&
-            dt <= ( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD ) ) {
-
-          this.changeInMomentumOpacityProperty.value = Utils.linear( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD,
-            CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD,
-            1,
-            0,
-            dt );
-
-          if ( this.changeInMomentumOpacityProperty.value === 0 ) {
-            this.clear();
-          }
-        }
-      }
+    // @public (read-only) {Property.<Vector2|null>} - the collision point of the Balls in the 'Intro' BallSystem. If
+    //                                                 this changes to a non-null position, a collision has happened and
+    //                                                 will trigger changes in the changeInMomentumOpacityProperty over
+    //                                                 time. Null means a collision-point is not yet defined.
+    this.collisionPointProperty = new Property( null, {
+      isValidValue: value => value instanceof Vector2 || value === null
     } );
 
+    // @public (read-only) {number|null} - indicates when the collision between the two Balls occurred. Null indicates
+    //                                     the collision-time is not yet defined.
+    this.collisionContactTime = null;
 
-
-    // @public (read-only)
+    // @public (read-only) {Map.<Ball, Vector2Property>} - Map of a Ball to its associated 'Change in Momentum' vector.
     this.ballToChangeInMomentumProperty = new Map();
 
-    // Populate the Map with Paths.
-    this.prepopulatedBalls.forEach( ball => {
+    //----------------------------------------------------------------------------------------
 
-      const changeInMomentumProperty = new Vector2Property( Vector2.ZERO );
+    // Populate the Map. There are a fixed number of Balls in the IntroBallSystem and Balls are never disposed.
+    this.balls.forEach( ball => {
 
-      ball.momentumProperty.link( ( ballMomentum, previousBallMomentum ) => {
-        if ( previousBallMomentum && this.changeInMomentumVisibleProperty.value && !ball.userControlledProperty.value ) {
-          changeInMomentumProperty.value = ballMomentum.minus( previousBallMomentum );
+      // Map the ball to the change in momentum Property.
+      this.ballToChangeInMomentumProperty.set( ball, new Vector2Property( Vector2.ZERO ) );
+
+      // Observe when the momentum of the Ball changes and compute the change in momentum. Currently, DerivedProperties
+      // have no support of passing the previous values, so we have to use a normal Property link to compute the change
+      // in momentum. Link lasts for the life-time of the sim as Balls are never disposed.
+      ball.momentumProperty.lazyLink( ( ballMomentum, previousBallMomentum ) => {
+
+        if ( this.changeInMomentumVisibleProperty.value && !ball.userControlledProperty.value ) {
+
+          // Only update the change in momentum if they are visible, as documented above. Also don't update the change
+          // in momentum from user-manipulation (like dragging the velocity of the Ball).
+          this.ballToChangeInMomentumProperty.get( ball ).value = ballMomentum.minus( previousBallMomentum );
         }
       } );
-
-      this.ballToChangeInMomentumProperty.set( ball, changeInMomentumProperty );
     } );
 
     //----------------------------------------------------------------------------------------
 
-    this.changeInMomentumVisibleProperty.link( changeInMomentVisible => {
-      if ( !changeInMomentVisible ) {
-        this.clear();
+    // Observe when the collision-point is set or when the elapsedTimeProperty changes. If the collision-time is
+    // defined, meaning that a collision between the two balls has occurred, the changeInMomentumOpacityProperty
+    // is degraded based on how far the total elapsed time has passed the time of collision. Multilink never disposed.
+    Property.multilink( [ this.collisionPointProperty, elapsedTimeProperty ], ( collisionPoint, elapsedTime ) => {
+      if ( this.collisionContactTime ) {
+
+        // Compute the time since the collision.
+        const timeSinceCollision = elapsedTime - this.collisionContactTime;
+
+        if ( timeSinceCollision < 0 ) {
+
+          // If the time since the collision is negative, the sim has reversed back to when the collision occurred. This
+          // clears the change in momentum vectors. See https://github.com/phetsims/collision-lab/issues/85
+          this.clearChangeInMomentum();
+        }
+        else if ( timeSinceCollision <= CHANGE_IN_MOMENTUM_VISIBLE_PERIOD ) {
+
+          // If the time is less than the CHANGE_IN_MOMENTUM_VISIBLE_PERIOD, it is still fully opaque.
+          this.changeInMomentumOpacityProperty.value = 1;
+        }
+        else {
+          assert && assert( timeSinceCollision > CHANGE_IN_MOMENTUM_VISIBLE_PERIOD );
+
+          // Convenience reference to the total time the Change in Momentum vectors should exist.
+          const totalChangeInMomentumLifetime = CHANGE_IN_MOMENTUM_VISIBLE_PERIOD + CHANGE_IN_MOMENTUM_FADE_PERIOD;
+
+          // Use a linear mapping to linearly decrease the opacity in this time period.
+          this.changeInMomentumOpacityProperty.value = Utils.linear( CHANGE_IN_MOMENTUM_VISIBLE_PERIOD,
+            totalChangeInMomentumLifetime,
+            1,
+            0,
+            Math.min( timeSinceCollision, totalChangeInMomentumLifetime ) );
+        }
       }
     } );
 
-    this.ballSystemUserControlledProperty.link( userControlled => {
-      if ( userControlled ) {
-        this.clear();
-      }
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the 'Change in Momentum' visibility is toggled to false. In this case, the change in momentum
+    // fields should be cleared. This is because the 'Change in Momentum' vectors only are calculated AFTER the
+    // visibility checkbox is checked.  Link persists for the life-time of the sim.
+    this.changeInMomentumVisibleProperty.lazyLink( changeInMomentVisible => {
+      !changeInMomentVisible && this.clearChangeInMomentum();
     } );
 
-    // @private
-    this.elapsedTimeProperty = elapsedTimeProperty;
-  }
-
-  // @public
-  clear() {
-    this.ballToChangeInMomentumProperty.forEach( changeInMomentumProperty => {
-      changeInMomentumProperty.reset();
+    // Observe when the user is controlling any of the Balls to clear the change in momentum vectors. See
+    // https://github.com/phetsims/collision-lab/issues/85. Link lasts for the life-time of the sim.
+    this.ballSystemUserControlledProperty.lazyLink( userControlled => {
+      userControlled && this.clearChangeInMomentum();
     } );
-    this.changeInMomentumDefined = false;
-    this.changeInMomentumOpacityProperty.value = 0;
   }
 
+  /**
+   * 'Clears' the 'change in momentum' related fields of this class.
+   * @public
+   *
+   * This is invoked in the following scenarios:
+   *   - the reset all button is pressed.
+   *   - the restart button is pressed.
+   *   - when the 'Change in Momentum' checkbox is un-checked.
+   *   - when the Ball is user-manipulated, either by dragging or from the Keypad.
+   *   - when the change in momentum vectors have fully faded.
+   */
+  clearChangeInMomentum() {
+    this.changeInMomentumOpacityProperty.reset();
+    this.collisionPointProperty.reset();
+    this.collisionContactTime = null;
+    this.ballToChangeInMomentumProperty.forEach( changeInMomentumProperty => { changeInMomentumProperty.reset(); } );
+  }
 
-  // @public
-  registerBallCollision( collisionPoint, overlappedTime ) {
-    if ( this.changeInMomentumVisibleProperty.value ) {
-      this.collisionPointProperty.value = collisionPoint;
-      this.collisionTime = this.elapsedTimeProperty.value - overlappedTime;
-      this.changeInMomentumDefined = true;
-      this.changeInMomentumOpacityProperty.value = 1;
-    }
+  /**
+   * Resets the IntroBallSystem.
+   * @public
+   * @override
+   */
+  reset() {
+    super.reset();
+    this.clearChangeInMomentum();
+  }
+
+  /**
+   * Restarts the IntroBallSystem.
+   * @public
+   * @override
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    super.restart();
+    this.clearChangeInMomentum();
+  }
+
+  /**
+   * Registers a collision between the two balls of the 'Intro' screen, if the change in momentum vectors are visible.
+   * This is called from inside of IntroCollisionEngine.
+   * @public
+   *
+   * @param {Vector2} collisionPoint - the exact position of where the 2 Balls collided.
+   * @param {number} collisionContactTime - when the 2 Balls collided.
+   */
+  registerChangeInMomentumCollision( collisionPoint, collisionContactTime ) {
+    assert && assert( this.changeInMomentumVisibleProperty.value );
+    assert && assert( collisionPoint instanceof Vector2, `invalid collisionPoint: ${collisionPoint}` );
+    assert && assert( typeof collisionContactTime === 'number' && collisionContactTime >= 0, `invalid collisionContactTime: ${collisionContactTime}` );
+
+    this.collisionPointProperty.value = collisionPoint;
+    this.collisionContactTime = collisionContactTime;
   }
 }
 

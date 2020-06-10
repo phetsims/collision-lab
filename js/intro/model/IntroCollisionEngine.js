@@ -7,10 +7,30 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
+import PlayArea from '../../common/model/PlayArea.js';
+import IntroBallSystem from './IntroBallSystem.js';
 
 class IntroCollisionEngine extends CollisionEngine {
+
+  /**
+   * @param {PlayArea} playArea
+   * @param {IntroBallSystem} ballSystem
+   * @param {Property.<number>} elapsedTimeProperty
+   */
+  constructor( playArea, ballSystem, elapsedTimeProperty ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+
+    super( playArea, ballSystem );
+
+    // @private {Property.<number>} - reference to the passed-in elapsedTimeProperty.
+    this.elapsedTimeProperty = elapsedTimeProperty;
+  }
+
 
   /**
    * Registers the exact position of a ball-to-ball collision by recording the exact collision position in the
@@ -27,10 +47,12 @@ class IntroCollisionEngine extends CollisionEngine {
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
   registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    const normal = this.mutableVectors.normal;
+    if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
+      const normal = this.mutableVectors.normal;
 
-    const collisionPoint = Vector2.createPolar( ball1.radius, normal.angle ).add( collisionPosition1 );
-    this.ballSystem.registerBallCollision( collisionPoint, overlappedTime );
+      const collisionPoint = Vector2.createPolar( ball1.radius, normal.angle ).add( collisionPosition1 );
+      this.ballSystem.registerChangeInMomentumCollision( collisionPoint, this.elapsedTimeProperty.value - overlappedTime );
+    }
   }
 
   /**

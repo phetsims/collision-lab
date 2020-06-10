@@ -65,7 +65,7 @@ class IntroModel extends CollisionLabModel {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    return new IntroCollisionEngine( this.playArea, this.ballSystem );
+    return new IntroCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 }
 

@@ -82,7 +82,9 @@ class IntroBallSystemNode extends BallSystemNode {
     } );
 
     ballSystem.collisionPointProperty.link( collisionPoint => {
-      txt.centerX = modelViewTransform.modelToViewX( collisionPoint.x );
+      if ( collisionPoint ) {
+        txt.centerX = modelViewTransform.modelToViewX( collisionPoint.x );
+      }
     } );
   }
 }
