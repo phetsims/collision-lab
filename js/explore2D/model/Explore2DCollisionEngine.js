@@ -45,15 +45,14 @@ class Explore2DCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * @override
-   * Registers the exact position of both ball-to-ball collisions and ball-to-border collisions in the respective Ball
-   * Paths. See https://github.com/phetsims/collision-lab/issues/75. Also see the super class method declaration for
-   * full context and background.
-   * @protected
+   * Registers the exact position of any collision involving Balls by recording the exact collision position in the
+   * Ball's path. See https://github.com/phetsims/collision-lab/issues/75. Also see the super class method declaration
+   * for full context and background.
+   * @private
    *
    * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
-   * @param {number} overlappedTime - the time the Ball has been overlapping the border.
+   * @param {Vector2} collisionPosition - the exact position of where the Ball collided.
+   * @param {number} overlappedTime - the time the Ball has been overlapping with the object that it is colliding with.
    */
   registerExactBallCollision( ball, collisionPosition, overlappedTime ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
@@ -70,6 +69,42 @@ class Explore2DCollisionEngine extends CollisionEngine {
 
       path.updatePath( collisionPosition, this.elapsedTimeProperty.value - overlappedTime );
     }
+  }
+
+  /**
+   * Registers the exact position of a ball-to-ball collision by recording the exact collision position in the
+   * respective Ball paths. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
+   * declaration for full context and background.
+   *
+   * @protected
+   * @override
+   *
+   * @param {Ball} ball1 - the first Ball involved in the collision.
+   * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
+   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
+   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
+   */
+  registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+    this.registerExactBallCollision( ball1, collisionPosition1, overlappedTime );
+    this.registerExactBallCollision( ball2, collisionPosition2, overlappedTime );
+  }
+
+  /**
+   * @override
+   * Registers the exact position of a ball-to-border collision by recording the exact collision position in the
+   * colliding Ball's path. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
+   * declaration for full context and background.
+   *
+   * @protected
+   * @override
+   *
+   * @param {Ball} ball - the Ball involved in the collision.
+   * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
+   * @param {number} overlappedTime - the time the Ball has been overlapping the border.
+   */
+  registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
+    this.registerExactBallCollision( ball, collisionPosition, overlappedTime );
   }
 }
 
