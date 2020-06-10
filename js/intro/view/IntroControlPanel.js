@@ -22,7 +22,6 @@ class IntroControlPanel extends CollisionLabControlPanel {
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
-   * @param {Object} [options]
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
@@ -30,8 +29,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
-               ballsConstantSizeProperty,
-               options ) {
+               ballsConstantSizeProperty ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( changeInMomentVectorVisibleProperty instanceof Property && typeof changeInMomentVectorVisibleProperty.value === 'boolean', `invalid changeInMomentVectorVisibleProperty: ${changeInMomentVectorVisibleProperty}` );
@@ -45,25 +43,18 @@ class IntroControlPanel extends CollisionLabControlPanel {
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,
-           ballsConstantSizeProperty,
-           options );
+           ballsConstantSizeProperty, {
+             includeReflectingBorderCheckbox: false,
+             elasticityControlSetNodeOptions: {
+                includeStickSlipSwitch: false
+             }
+           } );
 
     // 'Change in P' visibility Checkbox
-    const changeInMomentumVector = new CollisionLabCheckbox( changeInMomentVectorVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
+    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentVectorVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
 
-
-    this.contentNode.children = [
-      this.velocityCheckbox,
-      this.momentumCheckbox,
-      changeInMomentumVector,
-      this.centerOfMassCheckbox,
-      this.kineticEnergyCheckbox,
-      this.valuesCheckbox,
-      this.reflectingBorderCheckbox,
-      this.hSeperator,
-      this.elasticityControlSetNode,
-      this.constantRadiusCheckbox
-    ];
+    // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
+    this.contentNode.insertChild( this.contentNode.indexOfChild( this.centerOfMassCheckbox ), changeInMomentumCheckbox );
   }
 }
 

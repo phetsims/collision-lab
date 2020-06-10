@@ -50,22 +50,13 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
            ballsConstantSizeProperty,
            options );
 
+    //----------------------------------------------------------------------------------------
+
     // 'Path' visibility Checkbox
     const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
 
-
-    this.contentNode.children = [
-      this.velocityCheckbox,
-      this.momentumCheckbox,
-      this.centerOfMassCheckbox,
-      this.kineticEnergyCheckbox,
-      this.valuesCheckbox,
-      pathCheckbox,
-      this.reflectingBorderCheckbox,
-      this.hSeperator,
-      this.elasticityControlSetNode,
-      this.constantRadiusCheckbox
-    ];
+    // Add the Path Checkbox after the values Checkbox.
+    this.contentNode.insertChild( this.contentNode.indexOfChild( this.valuesCheckbox ) + 1, pathCheckbox );
   }
 }
 
