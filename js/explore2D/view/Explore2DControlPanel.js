@@ -11,7 +11,7 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
@@ -38,12 +38,11 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                inelasticCollisionTypeProperty,
                ballsConstantSizeProperty ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
-    assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
-    assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
-    assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
-    assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
-    assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
-    assert && assert( ballsConstantSizeProperty instanceof Property && typeof ballsConstantSizeProperty.value === 'boolean', `invalid ballsConstantSizeProperty: ${ballsConstantSizeProperty}` );
+    assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
+    assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
+    assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
     super( viewProperties,
            centerOfMassVisibleProperty,
