@@ -2,7 +2,7 @@
 
 /**
  * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen. See BallSystem for context. IntroBallSystems
- * only have 2 fixed and the numberOfBalls cannot be mutated.
+ * only have 2 fixed Balls and the numberOfBallsProperty cannot be mutated.
  *
  * In the 'Intro' screen, there are 'Change in Momentum' vectors that appear 'briefly' when the momentum of a Ball
  * collides and changes momentum with another Ball. IntroBallSystem will keep track the momentum of the two Balls
