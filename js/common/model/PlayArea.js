@@ -44,7 +44,10 @@ class PlayArea {
       bounds: PlayArea.DEFAULT_BOUNDS,
 
       // {boolean} - indicates if the Grid is visible initially.
-      isGridVisibleInitially: false
+      isGridVisibleInitially: false,
+
+      // {boolean} - indicates if the PlayArea's borders reflect initially.
+      reflectsBorderInititally: true
 
     }, options );
 
@@ -58,7 +61,7 @@ class PlayArea {
 
     // @public {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
     //                             is manipulated in the view.
-    this.reflectingBorderProperty = new BooleanProperty( true );
+    this.reflectingBorderProperty = new BooleanProperty( options.reflectsBorderInititally );
 
     // @public {BooleanProperty} - indicates if the grid of the PlayArea is visible. This is placed inside of the model
     //                             since the visibility of the grid affects the drag-snapping of Balls.
