@@ -36,7 +36,7 @@ class IntroScreenView extends CollisionLabScreenView {
   createControlPanel( viewProperties, model ) {
     return new IntroControlPanel( viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
-      model.ballSystem.changeInMomentVectorVisibleProperty,
+      model.ballSystem.changeInMomentumVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,

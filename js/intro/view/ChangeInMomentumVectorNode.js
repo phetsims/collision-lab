@@ -14,19 +14,17 @@ import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
-import ChangeInMomentumVector from '../model/ChangeInMomentumVector.js';
 
 const Y = 40;
 
 class ChangeInMomentumVectorNode extends Node {
 
   /**
-   * @param {ChangeInMomentumVector} changeInMomentumVector
+   * @param {Property.<Vector2>} changeInMomentumProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( changeInMomentumVector, ball, modelViewTransform, options ) {
-    assert && assert( changeInMomentumVector instanceof ChangeInMomentumVector, `invalid changeInMomentumVector: ${changeInMomentumVector}` );
+  constructor( changeInMomentumProperty, ball, modelViewTransform, options ) {
 
     options = merge( {
 
@@ -56,7 +54,7 @@ class ChangeInMomentumVectorNode extends Node {
     //----------------------------------------------------------------------------------------
 
     Property.multilink( [ ball.positionProperty,
-      changeInMomentumVector.componentsProperty  ], ( position, components ) => {
+      changeInMomentumProperty  ], ( position, components ) => {
 
         // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
         this.visible = ( components.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
@@ -72,11 +70,6 @@ class ChangeInMomentumVectorNode extends Node {
 
         line.setLine( ballViewPosition.x, ballViewPosition.y, tailViewPosition.x, tailViewPosition.y );
      } );
-
-
-    changeInMomentumVector.opacityProperty.link( opacity => {
-      this.opacity = opacity;
-    } );
   }
 }
 

@@ -8,7 +8,9 @@
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import Text from '../../../../scenery/js/nodes/Text.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import IntroBallSystem from '../model/IntroBallSystem.js';
@@ -56,15 +58,32 @@ class IntroBallSystemNode extends BallSystemNode {
 
     const changeInMomentumContainer = new Node();
 
-    ballSystem.ballToChangeInMomentumVector.forEach( ( changeInMomentumVector, ball ) => {
+    ballSystem.ballToChangeInMomentumProperty.forEach( ( changeInMomentumProperty, ball ) => {
 
       // Create the corresponding BallNode for each prepopulatedBall.
-      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumVector, ball, modelViewTransform );
+      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumProperty, ball, modelViewTransform );
 
       // Add the BallNode to the container.
       changeInMomentumContainer.addChild( changeInMomentumVectorNode );
     } );
     this.addChild( changeInMomentumContainer );
+
+    const txt = new Text( 'Change in Momentum', {
+      top: 10,
+      font: CollisionLabConstants.DISPLAY_FONT
+    } ); // tODO: move to strings file
+    this.addChild( txt );
+
+    ballSystem.changeInMomentumOpacityProperty.link( opacity => {
+      changeInMomentumContainer.children.forEach( child => {
+        child.opacity = opacity;
+      } );
+      txt.opacity = opacity;
+    } );
+
+    ballSystem.collisionPointProperty.link( collisionPoint => {
+      txt.centerX = modelViewTransform.modelToViewX( collisionPoint.x );
+    } );
   }
 }
 

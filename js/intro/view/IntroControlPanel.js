@@ -17,7 +17,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} changeInMomentVectorVisibleProperty
+   * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
@@ -25,14 +25,14 @@ class IntroControlPanel extends CollisionLabControlPanel {
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
-               changeInMomentVectorVisibleProperty,
+               changeInMomentumVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
                ballsConstantSizeProperty ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
-    assert && assert( changeInMomentVectorVisibleProperty instanceof Property && typeof changeInMomentVectorVisibleProperty.value === 'boolean', `invalid changeInMomentVectorVisibleProperty: ${changeInMomentVectorVisibleProperty}` );
+    assert && assert( changeInMomentumVisibleProperty instanceof Property && typeof changeInMomentumVisibleProperty.value === 'boolean', `invalid changeInMomentumVisibleProperty: ${changeInMomentumVisibleProperty}` );
     assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
     assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
     assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
@@ -51,7 +51,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
            } );
 
     // 'Change in P' visibility Checkbox
-    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentVectorVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
+    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
 
     // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.centerOfMassCheckbox ), changeInMomentumCheckbox );

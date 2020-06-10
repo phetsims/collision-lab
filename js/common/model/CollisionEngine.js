@@ -57,7 +57,7 @@ class CollisionEngine {
     // @private {BallSystem} - reference to the passed-in BallSystem.
     this.ballSystem = ballSystem;
 
-    // @private {Object} - mutable vectors, reused in critical code for a slight performance optimization.
+    // @protected {Object} - mutable vectors, reused in critical code for a slight performance optimization.
     this.mutableVectors = {
       deltaR: new Vector2( 0, 0 ),
       deltaV: new Vector2( 0, 0 ),

@@ -9,10 +9,10 @@
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
-import CollisionEngine from '../../common/model/CollisionEngine.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import IntroBallSystem from './IntroBallSystem.js';
+import IntroCollisionEngine from './IntroCollisionEngine.js';
 
 class IntroModel extends CollisionLabModel {
 
@@ -26,6 +26,7 @@ class IntroModel extends CollisionLabModel {
       playAreaOptions: {
         dimensions: 1,
         isGridVisibleInitially: true,
+        reflectsBorderInitially: false,
         bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
       }
     } );
@@ -64,7 +65,7 @@ class IntroModel extends CollisionLabModel {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    return new CollisionEngine( this.playArea, this.ballSystem );
+    return new IntroCollisionEngine( this.playArea, this.ballSystem );
   }
 }
 
