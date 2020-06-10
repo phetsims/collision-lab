@@ -38,7 +38,7 @@ class ChangeInMomentumVector {
    * @param {Property.<boolean>} changeInMomentVectorVisibleProperty - the components are always 0 if false.
    * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( ballMomentumProperty, changeInMomentVectorVisibleProperty, elapsedTimeProperty ) {
+  constructor( ballMomentumProperty, userControlledProperty, changeInMomentVectorVisibleProperty, elapsedTimeProperty ) {
     assert && AssertUtils.assertPropertyOf( ballMomentumProperty, Vector2 );
     assert && AssertUtils.assertPropertyOf( changeInMomentVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
@@ -56,7 +56,7 @@ class ChangeInMomentumVector {
     this.isDefined = false;
 
     ballMomentumProperty.link( ( ballMomentum, previousBallMomentum ) => {
-      if ( previousBallMomentum && changeInMomentVectorVisibleProperty.value ) {
+      if ( previousBallMomentum && changeInMomentVectorVisibleProperty.value && !userControlledProperty.value ) {
         this.componentsProperty.value = ballMomentum.minus( previousBallMomentum );
         this.setTime = elapsedTimeProperty.value;
         this.opacityProperty.value = 1;
@@ -68,6 +68,10 @@ class ChangeInMomentumVector {
       if ( !changeInMomentVectorVisible ) {
         this.clear();
       }
+    } );
+
+    userControlledProperty.link( userControlled => {
+      userControlled && this.clear();
     } );
 
 

@@ -53,7 +53,7 @@ class IntroBallSystem extends BallSystem {
 
     // Populate the Map with Paths.
     this.prepopulatedBalls.forEach( ball => {
-      this.ballToChangeInMomentumVector.set( ball, new ChangeInMomentumVector( ball.momentumProperty, this.changeInMomentVectorVisibleProperty, elapsedTimeProperty ) );
+      this.ballToChangeInMomentumVector.set( ball, new ChangeInMomentumVector( ball.momentumProperty, ball.userControlledProperty, this.changeInMomentVectorVisibleProperty, elapsedTimeProperty ) );
     } );
 
   }
