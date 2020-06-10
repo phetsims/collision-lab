@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * The 'Intro' screen. Conforms to the contract specified in joist/Screen.
+ * The 'Explore 2D' screen. Conforms to the contract specified in joist/Screen.
  *
  * @author Brandon Li
  */
@@ -21,20 +21,16 @@ class Explore2DScreen extends Screen {
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const options = {
+    const createModel = () => new Explore2DModel( tandem.createTandem( 'explore2DModel' ) );
+    const createView = model => new Explore2DScreenView( model, tandem.createTandem( 'explore2DScreenView' ) );
+
+    super( createModel, createView, {
       name: collisionLabStrings.screen.explore2D,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       tandem: tandem
-    };
-
-    super(
-      () => new Explore2DModel( tandem.createTandem( 'explore2DModel' ) ),
-      model => new Explore2DScreenView( model, tandem.createTandem( 'explore2DScreenView' ) ),
-      options
-    );
+    } );
   }
 }
 
