@@ -1,6 +1,12 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
+ * Explore2DControlPanel is a CollisionLabControlPanel sub-type for the 'Explore 2D' screen, which appears on the
+ * upper-right corner of the screen.
+ *
+ * It adds a 'Path' Checkbox to allow the user to toggle the visibility of Ball and Center of Mass paths. The 'Path'
+ * checkbox is inserted right below the 'Values' checkbox of the super-class. All other configurations and options
+ * are the same.
  *
  * @author Brandon Li
  */
@@ -23,7 +29,6 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
-   * @param {Object} [options]
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
@@ -31,8 +36,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
-               ballsConstantSizeProperty,
-               options ) {
+               ballsConstantSizeProperty ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( pathVisibleProperty instanceof Property && typeof pathVisibleProperty.value === 'boolean', `invalid pathVisibleProperty: ${pathVisibleProperty}` );
@@ -41,21 +45,19 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
     assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
     assert && assert( ballsConstantSizeProperty instanceof Property && typeof ballsConstantSizeProperty.value === 'boolean', `invalid ballsConstantSizeProperty: ${ballsConstantSizeProperty}` );
 
-
     super( viewProperties,
            centerOfMassVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,
-           ballsConstantSizeProperty,
-           options );
+           ballsConstantSizeProperty  );
 
     //----------------------------------------------------------------------------------------
 
     // 'Path' visibility Checkbox
     const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
 
-    // Add the Path Checkbox after the values Checkbox.
+    // Add the 'Path' Checkbox after the 'Values' Checkbox.
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.valuesCheckbox ) + 1, pathCheckbox );
   }
 }
