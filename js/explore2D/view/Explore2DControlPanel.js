@@ -53,7 +53,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
 
     //----------------------------------------------------------------------------------------
 
-    // 'Path' visibility Checkbox
+    // Create the 'Path' visibility Checkbox.
     const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
 
     // Add the 'Path' Checkbox after the 'Values' Checkbox.
