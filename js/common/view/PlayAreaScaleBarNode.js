@@ -80,7 +80,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
     // Create the Label of the scale-bar.
     const labelNode = new Text( StringUtils.fillIn( collisionLabStrings.pattern.m, { value: length } ), {
       font: options.labelFont,
-      maxWidth: 150 // constrain width for i18n. determined empirically
+      maxWidth: modelViewTransform.modelToViewDeltaX( length ) * 0.75 // Constrain width for i18n (eye-balled).
     } );
 
     /*----------------------------------------------------------------------------*
