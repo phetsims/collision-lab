@@ -1,7 +1,15 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * IntroCollisionEngine is a CollisionEngine sub-type.
+ * IntroCollisionEngine is a CollisionEngine sub-type that handles computing the exact point two balls collided,
+ * calculating exactly when the collision occurred (in between frames), and passing this information to the
+ * IntroBallSystem. See IntroBallSystem.js and CollisionEngine.js for background.
+ *
+ * When a collision with 2 balls occurs, its position and the overlapping time is taken into consideration,
+ * and Balls are set to a different position. However, for the 'Intro' screen, the 'Change in Momentum' text needs to be
+ * positioned above the exact collision point of the balls. Thus, when a collision is detected, this exact colliding
+ * point needs to be computed and passed to the IntroBallSystem, which will trigger changes in the change in momentum
+ * opacity over time. See https://github.com/phetsims/collision-lab/issues/85.
  *
  * @author Brandon Li
  */
