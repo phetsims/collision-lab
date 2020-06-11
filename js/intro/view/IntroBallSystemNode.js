@@ -31,7 +31,7 @@ import IntroBallSystem from '../model/IntroBallSystem.js';
 import ChangeInMomentumVectorNode from './ChangeInMomentumVectorNode.js';
 
 // constants
-const CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET = 50; // Vertical offset of the label from the ChangeInMomentumVectorNodes.
+const CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET = 30; // Vertical offset of the label from the ChangeInMomentumVectorNodes.
 
 class IntroBallSystemNode extends BallSystemNode {
 

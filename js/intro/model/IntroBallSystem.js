@@ -104,6 +104,8 @@ class IntroBallSystem extends BallSystem {
       // have no support for passing the previous values, so we have to use a normal Property link to compute the change
       // in momentum. Link lasts for the life-time of the sim as Balls are never disposed.
       ball.momentumProperty.lazyLink( ( ballMomentum, previousBallMomentum ) => {
+        assert && assert( ballMomentum.y === 0 && previousBallMomentum.y === 0 );
+
         if ( this.changeInMomentumVisibleProperty.value && !ball.userControlledProperty.value ) {
 
           // Only update the change in momentum if they are visible, as documented above. Also don't update the change
@@ -216,7 +218,7 @@ class IntroBallSystem extends BallSystem {
    */
   registerChangeInMomentumCollision( collisionPoint, collisionContactTime ) {
     assert && assert( this.changeInMomentumVisibleProperty.value );
-    assert && assert( collisionPoint instanceof Vector2, `invalid collisionPoint: ${collisionPoint}` );
+    assert && assert( collisionPoint instanceof Vector2 && collisionPoint.y === 0, `invalid collisionPoint: ${collisionPoint}` );
     assert && assert( typeof collisionContactTime === 'number' && collisionContactTime >= 0, `invalid collisionContactTime: ${collisionContactTime}` );
 
     this.collisionContactTime = collisionContactTime;
