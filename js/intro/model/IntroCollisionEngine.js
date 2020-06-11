@@ -1,15 +1,15 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * IntroCollisionEngine is a CollisionEngine sub-type that handles computing the exact point two balls collided,
- * calculating exactly when the collision occurred (in between frames), and passing this information to the
- * IntroBallSystem. See IntroBallSystem.js and CollisionEngine.js for background.
+ * IntroCollisionEngine is a CollisionEngine sub-type that handles computing the exact point the two balls of the
+ * 'Intro' screen collided and calculating when the collision occurred (in between frames).
  *
  * When a collision with 2 balls occurs, its position and the overlapping time is taken into consideration,
  * and Balls are set to a different position. However, for the 'Intro' screen, the 'Change in Momentum' text needs to be
  * positioned above the exact collision point of the balls. Thus, when a collision is detected, this exact colliding
  * point needs to be computed and passed to the IntroBallSystem, which will trigger changes in the change in momentum
- * opacity over time. See https://github.com/phetsims/collision-lab/issues/85.
+ * opacity over time. See https://github.com/phetsims/collision-lab/issues/85. See IntroBallSystem.js and
+ * CollisionEngine.js for complete background.
  *
  * @author Brandon Li
  */
@@ -59,15 +59,15 @@ class IntroCollisionEngine extends CollisionEngine {
     assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-    // Only register the 'Change in Momentum' collision point if the 'Change in Momentum' vectors checkbox is checked.
+    // Only register the 'Change in Momentum' collision point if the 'Change in Momentum' checkbox is checked.
     if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
 
       // Reference the normal 'line of impact' vector. See
       // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
-      // for an image.
+      // for an image. This is a unit vector.
       const normal = this.mutableVectors.normal;
 
-      // The normal vector points in the direction of ball2. So we scale the normalized normal vector by the radius
+      // The normal vector points in the direction of ball2. So we scale the normal vector (unit vector) by the radius
       // of ball1 and add it to the center colliding position of ball1 to get the collision-point.
       const collisionPoint = normal.times( ball1.radius ).add( collisionPosition1 );
 
