@@ -48,7 +48,6 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
     isValidValue: value => ( value >= 0 ),
     defaultValue: 0.5
   }
-
 } );
 
 // Log the values of all sim-specific query parameters
