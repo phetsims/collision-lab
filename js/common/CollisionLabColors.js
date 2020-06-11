@@ -24,6 +24,8 @@ const CollisionLabColors = {
   MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
   GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
 
+  CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR: 'rgb( 182, 181, 182 )',
+
   // Panel-like containers
   PANEL_COLORS: {
     stroke: 'rgb( 190, 190, 190 )',

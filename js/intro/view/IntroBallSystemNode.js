@@ -61,12 +61,10 @@ class IntroBallSystemNode extends BallSystemNode {
     ballSystem.ballToChangeInMomentumProperty.forEach( ( changeInMomentumProperty, ball ) => {
 
       // Create the corresponding BallNode for each prepopulatedBall.
-      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumProperty, ball, modelViewTransform );
+      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumProperty, ballSystem.changeInMomentumOpacityProperty, ball.positionProperty, modelViewTransform );
 
       // Add the BallNode to the container.
       changeInMomentumContainer.addChild( changeInMomentumVectorNode );
-
-      ballSystem.changeInMomentumOpacityProperty.linkAttribute( changeInMomentumVectorNode, 'opacity' );
     } );
     this.addChild( changeInMomentumContainer );
 
