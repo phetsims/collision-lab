@@ -11,9 +11,10 @@
  * time-period, the opacity linearly reduces for another set period of time. The opacity of the vectors is also
  * modeled in this class.
  *
- * In the design, the 'Change in Momentum' vectors only appear AFTER the visibility checkbox is checked, meaning the
- * components of the change in momentum vector are always 0 if the checkbox isn't checked and is only updated if and
- * only if the checkbox is checked. Thus, the changeInMomentumVisibleProperty is in the model.
+ * In the design, the 'Change in Momentum' vectors are only shown for collisions that occur AFTER the visibility
+ * checkbox is checked, meaning the components of the change in momentum vector are always 0 if the checkbox isn't
+ * checked and are only updated if and only if the checkbox is checked. Thus, the changeInMomentumVisibleProperty is in
+ * the model.
  *
  * Additionally, the view renders a 'Change in Momentum' string over where the two Balls collided, (there are no
  * ball-to-border collisions in 'Intro'). This collision point can only be computed inside of IntroCollisionEngine.js,
