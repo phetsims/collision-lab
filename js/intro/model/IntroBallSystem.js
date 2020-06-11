@@ -12,7 +12,7 @@
  * modeled in this class.
  *
  * In the design, the 'Change in Momentum' vectors are only shown for collisions that occur AFTER the visibility
- * checkbox is checked, meaning the components of the change in momentum vector are always 0 if the checkbox isn't
+ * checkbox is checked, meaning the components of the change in momentum vectors are always 0 if the checkbox isn't
  * checked and are only updated if and only if the checkbox is checked. Thus, the changeInMomentumVisibleProperty is in
  * the model.
  *
