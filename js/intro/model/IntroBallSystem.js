@@ -80,7 +80,8 @@ class IntroBallSystem extends BallSystem {
     //                                                 will trigger changes in the changeInMomentumOpacityProperty over
     //                                                 time. Null means a collision-point is not yet defined.
     this.collisionPointProperty = new Property( null, {
-      isValidValue: value => value instanceof Vector2 || value === null
+      isValidValue: value => value instanceof Vector2 || value === null,
+      reentrant: true
     } );
 
     // @public (read-only) {number|null} - indicates when the collision between the two Balls occurred. Null indicates
