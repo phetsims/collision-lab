@@ -140,7 +140,7 @@ class CollisionLabModel {
    *
    * Currently, it does the same thing as restarting. See https://github.com/phetsims/collision-lab/issues/90.
    */
-  returnreturnBalls(d) { this.restart(); }
+  returnBalls(d) { this.restart(); }
 
   /**
    * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the

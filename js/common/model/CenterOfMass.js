@@ -2,7 +2,7 @@
 
 /**
  * CenterOfMass is the model representation for the center of mass (COM) of a system of Balls. Each BallSystem has one
- * and only one CenterOfMass instance. CenterOfreturnBalls are created at the start of the sim and are never disposed,
+ * and only one CenterOfMass instance. CenterOfMasses are created at the start of the sim and are never disposed,
  * so no dispose method is necessary.
  *
  * Primary responsibilities are:
@@ -10,7 +10,7 @@
  *  2. Track the velocity of the center of mass, in m/s.
  *  3. Track the speed of the center of mass, in m/s.
  *
- * NOTE: CenterOfreturnBalls are designed and implemented to be minimally invasive to optimize the performance of the
+ * NOTE: CenterOfMasses are designed and implemented to be minimally invasive to optimize the performance of the
  *       simulation. The position and velocity (and speed) are not re-updated when the CenterOfMass isn't visible and
  *       are only recalculated when its visibility is set to true.
  *

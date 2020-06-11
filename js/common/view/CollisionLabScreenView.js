@@ -183,11 +183,11 @@ class CollisionLabScreenView extends ScreenView {
     } );
     this.addChild( moreDataCheckbox );
 
-    const returnreturnBallsButton = new ReturnBallsButton( model.ballSystem.ballsNotInsidePlayAreaProperty, {
+    const returnBallsButton = new ReturnBallsButton( model.ballSystem.ballsNotInsidePlayAreaProperty, {
       center: modelViewTransform.modelToViewPosition( model.playArea.bounds.center ),
-      listener: () => { model.returnreturnBalls(); }
+      listener: () => { model.returnBalls(); }
     } );
-    this.addChild( returnreturnBallsButton );
+    this.addChild( returnBallsButton );
 
   }
 
