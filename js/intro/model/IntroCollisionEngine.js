@@ -47,7 +47,8 @@ class IntroCollisionEngine extends CollisionEngine {
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
   registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
+    if ( this.ballSystem.changeInMomentumVisibleProperty.value  &&
+        this.elapsedTimeProperty.value - overlappedTime >= 0 ) {
       const normal = this.mutableVectors.normal;
 
       const collisionPoint = Vector2.createPolar( ball1.radius, normal.angle ).add( collisionPosition1 );
