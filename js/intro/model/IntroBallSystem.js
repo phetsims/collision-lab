@@ -117,7 +117,7 @@ class IntroBallSystem extends BallSystem {
     // defined, meaning that a collision between the two balls has occurred, the changeInMomentumOpacityProperty
     // is degraded based on how far the total elapsed time has passed the time of collision. Multilink never disposed.
     Property.multilink( [ this.collisionPointProperty, elapsedTimeProperty ], ( collisionPoint, elapsedTime ) => {
-      if ( this.collisionContactTime ) {
+      if ( Number.isFinite( this.collisionContactTime ) ) {
 
         // Compute the time since the collision.
         const timeSinceCollision = elapsedTime - this.collisionContactTime;
@@ -217,8 +217,8 @@ class IntroBallSystem extends BallSystem {
     assert && assert( collisionPoint instanceof Vector2, `invalid collisionPoint: ${collisionPoint}` );
     assert && assert( typeof collisionContactTime === 'number' && collisionContactTime >= 0, `invalid collisionContactTime: ${collisionContactTime}` );
 
-    this.collisionPointProperty.value = collisionPoint;
     this.collisionContactTime = collisionContactTime;
+    this.collisionPointProperty.value = collisionPoint;
   }
 }
 

@@ -59,9 +59,8 @@ class IntroCollisionEngine extends CollisionEngine {
     assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-
     // Only register the 'Change in Momentum' collision point if the 'Change in Momentum' vectors checkbox is checked.
-    if ( this.ballSystem.changeInMomentumVisibleProperty.value && this.elapsedTimeProperty.value >= overlappedTime ) {
+    if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
 
       // Reference the normal 'line of impact' vector. See
       // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
@@ -73,7 +72,7 @@ class IntroCollisionEngine extends CollisionEngine {
       const collisionPoint = normal.times( ball1.radius ).add( collisionPosition1 );
 
       // The time the collision occurred is the current time of this frame minus how long the Balls have overlapped.
-      const collisionTime = this.elapsedTimeProperty.value - overlappedTime;
+      const collisionTime = Math.max( this.elapsedTimeProperty.value - overlappedTime, 0 );
 
       // Pass the calculated information to the IntroBallSystem.
       this.ballSystem.registerChangeInMomentumCollision( collisionPoint, collisionTime );
