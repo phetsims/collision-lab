@@ -175,8 +175,8 @@ class IntroBallSystem extends BallSystem {
    *   - when the Ball is user-manipulated, either by dragging or from the Keypad.
    */
   clearChangeInMomentum() {
-    this.changeInMomentumOpacityProperty.reset();
     this.collisionPointProperty.reset();
+    this.changeInMomentumOpacityProperty.reset();
     this.collisionContactTime = null;
     this.ballToChangeInMomentumProperty.forEach( changeInMomentumProperty => { changeInMomentumProperty.reset(); } );
   }
@@ -188,6 +188,7 @@ class IntroBallSystem extends BallSystem {
    */
   reset() {
     super.reset();
+    this.changeInMomentumVisibleProperty.reset();
     this.clearChangeInMomentum();
   }
 

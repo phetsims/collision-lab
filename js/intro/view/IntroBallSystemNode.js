@@ -65,6 +65,8 @@ class IntroBallSystemNode extends BallSystemNode {
 
       // Add the BallNode to the container.
       changeInMomentumContainer.addChild( changeInMomentumVectorNode );
+
+      ballSystem.changeInMomentumOpacityProperty.linkAttribute( changeInMomentumVectorNode, 'opacity' );
     } );
     this.addChild( changeInMomentumContainer );
 
@@ -73,13 +75,8 @@ class IntroBallSystemNode extends BallSystemNode {
       font: CollisionLabConstants.DISPLAY_FONT
     } ); // tODO: move to strings file
     this.addChild( txt );
+    ballSystem.changeInMomentumOpacityProperty.linkAttribute( txt, 'opacity' );
 
-    ballSystem.changeInMomentumOpacityProperty.link( opacity => {
-      changeInMomentumContainer.children.forEach( child => {
-        child.opacity = opacity;
-      } );
-      txt.opacity = opacity;
-    } );
 
     ballSystem.collisionPointProperty.link( collisionPoint => {
       if ( collisionPoint ) {
