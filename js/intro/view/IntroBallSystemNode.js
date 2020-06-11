@@ -94,7 +94,7 @@ class IntroBallSystemNode extends BallSystemNode {
     // Create the 'Change in Momentum' text, which is displayed above the collision point.
     const changeInMomentumText = new Text( collisionLabStrings.changeInMomentum, {
       font: CollisionLabConstants.DISPLAY_FONT,
-      maxWidth: 150, // Constrain width for i18n. Determined empirically.
+      maxWidth: 160, // Constrain width for i18n. Determined empirically.
       top: modelViewTransform.modelToViewY( playArea.bounds.centerY )
             - ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET
             - CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET
