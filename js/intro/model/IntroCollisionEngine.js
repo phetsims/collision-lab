@@ -17,6 +17,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
+import Ball from '../../common/model/Ball.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import IntroBallSystem from './IntroBallSystem.js';
@@ -39,12 +40,9 @@ class IntroCollisionEngine extends CollisionEngine {
     this.elapsedTimeProperty = elapsedTimeProperty;
   }
 
-
   /**
-   * Registers the exact position of a ball-to-ball collision by recording the exact collision position in the
-   * respective Ball paths. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
-   * declaration for full context and background.
-   *
+   * Registers the exact position of a ball-to-ball collision by computing the exact point the Balls collided and
+   * passing this information to the IntroBallSystem if the 'Change in Momentum' vectors are visible.
    * @override
    * @protected
    *
@@ -55,30 +53,45 @@ class IntroCollisionEngine extends CollisionEngine {
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
   registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    if ( this.ballSystem.changeInMomentumVisibleProperty.value  &&
-        this.elapsedTimeProperty.value - overlappedTime >= 0 ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
+    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
+    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
+    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+
+
+    // Only register the 'Change in Momentum' collision point if the 'Change in Momentum' vectors checkbox is checked.
+    if ( this.ballSystem.changeInMomentumVisibleProperty.value && this.elapsedTimeProperty.value >= overlappedTime ) {
+
+      // Reference the normal 'line of impact' vector. See
+      // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
+      // for an image.
       const normal = this.mutableVectors.normal;
 
-      const collisionPoint = Vector2.createPolar( ball1.radius, normal.angle ).add( collisionPosition1 );
-      this.ballSystem.registerChangeInMomentumCollision( collisionPoint, this.elapsedTimeProperty.value - overlappedTime );
+      // The normal vector points in the direction of ball2. So we scale the normalized normal vector by the radius
+      // of ball1 and add it to the center colliding position of ball1 to get the collision-point.
+      const collisionPoint = normal.times( ball1.radius ).add( collisionPosition1 );
+
+      // The time the collision occurred is the current time of this frame minus how long the Balls have overlapped.
+      const collisionTime = this.elapsedTimeProperty.value - overlappedTime;
+
+      // Pass the calculated information to the IntroBallSystem.
+      this.ballSystem.registerChangeInMomentumCollision( collisionPoint, collisionTime );
     }
   }
 
   /**
-   * @override
-   * Registers the exact position of a ball-to-border collision by recording the exact collision position in the
-   * colliding Ball's path. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
-   * declaration for full context and background.
-   *
+   * Registers the exact position of a ball-to-border collision. Overriden to ensure that there are no ball-to-border
+   * collisions in the 'Intro' screen, since the PlayArea's border doesn't reflect.
    * @override
    * @protected
    *
-   * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the exact position of where the Ball collided with the border.
-   * @param {number} overlappedTime - the time the Ball has been overlapping the border.
+   * @param {Ball} ball
+   * @param {Vector2} collisionPosition
+   * @param {number} overlappedTime
    */
   registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
-    assert && assert( false );
+    assert && assert( false, 'There are no Ball to Border collisions in the Intro screen' );
   }
 }
 

@@ -91,7 +91,6 @@ class Explore2DCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * @override
    * Registers the exact position of a ball-to-border collision by recording the exact collision position in the
    * colliding Ball's path. See https://github.com/phetsims/collision-lab/issues/75 and the super class method
    * declaration for full context and background.
