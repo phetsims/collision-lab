@@ -1,11 +1,11 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * ReturnMassesButton is RectangularPushButton sub-type that displays 'Return Masses'. It appears when the
+ * ReturnBallsButton is RectangularPushButton sub-type that displays 'Return returnBalls'. It appears when the
  * 'Reflecting Border' checkbox is unchecked and all of the Balls in the system have escaped from within the
  * PlayArea's bounds.
  *
- * Pressing the ReturnMassesButton returns the Balls to their most recent saved state. ReturnMassesButtons are created
+ * Pressing the ReturnBallsButton returns the Balls to their most recent saved state. ReturnBallsButtons are created
  * at the start of the sim and are never disposed, so no dispose method is necessary and internal links are left as-is.
  *
  * @author Brandon Li
@@ -20,7 +20,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-class ReturnMassesButton extends RectangularPushButton {
+class ReturnBallsButton extends RectangularPushButton {
 
   /**
    * @param {Property.<boolean>} ballsNotInsidePlayAreaProperty - indicates if all of the Balls in the system are NOT
@@ -42,8 +42,8 @@ class ReturnMassesButton extends RectangularPushButton {
 
     //----------------------------------------------------------------------------------------
 
-    assert && assert( !options.content, 'ReturnMassesButton sets content' );
-    options.content = new Text( collisionLabStrings.returnMasses, {
+    assert && assert( !options.content, 'ReturnBallsButton sets content' );
+    options.content = new Text( collisionLabStrings.returnBalls, {
       font: options.labelFont,
       maxWidth: 150 // constrain width for i18n. determined empirically
     } );
@@ -54,10 +54,10 @@ class ReturnMassesButton extends RectangularPushButton {
 
     // Observe when the ballsNotInsidePlayAreaProperty changes and update the visibility of this Button, which
     // is only visible once all of the balls have escaped the PlayArea. Listener is never unlinked since
-    // ReturnMassesButtons are never disposed.
+    // ReturnBallsButtons are never disposed.
     ballsNotInsidePlayAreaProperty.linkAttribute( this, 'visible' );
   }
 }
 
-collisionLab.register( 'ReturnMassesButton', ReturnMassesButton );
-export default ReturnMassesButton;
+collisionLab.register( 'ReturnBallsButton', ReturnBallsButton );
+export default ReturnBallsButton;

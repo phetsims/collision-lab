@@ -2,7 +2,7 @@
 
 /**
  * CenterOfMass is the model representation for the center of mass (COM) of a system of Balls. Each BallSystem has one
- * and only one CenterOfMass instance. CenterOfMasses are created at the start of the sim and are never disposed,
+ * and only one CenterOfMass instance. CenterOfreturnBalls are created at the start of the sim and are never disposed,
  * so no dispose method is necessary.
  *
  * Primary responsibilities are:
@@ -10,7 +10,7 @@
  *  2. Track the velocity of the center of mass, in m/s.
  *  3. Track the speed of the center of mass, in m/s.
  *
- * NOTE: CenterOfMasses are designed and implemented to be minimally invasive to optimize the performance of the
+ * NOTE: CenterOfreturnBalls are designed and implemented to be minimally invasive to optimize the performance of the
  *       simulation. The position and velocity (and speed) are not re-updated when the CenterOfMass isn't visible and
  *       are only recalculated when its visibility is set to true.
  *
@@ -126,7 +126,7 @@ class CenterOfMass {
    *
    * @returns {number} - in kg.
    */
-  computeTotalBallMasses() {
+  computeTotalBallreturnBalls() {
     let totalMass = 0;
 
     this.balls.forEach( ball => {
@@ -152,7 +152,7 @@ class CenterOfMass {
 
     // The position of the center of mass is the total first moment divided by the total mass.
     // See https://en.wikipedia.org/wiki/Center_of_mass#A_system_of_particles for background on this formula.
-    return totalFirstMoment.dividedScalar( this.computeTotalBallMasses() );
+    return totalFirstMoment.dividedScalar( this.computeTotalBallreturnBalls() );
   }
 
   /**
@@ -171,7 +171,7 @@ class CenterOfMass {
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
-    return totalMomentum.dividedScalar( this.computeTotalBallMasses() );
+    return totalMomentum.dividedScalar( this.computeTotalBallreturnBalls() );
   }
 }
 

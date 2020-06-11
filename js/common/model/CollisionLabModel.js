@@ -135,12 +135,12 @@ class CollisionLabModel {
   }
 
   /**
-   * Called when the 'Return Masses' button is pressed.
+   * Called when the 'Return Balls' button is pressed.
    * @public
    *
    * Currently, it does the same thing as restarting. See https://github.com/phetsims/collision-lab/issues/90.
    */
-  returnMasses() { this.restart(); }
+  returnreturnBalls(d) { this.restart(); }
 
   /**
    * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the
