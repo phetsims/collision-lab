@@ -94,7 +94,7 @@ class CollisionLabModel {
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
    * @returns {BallSystem}
    */
-  createBallSystem( playArea ) { assert && assert( false, 'abstract method must be overriden' ); }
+  createBallSystem( playArea ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * @abstract
@@ -107,7 +107,7 @@ class CollisionLabModel {
    * @param {BallSystem} ballSystem - the BallSystem instance of the sim.
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem ) { assert && assert( false, 'abstract method must be overriden' ); }
+  createCollisionEngine( playArea, ballSystem ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * Resets the model. Called when the reset-all button is pressed.

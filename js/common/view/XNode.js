@@ -2,7 +2,7 @@
 
 /**
  * XNode is a specialized view for displaying a 'x'. It is used throughout the sim to indicate the center of mass
- * of a system of Balls. Generalized to appear as a icon aswell.
+ * of a system of Balls. Generalized to appear as a icon as well.
  *
  * XNode's rendering strategy is to sub-type PlusNode and rotate the Node 45 degrees.
  *

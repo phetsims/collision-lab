@@ -126,7 +126,7 @@ class CenterOfMass {
    *
    * @returns {number} - in kg.
    */
-  computeTotalBallreturnBalls() {
+  computeTotalBallMass() {
     let totalMass = 0;
 
     this.balls.forEach( ball => {
@@ -152,7 +152,7 @@ class CenterOfMass {
 
     // The position of the center of mass is the total first moment divided by the total mass.
     // See https://en.wikipedia.org/wiki/Center_of_mass#A_system_of_particles for background on this formula.
-    return totalFirstMoment.dividedScalar( this.computeTotalBallreturnBalls() );
+    return totalFirstMoment.dividedScalar( this.computeTotalBallMass() );
   }
 
   /**
@@ -171,7 +171,7 @@ class CenterOfMass {
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
-    return totalMomentum.dividedScalar( this.computeTotalBallreturnBalls() );
+    return totalMomentum.dividedScalar( this.computeTotalBallMass() );
   }
 }
 

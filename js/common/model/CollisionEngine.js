@@ -84,7 +84,7 @@ class CollisionEngine {
 
   /**
    * Registers the exact position of a ball-to-ball collision.
-   * This method is meant to be overriden in subclasses, but it isn't required. It's default behavior is to do nothing.
+   * This method is meant to be overridden in subclasses, but it isn't required. It's default behavior is to do nothing.
    *
    * When a collision between two balls occurs, its position and their overlapping time is taken into consideration,
    * and Balls are set to a different position. See collideBall() for background. However, this brings up issues for

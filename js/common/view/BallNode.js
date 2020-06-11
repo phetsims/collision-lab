@@ -87,8 +87,8 @@ class BallNode extends Node {
     // its brightnessFactor is increased based on the mass to indicate a denser ball (more dense = more saturated).
     // DerivedProperty is never disposed since BallNodes are never disposed.
     const fillProperty = new DerivedProperty( [ ball.massProperty, isConstantSizeProperty ],
-      ( mass, isContantSize ) => {
-        const brightnessFactor = isContantSize ? Utils.linear( MASS_RANGE.min, MASS_RANGE.max, 0.7, 0, mass ) : 0;
+      ( mass, isConstantSize ) => {
+        const brightnessFactor = isConstantSize ? Utils.linear( MASS_RANGE.min, MASS_RANGE.max, 0.7, 0, mass ) : 0;
         return CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( brightnessFactor );
       } );
 

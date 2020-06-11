@@ -10,7 +10,7 @@
  *    Vector Node. The positioning is also handled.
  *
  * MomentaDiagramVectorNode is NOT responsible for updating its visibility. MomentaDiagramVectorNodes are created for
- * each prepoluatedBall, which are never disposed. Thus, MomentaDiagramVectorNodes are never disposed.
+ * each prepopulatedBall, which are never disposed. Thus, MomentaDiagramVectorNodes are never disposed.
  *
  * @author Brandon Li
  */

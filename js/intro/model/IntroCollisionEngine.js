@@ -80,7 +80,7 @@ class IntroCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * Registers the exact position of a ball-to-border collision. Overriden to ensure that there are no ball-to-border
+   * Registers the exact position of a ball-to-border collision. Overridden to ensure that there are no ball-to-border
    * collisions in the 'Intro' screen, since the PlayArea's border doesn't reflect.
    * @override
    * @protected
