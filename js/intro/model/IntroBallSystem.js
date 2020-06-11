@@ -8,7 +8,7 @@
  * collides and changes momentum with another Ball. IntroBallSystem will keep track of the momentum of the two Balls
  * and compute the change in momentum vector. The vector is rendered out-of-bounds of the PlayArea to reduce clutter.
  * After a collision, the change in momentum vectors are fully opaque for a set time-period. Then, after this
- * time-period, the opacity linearly reduces for another set period of time. The opacity of the vectors is also
+ * time-period, the opacity linearly reduces for another set period of time. The opacity of the vectors are also
  * modeled in this class.
  *
  * In the design, the 'Change in Momentum' vectors are only shown for collisions that occur AFTER the visibility

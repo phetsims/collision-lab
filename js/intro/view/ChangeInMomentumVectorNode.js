@@ -27,9 +27,6 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 
-// constants
-const BALL_CHANGE_IN_MOMENTUM_Y_OFFSET = 120; // Vertical offset between the Ball's center and the Vectors.
-
 class ChangeInMomentumVectorNode extends Node {
 
   /**
@@ -85,7 +82,7 @@ class ChangeInMomentumVectorNode extends Node {
       const ballViewPosition = modelViewTransform.modelToViewPosition( ballPosition );
 
       // Calculate the position of the Change in Momentum vector in view coordinates.
-      const tailViewPosition = ballViewPosition.minusXY( 0, BALL_CHANGE_IN_MOMENTUM_Y_OFFSET );
+      const tailViewPosition = ballViewPosition.minusXY( 0, ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET );
       const tipViewPosition = tailViewPosition.plus( modelViewTransform.modelToViewDelta( changeInMomentum ) );
 
       // Update the positioning of the ArrowNode.
@@ -100,6 +97,9 @@ class ChangeInMomentumVectorNode extends Node {
     opacityProperty.linkAttribute( this, 'opacity' );
   }
 }
+
+// @public (read-only) {number} - vertical offset between the Ball's center and the Vectors.
+ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET = 120;
 
 collisionLab.register( 'ChangeInMomentumVectorNode', ChangeInMomentumVectorNode );
 export default ChangeInMomentumVectorNode;

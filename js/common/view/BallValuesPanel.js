@@ -60,7 +60,7 @@ class BallValuesPanel extends Panel {
       dimensions: 2,                // {number} - the dimensions of the screen that the Balls appears in.
 
       massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
-      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for 18n
+      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for i18n
 
       // {Font} - applied to all of the title label Text instances
       titleFont: CollisionLabConstants.PANEL_TITLE_FONT
