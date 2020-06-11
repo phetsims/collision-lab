@@ -21,7 +21,7 @@ class Explore2DModel extends CollisionLabModel {
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @param {PlayArea} playArea - the PlayArea instance of the screen.
    * @returns {Explore2DBallSystem}
    */
   createBallSystem( playArea ) {
@@ -37,8 +37,8 @@ class Explore2DModel extends CollisionLabModel {
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
-   * @param {Explore2DBallSystem} ballSystem - the BallSystem instance of the sim.
+   * @param {PlayArea} playArea - the PlayArea instance of the screen.
+   * @param {Explore2DBallSystem} ballSystem - the BallSystem instance of the screen.
    * @returns {CollisionEngine}
    */
   createCollisionEngine( playArea, ballSystem ) {

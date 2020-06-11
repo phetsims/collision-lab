@@ -14,6 +14,14 @@ import PlayArea from '../../common/model/PlayArea.js';
 import IntroBallSystem from './IntroBallSystem.js';
 import IntroCollisionEngine from './IntroCollisionEngine.js';
 
+// constants
+const PLAY_AREA_OPTIONS = {
+  dimensions: 1,
+  isGridVisibleInitially: true,
+  reflectsBorderInitially: false,
+  bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
+};
+
 class IntroModel extends CollisionLabModel {
 
   /**
@@ -22,28 +30,24 @@ class IntroModel extends CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( tandem, {
-      playAreaOptions: {
-        dimensions: 1,
-        isGridVisibleInitially: true,
-        reflectsBorderInitially: false,
-        bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
-      }
-    } );
+    super( tandem, { playAreaOptions: PLAY_AREA_OPTIONS } );
 
     //----------------------------------------------------------------------------------------
 
-    assert && this.playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Intro' ) );
+    // Ensure that Grids are always visible for the 'Intro' screen.
+    assert && this.playArea.gridVisibleProperty.link( gridVisible => {
+      assert( gridVisible, 'Grids must be visible in the Intro screen.' );
+    } );
   }
 
   /**
-   * @override
-   * Creates the IntroBallSystem for the 'Explore 1D' screen. Called in the constructor of the super-class. For this screen,
-   * this method will instantiate a sub-type of IntroBallSystem: IntroBallSystem. It also has its own custom
-   * initial BallStates.
+   * Creates the BallSystem for the 'Intro' screen. Called in the constructor of the super-class. For this screen,
+   * this method will instantiate a sub-type of BallSystem: IntroBallSystem.
    *
+   * @override
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   *
+   * @param {PlayArea} playArea - the PlayArea instance of the screen.
    * @returns {IntroBallSystem}
    */
   createBallSystem( playArea ) {
@@ -53,12 +57,14 @@ class IntroModel extends CollisionLabModel {
   }
 
   /**
-   * @override
-   * Creates the CollisionEngine for the 'Explore 1D' screen. Called in the constructor of the super-class.
+   * Creates the CollisionEngine for the 'Intro' screen. Called in the constructor of the super-class. For this
+   * screen, this method will instantiate a sub-type of CollisionEngine: IntroCollisionEngine.
    *
+   * @override
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
-   * @param {IntroBallSystem} ballSystem - the IntroBallSystem instance of the sim.
+   *
+   * @param {PlayArea} playArea - the PlayArea instance of the screen.
+   * @param {IntroBallSystem} ballSystem - the BallSystem instance of the screen.
    * @returns {CollisionEngine}
    */
   createCollisionEngine( playArea, ballSystem ) {
