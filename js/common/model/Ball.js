@@ -162,7 +162,9 @@ class Ball {
     this.massProperty.reset();
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
-    this.userControlledProperty.reset();
+    this.massUserControlledProperty.reset();
+    this.positionUserControlledProperty.reset();
+    this.velocityUserControlledProperty.reset();
   }
 
   /**
