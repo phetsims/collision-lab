@@ -166,6 +166,9 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       lineWidth: 2
     } );
 
+    // Create the background behind the Grid.
+    const backgroundNode = new Rectangle( gridViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
+
     // Create the Zoom Controls
     const zoomControlSet = new MomentaDiagramZoomControlSet( momentaDiagram, {
       bottom: gridViewBounds.maxY - options.zoomControlMargin,
@@ -175,6 +178,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     // Create a container of the content of the MomentaDiagramAccordionBox.
     const contentNode = new Node( {
       children: [
+        backgroundNode,
         gridNode,
         borderNode,
         momentaVectorContainer,
