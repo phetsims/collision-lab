@@ -109,15 +109,32 @@ class Ball {
       ( mass, speed ) => BallUtils.calculateBallKineticEnergy( this ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
-    // @public {BooleanProperty} - indicates if the Ball is currently being controlled by the user, either by dragging
-    //                             or editing a value through the Keypad. This is set externally in the view.
-    this.userControlledProperty = new BooleanProperty( false );
-
     // @public (read-only) {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
     //                                                   PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
+
+    //----------------------------------------------------------------------------------------
+
+    // @public {BooleanProperty} - indicates if the Ball's mass is being manipulated by the user. Set in the view.
+    this.massUserControlledProperty = new BooleanProperty( false );
+
+    // @public {BooleanProperty} - indicates if the Ball's position is being manipulated by the user. Set in the view.
+    this.positionUserControlledProperty = new BooleanProperty( false );
+
+    // @public {BooleanProperty} - indicates if the Ball's velocity is being manipulated by the user. Set in the view.
+    this.velocityUserControlledProperty = new BooleanProperty( false );
+
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user in any
+    //                                                   way, either by dragging or editing a value through the Keypad.
+    this.userControlledProperty = new DerivedProperty(
+      [ this.massUserControlledProperty, this.positionUserControlledProperty, this.velocityUserControlledProperty ],
+      ( massUserControlled, positionUserControlled, velocityUserControlled ) => {
+        return massUserControlled || positionUserControlled || velocityUserControlled;
+      }, {
+        valueType: 'boolean'
+      } );
 
     //----------------------------------------------------------------------------------------
 

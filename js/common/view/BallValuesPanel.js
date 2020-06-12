@@ -4,13 +4,13 @@
  * BallValuesPanel is the Panel at the bottom of all screen which displays and allows the user to modify Ball values.
  *
  * For each Ball in the PlayArea, it displays it's values, which are:
- *    - returnBalls (kg)
+ *    - Masses (kg)
  *    - The positions of the Balls (m)
  *    - The velocities of the Balls (m/s)
  *    - The linear momentum of the Balls (kg m/s)
  *
  * If the "More Data" checkbox is not checked, the Node only displays:
- *   - returnBalls of the Balls (kg)
+ *   - Masses of the Balls (kg)
  *   - A slider to change the mass
  *
  * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the screen that contains the
