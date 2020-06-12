@@ -84,6 +84,7 @@ class IntroBallSystemNode extends BallSystemNode {
         changeInMomentumProperty,
         ballSystem.changeInMomentumOpacityProperty,
         ball.positionProperty,
+        playArea.bounds,
         modelViewTransform
       );
 

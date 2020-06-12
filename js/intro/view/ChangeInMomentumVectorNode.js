@@ -16,6 +16,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -32,14 +33,21 @@ class ChangeInMomentumVectorNode extends Node {
   /**
    * @param {Property.<Vector2>} changeInMomentumProperty - the components of the 'Change in Momentum' vector.
    * @param {Property.<number>} opacityProperty - opacity of the 'Change in Momentum' vector.
-   * @param {Property.<Vector2>} ballPositionProperty - the position of the corresponding Ball.
+   * @param {Property.<Vector2>} ballPositionProperty - the position of the corresponding Ball, in meters.
+   * @param {Bounds2} playAreaBounds - bounds of the PlayArea, in meters.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( changeInMomentumProperty, opacityProperty, ballPositionProperty, modelViewTransform, options ) {
+  constructor( changeInMomentumProperty,
+               opacityProperty,
+               ballPositionProperty,
+               playAreaBounds,
+               modelViewTransform,
+               options ) {
     assert && AssertUtils.assertPropertyOf( changeInMomentumProperty, Vector2 );
     assert && AssertUtils.assertPropertyOf( opacityProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballPositionProperty, Vector2 );
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     options = merge( {
@@ -65,6 +73,9 @@ class ChangeInMomentumVectorNode extends Node {
       stroke: CollisionLabColors.CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR
     } );
 
+    // Get the Bounds of the PlayArea in view coordinates.
+    const playAreaViewBounds = modelViewTransform.modelToViewBounds( playAreaBounds );
+
     // Set the children of this Node in the correct rendering order.
     this.children = [
       arrowNode,
@@ -81,15 +92,22 @@ class ChangeInMomentumVectorNode extends Node {
       // Get the position of the Ball in view coordinates.
       const ballViewPosition = modelViewTransform.modelToViewPosition( ballPosition );
 
-      // Calculate the position of the Change in Momentum vector in view coordinates.
-      const tailViewPosition = ballViewPosition.minusXY( 0, ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET );
-      const tipViewPosition = tailViewPosition.plus( modelViewTransform.modelToViewDelta( changeInMomentum ) );
+      // Set the visibility of this Node to true if the Ball's center is inside the PlayArea and false otherwise.
+      this.visible = playAreaViewBounds.containsPoint( ballViewPosition );
 
-      // Update the positioning of the ArrowNode.
-      arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
+      // Update the positioning of the arrow and the connecting line if this Node is visible.
+      if ( this.visible ) {
 
-      // Update the positioning of the connecting line.
-      connectingLine.setLine( ballViewPosition.x, ballViewPosition.y, tailViewPosition.x, tailViewPosition.y );
+        // Calculate the position of the Change in Momentum vector in view coordinates.
+        const tailViewPosition = ballViewPosition.minusXY( 0, ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET );
+        const tipViewPosition = tailViewPosition.plus( modelViewTransform.modelToViewDelta( changeInMomentum ) );
+
+        // Update the positioning of the ArrowNode.
+        arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
+
+        // Update the positioning of the connecting line.
+        connectingLine.setLine( ballViewPosition.x, ballViewPosition.y, tailViewPosition.x, tailViewPosition.y );
+      }
     } );
 
     // Observe when the opacityProperty changes and match the opacity of this Node. Link is never unlinked
