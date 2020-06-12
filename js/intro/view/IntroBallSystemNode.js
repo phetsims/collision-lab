@@ -6,7 +6,7 @@
  *
  * In the 'Intro' screen, there are 'Change in Momentum' vectors that appear 'briefly' when the momentum of a Ball
  * collides and changes momentum with another Ball. See IntroBallSystem for context. The opacity and magnitudes of the
- * 'Change in Momentum' vectors are modeled in IntroBallSystem, so all this view has to do is mirror the opacity and
+ * 'Change in Momentum' vectors are modeled in IntroBallSystem, so all the view has to do is mirror the opacity and
  * components that are modeled.
  *
  * IntroBallSystem will create a ChangeInMomentumVectorNode for each of the 2 Balls in the 'Intro' screen. It will
@@ -31,7 +31,7 @@ import IntroBallSystem from '../model/IntroBallSystem.js';
 import ChangeInMomentumVectorNode from './ChangeInMomentumVectorNode.js';
 
 // constants
-const CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET = 30; // Vertical offset of the label from the ChangeInMomentumVectorNodes.
+const CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET = 30; // Vertical margin between the label and the ChangeInMomentumVectorNodes.
 
 class IntroBallSystemNode extends BallSystemNode {
 
@@ -72,15 +72,20 @@ class IntroBallSystemNode extends BallSystemNode {
 
     //----------------------------------------------------------------------------------------
 
-    // Create the container for all Ball Change In Momentum Vectors.
+    // Create the container for the Change In Momentum Vectors.
     const changeInMomentumContainer = new Node();
 
-    // Loop through each possible Change in Momentum vector and create the corresponding ChangeInMomentumVectorNode of
+    // Loop through each possible changeInMomentumProperty and create the corresponding ChangeInMomentumVectorNode of
     // each Ball.
     ballSystem.ballToChangeInMomentumProperty.forEach( ( changeInMomentumProperty, ball ) => {
 
-     // Create the corresponding ChangeInMomentumVectorNode for each prepopulatedBall.
-      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode( changeInMomentumProperty, ballSystem.changeInMomentumOpacityProperty, ball.positionProperty, modelViewTransform );
+      // Create the corresponding ChangeInMomentumVectorNode for each prepopulatedBall.
+      const changeInMomentumVectorNode = new ChangeInMomentumVectorNode(
+        changeInMomentumProperty,
+        ballSystem.changeInMomentumOpacityProperty,
+        ball.positionProperty,
+        modelViewTransform
+      );
 
       // Add the ChangeInMomentumVectorNode to the container.
       changeInMomentumContainer.addChild( changeInMomentumVectorNode );
@@ -109,7 +114,7 @@ class IntroBallSystemNode extends BallSystemNode {
     // Link is never unlinked since IntroBallSystems are never disposed.
     ballSystem.changeInMomentumOpacityProperty.linkAttribute( changeInMomentumText, 'opacity' );
 
-    // Observe when the collision-point changes and match the x-position of the 'Change in Momentum' Text if it exists.
+    // Observe when the collision-point changes and match the x-position of the 'Change in Momentum' Text, if it exists.
     // Link is never unlinked since IntroBallSystems are never disposed.
     ballSystem.collisionPointProperty.link( collisionPoint => {
       collisionPoint && changeInMomentumText.setCenterX( modelViewTransform.modelToViewX( collisionPoint.x ) );
