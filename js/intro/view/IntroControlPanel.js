@@ -1,6 +1,12 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
+ * IntroControlPanel is a CollisionLabControlPanel sub-type for the 'Intro' screen, which appears on the
+ * upper-right corner of the screen.
+ *
+ * It adds a 'Change in P' Checkbox to allow the user to toggle the visibility of change in momentum vectors. The
+ * checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
+ * 'Reflecting Border' Checkbox and the stick vs slip ABSwitch.
  *
  * @author Brandon Li
  */
@@ -50,7 +56,9 @@ class IntroControlPanel extends CollisionLabControlPanel {
              }
            } );
 
-    // 'Change in P' visibility Checkbox
+    //----------------------------------------------------------------------------------------
+
+    // 'Change in P' visibility Checkbox.
     const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
 
     // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
