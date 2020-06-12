@@ -108,27 +108,16 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     //----------------------------------------------------------------------------------------
 
-    // Create the Grid. Its spacings and offsets will be adjusted when the modelViewTransformProperty changes.
+    // Create the Grid. Its spacings and offsets will be adjusted when the modelViewTransformProperty changes. Never
+    // disposed since MomentaDiagramAccordionBoxes last for the life-time of the sim.
     const gridNode = new GridNode( gridViewBounds.width, gridViewBounds.height, {
       minorLineOptions: {
         lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
         stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
-      }
-    } );
-
-    // Observe when the modelViewTransformProperty changes and updated the spacing and offsets of the GridNode.
-    // Link is never unlinked since MomentaDiagramAccordionBoxes last for the life-time of the sim.
-    modelViewTransformProperty.link( modelViewTransform => {
-
-      // Convenience variables
-      const maxX = momentaDiagram.boundsProperty.value.maxX;
-      const minY = momentaDiagram.boundsProperty.value.minY;
-      const gridViewSpacing = modelViewTransform.modelToViewDeltaX( options.gridLineSpacing );
-
-      // Update the spacing and offsets of the Grid
-      gridNode.setLineSpacings( null, null, gridViewSpacing, gridViewSpacing );
-      gridNode.horizontalLineOffset = modelViewTransform.modelToViewDeltaY( minY % options.gridLineSpacing );
-      gridNode.verticalLineOffset = modelViewTransform.modelToViewDeltaX( maxX % options.gridLineSpacing );
+      },
+      modelViewTransformProperty: modelViewTransformProperty,
+      minorHorizontalLineSpacing: options.gridLineSpacing,
+      minorVerticalLineSpacing: options.gridLineSpacing
     } );
 
     //----------------------------------------------------------------------------------------
