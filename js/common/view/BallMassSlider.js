@@ -45,10 +45,10 @@ class BallMassSlider extends HSlider {
     assert && assert( !options.drag, 'BallMassSlider sets drag.' );
     assert && assert( !options.endDrag, 'BallMassSlider sets endDrag.' );
 
-    // Set the userControlledProperty of the Ball to true when dragging. See
+    // Set the massUserControlledProperty of the Ball to true when dragging. See
     // https://github.com/phetsims/collision-lab/issues/76
-    options.startDrag = () => { ball.userControlledProperty.value = true; };
-    options.endDrag = () => { ball.userControlledProperty.value = false; };
+    options.startDrag = () => { ball.massUserControlledProperty.value = true; };
+    options.endDrag = () => { ball.massUserControlledProperty.value = false; };
 
     //----------------------------------------------------------------------------------------
 

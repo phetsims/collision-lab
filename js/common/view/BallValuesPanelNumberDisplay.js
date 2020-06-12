@@ -93,12 +93,32 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     let fireListener; // reference to a FireListener if there is one.
 
     if ( canEdit ) {
+      let userControlledProperty;
+
+      if ( ballQuantity === BallQuantities.MASS ) {
+        userControlledProperty = ball.massUserControlledProperty;
+      }
+      else if ( ballQuantity === BallQuantities.X_POSITION ) {
+        userControlledProperty = ball.positionUserControlledProperty;
+      }
+      else if ( ballQuantity === BallQuantities.Y_POSITION ) {
+        userControlledProperty = ball.positionUserControlledProperty;
+      }
+      else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
+        userControlledProperty = ball.velocityUserControlledProperty;
+      }
+      else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
+        userControlledProperty = ball.velocityUserControlledProperty;
+      }
+
+      userControlledProperty.link( userControlled => {
+        this.backgroundFill = userControlled ? PhetColorScheme.BUTTON_YELLOW : options.backgroundFill;
+      } );
 
       // Create a FireListener that listens to presses and to fire the keypadDialog to allow the user to edit the
       // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
       fireListener = new FireListener( {
         fire: () => {
-          this.backgroundFill = PhetColorScheme.BUTTON_YELLOW;
 
           let editRange; // The editing range of the Ball Property.
           let unit; // The unit of the Ball Property that is being modified.
@@ -125,11 +145,10 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           }
 
           // Indicate that the Ball is currently being user controlled.
-          ball.userControlledProperty.value = true;
+          userControlledProperty.value = true;
 
           keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
-            this.backgroundFill = options.backgroundFill;
-            ball.userControlledProperty.value = false;
+            userControlledProperty.value = false;
           } );
         },
         fireOnDown: true
