@@ -15,28 +15,22 @@ import CollisionLabColors from '../common/CollisionLabColors.js';
 import IntroModel from './model/IntroModel.js';
 import IntroScreenView from './view/IntroScreenView.js';
 
-const screenIntroString = collisionLabStrings.screen.intro;
-
 class IntroScreen extends Screen {
 
   /**
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const options = {
-      name: screenIntroString,
+    const createModel = () => new IntroModel( tandem.createTandem( 'introModel' ) );
+    const createView = model => new IntroScreenView( model, tandem.createTandem( 'introScreenView' ) );
+
+    super( createModel, createView, {
+      name: collisionLabStrings.screen.intro,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       tandem: tandem
-    };
-
-    super(
-      () => new IntroModel( tandem.createTandem( 'introModel' ) ),
-      model => new IntroScreenView( model, tandem.createTandem( 'introView' ) ),
-      options
-    );
+    } );
   }
 }
 
