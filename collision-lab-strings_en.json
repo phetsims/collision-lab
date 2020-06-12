@@ -2,6 +2,7 @@
   "collision-lab.title": {
     "value": "Collision Lab"
   },
+
   "screen.intro": {
     "value": "Intro"
   },
@@ -11,9 +12,68 @@
   "screen.explore2D": {
     "value": "Explore 2D"
   },
+
+  "pattern.range": {
+    "value": "{{min}} to {{max}} {{units}}"
+  },
+  "pattern.labelParenthesesUnits": {
+     "value": "{{label}} ({{units}})"
+  },
+  "pattern.valueUnits": {
+    "value": "{{value}} {{units}}"
+  },
+  "pattern.symbolSubSymbol": {
+    "value": "{{symbol1}}<sub>{{symbol2}}</sub>"
+  },
+
+  "units.kilogram": {
+    "value": "kg"
+  },
+  "units.meters": {
+    "value": "m"
+  },
+  "units.seconds": {
+    "value": "s"
+  },
+  "units.metersPerSecond": {
+    "value": "m/s"
+  },
+  "units.kilogramMetersPerSecond": {
+    "value": "kg m/s"
+  },
+  "units.percent": {
+    "value": "\u0025"
+  },
+
+  "symbol.x": {
+    "value": "x"
+  },
+  "symbol.y": {
+    "value": "y"
+  },
+  "symbol.momentum": {
+    "value": "p"
+  },
+  "symbol.velocity": {
+    "value": "v"
+  },
+
+
+  "mass": {
+    "value": "Mass"
+  },
+  "position": {
+    "value": "Position"
+  },
   "velocity": {
     "value": "Velocity"
   },
+  "momentum": {
+    "value": "Momentum"
+  },
+
+
+
   "momentum": {
     "value": "Momentum"
   },
@@ -59,18 +119,7 @@
   "moreData": {
     "value": "More Data"
   },
-  "massUnit": {
-    "value": "Mass (kg)"
-  },
-  "positionUnit": {
-    "value": "Position (m)"
-  },
-  "velocityUnit": {
-    "value": "Velocity (m/s)"
-  },
-  "momentumUnit": {
-    "value": "Momentum (kg m/s)"
-  },
+
   "kineticEnergyJ": {
     "value": "Kinetic Energy = {{value}} J"
   },
@@ -80,44 +129,14 @@
   "momentumPattern": {
     "value": "|p| = {{value}} kg m/s"
   },
-  "elasticityPercent": {
-    "value": "{{value}} %"
-  },
-  "s": {
-    "value": "{{value}} s"
+  "changeInP": {
+    "value": "Change in p"
   },
   "balls": {
     "value": "Balls"
   },
   "enter": {
     "value": "Enter"
-  },
-  "rangeMessage": {
-    "value": "{{min}} to {{max}} {{units}}"
-  },
-  "kg": {
-    "value": "kg"
-  },
-  "m": {
-    "value": "m"
-  },
-  "pattern.m": {
-    "value": "{{value}} m"
-  },
-  "metersPerSecond": {
-    "value": "m/s"
-  },
-  "symbol.x": {
-    "value": "x"
-  },
-  "symbol.y": {
-    "value": "y"
-  },
-  "symbol.p": {
-    "value": "p"
-  },
-  "symbol.v": {
-    "value": "v"
   },
   "returnBalls": {
     "value": "Return Balls"

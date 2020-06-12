@@ -77,8 +77,14 @@ class PlayAreaScaleBarNode extends LayoutBox {
 
     //----------------------------------------------------------------------------------------
 
+    // Concatenate the label string. Looks like '0.5 m'
+    const labelString = StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
+      value: length,
+      units: collisionLabStrings.units.meters
+    } );
+
     // Create the Label of the scale-bar.
-    const labelNode = new Text( StringUtils.fillIn( collisionLabStrings.pattern.m, { value: length } ), {
+    const labelNode = new Text( labelString, {
       font: options.labelFont,
 
       // Constrain width for i18n. Determined empirically (also based on the orientation).

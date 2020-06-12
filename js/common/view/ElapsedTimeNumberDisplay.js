@@ -14,6 +14,7 @@
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
@@ -38,7 +39,9 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       yMargin: 6,
       xMargin: 6,
       backgroundStroke: Color.BLACK,
-      valuePattern: collisionLabStrings.s,
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
+        units: collisionLabStrings.units.seconds
+      } ),
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT,
         maxWidth: 100 // constrain width for i18n, determined empirically

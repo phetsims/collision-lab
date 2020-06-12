@@ -25,6 +25,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import merge from '../../../../phet-core/js/merge.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
@@ -108,11 +109,21 @@ class BallValuesPanel extends Panel {
     // Create a AlignGroup for the Title Labels to match the vertical height of each Text instance.
     const titleAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
+    const createTitleNode = ( label, units, maxWidth = options.componentGroupTitleMaxWidth ) => {
+      return titleAlignGroup.createBox( new Text( StringUtils.fillIn( collisionLabStrings.pattern.labelParenthesesUnits, {
+        label: label,
+        units: units
+      } ), {
+        font: options.titleFont,
+        maxWidth: maxWidth
+      } ) );
+    };
+
     // Create the Title Labels for the groups of columns. Wrapped in AlignBoxes to ensure they have the same height.
-    const massTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.massUnit, { font: options.titleFont, maxWidth: options.massTitleMaxWidth } ) );
-    const momentumTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.momentumUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
-    const positionTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.positionUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
-    const velocityTitleNode = titleAlignGroup.createBox( new Text( collisionLabStrings.velocityUnit, { font: options.titleFont, maxWidth: options.componentGroupTitleMaxWidth } ) );
+    const massTitleNode = createTitleNode( collisionLabStrings.mass, collisionLabStrings.units.kilogram, options.massTitleMaxWidth );
+    const momentumTitleNode = createTitleNode( collisionLabStrings.momentum, collisionLabStrings.units.kilogramMetersPerSecond );
+    const positionTitleNode = createTitleNode( collisionLabStrings.position, collisionLabStrings.units.meters );
+    const velocityTitleNode = createTitleNode( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );
 
     // Horizontally group the column groups with their respective title Labels in a VBox.
     const massColumnGroupAndTitleBox = new VBox( { children: [ massTitleNode, massColumnNode ], spacing: options.columnGroupsTopMargin } );

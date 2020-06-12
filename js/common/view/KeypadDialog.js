@@ -156,7 +156,7 @@ class KeypadDialog extends Dialog {
     this.editFinishedCallback = editFinishedCallback;
 
     // Update the rangeText message.
-    const rangeMessage = StringUtils.fillIn( collisionLabStrings.rangeMessage, {
+    const rangeMessage = StringUtils.fillIn( collisionLabStrings.pattern.range, {
       min: valueRange.min,
       max: valueRange.max,
       units: unitsString ? unitsString : ''

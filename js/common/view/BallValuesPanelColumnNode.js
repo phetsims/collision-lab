@@ -26,6 +26,7 @@
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
@@ -171,12 +172,18 @@ class BallValuesPanelColumnNode extends VBox {
     const xString = collisionLabStrings.symbol.x;
     const yString = collisionLabStrings.symbol.y;
 
+    const getComponentLabel = ( label, component ) => StringUtils.fillIn( collisionLabStrings.pattern.symbolSubSymbol, {
+      symbol1: label,
+      symbol2: component
+    } );
+
+
     if ( this.columnType === ColumnTypes.X_POSITION ) { return xString; }
     if ( this.columnType === ColumnTypes.Y_POSITION ) { return yString; }
-    if ( this.columnType === ColumnTypes.X_VELOCITY ) { return `${collisionLabStrings.symbol.v}<sub>${xString}</sub>`; }
-    if ( this.columnType === ColumnTypes.Y_VELOCITY ) { return `${collisionLabStrings.symbol.v}<sub>${yString}</sub>`; }
-    if ( this.columnType === ColumnTypes.X_MOMENTUM ) { return `${collisionLabStrings.symbol.p}<sub>${xString}</sub>`; }
-    if ( this.columnType === ColumnTypes.Y_MOMENTUM ) { return `${collisionLabStrings.symbol.p}<sub>${yString}</sub>`; }
+    if ( this.columnType === ColumnTypes.X_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, xString ); }
+    if ( this.columnType === ColumnTypes.Y_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, yString ); }
+    if ( this.columnType === ColumnTypes.X_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, xString ); }
+    if ( this.columnType === ColumnTypes.Y_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, yString ); }
 
     // At this point, the column doesn't have a specific label, so return the empty string.
     return '';

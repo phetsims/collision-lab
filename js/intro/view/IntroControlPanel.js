@@ -4,7 +4,7 @@
  * IntroControlPanel is a CollisionLabControlPanel sub-type for the 'Intro' screen, which appears on the
  * upper-right corner of the screen.
  *
- * It adds a 'Change in P' Checkbox to allow the user to toggle the visibility of change in momentum vectors. The
+ * It adds a 'Change in P' Checkbox to allow the user to toggle the visibility of the change in momentum vectors. The
  * checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
  * 'Reflecting Border' Checkbox and the stick vs slip ABSwitch.
  *
@@ -13,6 +13,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
 import CollisionLabCheckbox from '../../common/view/CollisionLabCheckbox.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
@@ -59,7 +60,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
     //----------------------------------------------------------------------------------------
 
     // 'Change in P' visibility Checkbox.
-    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, 'Change in momentum' ); // TODO move to strings file.
+    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, collisionLabStrings.changeInP );
 
     // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.centerOfMassCheckbox ), changeInMomentumCheckbox );

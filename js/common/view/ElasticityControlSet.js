@@ -18,6 +18,7 @@
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
@@ -110,7 +111,9 @@ class ElasticityControlSet extends VBox {
           trackSize: new Dimension2( trackWidth, 0.1 ) // height determined empirically
         },
         numberDisplayOptions: {
-          valuePattern: collisionLabStrings.elasticityPercent,
+          valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
+            units: collisionLabStrings.units.percent
+          } ),
           textOptions: { font: CollisionLabConstants.DISPLAY_FONT, maxWidth: options.titleTextOptions.maxWidth },
           backgroundStroke: Color.BLACK,
           backgroundLineWidth: 0.5
