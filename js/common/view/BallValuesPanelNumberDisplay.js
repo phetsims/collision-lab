@@ -105,23 +105,23 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
 
           if ( ballQuantity === BallQuantities.MASS ) {
             editRange = CollisionLabConstants.MASS_RANGE;
-            unit = collisionLabStrings.kilogram;
+            unit = collisionLabStrings.units.kilogram;
           }
           else if ( ballQuantity === BallQuantities.X_POSITION ) {
             editRange = BallUtils.getKeypadXPositionRange( ball );
-            unit = collisionLabStrings.meters;
+            unit = collisionLabStrings.units.meters;
           }
           else if ( ballQuantity === BallQuantities.Y_POSITION ) {
             editRange = BallUtils.getKeypadYPositionRange( ball );
-            unit = collisionLabStrings.meters;
+            unit = collisionLabStrings.units.meters;
           }
           else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
             editRange = CollisionLabConstants.VELOCITY_RANGE;
-            unit = collisionLabStrings.metersPerSecond;
+            unit = collisionLabStrings.units.metersPerSecond;
           }
           else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
             editRange = CollisionLabConstants.VELOCITY_RANGE;
-            unit = collisionLabStrings.metersPerSecond;
+            unit = collisionLabStrings.units.metersPerSecond;
           }
 
           // Indicate that the Ball is currently being user controlled.
