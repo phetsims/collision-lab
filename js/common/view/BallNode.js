@@ -111,7 +111,7 @@ class BallNode extends Node {
     // Create the Vector Node for the velocity vector of the Ball. To be positioned later.
     const velocityVectorNode = new BallVelocityVectorNode( ball,
       ball.velocityProperty,
-      ball.userControlledProperty,
+      ball.velocityUserControlledProperty,
       velocityVectorVisibleProperty,
       isPlayingProperty,
       modelViewTransform );
@@ -190,17 +190,17 @@ class BallNode extends Node {
         leaderLinesNode.reticle = ballCircle.center;
       },
 
-      // Set the userControlledProperty of the ball and the visibility of the leader-lines to true when dragging.
+      // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
       start: ( event, listener ) => {
         ball.dragToPosition( listener.modelPoint );
         leaderLinesNode.reticle = ballCircle.center;
 
         leaderLinesNode.visible = true;
-        ball.userControlledProperty.value = true;
+        ball.positionUserControlledProperty.value = true;
       },
       end: () => {
         leaderLinesNode.visible = false;
-        ball.userControlledProperty.value = false;
+        ball.positionUserControlledProperty.value = false;
       }
     } ) );
 
