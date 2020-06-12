@@ -9,6 +9,7 @@
 import ObservableArray from '../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import isArray from '../../../phet-core/js/isArray.js';
+import AssertUtils from '../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../collisionLab.js';
 
 const CollisionLabUtils = {
@@ -93,7 +94,7 @@ const CollisionLabUtils = {
    * @returns {boolean}
    */
   isSorted( array ) {
-    assert && assert( isArray( array ) && _.every( array, number => Number.isFinite( number ) ), `invalid array: ${ array }` );
+    assert && AssertUtils.assertArrayOf( array, 'number' );
 
     // Flag that indicates if the array is sorted.
     let isSorted = true;
