@@ -18,6 +18,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -25,6 +26,19 @@ import Ball from '../model/Ball.js';
 import XNode from './XNode.js';
 
 const CollisionLabIconFactory = {
+
+  /**
+   * Creates the icon used on the Restart button just outside the bottom-right corner of the PlayArea.
+   * @public
+   *
+   * @returns {Node}
+   */
+   createRestartIcon() {
+
+    // A solution using common-code components was investigated, and it was decided to use the FontAwesomeNode 'undo'
+    // character. See https://github.com/phetsims/collision-lab/issues/54
+    return new FontAwesomeNode( 'undo', { scale: 0.5 } );
+  },
 
   /**
    * Creates a Ball icon that appears in the BallValuesPanel.
