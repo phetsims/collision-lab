@@ -1,8 +1,10 @@
 // Copyright 2018-2020, University of Colorado Boulder
 
 /**
- * Enumeration of the possible 'types' of BallValuesPanelColumnNodes. This Enumeration is solely used in the view
- * hierarchy. See BallValuesPanelColumnNode.js and BallValuesPanelNumberDisplay.js for full context.
+ * Enumeration of the possible 'types' of columns in the BallValuesPanel at the bottom of the screen. This Enumeration
+ * is solely used within the view hierarchy. The column will determine what label is displayed and what Property of a
+ * Ball is displayed and/or manipulated. See BallValuesPanel.js, BallValuesPanelColumnNode.js, and
+ * BallValuesPanelNumberDisplay.js for full context.
  *
  * @author Brandon Li
  */
