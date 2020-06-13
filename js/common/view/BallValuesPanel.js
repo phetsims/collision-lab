@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * BallValuesPanel is the Panel at the bottom of all screen which displays and allows the user to modify Ball values.
+ * BallValuesPanel is the Panel at the bottom of all screens which displays and allows the user to modify Ball values.
  *
  * For each Ball in the PlayArea, it displays it's values, which are:
  *    - Masses (kg)
@@ -11,10 +11,10 @@
  *
  * If the "More Data" checkbox is not checked, the Node only displays:
  *   - Masses of the Balls (kg)
- *   - A slider to change the mass
+ *   - A slider to change the masses
  *
- * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the screen that contains the
- * Balls is 2D, the columns are grouped together (like the x-position and the y-position column) and a title-label is
+ * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayAres is 2D, the columns
+ * are grouped together in components (like the x-position and the y-position columns) and a title-label is
  * placed above it (in this case "Position").
  *
  * This panel exists for the entire sim and is never disposed.
