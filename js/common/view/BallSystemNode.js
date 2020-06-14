@@ -74,7 +74,8 @@ class BallSystemNode extends Node {
         ballSystem.ballsConstantSizeProperty,
         playArea.elasticityPercentProperty,
         isPlayingProperty,
-        modelViewTransform );
+        modelViewTransform,
+        ballSystem );
 
       // Add the BallNode to the container.
       ballNodeContainer.addChild( ballNode );

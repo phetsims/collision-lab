@@ -219,7 +219,7 @@ class BallSystem {
     this.balls.forEach( otherBall => {
       if ( otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall ) ) {
         const normal = ball.position.minus( otherBall.position ).normalize();
-        ball.position = normal.timesScalar( otherBall.radius + ball.radius );
+        ball.position = otherBall.position.plus( normal.timesScalar( otherBall.radius + ball.radius ) );
       }
     } );
   }
