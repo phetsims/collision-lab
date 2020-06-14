@@ -30,6 +30,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallState from './BallState.js';
+import BallUtils from './BallUtils.js';
 import CenterOfMass from './CenterOfMass.js';
 import PlayArea from './PlayArea.js';
 
@@ -205,6 +206,21 @@ class BallSystem {
     // Step each Ball in the BallSystem.
     this.balls.forEach( ball => {
       ball.step( dt );
+    } );
+  }
+
+  /**
+   * @public
+   * TEST
+   */
+  moveBallAwayFromOtherBalls( ball ) {
+    assert && assert( this.balls.contains( ball ) );
+
+    this.balls.forEach( otherBall => {
+      if ( otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall ) ) {
+        const normal = ball.position.minus( otherBall.position ).normalize();
+        ball.position = normal.timesScalar( otherBall.radius + ball.radius );
+      }
     } );
   }
 
