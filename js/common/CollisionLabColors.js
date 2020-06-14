@@ -15,6 +15,8 @@ const CollisionLabColors = {
   // General
   SCREEN_BACKGROUND: 'rgb( 244, 250, 255 )',
 
+
+
   // PlayArea background
   PLAY_AREA_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
 
@@ -34,10 +36,10 @@ const CollisionLabColors = {
 
   // Balls
   BALL_COLORS: [
-    new Color( 255, 0, 0 ),
-    new Color( 0, 155, 255 ),
-    new Color( 0, 155, 0 ),
-    new Color( 255, 0, 255 )
+    new Color( 225, 70, 124 ).setImmutable(),
+    new Color( 73, 157, 247 ).setImmutable(),
+    new Color( 2, 175, 4 ).setImmutable(),
+    new Color( 215, 60, 206 ).setImmutable()
   ],
 
   // Center of mass
