@@ -5,9 +5,12 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import GridNode from '../../../../griddle/js/GridNode.js';
+import Shape from '../../../../kite/js/Shape.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -17,6 +20,8 @@ import PlayArea from '../model/PlayArea.js';
 // constants
 const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
 const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
+const MAJOR_TICK_LENGTH = 0.09; // model units
+const MINOR_TICK_LENGTH = 0.06; // model units
 const MAJOR_GRID_LINE_WIDTH = 2; // view units
 const MINOR_GRID_LINE_WIDTH = 1; // view units
 
@@ -44,42 +49,99 @@ class PlayAreaNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( playArea.bounds );
 
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
+    const children = [
+      background
+    ];
 
-    const gridNode = new GridNode( playAreaViewBounds.width, playAreaViewBounds.height, {
-      majorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MAJOR_GRIDLINE_SPACING ),
-      majorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MAJOR_GRIDLINE_SPACING ),
-      minorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MINOR_GRIDLINE_SPACING ),
-      minorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MINOR_GRIDLINE_SPACING ),
-      majorLineOptions: {
-        lineWidth: MAJOR_GRID_LINE_WIDTH,
-        stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
-      },
-      minorLineOptions: {
-        lineWidth: MINOR_GRID_LINE_WIDTH,
-        stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
-      },
-      center: playAreaViewBounds.center
-    } );
+    if ( playArea.dimensions === 2 ) {
 
-    gridVisibleProperty.linkAttribute( gridNode, 'visible' );
+      const gridNode = new GridNode( playAreaViewBounds.width, playAreaViewBounds.height, {
+        majorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MAJOR_GRIDLINE_SPACING ),
+        majorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MAJOR_GRIDLINE_SPACING ),
+        minorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MINOR_GRIDLINE_SPACING ),
+        minorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MINOR_GRIDLINE_SPACING ),
+        majorLineOptions: {
+          lineWidth: MAJOR_GRID_LINE_WIDTH,
+          stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+        },
+        minorLineOptions: {
+          lineWidth: MINOR_GRID_LINE_WIDTH,
+          stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+        },
+        center: playAreaViewBounds.center
+      } );
+
+      gridVisibleProperty.linkAttribute( gridNode, 'visible' );
+
+      children.push( gridNode );
+    }
+    else {
+      const ticksNode = new TicksNode( playArea.bounds, modelViewTransform );
+
+      assert && playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible' ) );
+      children.push( ticksNode );
+
+    }
 
     const border = new Rectangle( playAreaViewBounds, {
       stroke: CollisionLabColors.GRID_BORDER_COLOR,
       lineWidth: 3
     } );
+    children.push( border );
 
-    // Set the children of the PlayAreaNode in the correct rendering order.
-    this.children = [
-      background,
-      gridNode,
-      border
-    ];
+    this.children = children;
   }
 }
+
+
+// Draws vertical and horizontal grid-lines with the given spacing. Used for major and minor axes. Handles visibility.
+class TicksNode extends Node {
+
+  /**
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Object} [options]
+   */
+  constructor( playAreaBounds, modelViewTransform ) {
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
+
+    //----------------------------------------------------------------------------------------
+
+    // Convenience variables
+    const gridMinX = playAreaBounds.minX;
+    const gridMaxX = playAreaBounds.maxX;
+    const gridMinY = playAreaBounds.minY;
+    const minorGridLinesShape = new Shape();
+    const majorGridLinesShape = new Shape();
+
+    // Minor Grid lines
+    for ( let xValue = gridMinX; xValue <= gridMaxX; xValue += MINOR_GRIDLINE_SPACING ) {
+      minorGridLinesShape.moveTo( xValue, gridMinY ).verticalLineToRelative( MINOR_TICK_LENGTH );
+    }
+
+    // Major Grid lines
+    for ( let xValue = gridMinX; xValue <= gridMaxX; xValue += MAJOR_GRIDLINE_SPACING ) {
+      majorGridLinesShape.moveTo( xValue, gridMinY ).verticalLineToRelative( MAJOR_TICK_LENGTH );
+    }
+
+    super( {
+      children: [
+        new Path( modelViewTransform.modelToViewShape( minorGridLinesShape ), {
+          lineWidth: MINOR_GRID_LINE_WIDTH,
+          stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+        } ),
+        new Path( modelViewTransform.modelToViewShape( majorGridLinesShape ), {
+          lineWidth: MINOR_GRID_LINE_WIDTH,
+          stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+        } )
+      ]
+    } );
+  }
+}
+
 
 collisionLab.register( 'PlayAreaNode', PlayAreaNode );
 export default PlayAreaNode;
