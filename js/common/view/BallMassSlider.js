@@ -1,10 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallMassSlider is a HSlider sub-type that appears in the BallValuesPanel that allows the user to laterally manipulate
- * the mass of a Ball.
- *
- * Also responsible for handling color customization for each Ball.
+ * BallMassSlider is a HSlider sub-type that appears in the BallValuesPanel when 'More Data' is off. It allows the user
+ * to laterally manipulate the mass of a Ball. The color of the slider-thumb is based on the color of the Ball.
  *
  * The BallMassSlider should be disposed if the Ball is removed from the PlayArea.
  *
