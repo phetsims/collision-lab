@@ -1,13 +1,6 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View for the PlayArea, which includes:
- *  - background, border, and grid lines
- *  - Kinetic Energy Display
- *  - Center of mass
- *
- * PlayAreaNode is created at the start of the sim and is never disposed, so no dispose method is necessary.
- *
  * @author Brandon Li
  */
 
@@ -51,6 +44,7 @@ class PlayAreaNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
+
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( playArea.bounds );
 
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
@@ -70,6 +64,8 @@ class PlayAreaNode extends Node {
       },
       center: playAreaViewBounds.center
     } );
+
+    gridVisibleProperty.linkAttribute( gridNode, 'visible' );
 
     const border = new Rectangle( playAreaViewBounds, {
       stroke: CollisionLabColors.GRID_BORDER_COLOR,
