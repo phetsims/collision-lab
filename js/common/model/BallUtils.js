@@ -149,13 +149,13 @@ const BallUtils = {
   },
 
   /**
-   * Returns a boolean that indicates if the passed-in balls are physically intersecting, meaning they are colliding.
+   * Returns a boolean that indicates if the passed-in balls are physically overlapping.
    * @public
    *
    * @param {Ball} ball1
    * @param {Ball} ball2
    */
-  areBallsColliding( ball1, ball2 ) {
+  areBallsOverlapping( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
 

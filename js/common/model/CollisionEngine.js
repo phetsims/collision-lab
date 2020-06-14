@@ -141,7 +141,7 @@ class CollisionEngine {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
       // If two balls are on top of each other, process the collision.
-      if ( BallUtils.areBallsColliding( ball1, ball2 ) ) {
+      if ( BallUtils.areBallsOverlapping( ball1, ball2 ) ) {
         this.collideBalls( ball1, ball2, isReversing );
       }
     } );
@@ -165,7 +165,7 @@ class CollisionEngine {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
-    assert && assert( BallUtils.areBallsColliding( ball1, ball2 ), 'balls must be intersecting' );
+    assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
 
     // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
     // when the balls first collided. Use the overlapped time to find the exact collision positions.
@@ -239,7 +239,7 @@ class CollisionEngine {
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
     assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
-    assert && assert( BallUtils.areBallsColliding( ball1, ball2 ), 'balls must be intersecting' );
+    assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
 
     /*----------------------------------------------------------------------------*
      * This calculation comes from the known fact that when the Balls are exactly colliding,
