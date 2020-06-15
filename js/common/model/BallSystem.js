@@ -141,11 +141,11 @@ class BallSystem {
     //
     // For the dependencies, we use:
     //  - The KE Properties of the prepopulatedBalls. However, only the balls in the system are used in the calculation.
-    //  - numberOfBallsProperty, since removing or adding a Ball changes the total kinetic energy of the system.
+    //  - balls.lengthProperty, since removing or adding a Ball changes the total kinetic energy of the system.
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty(
-      [ this.numberOfBallsProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
+      [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
       () =>  _.sum( this.balls.map( ball => ball.kineticEnergy ) ), {
         valueType: 'number',
         isValidValue: value => value >= 0
