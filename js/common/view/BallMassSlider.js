@@ -16,6 +16,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallUtils from '../model/BallUtils.js';
 
 class BallMassSlider extends HSlider {
 
@@ -23,7 +24,7 @@ class BallMassSlider extends HSlider {
    * @param {Ball} ball
    * @param {Object} [options]
    */
-  constructor( ball, ballSystem, options ) {
+  constructor( ball, balls, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
@@ -47,7 +48,7 @@ class BallMassSlider extends HSlider {
     // https://github.com/phetsims/collision-lab/issues/76
     options.startDrag = () => { ball.massUserControlledProperty.value = true; };
     options.endDrag = () => {
-      ballSystem.moveBallAwayFromOtherBalls( ball );
+      BallUtils.moveBallAwayFromOtherBalls( ball, balls );
       ball.massUserControlledProperty.value = false;
     };
 

@@ -40,6 +40,7 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallUtils from '../model/BallUtils.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
 import LeaderLinesNode from './LeaderLinesNode.js';
@@ -65,7 +66,7 @@ class BallNode extends Node {
    * @param {Object} [options]
    */
   constructor( ball,
-               ballSystem,
+               balls,
                valuesVisibleProperty,
                velocityVectorVisibleProperty,
                momentumVectorVisibleProperty,
@@ -215,7 +216,7 @@ class BallNode extends Node {
     //       ( !positionUserControlled || !massUserControlled ) && this.moveBallAwayFromOtherBalls( ball, playArea );
     //     } );
     // } );
-        ballSystem.moveBallAwayFromOtherBalls( ball );
+        BallUtils.moveBallAwayFromOtherBalls( ball, balls );
         ball.positionUserControlledProperty.value = false;
       }
     } ) );

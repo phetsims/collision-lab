@@ -189,6 +189,71 @@ const BallUtils = {
   },
 
   /**
+   * Moves the passed-in Ball away from the other Balls in the system that overlap with it. See
+   * https://github.com/phetsims/collision-lab/issues/100. Does nothing if the Ball isn't overlapping with any other
+   * Balls.
+   *
+   * This feature was modified from the flash version; the ball that the user is dragging will get "bumped" away, and
+   * won’t affect the position of the other balls.
+   *
+   * This is generally called when the user is **finished** controlling the radius or the position of the Ball, either
+   * through the Keypad or by dragging the Ball. We decided it was most natural and smooth to 'bump' Balls away after
+   * the user interaction. It was also decided that Balls that are bumped away must still be inside the PlayArea.
+   *
+   * @public
+   * @param {Ball} ball - the Ball that was just user-controlled.
+   * @param {ObservableArray.<Ball>} balls - all the balls in the system
+   */
+  moveBallAwayFromOtherBalls( ball, balls ) {
+    assert && assert( ball instanceof Ball && balls.contains( ball ), `invalid ball: ${ball}` );
+    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+
+    // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
+    // are overlapping with the passed-in Ball.
+    let overlappingBall = BallUtils.getOverlappingBall( ball, balls );
+
+    // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
+    const bumpedAwayFromBalls = [];
+
+    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where
+    // Ball is bumped to a position where it overlaps with another Ball. No matter what,
+    // every Ball has a place where it is fully inside the PlayArea.
+    while ( overlappingBall ) {
+
+      // DirectionVector, which is the unit vector from the center of the colliding Ball that points in the direction of
+      // the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of each other.
+      const directionVector = !ball.position.equals( overlappingBall.position ) ?
+                                ball.position.minus( overlappingBall.position ).normalize() :
+                                Vector2.X_UNIT.copy();
+
+      // Bump the Ball from the overlappingBall, using the directionVector,
+      BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
+
+      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
+      // before, reverse the directionVector and attempt to bump the Ball again.
+      if ( !ball.playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, overlappingBall ) ) {
+        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotated( Math.PI ) );
+      }
+
+      // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
+      // direction. Rotate the directionVector in increments of Math.PI / 2.
+      while ( !ball.playArea.fullyContainsBall( ball ) ) {
+        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
+      }
+
+      // Sanity check.
+      assert && assert( BallUtils.getOverlappingBall( ball, balls ) !== overlappingBall );
+
+      // Recompute the overlappingBall for the next iteration.
+      bumpedAwayFromBalls.push( overlappingBall );
+      overlappingBall = BallUtils.getOverlappingBall( ball, balls );
+    }
+
+    // Sanity check.
+    assert && assert( !BallUtils.getOverlappingBall( ball, balls ) && ball.playArea.fullyContainsBall( ball ) );
+  },
+
+  /**
    * 'Bumps' the position of a Ball that is overlapping with the overlappingBall. See
    * https://github.com/phetsims/collision-lab/issues/100.
    *
