@@ -8,7 +8,6 @@
 
 import ObservableArray from '../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
-import isArray from '../../../phet-core/js/isArray.js';
 import AssertUtils from '../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../collisionLab.js';
 
@@ -24,7 +23,7 @@ const CollisionLabUtils = {
    * @param {function(value:*,previousValue:*)} iterator
    */
   forEachAdjacentPair( collection, iterator ) {
-    assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
+    assert && assert( Array.isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
     for ( let i = 1; i < collection.length; i++ ) {
@@ -46,7 +45,7 @@ const CollisionLabUtils = {
    * @param {function(value1:*,value2:*)} iterator
    */
   forEachPossiblePair( collection, iterator ) {
-    assert && assert( isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
+    assert && assert( Array.isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
     for ( let i = 0; i < collection.length - 1; i++ ) {
