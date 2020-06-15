@@ -277,6 +277,13 @@ class BallSystem {
         ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
       }
 
+      let direction = Math.PI / 2;
+      while ( !playArea.fullyContainsBall( ball ) ) {
+        normal.rotate( Math.PI );
+        direction += Math.PI / 2;
+        ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
+      }
+
       // Sanity checks.
       assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
       assert && assert( BallUtils.getOverlappingBall( ball, this.balls ) !== overlappingBall );

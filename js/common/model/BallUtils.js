@@ -9,6 +9,7 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -185,6 +186,38 @@ const BallUtils = {
     return balls.find( otherBall => {
       return otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall );
     } );
+  },
+
+  /**
+   * Sets the position of a Ball that is overlapping with the overlappingBall. It uses the directionVector, which is
+   * the vector from the center of the overlappingBall that points in the direction of where to set the Ball's position.
+   *
+   * The directionVector's magnitude is set to the sum of the radii of the passed-in Ball and the overlappingBall so
+   * that the Balls are no longer overlapping.
+   *
+   * @public
+   * @param {Ball} ball - the Ball whose position is set.
+   * @param {Ball} overlappingBall - the Ball that is overlapping with the passed-in ball. Position not set.
+   * @param {Vector2} directionVector - the vector from the center of the overlappingBall that points in the direction
+   *                                    of where to set the Ball's position. Won't be mutated.
+   */
+  setOverlappingBallPosition( ball, overlappingBall, directionVector ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( overlappingBall instanceof Ball, `invalid overlappingBall: ${overlappingBall}` );
+    assert && assert( directionVector instanceof Vector2, `invalid directionVector: ${directionVector}` );
+    assert && assert( BallUtils.areBallsOverlapping( ball, overlappingBall ) );
+
+    // Set the directionVector's magnitude to the sum of the radii of the passed-in Ball and the overlappingBall.
+    // The ZERO_THRESHOLD is also added to add a infinitesimally small separation between the Balls.
+    const scaledDirectionVector = directionVector.withMagnitude( overlappingBall.radius
+                                                                 + ball.radius
+                                                                 + CollisionLabConstants.ZERO_THRESHOLD );
+
+    // Set the Ball's position, which is the center of the overlappingBall plus the scaledDirectionVector.
+    ball.position = scaledDirectionVector.add( overlappingBall.center );
+
+    // Sanity check.
+    assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
   }
 };
 
