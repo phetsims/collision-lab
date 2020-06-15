@@ -158,6 +158,7 @@ const BallUtils = {
   areBallsOverlapping( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
+    assert && assert( ball1 !== ball2, 'ball cannot overlap with itself' );
 
     // Use a distance approach to detect if the Balls are physically overlapping.
     const distanceBetweenBalls = ball1.position.distance( ball2.position );
