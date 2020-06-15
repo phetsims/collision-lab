@@ -24,6 +24,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
@@ -228,9 +229,7 @@ class BallSystem {
     this.balls.forEach( otherBall => {
       if ( otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall ) ) {
 
-
-
-          const normal = ball.position.minus( otherBall.position ).normalize();
+        const normal = !ball.position.equals( otherBall.position ) ? Vector2.ZERO.copy().set( ball.position ).subtract( otherBall.position ).normalize() : Vector2.X_UNIT;
 
           ball.position = otherBall.position.plus( normal.timesScalar( otherBall.radius + ball.radius ) );
 
