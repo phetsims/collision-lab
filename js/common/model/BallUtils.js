@@ -170,7 +170,7 @@ const BallUtils = {
   },
 
   /**
-   * Gets the first Ball that is overlapping with the passed-in Ball. of the system If the passed-in Ball isn't
+   * Gets the first Ball that is overlapping with the passed-in Ball of the system. If the passed-in Ball isn't
    * overlapping with any of the other Balls in the system, null is returned.
    * @public
    *
