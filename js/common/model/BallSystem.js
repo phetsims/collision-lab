@@ -12,6 +12,7 @@
  *   - Keeping track of the total kinetic energy of the system.
  *   - Tracking if there are any Balls that are being controlled by the user.
  *   - Tracking if the Balls in the system are inside of the PlayArea.
+ *   - Moving Balls away from other Balls that overlap with it after the user manipulates the position or radius.
  *
  * BallSystems are created at the start of the sim and are never disposed, so no dispose method is necessary and links
  * are left as-is.
@@ -23,6 +24,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import Property from '../../../../axon/js/Property.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -169,17 +171,18 @@ class BallSystem {
         valueType: 'boolean'
       } );
 
-    // @private
-    this.playArea = playArea;
-
+    // Loop through each possible Ball to move Balls away from other Balls that overlap with it after the user
+    // manipulates the position or radius of the Ball.
     this.prepopulatedBalls.forEach( ball => {
-      ball.massUserControlledProperty.lazyLink( massUserControlled => {
-        !massUserControlled && this.moveBallAwayFromOtherBalls( ball );
-      } );
 
-      ball.positionUserControlledProperty.lazyLink( positionUserControlled => {
-        !positionUserControlled && this.moveBallAwayFromOtherBalls( ball );
-      } );
+      // Observe when the user is finished controlling the mass of the Ball, which changes the radius of the Ball or
+      // when the user is finished controlling the position of the Ball, either through the Keypad or by dragging.
+      // When this happens, the Ball should be moved away from other Balls that overlap with it. See
+      // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
+      Property.lazyMultilink( [ ball.positionUserControlledProperty, ball.massUserControlledProperty ],
+        ( positionUserControlled, massUserControlled ) => {
+          ( !positionUserControlled || !massUserControlled ) && this.moveBallAwayFromOtherBalls( ball, playArea );
+        } );
     } );
   }
 
@@ -227,7 +230,7 @@ class BallSystem {
    * @public
    * TEST
    */
-  moveBallAwayFromOtherBalls( ball ) {
+  moveBallAwayFromOtherBalls( ball, playArea ) {
     assert && assert( this.balls.contains( ball ) );
 
     let collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
@@ -245,7 +248,7 @@ class BallSystem {
 
       ball.position = collidingBall.position.plus( normal.setMagnitude( collidingBall.radius + ball.radius ) );
 
-      if ( !this.playArea.fullyContainsBall( ball ) ) {
+      if ( !playArea.fullyContainsBall( ball ) ) {
         ball.position = collidingBall.position.plus( normal.setMagnitude( -collidingBall.radius - ball.radius ) );
       }
       collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
