@@ -9,6 +9,7 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
@@ -166,6 +167,24 @@ const BallUtils = {
 
     // If the distance between the Balls is less the sum of the radii, they are overlapping.
     return distanceBetweenBalls < distanceThreshold;
+  },
+
+  /**
+   * Gets the first Ball that is overlapping with the passed-in Ball. of the system If the passed-in Ball isn't
+   * overlapping with any of the other Balls in the system, null is returned.
+   * @public
+   *
+   * @param {Ball} ball
+   * @param {ObservableArray.<Ball>} balls - all the balls in the system
+   * @returns {Ball|null}
+   */
+  getOverlappingBall( ball, balls ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+
+    return balls.find( otherBall => {
+      return otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall );
+    } );
   }
 };
 

@@ -183,7 +183,8 @@ class CollisionEngine {
 
     // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() : Vector2.X_UNIT;
+    const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
+                                      this.mutableVectors.normal.set( Vector2.X_UNIT );
 
     // Tangential vector, called the 'plane of contact'.
     const tangent = this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );

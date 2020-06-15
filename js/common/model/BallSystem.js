@@ -230,18 +230,27 @@ class BallSystem {
   moveBallAwayFromOtherBalls( ball ) {
     assert && assert( this.balls.contains( ball ) );
 
-    this.balls.forEach( otherBall => {
-      if ( otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall ) ) {
+    let collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
 
-        const normal = !ball.position.equals( otherBall.position ) ? Vector2.ZERO.copy().set( ball.position ).subtract( otherBall.position ).normalize() : Vector2.X_UNIT;
+    while ( collidingBall ) {
+      const normal = !ball.position.equals( collidingBall.position ) ? ball.position.minus( collidingBall.position ) :
+                                                                     Vector2.X_UNIT.copy();
 
-          ball.position = otherBall.position.plus( normal.timesScalar( otherBall.radius + ball.radius ) );
+    // // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
+    // // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
+    // const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
+    //                                   this.mutableVectors.normal.set( Vector2.X_UNIT );
 
-          if ( !this.playArea.fullyContainsBall( ball ) ) {
-            ball.position = otherBall.position.plus( normal.timesScalar( -otherBall.radius - ball.radius ) );
-          }
+
+
+      ball.position = collidingBall.position.plus( normal.setMagnitude( collidingBall.radius + ball.radius ) );
+
+      if ( !this.playArea.fullyContainsBall( ball ) ) {
+        ball.position = collidingBall.position.plus( normal.setMagnitude( -collidingBall.radius - ball.radius ) );
       }
-    } );
+      collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
+
+    }
   }
 
   /**
