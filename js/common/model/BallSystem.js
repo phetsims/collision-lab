@@ -167,6 +167,9 @@ class BallSystem {
       () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
         valueType: 'boolean'
       } );
+
+    // @private
+    this.playArea = playArea;
   }
 
   /**
@@ -218,8 +221,16 @@ class BallSystem {
 
     this.balls.forEach( otherBall => {
       if ( otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall ) ) {
-        const normal = ball.position.minus( otherBall.position ).normalize();
-        ball.position = otherBall.position.plus( normal.timesScalar( otherBall.radius + ball.radius ) );
+
+
+
+          const normal = ball.position.minus( otherBall.position ).normalize();
+
+          ball.position = otherBall.position.plus( normal.timesScalar( otherBall.radius + ball.radius ) );
+
+          if ( !this.playArea.fullyContainsBall( ball ) ) {
+            ball.position = otherBall.position.plus( normal.timesScalar( -otherBall.radius - ball.radius ) );
+          }
       }
     } );
   }
