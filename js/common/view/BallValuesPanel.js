@@ -23,7 +23,6 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
@@ -34,7 +33,6 @@ import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import KeypadDialog from './KeypadDialog.js';
