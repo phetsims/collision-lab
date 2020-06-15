@@ -272,7 +272,7 @@ class BallSystem {
       // If the Ball isn't fully inside the PlayArea, we reverse the direction of the normal vector. Technically this
       // sets the position of the Ball twice, but this doesn't affect performance greatly since this method isn't called
       // in-between animation frames. We also do this if we have bumped away from this ball before.
-      if ( !playArea.fullyContainsBall( ball ) || bumpedAwayFromBalls.includes( overlappingBall ) ) {
+      if ( !playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, overlappingBall ) ) {
         normal.multiply( -1 );
         ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
       }
