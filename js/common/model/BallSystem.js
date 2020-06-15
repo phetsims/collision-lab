@@ -258,34 +258,28 @@ class BallSystem {
     // every Ball has a place where it is fully inside the PlayArea.
     while ( overlappingBall ) {
 
-      // Normal vector, called the 'line of impact', which is the vector from the center of the colliding Ball that
-      // points in the direction of the passed-in Ball. Account for a scenario when Balls are placed exactly
-      // concentrically on-top of each other.
-      const normal = !ball.position.equals( overlappingBall.position ) ?
-                        ball.position.minus( overlappingBall.position ).normalize() :
-                        Vector2.X_UNIT.copy();
+      // DirectionVector, which is the unit vector from the center of the colliding Ball that points in the direction of
+      // the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of each other.
+      const directionVector = !ball.position.equals( overlappingBall.position ) ?
+                                ball.position.minus( overlappingBall.position ).normalize() :
+                                Vector2.X_UNIT.copy();
 
-      // Use the normal vector and scale it to find the position of the passed-in Ball. It's magnitude is the sum
-      // of the radii of the passed-in Ball and the overlappingBall.
-      ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
+      // Bump the Ball from the overlappingBall, using the directionVector,
+      BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
 
-      // If the Ball isn't fully inside the PlayArea, we reverse the direction of the normal vector. Technically this
-      // sets the position of the Ball twice, but this doesn't affect performance greatly since this method isn't called
-      // in-between animation frames. We also do this if we have bumped away from this ball before.
+      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
+      // before, reverse the directionVector and attempt to bump the Ball again.
       if ( !playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, overlappingBall ) ) {
-        normal.multiply( -1 );
-        ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
+        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotated( Math.PI ) );
       }
 
-      let direction = Math.PI / 2;
+      // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
+      // direction. Rotate the directionVector in increments of Math.PI / 2.
       while ( !playArea.fullyContainsBall( ball ) ) {
-        normal.rotate( Math.PI );
-        direction += Math.PI / 2;
-        ball.position = overlappingBall.position.plus( normal.times( overlappingBall.radius + ball.radius + 1E-10 ) );
+        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
       }
 
-      // Sanity checks.
-      assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
+      // Sanity check.
       assert && assert( BallUtils.getOverlappingBall( ball, this.balls ) !== overlappingBall );
 
       // Recompute the overlappingBall for the next iteration.

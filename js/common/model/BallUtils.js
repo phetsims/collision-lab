@@ -189,8 +189,11 @@ const BallUtils = {
   },
 
   /**
-   * Sets the position of a Ball that is overlapping with the overlappingBall. It uses the directionVector, which is
-   * the vector from the center of the overlappingBall that points in the direction of where to set the Ball's position.
+   * 'Bumps' the position of a Ball that is overlapping with the overlappingBall. See
+   * https://github.com/phetsims/collision-lab/issues/100.
+   *
+   * This method uses the directionVector, which is the vector from the center of the overlappingBall that points in the
+   * direction of where to set the Ball's position.
    *
    * The directionVector's magnitude is set to the sum of the radii of the passed-in Ball and the overlappingBall so
    * that the Balls are no longer overlapping.
@@ -201,11 +204,10 @@ const BallUtils = {
    * @param {Vector2} directionVector - the vector from the center of the overlappingBall that points in the direction
    *                                    of where to set the Ball's position. Won't be mutated.
    */
-  setOverlappingBallPosition( ball, overlappingBall, directionVector ) {
+  bumpBallFromOverlappingBall( ball, overlappingBall, directionVector ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && assert( overlappingBall instanceof Ball, `invalid overlappingBall: ${overlappingBall}` );
     assert && assert( directionVector instanceof Vector2, `invalid directionVector: ${directionVector}` );
-    assert && assert( BallUtils.areBallsOverlapping( ball, overlappingBall ) );
 
     // Set the directionVector's magnitude to the sum of the radii of the passed-in Ball and the overlappingBall.
     // The ZERO_THRESHOLD is also added to add a infinitesimally small separation between the Balls.
@@ -214,7 +216,7 @@ const BallUtils = {
                                                                  + CollisionLabConstants.ZERO_THRESHOLD );
 
     // Set the Ball's position, which is the center of the overlappingBall plus the scaledDirectionVector.
-    ball.position = scaledDirectionVector.add( overlappingBall.center );
+    ball.position = scaledDirectionVector.add( overlappingBall.position );
 
     // Sanity check.
     assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
