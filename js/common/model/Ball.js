@@ -199,7 +199,7 @@ class Ball {
    * This is called when the user presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
    */
   saveState() {
-    this.insidePlayAreaProperty.value && this.restartState.saveState( this.position, this.velocity, this.mass );
+    this.restartState.saveState( this.position, this.velocity, this.mass );
   }
 
   /**

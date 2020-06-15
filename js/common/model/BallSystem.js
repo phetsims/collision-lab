@@ -290,9 +290,9 @@ class BallSystem {
    */
   saveBallStates() {
 
-    // Save the state of each Ball in the BallSystem.
+    // Save the state of each Ball in the BallSystem that are inside the PlayArea.
     this.balls.forEach( ball => {
-      ball.saveState();
+      ball.insidePlayAreaProperty.value && ball.saveState();
     } );
   }
 }
