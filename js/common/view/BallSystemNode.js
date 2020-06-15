@@ -68,6 +68,7 @@ class BallSystemNode extends Node {
 
       // Create the corresponding BallNode for each prepopulatedBall.
       const ballNode = new BallNode( ball,
+        ballSystem,
         valuesVisibleProperty,
         velocityVectorVisibleProperty,
         momentumVectorVisibleProperty,

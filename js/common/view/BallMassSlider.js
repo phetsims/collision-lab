@@ -23,7 +23,7 @@ class BallMassSlider extends HSlider {
    * @param {Ball} ball
    * @param {Object} [options]
    */
-  constructor( ball, options ) {
+  constructor( ball, ballSystem, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
@@ -46,7 +46,10 @@ class BallMassSlider extends HSlider {
     // Set the massUserControlledProperty of the Ball to true when dragging. See
     // https://github.com/phetsims/collision-lab/issues/76
     options.startDrag = () => { ball.massUserControlledProperty.value = true; };
-    options.endDrag = () => { ball.massUserControlledProperty.value = false; };
+    options.endDrag = () => {
+      ballSystem.moveBallAwayFromOtherBalls( ball );
+      ball.massUserControlledProperty.value = false;
+    };
 
     //----------------------------------------------------------------------------------------
 

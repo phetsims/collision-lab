@@ -65,6 +65,9 @@ class BallSystem {
     // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
     this.numberOfBallsRange = options.numberOfBallsRange;
 
+    // @private {PlayArea} - reference to the passed-in playArea.
+    this.playArea = playArea;
+
     // @public {BooleanProperty} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
     //                             is manipulated externally in the view.
     this.ballsConstantSizeProperty = new BooleanProperty( false );
@@ -170,20 +173,6 @@ class BallSystem {
       () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
         valueType: 'boolean'
       } );
-
-    // Loop through each possible Ball to move Balls away from other Balls that overlap with it after the user
-    // manipulates the position or radius of the Ball.
-    this.prepopulatedBalls.forEach( ball => {
-
-      // Observe when the user is finished controlling the mass of the Ball, which changes the radius of the Ball, or
-      // when the user is finished controlling the position of the Ball, either through the Keypad or by dragging.
-      // When this happens, the Ball should be moved away from other Balls that overlap with it. See
-      // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
-      Property.lazyMultilink( [ ball.positionUserControlledProperty, ball.massUserControlledProperty ],
-        ( positionUserControlled, massUserControlled ) => {
-          ( !positionUserControlled || !massUserControlled ) && this.moveBallAwayFromOtherBalls( ball, playArea );
-        } );
-    } );
   }
 
   /**
@@ -240,11 +229,9 @@ class BallSystem {
    *
    * @public
    * @param {Ball} ball - the Ball that was just user-controlled.
-   * @param {PlayArea} - Balls that are bumped away must still be inside the PlayArea.
    */
-  moveBallAwayFromOtherBalls( ball, playArea ) {
+  moveBallAwayFromOtherBalls( ball ) {
     assert && assert( ball instanceof Ball && this.balls.contains( ball ), `invalid ball: ${ball}` );
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
     // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
     // are overlapping with the passed-in Ball.
@@ -269,13 +256,13 @@ class BallSystem {
 
       // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
       // before, reverse the directionVector and attempt to bump the Ball again.
-      if ( !playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, overlappingBall ) ) {
+      if ( !this.playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, overlappingBall ) ) {
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotated( Math.PI ) );
       }
 
       // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
       // direction. Rotate the directionVector in increments of Math.PI / 2.
-      while ( !playArea.fullyContainsBall( ball ) ) {
+      while ( !this.playArea.fullyContainsBall( ball ) ) {
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
       }
 
@@ -288,7 +275,7 @@ class BallSystem {
     }
 
     // Sanity check.
-    assert && assert( !BallUtils.getOverlappingBall( ball, this.balls ) && playArea.fullyContainsBall( ball ) );
+    assert && assert( !BallUtils.getOverlappingBall( ball, this.balls ) && this.playArea.fullyContainsBall( ball ) );
   }
 
   /**
