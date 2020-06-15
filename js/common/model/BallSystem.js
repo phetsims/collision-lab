@@ -170,6 +170,12 @@ class BallSystem {
 
     // @private
     this.playArea = playArea;
+
+    this.prepopulatedBalls.forEach( ball => {
+      ball.massUserControlledProperty.lazyLink( massUserControlled => {
+        !massUserControlled && this.moveBallAwayFromOtherBalls( ball );
+      } );
+    } );
   }
 
   /**
