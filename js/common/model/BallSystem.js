@@ -227,33 +227,58 @@ class BallSystem {
   }
 
   /**
+   * Moves the passed-in Ball away from the other Balls in the system that overlap with it. See
+   * https://github.com/phetsims/collision-lab/issues/100. Does nothing if the Ball isn't overlapping with any other
+   * Balls.
+   *
+   * This feature was modified from the flash version; the ball that the user is dragging will get "bumped" away, and
+   * won’t affect the position of the other balls.
+   *
+   * This is generally called when the user is **finished** controlling the radius or the position of the Ball, either
+   * through the Keypad or by dragging the Ball. We decided it was most natural and smooth to 'bump' Balls away after
+   * the user interaction. It was also decided that Balls that are bumped away must still be inside the PlayArea.
+   *
    * @public
-   * TEST
+   * @param {Ball} ball - the Ball that was just user-controlled.
+   * @param {PlayArea} - Balls that are bumped away must still be inside the PlayArea.
    */
   moveBallAwayFromOtherBalls( ball, playArea ) {
-    assert && assert( this.balls.contains( ball ) );
+    assert && assert( ball instanceof Ball && this.balls.contains( ball ), `invalid ball: ${ball}` );
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
+    // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
+    // are overlapping with the passed-in Ball.
     let collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
 
+    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where
+    // Ball is bumped to a position where it overlaps with another Ball. No matter what,
+    // every Ball has a place where it is fully inside the PlayArea.
     while ( collidingBall ) {
+
+      // Normal vector, called the 'line of impact', which is the vector from the center of the colliding Ball that
+      // points in the direction of the passed-in Ball. Account for a scenario when Balls are placed exactly
+      // concentrically on-top of each other.
       const normal = !ball.position.equals( collidingBall.position ) ? ball.position.minus( collidingBall.position ) :
-                                                                     Vector2.X_UNIT.copy();
+                                                                       Vector2.X_UNIT.copy();
 
-    // // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
-    // // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    // const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
-    //                                   this.mutableVectors.normal.set( Vector2.X_UNIT );
-
-
-
+      // Use the normal vector and scale it to find the position of the passed-in Ball. It's magnitude is the sum
+      // of the radii of the passed-in Ball and the collidingBall.
       ball.position = collidingBall.position.plus( normal.setMagnitude( collidingBall.radius + ball.radius ) );
 
+      // If the Ball isn't fully inside the PlayArea, we reverse the direction of the normal vector. Technically this
+      // sets the position of the Ball twice, but this doesn't affect performance greatly since this method isn't called
+      // in-between animation frames.
       if ( !playArea.fullyContainsBall( ball ) ) {
-        ball.position = collidingBall.position.plus( normal.setMagnitude( -collidingBall.radius - ball.radius ) );
+        normal.multiply( -1 );
+        ball.position = collidingBall.position.plus( normal.setMagnitude( collidingBall.radius + ball.radius ) );
       }
-      collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
 
+      // Recompute the collidingBall for the next iteration.
+      collidingBall = BallUtils.getOverlappingBall( ball, this.balls );
     }
+
+    // Sanity check.
+    assert && assert( !BallUtils.getOverlappingBall( ball, this.balls ) && playArea.fullyContainsBall( ball ) );
   }
 
   /**
