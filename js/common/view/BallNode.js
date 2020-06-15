@@ -72,7 +72,6 @@ class BallNode extends Node {
                elasticityPercentProperty,
                isPlayingProperty,
                modelViewTransform,
-               ballSystem, // TODO: decoupling?
                options ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && AssertUtils.assertPropertyOf( valuesVisibleProperty, 'boolean' );
@@ -202,8 +201,6 @@ class BallNode extends Node {
       end: () => {
         leaderLinesNode.visible = false;
         ball.positionUserControlledProperty.value = false;
-
-        ballSystem.moveBallAwayFromOtherBalls( ball );
       }
     } ) );
 

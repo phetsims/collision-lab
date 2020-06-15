@@ -176,6 +176,10 @@ class BallSystem {
       ball.massUserControlledProperty.lazyLink( massUserControlled => {
         !massUserControlled && this.moveBallAwayFromOtherBalls( ball );
       } );
+
+      ball.positionUserControlledProperty.lazyLink( positionUserControlled => {
+        !positionUserControlled && this.moveBallAwayFromOtherBalls( ball );
+      } );
     } );
   }
 
