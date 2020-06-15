@@ -175,7 +175,7 @@ class BallSystem {
     // manipulates the position or radius of the Ball.
     this.prepopulatedBalls.forEach( ball => {
 
-      // Observe when the user is finished controlling the mass of the Ball, which changes the radius of the Ball or
+      // Observe when the user is finished controlling the mass of the Ball, which changes the radius of the Ball, or
       // when the user is finished controlling the position of the Ball, either through the Keypad or by dragging.
       // When this happens, the Ball should be moved away from other Balls that overlap with it. See
       // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
