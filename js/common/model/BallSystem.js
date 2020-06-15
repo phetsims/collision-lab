@@ -280,9 +280,9 @@ class BallSystem {
       // Sanity checks.
       assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
       assert && assert( BallUtils.getOverlappingBall( ball, this.balls ) !== overlappingBall );
-      bumpedAwayFromBalls.push( overlappingBall );
 
       // Recompute the overlappingBall for the next iteration.
+      bumpedAwayFromBalls.push( overlappingBall );
       overlappingBall = BallUtils.getOverlappingBall( ball, this.balls );
     }
 
