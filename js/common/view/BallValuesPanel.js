@@ -22,8 +22,8 @@
  * @author Brandon Li
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import HBox from '../../../../scenery/js/nodes/HBox.js';
@@ -33,32 +33,43 @@ import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import BallSystem from '../model/BallSystem.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
+import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
+
+// Create an AlignGroup for each grouping of BallValuesPanelColumnNodes to match the width of each sections of the
+// BallValuesPanel across screens. See https://github.com/phetsims/collision-lab/issues/83#issuecomment-639105292.
+const COLUMN_GROUP_ALIGN_GROUP = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
+
+// Create an AlignGroup for the Title Labels above each column group to match the vertical height of each title Text
+// instance across screens.
+const TITLE_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
 class BallValuesPanel extends Panel {
 
   /**
-   * @param {BallSystem} ballSystem
+   * @param {BallSystem} ballSystem - the system of Balls.
    * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
    * @param {KeypadDialog} keypadDialog
+   * @param {number} dimensions - the dimensions of the PlayArea.
    * @param {Object} [options]
    */
-  constructor( ballSystem, moreDataVisibleProperty, keypadDialog, options ) {
-    assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+  constructor( ballSystem, moreDataVisibleProperty, keypadDialog, dimensions, options ) {
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && AssertUtils.assertPropertyOf( moreDataVisibleProperty, 'boolean' );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${ dimensions }` );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      ballIconColumnSpacing: 12,    // {number} - x-spacing between the ball-icons and the first NumberDisplays
-      componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y component NumberDisplay columns
-      columnGroupSpacing: 21,       // {number} - x-spacing between the major groups of NumberDisplay columns
-      columnGroupsTopMargin: 0.5,   // {number} - y-margin between the columns and the title-labels above them
-      dimensions: 2,                // {number} - the dimensions of the screen that the Balls appears in.
+      ballIconColumnSpacing: 12,    // {number} - x-spacing between the ball-icons and the first column.
+      componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y components of NumberDisplay columns.
+      columnGroupSpacing: 21,       // {number} - x-spacing between the major groupings of NumberDisplay columns.
+      columnGroupsTopMargin: 0.5,   // {number} - y-margin between the column groups and the title-labels above them
 
-      massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n
-      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for i18n
+      massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n.
+      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for i18n.
 
       // {Font} - applied to all of the title label Text instances
       titleFont: CollisionLabConstants.PANEL_TITLE_FONT
@@ -67,34 +78,26 @@ class BallValuesPanel extends Panel {
 
     //----------------------------------------------------------------------------------------
 
-    // Create AlignGroups for the content and labels of every BallValuesPanelColumnNode to match the vertical height of
-    // each component in the BallValuesPanel. See BallValuesPanelColumnNode for more documentation.
-    const labelAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
-    const contentAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
-
-    // Convenience function to create a BallValuesPanelColumnNode
-    const createColumnNode = columnType => new BallValuesPanelColumnNode( ballSystem, columnType, contentAlignGroup, labelAlignGroup, keypadDialog );
-
-    // Create each BallValuesPanelColumnNode for each 1D BallValuesPanelColumnNode.ColumnTypes first.
-    const ballIconsColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS );
-    const massColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.MASS );
-    const xPositionColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_POSITION );
-    const xVelocityColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_VELOCITY );
-    const xMomentumColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.X_MOMENTUM );
-    const massSlidersColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.MASS_SLIDERS );
+    // Create each BallValuesPanelColumnNode for each BallValuesPanelColumnTypes that are common to both 1D and 2D.
+    const ballIconsColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.BALL_ICONS, keypadDialog );
+    const massColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.MASS, keypadDialog );
+    const xPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_POSITION, keypadDialog );
+    const xVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_VELOCITY, keypadDialog );
+    const xMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_MOMENTUM, keypadDialog );
+    const massSlidersColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.MASS_SLIDERS, keypadDialog );
 
     //----------------------------------------------------------------------------------------
 
-    // Wrap the component-specific column groups into a HBox. Children will be added if the dimensions is 2D.
+    // Wrap the component-specific column groups into a HBox. The y-component columns will be added for 2D.
     const positionColumnGroup = new HBox( { children: [ xPositionColumnNode ], spacing: options.componentColumnsSpacing } );
     const velocityColumnGroup = new HBox( { children: [ xVelocityColumnNode ], spacing: options.componentColumnsSpacing } );
     const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
 
-    // For 2D screens, add the y-component Columns to their correlating group.
-    if ( options.dimensions === 2 ) {
-      const yPositionColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_POSITION );
-      const yVelocityColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_VELOCITY );
-      const yMomentumColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.Y_MOMENTUM );
+    // For 2D screens, add the y-component columns to their correlating group.
+    if ( dimensions === 2 ) {
+      const yPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_POSITION, keypadDialog );
+      const yVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_VELOCITY, keypadDialog );
+      const yMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_MOMENTUM, keypadDialog );
 
       positionColumnGroup.addChild( yPositionColumnNode );
       velocityColumnGroup.addChild( yVelocityColumnNode );
@@ -103,14 +106,15 @@ class BallValuesPanel extends Panel {
 
     //----------------------------------------------------------------------------------------
 
-    // Create a AlignGroup for the Title Labels to match the vertical height of each Text instance.
-    const titleAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
-
+    // Convenience function to create the title Nodes above each of the groupings of columns.
     const createTitleNode = ( label, units, maxWidth = options.componentGroupTitleMaxWidth ) => {
-      return titleAlignGroup.createBox( new Text( StringUtils.fillIn( collisionLabStrings.pattern.labelParenthesesUnits, {
+      const titleString = StringUtils.fillIn( collisionLabStrings.pattern.labelParenthesesUnits, {
         label: label,
         units: units
-      } ), {
+      } );
+
+      // Wrap the text in a align group to match height.
+      return TITLE_ALIGN_GROUP.createBox( new Text( titleString, {
         font: options.titleFont,
         maxWidth: maxWidth
       } ) );
@@ -122,18 +126,30 @@ class BallValuesPanel extends Panel {
     const positionTitleNode = createTitleNode( collisionLabStrings.position, collisionLabStrings.units.meters );
     const velocityTitleNode = createTitleNode( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );
 
+    //----------------------------------------------------------------------------------------
+
+    // Convenience function to create each section of the Panel, which includes the column group and a title above it.
+    const createSectionNode = ( titleNode, columnGroup ) => {
+      return new VBox( {
+
+        // Wrap the column group in a align group to match width.
+        children: [ titleNode, COLUMN_GROUP_ALIGN_GROUP.createBox( columnGroup ) ],
+        spacing: options.columnGroupsTopMargin
+      } );
+    };
+
     // Horizontally group the column groups with their respective title Labels in a VBox.
-    const massColumnGroupAndTitleBox = new VBox( { children: [ massTitleNode, massColumnNode ], spacing: options.columnGroupsTopMargin } );
-    const positionColumnGroupAndTitleBox = new VBox( { children: [ positionTitleNode, positionColumnGroup ], spacing: options.columnGroupsTopMargin } );
-    const velocityColumnGroupAndTitleBox = new VBox( { children: [ velocityTitleNode, velocityColumnGroup ], spacing: options.columnGroupsTopMargin } );
-    const momentumColumnGroupAndTitleBox = new VBox( { children: [ momentumTitleNode, momentumColumnGroup ], spacing: options.columnGroupsTopMargin } );
+    const massColumnAndTitleBox = new VBox( { children: [ massTitleNode, massColumnNode ], spacing: options.columnGroupsTopMargin } );
+    const positionColumnGroupAndTitleBox = createSectionNode( positionTitleNode, positionColumnGroup );
+    const velocityColumnGroupAndTitleBox = createSectionNode( velocityTitleNode, velocityColumnGroup );
+    const momentumColumnGroupAndTitleBox = createSectionNode( momentumTitleNode, momentumColumnGroup );
 
     //----------------------------------------------------------------------------------------
 
     // The content of the entire Panel when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
-        massColumnGroupAndTitleBox,
+        massColumnAndTitleBox,
         positionColumnGroupAndTitleBox,
         velocityColumnGroupAndTitleBox,
         momentumColumnGroupAndTitleBox
@@ -145,7 +161,7 @@ class BallValuesPanel extends Panel {
     // The content of the entire Panel when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        massColumnGroupAndTitleBox,
+        massColumnAndTitleBox,
         massSlidersColumnNode
       ],
       spacing: options.columnGroupSpacing,
