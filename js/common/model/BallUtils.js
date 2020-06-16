@@ -219,7 +219,7 @@ const BallUtils = {
                                                                  + ball1.radius
                                                                  + CollisionLabConstants.ZERO_THRESHOLD );
 
-    // Set ball1's, which is the center of ball2 plus the scaledDirectionVector.
+    // Set ball1's position, which is the center of ball2 plus the scaledDirectionVector.
     ball1.position = scaledDirectionVector.add( ball2.position );
 
     // Sanity check to ensure that the Balls are adjacent to each other.
