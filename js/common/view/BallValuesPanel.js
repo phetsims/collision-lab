@@ -54,27 +54,27 @@ class BallValuesPanel extends Panel {
   /**
    * @param {BallSystem} ballSystem - the system of Balls.
    * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
-   * @param {KeypadDialog} keypadDialog
    * @param {number} dimensions - the dimensions of the PlayArea.
+   * @param {KeypadDialog} keypadDialog - KeypadDialog instance for the screen.
    * @param {Object} [options]
    */
-  constructor( ballSystem, moreDataVisibleProperty, keypadDialog, dimensions, options ) {
+  constructor( ballSystem, moreDataVisibleProperty, dimensions, keypadDialog, options ) {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && AssertUtils.assertPropertyOf( moreDataVisibleProperty, 'boolean' );
-    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${ dimensions }` );
+    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
 
-      ballIconColumnSpacing: 12,    // {number} - x-spacing between the ball-icons and the first column.
-      componentColumnsSpacing: 12,  // {number} - x-spacing between the x and y components of NumberDisplay columns.
-      columnGroupSpacing: 21,       // {number} - x-spacing between the major groupings of NumberDisplay columns.
-      columnGroupsTopMargin: 0.5,   // {number} - y-margin between the column groups and the title-labels above them
+      ballIconColumnSpacing: 12,   // {number} - x-spacing between the ball-icons and the first column.
+      componentColumnsSpacing: 12, // {number} - x-spacing between the x and y components of NumberDisplay columns.
+      columnGroupSpacing: 21,      // {number} - x-spacing between each group of columns.
+      titleLabelSpacing: 0.5,      // {number} - y-margin between the column groups and the title-labels above them.
 
-      massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label for i18n.
-      componentGroupTitleMaxWidth: 140, // {number} maxWidth for the other title labels (for component groups) for i18n.
+      massTitleMaxWidth: 67,            // {number} - maxWidth for the 'Mass (kg)' title label, for i18n.
+      componentGroupTitleMaxWidth: 140, // {number} - maxWidth for the title labels of component groups, for i18n.
 
-      // {Font} - applied to all of the title label Text instances
+      // {Font} - applied to all of the title-label Text instances
       titleFont: CollisionLabConstants.PANEL_TITLE_FONT
 
     }, options );
@@ -83,13 +83,11 @@ class BallValuesPanel extends Panel {
 
     // Create each BallValuesPanelColumnNode for each BallValuesPanelColumnTypes that are common to both 1D and 2D.
     const ballIconsColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.BALL_ICONS, keypadDialog );
-    const massColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.MASS, keypadDialog );
     const xPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_POSITION, keypadDialog );
     const xVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_VELOCITY, keypadDialog );
     const xMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.X_MOMENTUM, keypadDialog );
+    const massColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.MASS, keypadDialog );
     const massSlidersColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.MASS_SLIDERS, keypadDialog );
-
-    //----------------------------------------------------------------------------------------
 
     // Wrap the component-specific column groups into a HBox. The y-component columns will be added for 2D.
     const positionColumnGroup = new HBox( { children: [ xPositionColumnNode ], spacing: options.componentColumnsSpacing } );
@@ -109,53 +107,56 @@ class BallValuesPanel extends Panel {
 
     //----------------------------------------------------------------------------------------
 
-    // Convenience function to create the title Nodes above each of the groupings of columns.
-    const createTitleNode = ( label, units, maxWidth = options.componentGroupTitleMaxWidth ) => {
+    // Convenience function to create the title-label that appears above each column group.
+    const createTitleLabel = ( label, units, maxWidth = options.componentGroupTitleMaxWidth ) => {
       const titleString = StringUtils.fillIn( collisionLabStrings.pattern.labelParenthesesUnits, {
         label: label,
         units: units
       } );
 
-      // Wrap the text in a align group to match height.
+      // Wrap the text in an AlignGroup to match height.
       return TITLE_ALIGN_GROUP.createBox( new Text( titleString, {
         font: options.titleFont,
         maxWidth: maxWidth
       } ) );
     };
 
-    // Create the Title Labels for the groups of columns. Wrapped in AlignBoxes to ensure they have the same height.
-    const massTitleNode = createTitleNode( collisionLabStrings.mass, collisionLabStrings.units.kilogram, options.massTitleMaxWidth );
-    const momentumTitleNode = createTitleNode( collisionLabStrings.momentum, collisionLabStrings.units.kilogramMetersPerSecond );
-    const positionTitleNode = createTitleNode( collisionLabStrings.position, collisionLabStrings.units.meters );
-    const velocityTitleNode = createTitleNode( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );
+    // Create the Title Labels for each section of the BallValuesPanel.
+    const massTitleNode = createTitleLabel( collisionLabStrings.mass, collisionLabStrings.units.kilogram, options.massTitleMaxWidth );
+    const momentumTitleNode = createTitleLabel( collisionLabStrings.momentum, collisionLabStrings.units.kilogramMetersPerSecond );
+    const positionTitleNode = createTitleLabel( collisionLabStrings.position, collisionLabStrings.units.meters );
+    const velocityTitleNode = createTitleLabel( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );
 
     //----------------------------------------------------------------------------------------
 
     // Convenience function to create each section of the Panel, which includes the column group and a title above it.
-    const createSectionNode = ( titleNode, columnGroup ) => {
+    const createSectionNode = ( titleNode, columnGroup, isComponentColumnGroup = true ) => {
       return new VBox( {
+        children: [
+          titleNode,
 
-        // Wrap the column group in a align group to match width.
-        children: [ titleNode, COMPONENT_COLUMN_GROUP_ALIGN_GROUP.createBox( columnGroup ) ],
-        spacing: options.columnGroupsTopMargin
+          // If the group is a grouping of component columns, wrap the column group in a align group to match width.
+          isComponentColumnGroup ? COMPONENT_COLUMN_GROUP_ALIGN_GROUP.createBox( columnGroup ) : columnGroup
+        ],
+        spacing: options.titleLabelSpacing
       } );
     };
 
-    // Horizontally group the column groups with their respective title Labels in a VBox.
-    const massColumnAndTitleBox = new VBox( { children: [ massTitleNode, massColumnNode ], spacing: options.columnGroupsTopMargin } );
-    const positionColumnGroupAndTitleBox = createSectionNode( positionTitleNode, positionColumnGroup );
-    const velocityColumnGroupAndTitleBox = createSectionNode( velocityTitleNode, velocityColumnGroup );
-    const momentumColumnGroupAndTitleBox = createSectionNode( momentumTitleNode, momentumColumnGroup );
+    // Horizontally group the column groups with their respective title-labels.
+    const massSectionNode = createSectionNode( massTitleNode, massColumnNode, false );
+    const positionSectionNode = createSectionNode( positionTitleNode, positionColumnGroup );
+    const velocitySectionNode = createSectionNode( velocityTitleNode, velocityColumnGroup );
+    const momentumSectionNode = createSectionNode( momentumTitleNode, momentumColumnGroup );
 
     //----------------------------------------------------------------------------------------
 
     // The content of the entire Panel when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
-        massColumnAndTitleBox,
-        positionColumnGroupAndTitleBox,
-        velocityColumnGroupAndTitleBox,
-        momentumColumnGroupAndTitleBox
+        massSectionNode,
+        positionSectionNode,
+        velocitySectionNode,
+        momentumSectionNode
       ],
       spacing: options.columnGroupSpacing,
       align: 'bottom'
@@ -164,26 +165,25 @@ class BallValuesPanel extends Panel {
     // The content of the entire Panel when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        massColumnAndTitleBox,
+        massSectionNode,
         massSlidersColumnNode
       ],
       spacing: options.columnGroupSpacing,
       align: 'bottom'
     } );
 
-    //----------------------------------------------------------------------------------------
-
-    // Reference the content Node of the Panel, passed to the super-class.
-    const panelContentNode = new HBox( { spacing: options.ballIconColumnSpacing, align: 'bottom' } );
-
-    // Observe when the moreDataVisibleProperty changes and update the children of the content. We change the children
-    // rather than the visibility of the children to change the Panel's Bounds, which allows the super-class to resize.
+    // Observe when the moreDataVisibleProperty changes and update the visibility of the content of the Panel.
     // Link is not removed since BallValuesPanels are never disposed.
     moreDataVisibleProperty.link( moreDataVisible => {
-      panelContentNode.children = [ ballIconsColumnNode, moreDataVisible ? moreDataBox : lessDataBox ];
+      moreDataBox.visible = moreDataVisible;
+      lessDataBox.visible = !moreDataVisible;
     } );
 
-    super( panelContentNode, options );
+    super( new HBox( {
+      spacing: options.ballIconColumnSpacing,
+      children: [ ballIconsColumnNode, moreDataBox, lessDataBox ],
+      align: 'bottom'
+    } ), options );
   }
 }
 
