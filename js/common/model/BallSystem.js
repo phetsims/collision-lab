@@ -12,7 +12,6 @@
  *   - Keeping track of the total kinetic energy of the system.
  *   - Tracking if there are any Balls that are being controlled by the user.
  *   - Tracking if the Balls in the system are inside of the PlayArea.
- *   - Moving Balls away from other Balls that overlap with it after the user manipulates the position or radius.
  *
  * BallSystems are created at the start of the sim and are never disposed, so no dispose method is necessary and links
  * are left as-is.
