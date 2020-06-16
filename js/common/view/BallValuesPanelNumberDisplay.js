@@ -12,6 +12,9 @@
  *     Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadDialog is opened,
  *     allowing the user to edit the value of the Ball quantity.
  *
+ *   - If the user is controlling the associated BallProperty, a highlight is added to the NumberDisplay. See
+ *     https://github.com/phetsims/collision-lab/issues/95.
+ *
  * For the 'Collision Lab' sim, BallValuesPanelNumberDisplays are instantiated at the start and are never disposed.
  * See BallValuesPanelColumnNode for more background.
  *
@@ -56,6 +59,9 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     const canEdit = columnType !== BallValuesPanelColumnTypes.X_MOMENTUM &&
                     columnType !== BallValuesPanelColumnTypes.Y_MOMENTUM;
 
+    // Gets the property of the Ball that is associated with the BallValuesPanelColumnType.
+    const ballProperty = BallValuesPanelNumberDisplay.getBallProperty( ball, columnType );
+
     options = merge( {
       align: 'center',
       textOptions: {
@@ -70,79 +76,131 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
     }, options );
 
-    //----------------------------------------------------------------------------------------
-
-    let ballProperty; // The Ball Property to edit and/or display.
-
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { ballProperty = ball.massProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { ballProperty = ball.xPositionProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { ballProperty = ball.yPositionProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { ballProperty = ball.xVelocityProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { ballProperty = ball.yVelocityProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { ballProperty = ball.xMomentumProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { ballProperty = ball.yMomentumProperty; }
-
     super( ballProperty, DISPLAY_RANGE, options );
 
     //----------------------------------------------------------------------------------------
 
     if ( canEdit ) {
 
-      // Get the userControlledProperty that is associated with the columnType.
-      let userControlledProperty;
+      // Get the Property that indicates if the user is controlling the associated BallProperty.
+      const userControlledProperty = BallValuesPanelNumberDisplay.getUserControlledProperty( ball, columnType );
 
-      if ( columnType === BallValuesPanelColumnTypes.MASS ) { userControlledProperty = ball.massUserControlledProperty; }
-      else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { userControlledProperty = ball.xPositionUserControlledProperty; }
-      else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { userControlledProperty = ball.yPositionUserControlledProperty; }
-      else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { userControlledProperty = ball.xVelocityUserControlledProperty; }
-      else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { userControlledProperty = ball.yVelocityUserControlledProperty; }
-
-      // Observe when the user is controlling the ball value that is associated with the column type and adjust the
-      // background fill. Link is never disposed since BallValuesPanelNumberDisplays are never disposed.
+      // Observe when the user is controlling the associated BallProperty and a highlight to the NumberDisplay. See
+      // https://github.com/phetsims/collision-lab/issues/95. Link is never disposed since BallValuesPanelNumberDisplays
+      // are never disposed.
       userControlledProperty.link( userControlled => {
         this.backgroundFill = userControlled ? PhetColorScheme.BUTTON_YELLOW : options.backgroundFill;
       } );
+
+      // Get the unit displayed when the user is editing the BallProperty.
+      const unit = BallValuesPanelNumberDisplay.getEditingUnit( columnType );
 
       // Observe when the user presses the NumberDisplay and open the KeypadDialog to allow the user to edit the
       // ballProperty. Listener is never removed since BallValuesPanelNumberDisplays are never disposed.
       this.addInputListener( new FireListener( {
         fire: () => {
 
-          let editRange; // The editing range of the Ball Property.
-          let unit; // The unit of the Ball Property that is being modified.
-
-          if ( columnType === BallValuesPanelColumnTypes.MASS ) {
-            editRange = CollisionLabConstants.MASS_RANGE;
-            unit = collisionLabStrings.units.kilogram;
-          }
-          else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) {
-            editRange = BallUtils.getKeypadXPositionRange( ball );
-            unit = collisionLabStrings.units.meters;
-          }
-          else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) {
-            editRange = BallUtils.getKeypadYPositionRange( ball );
-            unit = collisionLabStrings.units.meters;
-          }
-          else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) {
-            editRange = CollisionLabConstants.VELOCITY_RANGE;
-            unit = collisionLabStrings.units.metersPerSecond;
-          }
-          else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) {
-            editRange = CollisionLabConstants.VELOCITY_RANGE;
-            unit = collisionLabStrings.units.metersPerSecond;
-          }
-
-          // Indicate that the Ball is currently being user controlled.
+          // Indicate that the BallProperty is currently being user controlled.
           userControlledProperty.value = true;
 
-          keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
+          // Get the editing Range of the BallProperty. Must be recomputed every time the KeypadDialog is opened.
+          const editingRange = BallValuesPanelNumberDisplay.getEditingRange( ball, columnType );
+
+          keypadDialog.beginEdit( ballProperty, editingRange, unit, () => {
+
+            // When the user is finished editing the BallProperty, bump the Ball away from the other Balls that it is
+            // overlapping with. See https://github.com/phetsims/collision-lab/issues/100.
             ballSystem.bumpBallAwayFromOtherBalls( ball );
+
+            // Now indicate that the user is finished editing this BallProperty.
             userControlledProperty.value = false;
           } );
         },
         fireOnDown: true
       } ) );
     }
+  }
+
+  /**
+   * Gets the property of a Ball that is associated with a BallValuesPanelColumnType.
+   * @private
+   *
+   * @param {Ball} ball
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @returns {Property.<number>}
+   */
+  static getBallProperty( ball, columnType ) {
+    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return ball.massProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return ball.xPositionProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return ball.yPositionProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return ball.xVelocityProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return ball.yVelocityProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { return ball.xMomentumProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { return ball.yMomentumProperty; }
+    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
+  }
+
+  /**
+   * Gets the property of a Ball that indicates if the user is controlling the associated BallProperty.
+   * @private
+   *
+   * @param {Ball} ball
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @returns {Property.<number>}
+   */
+  static getUserControlledProperty( ball, columnType ) {
+    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return ball.massUserControlledProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return ball.xPositionUserControlledProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return ball.yPositionUserControlledProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return ball.xVelocityUserControlledProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return ball.yVelocityUserControlledProperty; }
+    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
+  }
+
+  /**
+   * Gets the unit of a associated BallProperty of a BallValuesPanelColumnType, used when the user is editing the
+   * BallProperty.
+   * @private
+   *
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @returns {string}
+   */
+  static getEditingUnit( columnType ) {
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return collisionLabStrings.units.kilogram; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return collisionLabStrings.units.meters; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return collisionLabStrings.units.meters; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return collisionLabStrings.units.metersPerSecond; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return collisionLabStrings.units.metersPerSecond; }
+    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
+  }
+
+  /**
+   * Gets the range of a associated BallProperty of a BallValuesPanelColumnType, used when the user is editing the
+   * BallProperty.
+   * @private
+   *
+   * @param {Ball} ball
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @returns {Range}
+   */
+  static getEditingRange( ball, columnType ) {
+    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return CollisionLabConstants.MASS_RANGE; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return BallUtils.getKeypadXPositionRange( ball ); }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return BallUtils.getKeypadYPositionRange( ball ); }
+    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return CollisionLabConstants.VELOCITY_RANGE; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return CollisionLabConstants.VELOCITY_RANGE; }
+    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
   }
 }
 
