@@ -183,9 +183,10 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
 
-    return balls.find( otherBall => {
+    const overlappingBalls = balls.filter( otherBall => {
       return otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall );
     } );
+    return _.minBy( overlappingBalls, otherBall => otherBall.position.distance( ball.position ) );
   },
 
   /**
@@ -207,6 +208,7 @@ const BallUtils = {
   bumpBallFromOtherBalls( ball, balls ) {
     assert && assert( ball instanceof Ball && balls.contains( ball ), `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+
     // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
     // are overlapping with the passed-in Ball.
     let overlappingBall = BallUtils.getOverlappingBall( ball, balls );
@@ -228,15 +230,9 @@ const BallUtils = {
       BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
       // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
       // before, reverse the directionVector and attempt to bump the Ball again.
-      if ( !ball.playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, BallUtils.getOverlappingBall( ball, balls ) ) ) {
+      if ( _.includes( bumpedAwayFromBalls, BallUtils.getOverlappingBall( ball, balls ) ) ) {
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
 
-
-        // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
-        // direction. Rotate the directionVector in increments of Math.PI / 2.
-        while ( ball.playArea.dimensions === 2 && !ball.playArea.fullyContainsBall( ball ) ) {
-          BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
-        }
       }
 
       // Sanity check.
@@ -248,7 +244,7 @@ const BallUtils = {
     }
 
     // Sanity check.
-    assert && assert( !BallUtils.getOverlappingBall( ball, balls ) && ball.playArea.fullyContainsBall( ball ) );
+    assert && assert( !BallUtils.getOverlappingBall( ball, balls ) );
   },
 
   /**
