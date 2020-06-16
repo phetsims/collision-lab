@@ -112,8 +112,8 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     // disposed since MomentaDiagramAccordionBoxes last for the life-time of the sim.
     const gridNode = new GridNode( gridViewBounds.width, gridViewBounds.height, {
       minorLineOptions: {
-        lineWidth: CollisionLabConstants.MINOR_GRID_LINE_WIDTH,
-        stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+        lineWidth: CollisionLabConstants.MINOR_GRIDLINE_WIDTH,
+        stroke: CollisionLabColors.MAJOR_GRIDLINE_COLOR
       },
       modelViewTransformProperty: modelViewTransformProperty,
       minorHorizontalLineSpacing: options.gridLineSpacing,

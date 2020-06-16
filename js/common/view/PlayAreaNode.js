@@ -22,8 +22,8 @@ const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // 
 const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
 const MAJOR_TICK_LENGTH = 0.09; // model units
 const MINOR_TICK_LENGTH = 0.06; // model units
-const MAJOR_GRID_LINE_WIDTH = 2; // view units
-const MINOR_GRID_LINE_WIDTH = 1; // view units
+const MAJOR_GRIDLINE_WIDTH = 2; // view units
+const MINOR_GRIDLINE_WIDTH = 1; // view units
 
 class PlayAreaNode extends Node {
 
@@ -64,12 +64,12 @@ class PlayAreaNode extends Node {
         minorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MINOR_GRIDLINE_SPACING ),
         minorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MINOR_GRIDLINE_SPACING ),
         majorLineOptions: {
-          lineWidth: MAJOR_GRID_LINE_WIDTH,
-          stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+          lineWidth: MAJOR_GRIDLINE_WIDTH,
+          stroke: CollisionLabColors.MAJOR_GRIDLINE_COLOR
         },
         minorLineOptions: {
-          lineWidth: MINOR_GRID_LINE_WIDTH,
-          stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+          lineWidth: MINOR_GRIDLINE_WIDTH,
+          stroke: CollisionLabColors.MINOR_GRIDLINE_COLOR
         },
         center: playAreaViewBounds.center
       } );
@@ -130,12 +130,12 @@ class TicksNode extends Node {
     super( {
       children: [
         new Path( modelViewTransform.modelToViewShape( minorGridLinesShape ), {
-          lineWidth: MINOR_GRID_LINE_WIDTH,
-          stroke: CollisionLabColors.MINOR_GRID_LINE_COLOR
+          lineWidth: MINOR_GRIDLINE_WIDTH,
+          stroke: CollisionLabColors.MINOR_GRIDLINE_COLOR
         } ),
         new Path( modelViewTransform.modelToViewShape( majorGridLinesShape ), {
-          lineWidth: MINOR_GRID_LINE_WIDTH,
-          stroke: CollisionLabColors.MAJOR_GRID_LINE_COLOR
+          lineWidth: MINOR_GRIDLINE_WIDTH,
+          stroke: CollisionLabColors.MAJOR_GRIDLINE_COLOR
         } )
       ]
     } );

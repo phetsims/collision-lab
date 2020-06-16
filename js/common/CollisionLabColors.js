@@ -22,8 +22,8 @@ const CollisionLabColors = {
 
   // Grid
   GRID_BACKGROUND_COLOR: 'rgb( 255, 254, 255 )',
-  MAJOR_GRID_LINE_COLOR: 'rgb( 212, 212, 212 )',
-  MINOR_GRID_LINE_COLOR: 'rgb( 225, 225, 225 )',
+  MAJOR_GRIDLINE_COLOR: 'rgb( 212, 212, 212 )',
+  MINOR_GRIDLINE_COLOR: 'rgb( 225, 225, 225 )',
   GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
 
   CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR: 'rgb( 182, 181, 182 )',
