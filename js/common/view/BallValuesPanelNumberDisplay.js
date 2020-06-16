@@ -8,7 +8,7 @@
  * in the specified PlayArea.
  *
  * 'Is a' relationship with NumberDisplay but adds the following functionality:
- *    - If BallQuantities is X_MOMENTUM or Y_MOMENTUM, it solely displays the Ball Property,
+ *    - If BallValuesPanelColumnTypes is X_MOMENTUM or Y_MOMENTUM, it solely displays the Ball Property,
  *
  *    - Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadLayer is fired,
  *      allowing the user to edit the value of the Ball quantity.
@@ -19,7 +19,6 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
@@ -29,36 +28,28 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallUtils from '../model/BallUtils.js';
+import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
 
 // constants
 const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDisplay (used to determine width).
-const BallQuantities = Enumeration.byKeys( [
-  'MASS',
-  'X_POSITION',
-  'Y_POSITION',
-  'X_VELOCITY',
-  'Y_VELOCITY',
-  'X_MOMENTUM',
-  'Y_MOMENTUM'
-] );
 
 class BallValuesPanelNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Ball} ball - the Ball model
-   * @param {BallQuantities} ballQuantity - the Ball Quantity to display
+   * @param {BallValuesPanelColumnTypes} columnType - the Ball Quantity to display
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( ball, ballQuantity, ballSystem, keypadDialog, options ) {
+  constructor( ball, columnType, ballSystem, keypadDialog, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( BallQuantities.includes( ballQuantity ), `invalid ballQuantity: ${ballQuantity}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     // Indicates if the Ball Property can be edited.
-    const canEdit = ballQuantity !== BallQuantities.X_MOMENTUM && ballQuantity !== BallQuantities.Y_MOMENTUM;
+    const canEdit = columnType !== BallValuesPanelColumnTypes.X_MOMENTUM && columnType !== BallValuesPanelColumnTypes.Y_MOMENTUM;
 
     options = merge( {
       align: 'center',
@@ -78,13 +69,13 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
 
     let ballProperty; // The Ball Property to edit and/or display.
 
-    if ( ballQuantity === BallQuantities.MASS ) { ballProperty = ball.massProperty; }
-    else if ( ballQuantity === BallQuantities.X_POSITION ) { ballProperty = ball.xPositionProperty; }
-    else if ( ballQuantity === BallQuantities.Y_POSITION ) { ballProperty = ball.yPositionProperty; }
-    else if ( ballQuantity === BallQuantities.X_VELOCITY ) { ballProperty = ball.xVelocityProperty; }
-    else if ( ballQuantity === BallQuantities.Y_VELOCITY ) { ballProperty = ball.yVelocityProperty; }
-    else if ( ballQuantity === BallQuantities.X_MOMENTUM ) { ballProperty = ball.xMomentumProperty; }
-    else if ( ballQuantity === BallQuantities.Y_MOMENTUM ) { ballProperty = ball.yMomentumProperty; }
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { ballProperty = ball.massProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { ballProperty = ball.xPositionProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { ballProperty = ball.yPositionProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { ballProperty = ball.xVelocityProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { ballProperty = ball.yVelocityProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { ballProperty = ball.xMomentumProperty; }
+    else if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { ballProperty = ball.yMomentumProperty; }
 
     super( ballProperty, DISPLAY_RANGE, options );
 
@@ -95,19 +86,19 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     if ( canEdit ) {
       let userControlledProperty;
 
-      if ( ballQuantity === BallQuantities.MASS ) {
+      if ( columnType === BallValuesPanelColumnTypes.MASS ) {
         userControlledProperty = ball.massUserControlledProperty;
       }
-      else if ( ballQuantity === BallQuantities.X_POSITION ) {
+      else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) {
         userControlledProperty = ball.xPositionUserControlledProperty;
       }
-      else if ( ballQuantity === BallQuantities.Y_POSITION ) {
+      else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) {
         userControlledProperty = ball.yPositionUserControlledProperty;
       }
-      else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
+      else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) {
         userControlledProperty = ball.xVelocityUserControlledProperty;
       }
-      else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
+      else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) {
         userControlledProperty = ball.yVelocityUserControlledProperty;
       }
 
@@ -123,23 +114,23 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           let editRange; // The editing range of the Ball Property.
           let unit; // The unit of the Ball Property that is being modified.
 
-          if ( ballQuantity === BallQuantities.MASS ) {
+          if ( columnType === BallValuesPanelColumnTypes.MASS ) {
             editRange = CollisionLabConstants.MASS_RANGE;
             unit = collisionLabStrings.units.kilogram;
           }
-          else if ( ballQuantity === BallQuantities.X_POSITION ) {
+          else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) {
             editRange = BallUtils.getKeypadXPositionRange( ball );
             unit = collisionLabStrings.units.meters;
           }
-          else if ( ballQuantity === BallQuantities.Y_POSITION ) {
+          else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) {
             editRange = BallUtils.getKeypadYPositionRange( ball );
             unit = collisionLabStrings.units.meters;
           }
-          else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
+          else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) {
             editRange = CollisionLabConstants.VELOCITY_RANGE;
             unit = collisionLabStrings.units.metersPerSecond;
           }
-          else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
+          else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) {
             editRange = CollisionLabConstants.VELOCITY_RANGE;
             unit = collisionLabStrings.units.metersPerSecond;
           }
@@ -181,8 +172,8 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
   }
 }
 
-// @public {BallQuantities} - possible quantities to display and/or allow the user to edit.
-BallValuesPanelNumberDisplay.BallQuantities = BallQuantities;
+// @public {BallValuesPanelColumnTypes} - possible quantities to display and/or allow the user to edit.
+BallValuesPanelNumberDisplay.BallValuesPanelColumnTypes = BallValuesPanelColumnTypes;
 
 collisionLab.register( 'BallValuesPanelNumberDisplay', BallValuesPanelNumberDisplay );
 export default BallValuesPanelNumberDisplay;

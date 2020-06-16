@@ -36,17 +36,17 @@ import BallValuesPanelNumberDisplay from './BallValuesPanelNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import KeypadDialog from './KeypadDialog.js';
 
-// Create AlignGroups for the content and labels of every BallValuesPanelColumnNode to match the vertical height of
-// each component in the BallValuesPanel across screens.
+// AlignGroups for the content and label Nodes of every BallValuesPanelColumnNode. Created to match the vertical height
+// of each component in the BallValuesPanel across screens every screen.
 const LABEL_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 const CONTENT_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
 class BallValuesPanelColumnNode extends VBox {
 
   /**
-   * @param {BallSystem} ballSystem
-   * @param {BallValuesPanelColumnTypes} columnType - the column-type.
-   * @param {KeypadDialog} keypadDialog
+   * @param {BallSystem} ballSystem - the system of Balls.
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @param {KeypadDialog} keypadDialog - KeypadDialog instance for the screen.
    * @param {Object} [options]
    */
   constructor( ballSystem, columnType, keypadDialog, options ) {
@@ -57,7 +57,7 @@ class BallValuesPanelColumnNode extends VBox {
     options = merge( {
 
       contentContainerSpacing: 3.5, // {number} - y-spacing between the content
-      labelSpacing: 3,              // {number} - y-spacing between the label and the content container
+      labelSpacing: 3,              // {number} - y-spacing between the label and first contentNode.
       labelFont: CollisionLabConstants.DISPLAY_FONT
 
     }, options );
@@ -70,100 +70,92 @@ class BallValuesPanelColumnNode extends VBox {
 
     //----------------------------------------------------------------------------------------
 
-    // @private {BallValuesPanelColumnTypes} (final)
-    this.columnType = columnType;
-
-    // First create the Label Node. Wrapped in a AlignBox to align with the AlignGroup.
-    const labelNode = LABEL_ALIGN_GROUP.createBox( new RichText( this.getLabelString(), {
+    // First create the Label Node.
+    const labelNode = new RichText( BallValuesPanelColumnNode.getLabelString( columnType ), {
       font: options.labelFont,
       maxWidth: 25 // constrain width for i18n, determined empirically
-    } ) );
+    } );
 
-    // @private {VBox} - create the VBox wrapper for the content of column.
-    this.contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
+    // Create the VBox container for the contentNodes of the column.
+    const contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
 
-    // @private {KeypadDialog}
-    this.keypadDialog = keypadDialog;
+    // Loop through each possible Ball and create the corresponding contentNode. These Balls are NOT necessarily the
+    // Balls currently within the BallSystem so we are responsible for updating visibility based on whether or not it is
+    // the system.
+    ballSystem.prepopulatedBalls.forEach( ball => {
 
-    // @private {ObservableArray.<Ball>}
-    this.ballSystem = ballSystem;
+      // Create the corresponding contentNode for each prepopulatedBall.
+      const contentNode = BallValuesPanelColumnNode.createContentNode( ball, ballSystem, columnType, keypadDialog );
 
-    // Add both the label and the contentContainerNode as children of this Node.
-    this.children = [ labelNode, this.contentContainerNode ];
+      // Add the content to the container.
+      contentContainerNode.addChild( contentNode );
 
-    //----------------------------------------------------------------------------------------
+      // Observe when Balls are added or removed from the BallSystem, meaning the contentNode's visibility could change
+      // if the ball is added or removed from the system. It should only be visible if the ball is in the BallSystem.
+      ballSystem.balls.lengthProperty.link( () => {
+        contentNode.visible = ballSystem.balls.contains( ball );
+      } );
+    } );
 
-    // Register the Balls that are already in the system.
-    ballSystem.balls.forEach( this.registerAddedBall.bind( this ) );
-
-    // Observe when Balls are added to the system and register the added Ball. Link is never disposed as
-    // BallValuesColumnNodes are never disposed.
-    ballSystem.balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
+    // Set the children of this Node to the correct rendering order.
+    this.children = [ LABEL_ALIGN_GROUP.createBox( labelNode ), contentContainerNode ];
   }
 
   /**
-   * Registers a new Ball by adding the appropriate contentNodes (usually NumberDisplays). This is generally invoked
-   * when Balls are added to the system, meaning the column needs to update. Will also ensure that the contentNode
-   * is removed if the Ball is removed from the play-area system, and disposes all unused NumberDisplays.
+   * Creates the contentNode for a Ball in a specific BallValuesPanelColumnType.
    * @private
    *
    * @param {Ball} ball
+   * @param {BallSystem} ballSystem - the system of Balls.
+   * @param {BallValuesPanelColumnTypes} columnType
+   * @param {KeypadDialog} keypadDialog - KeypadDialog instance for the screen.
+   * @returns {Node}
    */
-  registerAddedBall( ball ) {
+  static createContentNode( ball, ballSystem, columnType, keypadDialog ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+    assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
 
     // The content Node to add to the column.
     let contentNode;
 
-    if ( this.columnType === BallValuesPanelColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
-    else if ( this.columnType === BallValuesPanelColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, this.ballSystem ); }
-    else {
-      contentNode = new BallValuesPanelNumberDisplay( ball,
-        BallValuesPanelNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
-        this.ballSystem,
-        this.keypadDialog
-      );
-    }
+    if ( columnType === BallValuesPanelColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
+    else if ( columnType === BallValuesPanelColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, ballSystem ); }
+    else { contentNode = new BallValuesPanelNumberDisplay( ball, columnType, ballSystem, keypadDialog ); }
 
     // Wrap the content in a AlignBox to align with contentAlignBox.
-    const contentAlignBox = CONTENT_ALIGN_GROUP.createBox( contentNode );
-    this.contentContainerNode.addChild( contentAlignBox );
-
-    // Observe when the ball is removed to update the Display and dispose the contentNode.
-    const removeBallListener = removedBall => {
-      if ( ball === removedBall ) {
-        CONTENT_ALIGN_GROUP.removeAlignBox( contentAlignBox );
-        this.contentContainerNode.removeChild( contentAlignBox );
-        contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
-        this.ballSystem.balls.removeItemRemovedListener( removeBallListener );
-      }
-    };
-    this.ballSystem.balls.addItemRemovedListener( removeBallListener );
+    return CONTENT_ALIGN_GROUP.createBox( contentNode );
   }
 
   /**
-   * Gets the label string representation of the column. The label is above the content of the column. For instance,
-   * there is a 'x' label above the x-position NumberDisplays in the BallValuesPanel.
+   * Gets the string for the label of a BallValuesPanelColumnType. The label is above the content of the column. For
+   * instance, there is a 'x' label above the x-position NumberDisplays in the BallValuesPanel. Some column-types
+   * don't have labels.
    * @private
    *
+   * @param {BallValuesPanelColumnTypes} columnType
    * @returns {string} - label to display. May use inlined HTML.
    */
-  getLabelString() {
+  static getLabelString( columnType ) {
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+
+    // Reference the 'x' and the 'y' strings.
     const xString = collisionLabStrings.symbol.x;
     const yString = collisionLabStrings.symbol.y;
 
+    // Convenience function that gets a label for a component BallValuesPanelColumnType.
     const getComponentLabel = ( label, component ) => StringUtils.fillIn( collisionLabStrings.pattern.symbolSubSymbol, {
       symbol1: label,
       symbol2: component
     } );
 
-
-    if ( this.columnType === BallValuesPanelColumnTypes.X_POSITION ) { return xString; }
-    if ( this.columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return yString; }
-    if ( this.columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, xString ); }
-    if ( this.columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, yString ); }
-    if ( this.columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, xString ); }
-    if ( this.columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, yString ); }
+    if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return xString; }
+    if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return yString; }
+    if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, xString ); }
+    if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, yString ); }
+    if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, xString ); }
+    if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, yString ); }
 
     // At this point, the column doesn't have a specific label, so return the empty string.
     return '';
