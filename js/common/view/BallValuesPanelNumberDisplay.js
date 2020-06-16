@@ -4,16 +4,16 @@
  * BallValuesPanelNumberDisplay is a subclass of NumberDisplay for displaying a value that is associated with a Ball.
  * Instances appear in the BallValuesPanel.
  *
- * Displays a single component of a Ball Vector (i.e. x-position | x-velocity ... ) of a single Ball that is currently
- * in the specified PlayArea.
+ * Adds the following functionality to NumberDisplay:
+ *   - Displays a single component of a Ball Vector (i.e. x-position | x-velocity ... ) of a single Ball. Each
+ *     BallValuesPanelNumberDisplay is associated with a BallValuesPanelColumnNode.
  *
- * 'Is a' relationship with NumberDisplay but adds the following functionality:
- *    - If BallValuesPanelColumnTypes is X_MOMENTUM or Y_MOMENTUM, it solely displays the Ball Property,
+ *   - If BallValuesPanelColumnTypes is X_MOMENTUM or Y_MOMENTUM, it solely displays the Ball Property.
+ *     Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadDialog is opened,
+ *     allowing the user to edit the value of the Ball quantity.
  *
- *    - Otherwise the Ball Property is editable, meaning when the NumberDisplay is pressed, the KeypadLayer is fired,
- *      allowing the user to edit the value of the Ball quantity.
- *
- * The BallValuesPanelNumberDisplay should be disposed if the Ball is removed from the PlayArea.
+ * For the 'Collision Lab' sim, BallValuesPanelNumberDisplays are instantiated at the start and are never disposed.
+ * See BallValuesPanelColumnNode for more background.
  *
  * @author Brandon Li
  */
