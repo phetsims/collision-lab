@@ -23,7 +23,6 @@
  * @author Brandon Li
  */
 
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
@@ -33,40 +32,30 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallSystem from '../model/BallSystem.js';
 import BallMassSlider from './BallMassSlider.js';
+import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import BallValuesPanelNumberDisplay from './BallValuesPanelNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import KeypadDialog from './KeypadDialog.js';
 
-// Possible BallValuesPanelColumnNode types. See the comment at the top of this file for context.
-const ColumnTypes = Enumeration.byKeys( [
-  'BALL_ICONS',
-  'MASS',
-  'MASS_SLIDERS',
-  'X_POSITION',
-  'Y_POSITION',
-  'X_VELOCITY',
-  'Y_VELOCITY',
-  'X_MOMENTUM',
-  'Y_MOMENTUM'
-] );
+// Create AlignGroups for the content and labels of every BallValuesPanelColumnNode to match the vertical height of
+// each component in the BallValuesPanel across screens.
+const LABEL_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
+const CONTENT_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
 class BallValuesPanelColumnNode extends VBox {
 
   /**
    * @param {BallSystem} ballSystem
-   * @param {ColumnTypes} columnType - the column-type.
-   * @param {AlignGroup} contentAlignGroup - AlignGroup for the main content of the column.
-   * @param {AlignGroup} labelAlignGroup - AlignGroup for the label of the column, even if there is no apparent label.
+   * @param {BallValuesPanelColumnTypes} columnType - the column-type.
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( ballSystem, columnType, contentAlignGroup, labelAlignGroup, keypadDialog, options ) {
-    assert && assert( ColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
-    assert && assert( contentAlignGroup instanceof AlignGroup, `invalid contentAlignGroup: ${contentAlignGroup}` );
-    assert && assert( labelAlignGroup instanceof AlignGroup, `invalid labelAlignGroup: ${labelAlignGroup}` );
+  constructor( ballSystem, columnType, keypadDialog, options ) {
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
 
     options = merge( {
 
@@ -84,20 +73,17 @@ class BallValuesPanelColumnNode extends VBox {
 
     //----------------------------------------------------------------------------------------
 
-    // @private {ColumnTypes} (final)
+    // @private {BallValuesPanelColumnTypes} (final)
     this.columnType = columnType;
 
     // First create the Label Node. Wrapped in a AlignBox to align with the AlignGroup.
-    const labelNode = labelAlignGroup.createBox( new RichText( this.getLabelString(), {
+    const labelNode = LABEL_ALIGN_GROUP.createBox( new RichText( this.getLabelString(), {
       font: options.labelFont,
       maxWidth: 25 // constrain width for i18n, determined empirically
     } ) );
 
     // @private {VBox} - create the VBox wrapper for the content of column.
     this.contentContainerNode = new VBox( { spacing: options.contentContainerSpacing } );
-
-    // @private {AlignGroup}
-    this.contentAlignGroup = contentAlignGroup;
 
     // @private {KeypadDialog}
     this.keypadDialog = keypadDialog;
@@ -132,8 +118,8 @@ class BallValuesPanelColumnNode extends VBox {
     // The content Node to add to the column.
     let contentNode;
 
-    if ( this.columnType === ColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
-    else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, this.ballSystem ); }
+    if ( this.columnType === BallValuesPanelColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
+    else if ( this.columnType === BallValuesPanelColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, this.ballSystem ); }
     else {
       contentNode = new BallValuesPanelNumberDisplay( ball,
         BallValuesPanelNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
@@ -143,13 +129,13 @@ class BallValuesPanelColumnNode extends VBox {
     }
 
     // Wrap the content in a AlignBox to align with contentAlignBox.
-    const contentAlignBox = this.contentAlignGroup.createBox( contentNode );
+    const contentAlignBox = CONTENT_ALIGN_GROUP.createBox( contentNode );
     this.contentContainerNode.addChild( contentAlignBox );
 
     // Observe when the ball is removed to update the Display and dispose the contentNode.
     const removeBallListener = removedBall => {
       if ( ball === removedBall ) {
-        this.contentAlignGroup.removeAlignBox( contentAlignBox );
+        CONTENT_ALIGN_GROUP.removeAlignBox( contentAlignBox );
         this.contentContainerNode.removeChild( contentAlignBox );
         contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
         this.ballSystem.balls.removeItemRemovedListener( removeBallListener );
@@ -175,20 +161,20 @@ class BallValuesPanelColumnNode extends VBox {
     } );
 
 
-    if ( this.columnType === ColumnTypes.X_POSITION ) { return xString; }
-    if ( this.columnType === ColumnTypes.Y_POSITION ) { return yString; }
-    if ( this.columnType === ColumnTypes.X_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, xString ); }
-    if ( this.columnType === ColumnTypes.Y_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, yString ); }
-    if ( this.columnType === ColumnTypes.X_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, xString ); }
-    if ( this.columnType === ColumnTypes.Y_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, yString ); }
+    if ( this.columnType === BallValuesPanelColumnTypes.X_POSITION ) { return xString; }
+    if ( this.columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return yString; }
+    if ( this.columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, xString ); }
+    if ( this.columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return getComponentLabel( collisionLabStrings.symbol.velocity, yString ); }
+    if ( this.columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, xString ); }
+    if ( this.columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { return getComponentLabel( collisionLabStrings.symbol.momentum, yString ); }
 
     // At this point, the column doesn't have a specific label, so return the empty string.
     return '';
   }
 }
 
-// @public {ColumnTypes} - possible types of BallValuesPanelColumnNodes, which determines what is displayed.
-BallValuesPanelColumnNode.ColumnTypes = ColumnTypes;
+// @public {BallValuesPanelColumnTypes} - possible types of BallValuesPanelColumnNodes, which determines what is displayed.
+BallValuesPanelColumnNode.BallValuesPanelColumnTypes = BallValuesPanelColumnTypes;
 
 collisionLab.register( 'BallValuesPanelColumnNode', BallValuesPanelColumnNode );
 export default BallValuesPanelColumnNode;
