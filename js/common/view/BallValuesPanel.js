@@ -5,9 +5,9 @@
  *
  * For each Ball in the PlayArea, it displays it's values, which are:
  *    - Masses (kg)
- *    - The positions of the Balls (m)
- *    - The velocities of the Balls (m/s)
- *    - The linear momentum of the Balls (kg m/s)
+ *    - The position of the Balls, in components (m)
+ *    - The velocity of the Balls, in components (m/s)
+ *    - The linear momentum of the Balls, in components (kg m/s)
  *
  * If the "More Data" checkbox is not checked, the Node only displays:
  *   - Masses of the Balls (kg)
@@ -15,7 +15,7 @@
  *
  * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayAres is 2D, the columns
  * are grouped together in components (like the x-position and the y-position columns) and a title-label is
- * placed above it (in this case "Position").
+ * placed above it (in this case "Position"). Otherwise, the y-component columns are not included.
  *
  * This panel exists for the entire sim and is never disposed.
  *
