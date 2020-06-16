@@ -99,16 +99,16 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
         userControlledProperty = ball.massUserControlledProperty;
       }
       else if ( ballQuantity === BallQuantities.X_POSITION ) {
-        userControlledProperty = ball.positionUserControlledProperty;
+        userControlledProperty = ball.xPositionUserControlledProperty;
       }
       else if ( ballQuantity === BallQuantities.Y_POSITION ) {
-        userControlledProperty = ball.positionUserControlledProperty;
+        userControlledProperty = ball.yPositionUserControlledProperty;
       }
       else if ( ballQuantity === BallQuantities.X_VELOCITY ) {
-        userControlledProperty = ball.velocityUserControlledProperty;
+        userControlledProperty = ball.xVelocityUserControlledProperty;
       }
       else if ( ballQuantity === BallQuantities.Y_VELOCITY ) {
-        userControlledProperty = ball.velocityUserControlledProperty;
+        userControlledProperty = ball.yVelocityUserControlledProperty;
       }
 
       userControlledProperty.link( userControlled => {

@@ -113,7 +113,8 @@ class BallNode extends Node {
     // Create the Vector Node for the velocity vector of the Ball. To be positioned later.
     const velocityVectorNode = new BallVelocityVectorNode( ball,
       ball.velocityProperty,
-      ball.velocityUserControlledProperty,
+      ball.xVelocityUserControlledProperty,
+      ball.yVelocityUserControlledProperty,
       velocityVectorVisibleProperty,
       isPlayingProperty,
       modelViewTransform );
@@ -198,7 +199,8 @@ class BallNode extends Node {
         leaderLinesNode.reticle = ballCircle.center;
 
         leaderLinesNode.visible = true;
-        ball.positionUserControlledProperty.value = true;
+        ball.xPositionUserControlledProperty.value = true;
+        ball.yPositionUserControlledProperty.value = true;
       },
       end: () => {
         leaderLinesNode.visible = false;
@@ -217,7 +219,8 @@ class BallNode extends Node {
     //     } );
     // } );
         BallUtils.bumpBallFromOtherBalls( ball, balls );
-        ball.positionUserControlledProperty.value = false;
+        ball.xPositionUserControlledProperty.value = false;
+        ball.yPositionUserControlledProperty.value = false;
       }
     } ) );
 

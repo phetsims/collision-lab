@@ -41,7 +41,7 @@ class BallVelocityVectorNode extends BallVectorNode {
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ball, velocityProperty, userControlledProperty, visibleProperty, isPlayingProperty, modelViewTransform, options ) {
+  constructor( ball, velocityProperty, xUserControlledProperty, yUserControlledProperty, visibleProperty, isPlayingProperty, modelViewTransform, options ) {
 
     assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2,
@@ -76,10 +76,12 @@ class BallVelocityVectorNode extends BallVectorNode {
     const tipDragListener = new DragListener( {
       positionProperty: tipPositionProperty,
       start: () => {
-        userControlledProperty.value = true;
+        xUserControlledProperty.value = true;
+        yUserControlledProperty.value = true;
       },
       end: () => {
-        userControlledProperty.value = false;
+        xUserControlledProperty.value = false;
+        yUserControlledProperty.value = false;
       }
     } );
 

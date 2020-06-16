@@ -121,20 +121,23 @@ class Ball {
     this.massUserControlledProperty = new BooleanProperty( false );
 
     // @public {BooleanProperty} - indicates if the Ball's position is being manipulated by the user. Set in the view.
-    this.positionUserControlledProperty = new BooleanProperty( false );
+    this.xPositionUserControlledProperty = new BooleanProperty( false );
+    this.yPositionUserControlledProperty = new BooleanProperty( false );
 
     // @public {BooleanProperty} - indicates if the Ball's velocity is being manipulated by the user. Set in the view.
-    this.velocityUserControlledProperty = new BooleanProperty( false );
+    this.xVelocityUserControlledProperty = new BooleanProperty( false );
+    this.yVelocityUserControlledProperty = new BooleanProperty( false );
 
     // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user in any
     //                                                   way, either by dragging or editing a value through the Keypad.
-    this.userControlledProperty = new DerivedProperty(
-      [ this.massUserControlledProperty, this.positionUserControlledProperty, this.velocityUserControlledProperty ],
-      ( massUserControlled, positionUserControlled, velocityUserControlled ) => {
-        return massUserControlled || positionUserControlled || velocityUserControlled;
-      }, {
-        valueType: 'boolean'
-      } );
+    this.userControlledProperty = new DerivedProperty( [ this.massUserControlledProperty,
+      this.xPositionUserControlledProperty,
+      this.yPositionUserControlledProperty,
+      this.xVelocityUserControlledProperty,
+      this.yVelocityUserControlledProperty
+    ], ( ...userControlledValues ) => _.some( userControlledValues, _.identity ), {
+      valueType: 'boolean'
+    } );
 
     //----------------------------------------------------------------------------------------
 
@@ -163,8 +166,10 @@ class Ball {
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
     this.massUserControlledProperty.reset();
-    this.positionUserControlledProperty.reset();
-    this.velocityUserControlledProperty.reset();
+    this.xPositionUserControlledProperty.reset();
+    this.yPositionUserControlledProperty.reset();
+    this.xVelocityUserControlledProperty.reset();
+    this.yVelocityUserControlledProperty.reset();
   }
 
   /**
