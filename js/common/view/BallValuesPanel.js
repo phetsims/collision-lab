@@ -5,14 +5,14 @@
  * of all Balls that are currently in the system.
  *
  * For each Ball in the BallSystem, it displays it's values, which are:
- *    - Masses (kg)
- *    - The x and y component of the Ball's position (m)
- *    - The x and y component of the Ball's velocity (m/s)
- *    - The x and y component of the Ball's linear momentum (kg m/s)
+ *    - Masses (kg).
+ *    - The x and y component of the Ball's position (m).
+ *    - The x and y component of the Ball's velocity (m/s).
+ *    - The x and y component of the Ball's linear momentum (kg m/s).
  *
- * If the "More Data" checkbox is not checked, the Node only displays:
- *   - Masses of the Balls (kg)
- *   - A slider to change the masses
+ * If the "More Data" checkbox is not checked, the Panel only displays:
+ *   - Masses of the Balls (kg).
+ *   - Sliders to change the masses.
  *
  * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayArea is 1D, the y
  * component of the BallValues described above are not included. Otherwise, each column of components are grouped
