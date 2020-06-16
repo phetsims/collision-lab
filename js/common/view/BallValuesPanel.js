@@ -1,9 +1,10 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * BallValuesPanel is the Panel at the bottom of all screens which displays and allows the user to modify Ball values.
+ * BallValuesPanel is the Panel at the bottom of all screens which displays and allows the user to modify the values
+ * of all Balls that are currently in the system.
  *
- * For each Ball in the PlayArea, it displays it's values, which are:
+ * For each Ball in the BallSystem, it displays it's values, which are:
  *    - Masses (kg)
  *    - The x and y component of the Ball's position (m)
  *    - The x and y component of the Ball's velocity (m/s)
