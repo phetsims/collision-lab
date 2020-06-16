@@ -164,8 +164,8 @@ class BallSystem {
     //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
     //                                                   Balls but only the Balls in the system are considered.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
-      [ ...this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ), this.balls.lengthProperty ],
-      () => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === this.balls.length, {
+      [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ) ],
+      length => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === length, {
         valueType: 'boolean'
       } );
   }
@@ -196,7 +196,7 @@ class BallSystem {
   }
 
   /**
-   * Steps the BallSystem by stepping the position of the Balls.
+   * Steps the BallSystem.
    * @public
    *
    * @param {number} dt - in seconds
@@ -266,8 +266,8 @@ class BallSystem {
   }
 
   /**
-   * Saves the states of all of the Balls in the system for the next restart() call. This is called when the user
-   * presses the play button.
+   * Saves the states of all the Balls in the system that are fully inside of the PlayArea for the next restart() call.
+   * This is called when the user presses the play button.
    * @public
    *
    * See https://github.com/phetsims/collision-lab/issues/76.
