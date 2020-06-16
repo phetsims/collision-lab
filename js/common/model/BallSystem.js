@@ -232,7 +232,7 @@ class BallSystem {
     // are overlapping with the passed-in Ball.
     let overlappingBall = BallUtils.getClosestOverlappingBall( ball, this.balls );
 
-    // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
+    // Array of the overlappingBalls that we have bumped away from. This is used to break infinite loops.
     const bumpedAwayFromBalls = [];
 
     // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where

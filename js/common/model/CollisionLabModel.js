@@ -99,7 +99,7 @@ class CollisionLabModel {
   /**
    * @abstract
    * Creates the CollisionEngine for the screen. Called in the constructor of the CollisionLabModel. This is an abstract
-   * method because some screens use sub-types of CollisionEngine and have different API's, but all screens have a
+   * method because some screens use sub-types of CollisionEngine and have different APIs, but all screens have a
    * CollisionEngine.
    *
    * @protected
