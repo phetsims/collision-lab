@@ -32,7 +32,7 @@ const BallUtils = {
    * @param {boolean} isConstantSize - indicates if the 'Constant Size' checkbox is checked.
    * @returns {number} - in meters
    */
-  calculateBallRadius( mass, isConstantSize ) {
+  calculateRadius( mass, isConstantSize ) {
     assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
     assert && assert( typeof isConstantSize === 'boolean', `invalid isConstantSize: ${isConstantSize}` );
 

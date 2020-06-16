@@ -101,7 +101,7 @@ class Ball {
 
     // @public (read-only) {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
-      ( mass, isConstantSize ) => BallUtils.calculateBallRadius( mass, isConstantSize ),
+      ( mass, isConstantSize ) => BallUtils.calculateRadius( mass, isConstantSize ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 
     // @public (read-only) {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
