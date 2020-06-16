@@ -170,9 +170,7 @@ class CollisionLabScreenView extends ScreenView {
       }
     } );
 
-    const ballValuesPanel = new BallValuesPanel( model.ballSystem, viewProperties.moreDataVisibleProperty, keypad, {
-      dimensions: model.playArea.dimensions
-    } );
+    const ballValuesPanel = new BallValuesPanel( model.ballSystem, viewProperties.moreDataVisibleProperty, keypad, model.playArea.dimensions );
     this.addChild( ballValuesPanel );
     ballValuesPanel.top = 420;
     ballValuesPanel.left = ( options.playAreaLeftTop.x );
