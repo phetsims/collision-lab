@@ -40,7 +40,6 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
-import BallUtils from '../model/BallUtils.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
 import LeaderLinesNode from './LeaderLinesNode.js';
@@ -57,20 +56,19 @@ class BallNode extends Node {
 
   /**
    * @param {Ball} ball - the Ball model
+   * @param {BallSystem} ballSystem
    * @param {Property.<boolean>} valuesVisibleProperty - indicates if the momentum and speed NumberDisplays are visible.
    * @param {Property.<boolean>} velocityVectorVisibleProperty - indicates if the velocity vector is visible.
    * @param {Property.<boolean>} momentumVectorVisibleProperty - indicates if the momentum vector is visible.
-   * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is constant size.
    * @param {Property.<boolean>} isPlayingProperty - indicates if simulation is playing or not.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
   constructor( ball,
-               balls,
+               ballSystem,
                valuesVisibleProperty,
                velocityVectorVisibleProperty,
                momentumVectorVisibleProperty,
-               isConstantSizeProperty,
                elasticityPercentProperty,
                isPlayingProperty,
                modelViewTransform,
@@ -79,7 +77,6 @@ class BallNode extends Node {
     assert && AssertUtils.assertPropertyOf( valuesVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( velocityVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
@@ -88,7 +85,7 @@ class BallNode extends Node {
     // The fill color of the Ball. The color of the Ball is based on its index. If isConstantSizeProperty is true,
     // its brightnessFactor is increased based on the mass to indicate a denser ball (more dense = more saturated).
     // DerivedProperty is never disposed since BallNodes are never disposed.
-    const fillProperty = new DerivedProperty( [ ball.massProperty, isConstantSizeProperty ],
+    const fillProperty = new DerivedProperty( [ ball.massProperty, ballSystem.ballsConstantSizeProperty ],
       ( mass, isConstantSize ) => {
         const brightnessFactor = isConstantSize ? Utils.linear( MASS_RANGE.min, MASS_RANGE.max, 0.7, 0, mass ) : 0;
         return CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( brightnessFactor );
@@ -215,10 +212,10 @@ class BallNode extends Node {
     //   // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
     //   Property.lazyMultilink( [ ball.positionUserControlledProperty, ball.massUserControlledProperty ],
     //     ( positionUserControlled, massUserControlled ) => {
-    //       ( !positionUserControlled || !massUserControlled ) && this.bumpBallFromOtherBalls( ball, playArea );
+    //       ( !positionUserControlled || !massUserControlled ) && this.bumpBallAwayFromOtherBalls( ball, playArea );
     //     } );
     // } );
-        BallUtils.bumpBallFromOtherBalls( ball, balls );
+        ballSystem.bumpBallAwayFromOtherBalls( ball );
         ball.xPositionUserControlledProperty.value = false;
         ball.yPositionUserControlledProperty.value = false;
       }

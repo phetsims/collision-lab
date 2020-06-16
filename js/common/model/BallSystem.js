@@ -24,12 +24,14 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallState from './BallState.js';
+import BallUtils from './BallUtils.js';
 import CenterOfMass from './CenterOfMass.js';
 import PlayArea from './PlayArea.js';
 
@@ -206,6 +208,62 @@ class BallSystem {
     this.balls.forEach( ball => {
       ball.step( dt );
     } );
+  }
+
+  /**
+   * Moves the passed-in Ball away from the other Balls in the system that overlap with it. See
+   * https://github.com/phetsims/collision-lab/issues/100. Does nothing if the Ball isn't overlapping with any other
+   * Balls.
+   *
+   * This feature was modified from the flash version; the ball that the user is dragging will get "bumped" away, and
+   * won’t affect the position of the other balls.
+   *
+   * This is generally called when the user is **finished** controlling the radius or the position of the Ball, either
+   * through the Keypad or by dragging the Ball. We decided it was most natural and smooth to 'bump' Balls away after
+   * the user interaction. This method is invoked in the view.
+   *
+   * @public
+   * @param {Ball} ball - the Ball that was just user-controlled.
+   */
+  bumpBallAwayFromOtherBalls( ball ) {
+    assert && assert( ball instanceof Ball && this.balls.contains( ball ), `invalid ball: ${ball}` );
+
+    // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
+    // are overlapping with the passed-in Ball.
+    let overlappingBall = BallUtils.getClosestOverlappingBall( ball, this.balls );
+
+    // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
+    const bumpedAwayFromBalls = [];
+
+    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where
+    // Ball is bumped to a position where it overlaps with another Ball. No matter what,
+    // every Ball has a place where it is fully inside the PlayArea.
+    while ( overlappingBall ) {
+      // DirectionVector, which is the unit vector from the center of the colliding Ball that points in the direction of
+      // the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of each other.
+      const directionVector = !ball.position.equals( overlappingBall.position ) ?
+                                ball.position.minus( overlappingBall.position ).normalize() :
+                                Vector2.X_UNIT.copy();
+
+      // Bump the Ball from the overlappingBall, using the directionVector,
+      BallUtils.moveBallNextToBall( ball, overlappingBall, directionVector );
+      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
+      // before, reverse the directionVector and attempt to bump the Ball again.
+      if ( _.includes( bumpedAwayFromBalls, BallUtils.getClosestOverlappingBall( ball, this.balls ) ) ) {
+        BallUtils.moveBallNextToBall( ball, overlappingBall, directionVector.multiply( -1 ) );
+
+      }
+
+      // Sanity check.
+      assert && assert( BallUtils.getClosestOverlappingBall( ball, this.balls ) !== overlappingBall );
+
+      // Recompute the overlappingBall for the next iteration.
+      bumpedAwayFromBalls.push( overlappingBall );
+      overlappingBall = BallUtils.getClosestOverlappingBall( ball, this.balls );
+    }
+
+    // Sanity check.
+    assert && assert( !BallUtils.getClosestOverlappingBall( ball, this.balls ) );
   }
 
   /**

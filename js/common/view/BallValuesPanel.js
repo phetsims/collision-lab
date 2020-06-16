@@ -39,12 +39,12 @@ import KeypadDialog from './KeypadDialog.js';
 class BallValuesPanel extends Panel {
 
   /**
-   * @param {ObservableArray.<Ball>} balls - collections of particles inside the container
+   * @param {BallSystem} ballSystem
    * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( balls, moreDataVisibleProperty, keypadDialog, options ) {
+  constructor( ballSystem, moreDataVisibleProperty, keypadDialog, options ) {
     assert && assert( moreDataVisibleProperty instanceof BooleanProperty, `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
@@ -73,7 +73,7 @@ class BallValuesPanel extends Panel {
     const contentAlignGroup = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
 
     // Convenience function to create a BallValuesPanelColumnNode
-    const createColumnNode = columnType => new BallValuesPanelColumnNode( balls, columnType, contentAlignGroup, labelAlignGroup, keypadDialog );
+    const createColumnNode = columnType => new BallValuesPanelColumnNode( ballSystem, columnType, contentAlignGroup, labelAlignGroup, keypadDialog );
 
     // Create each BallValuesPanelColumnNode for each 1D BallValuesPanelColumnNode.ColumnTypes first.
     const ballIconsColumnNode = createColumnNode( BallValuesPanelColumnNode.ColumnTypes.BALL_ICONS );

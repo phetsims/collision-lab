@@ -51,7 +51,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( ball, ballQuantity, balls, keypadDialog, options ) {
+  constructor( ball, ballQuantity, ballSystem, keypadDialog, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
     assert && assert( BallQuantities.includes( ballQuantity ), `invalid ballQuantity: ${ballQuantity}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
@@ -148,7 +148,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           userControlledProperty.value = true;
 
           keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
-            BallUtils.bumpBallFromOtherBalls( ball, balls );
+            ballSystem.bumpBallAwayFromOtherBalls( ball );
             userControlledProperty.value = false;
           } );
         },

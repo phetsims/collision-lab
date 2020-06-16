@@ -54,14 +54,14 @@ const ColumnTypes = Enumeration.byKeys( [
 class BallValuesPanelColumnNode extends VBox {
 
   /**
-   * @param {ObservableArray.<Ball>} balls - collections of particles inside the PlayArea.
+   * @param {BallSystem} ballSystem
    * @param {ColumnTypes} columnType - the column-type.
    * @param {AlignGroup} contentAlignGroup - AlignGroup for the main content of the column.
    * @param {AlignGroup} labelAlignGroup - AlignGroup for the label of the column, even if there is no apparent label.
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
-  constructor( balls, columnType, contentAlignGroup, labelAlignGroup, keypadDialog, options ) {
+  constructor( ballSystem, columnType, contentAlignGroup, labelAlignGroup, keypadDialog, options ) {
     assert && assert( ColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
     assert && assert( contentAlignGroup instanceof AlignGroup, `invalid contentAlignGroup: ${contentAlignGroup}` );
     assert && assert( labelAlignGroup instanceof AlignGroup, `invalid labelAlignGroup: ${labelAlignGroup}` );
@@ -103,7 +103,7 @@ class BallValuesPanelColumnNode extends VBox {
     this.keypadDialog = keypadDialog;
 
     // @private {ObservableArray.<Ball>}
-    this.balls = balls;
+    this.ballSystem = ballSystem;
 
     // Add both the label and the contentContainerNode as children of this Node.
     this.children = [ labelNode, this.contentContainerNode ];
@@ -111,11 +111,11 @@ class BallValuesPanelColumnNode extends VBox {
     //----------------------------------------------------------------------------------------
 
     // Register the Balls that are already in the system.
-    balls.forEach( this.registerAddedBall.bind( this ) );
+    ballSystem.balls.forEach( this.registerAddedBall.bind( this ) );
 
     // Observe when Balls are added to the system and register the added Ball. Link is never disposed as
     // BallValuesColumnNodes are never disposed.
-    balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
+    ballSystem.balls.addItemAddedListener( this.registerAddedBall.bind( this ) );
   }
 
   /**
@@ -133,11 +133,11 @@ class BallValuesPanelColumnNode extends VBox {
     let contentNode;
 
     if ( this.columnType === ColumnTypes.BALL_ICONS ) { contentNode = CollisionLabIconFactory.createBallIcon( ball ); }
-    else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, this.balls ); }
+    else if ( this.columnType === ColumnTypes.MASS_SLIDERS ) { contentNode = new BallMassSlider( ball, this.ballSystem ); }
     else {
       contentNode = new BallValuesPanelNumberDisplay( ball,
         BallValuesPanelNumberDisplay.BallQuantities[ this.columnType.name ], // TODO: find a better way to do this
-        this.balls,
+        this.ballSystem,
         this.keypadDialog
       );
     }
@@ -152,10 +152,10 @@ class BallValuesPanelColumnNode extends VBox {
         this.contentAlignGroup.removeAlignBox( contentAlignBox );
         this.contentContainerNode.removeChild( contentAlignBox );
         contentNode.dispose(); // Dispose the contentNode if it's a NumberDisplay to unlink its internal links.
-        this.balls.removeItemRemovedListener( removeBallListener );
+        this.ballSystem.balls.removeItemRemovedListener( removeBallListener );
       }
     };
-    this.balls.addItemRemovedListener( removeBallListener );
+    this.ballSystem.balls.addItemRemovedListener( removeBallListener );
   }
 
   /**
