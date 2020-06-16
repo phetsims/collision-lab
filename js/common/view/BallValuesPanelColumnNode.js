@@ -1,24 +1,21 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A single column in the BallValuesPanel: either displays a column of a single type of Ball Values for all Balls
- * or other components, like Ball icons or Mass sliders.
- *
- * Possible 'types' of Ball columns are:
- *   - Mass (kg)
- *   - x or y position of the Ball (m)
- *   - x or y velocity of the Ball (m/s)
- *   - x or y linear momentum of the Ball (kg m/s)
- *   - Ball Icons
- *   - Mass Sliders
+ * A single column in the BallValuesPanel: usually displays a column of a NumberDisplays of single type of Ball Values
+ * for all the Balls in the system, but also displays some other components, like Ball icons or Mass sliders.
+ * See BallValuesPanelColumnTypes for the different types of columns.
  *
  * Each column has:
- *   - Content Nodes - these are the main content Nodes of the column (eg. the NumberDisplays).
- *   - Label Nodes - these are the Labels above some of the columns (eg. the 'x' above the x position NumberDisplays).
+ *   - Content Nodes - these are the main content Nodes of the column (the NumberDisplays, ball icons, etc.).
+ *   - Label Nodes - these are the Labels above some of the columns (eg. the 'x' above the x-position NumberDisplays).
  *     If the column doesn't have a label, the label will be an empty Node. These are all aligned to have the same
- *     heights vertically in a AlignGroup (provided externally).
+ *     heights vertically in a AlignGroup.
  *
- * BallValuesColumnNodes are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * BallValuesColumnNode takes advantage of the prepopulatedBalls in the BallSystem, which all Balls in the system must
+ * be apart of. Instead of creating a Content Node each time a Ball is added to the system, it creates all the Content
+ * Nodes for every Ball at the start of the sim and adjusts their visibilities based on which Balls are in the
+ * system. There is no performance loss since Balls not in the BallSystem are not stepped or updated (meaning their
+ * values cannot be changed). BallValuesColumnNodes are created at the start of the sim and are never disposed.
  *
  * @author Brandon Li
  */
