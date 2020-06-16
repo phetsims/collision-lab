@@ -14,9 +14,9 @@
  *   - Masses of the Balls (kg).
  *   - Sliders to change the masses.
  *
- * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayArea is 1D, the y
- * component of the BallValues described above are not included. Otherwise, each column of components are grouped
- * together and a title-label is placed above it (like "Position (m)").
+ * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayArea is 1D, the
+ * y-component of the vectored BallValues described above are not included. Otherwise, each column of components are
+ * grouped together and a title-label is placed above the group (like "Position (m)").
  *
  * This panel exists for the entire sim and is never disposed.
  *
@@ -39,13 +39,15 @@ import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
 
-// Create an AlignGroup for each grouping of BallValuesPanelColumnNodes to match the width of each sections of the
-// BallValuesPanel across screens. See https://github.com/phetsims/collision-lab/issues/83#issuecomment-639105292.
-const COLUMN_GROUP_ALIGN_GROUP = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
+// AlignGroup for each group of x (and y) component columns that display the components of vector values of Balls. This
+// is to match the width of column groups across screens, regardless of whether or not the y-component column is
+// included. See https://github.com/phetsims/collision-lab/issues/83#issuecomment-639105292.
+const COMPONENT_COLUMN_GROUP_ALIGN_GROUP = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
-// Create an AlignGroup for the Title Labels above each column group to match the vertical height of each title Text
-// instance across screens.
+// AlignGroup for the title-labels that are placed above each group (like "Position (m)"). This is made to match the
+// vertical height of each title-label across screens, regardless of their scaling.
 const TITLE_ALIGN_GROUP = new AlignGroup( { matchHorizontal: false, matchVertical: true } );
+
 
 class BallValuesPanel extends Panel {
 
@@ -134,7 +136,7 @@ class BallValuesPanel extends Panel {
       return new VBox( {
 
         // Wrap the column group in a align group to match width.
-        children: [ titleNode, COLUMN_GROUP_ALIGN_GROUP.createBox( columnGroup ) ],
+        children: [ titleNode, COMPONENT_COLUMN_GROUP_ALIGN_GROUP.createBox( columnGroup ) ],
         spacing: options.columnGroupsTopMargin
       } );
     };
