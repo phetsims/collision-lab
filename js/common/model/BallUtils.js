@@ -195,95 +195,35 @@ const BallUtils = {
   },
 
   /**
-   * Moves the passed-in Ball away from the other Balls in the system that overlap with it. See
-   * https://github.com/phetsims/collision-lab/issues/100. Does nothing if the Ball isn't overlapping with any other
-   * Balls.
+   * Moves the position of ball1 exactly next to ball2 in a given direction. Used for 'bumping' balls. See
+   * https://github.com/phetsims/collision-lab/issues/100 for context.
    *
-   * This feature was modified from the flash version; the ball that the user is dragging will get "bumped" away, and
-   * won’t affect the position of the other balls.
-   *
-   * This is generally called when the user is **finished** controlling the radius or the position of the Ball, either
-   * through the Keypad or by dragging the Ball. We decided it was most natural and smooth to 'bump' Balls away after
-   * the user interaction. It was also decided that Balls that are bumped away must still be inside the PlayArea.
+   * This method uses the directionVector, which is the vector from the center of the ball2 that points in the
+   * direction of where to set ball1's position. Note that ball2's position is not mutated. The directionVector's
+   * magnitude is set to the sum of the radii of ball1 and ball2 so that ball1 is adjacent to ball2.
    *
    * @public
-   * @param {Ball} ball - the Ball that was just user-controlled.
-   * @param {ObservableArray.<Ball>} balls - all the balls in the system
+   * @param {Ball} ball1 - Position is set.
+   * @param {Ball} ball2 - Position not set.
+   * @param {Vector2} directionVector - the vector from the center of the ball2 that points in the direction
+   *                                    of where to set ball1's position. Won't be mutated.
    */
-  bumpBallFromOtherBalls( ball, balls ) {
-    assert && assert( ball instanceof Ball && balls.contains( ball ), `invalid ball: ${ball}` );
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-
-    // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
-    // are overlapping with the passed-in Ball.
-    let overlappingBall = BallUtils.getClosestOverlappingBall( ball, balls );
-
-    // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
-    const bumpedAwayFromBalls = [];
-
-    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where
-    // Ball is bumped to a position where it overlaps with another Ball. No matter what,
-    // every Ball has a place where it is fully inside the PlayArea.
-    while ( overlappingBall ) {
-      // DirectionVector, which is the unit vector from the center of the colliding Ball that points in the direction of
-      // the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of each other.
-      const directionVector = !ball.position.equals( overlappingBall.position ) ?
-                                ball.position.minus( overlappingBall.position ).normalize() :
-                                Vector2.X_UNIT.copy();
-
-      // Bump the Ball from the overlappingBall, using the directionVector,
-      BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
-      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
-      // before, reverse the directionVector and attempt to bump the Ball again.
-      if ( _.includes( bumpedAwayFromBalls, BallUtils.getClosestOverlappingBall( ball, balls ) ) ) {
-        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
-
-      }
-
-      // Sanity check.
-      assert && assert( BallUtils.getClosestOverlappingBall( ball, balls ) !== overlappingBall );
-
-      // Recompute the overlappingBall for the next iteration.
-      bumpedAwayFromBalls.push( overlappingBall );
-      overlappingBall = BallUtils.getClosestOverlappingBall( ball, balls );
-    }
-
-    // Sanity check.
-    assert && assert( !BallUtils.getClosestOverlappingBall( ball, balls ) );
-  },
-
-  /**
-   * 'Bumps' the position of a Ball that is overlapping with the overlappingBall. See
-   * https://github.com/phetsims/collision-lab/issues/100.
-   *
-   * This method uses the directionVector, which is the vector from the center of the overlappingBall that points in the
-   * direction of where to set the Ball's position.
-   *
-   * The directionVector's magnitude is set to the sum of the radii of the passed-in Ball and the overlappingBall so
-   * that the Balls are no longer overlapping.
-   *
-   * @public
-   * @param {Ball} ball - the Ball whose position is set.
-   * @param {Ball} overlappingBall - the Ball that is overlapping with the passed-in ball. Position not set.
-   * @param {Vector2} directionVector - the vector from the center of the overlappingBall that points in the direction
-   *                                    of where to set the Ball's position. Won't be mutated.
-   */
-  bumpBallFromOverlappingBall( ball, overlappingBall, directionVector ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( overlappingBall instanceof Ball, `invalid overlappingBall: ${overlappingBall}` );
+  moveBallNextToBall( ball1, ball2, directionVector ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
     assert && assert( directionVector instanceof Vector2, `invalid directionVector: ${directionVector}` );
 
-    // Set the directionVector's magnitude to the sum of the radii of the passed-in Ball and the overlappingBall.
+    // Set the directionVector's magnitude to the sum of the radii of ball1 and ball2.
     // The ZERO_THRESHOLD is also added to add a infinitesimally small separation between the Balls.
-    const scaledDirectionVector = directionVector.withMagnitude( overlappingBall.radius
-                                                                 + ball.radius
+    const scaledDirectionVector = directionVector.withMagnitude( ball2.radius
+                                                                 + ball1.radius
                                                                  + CollisionLabConstants.ZERO_THRESHOLD );
 
-    // Set the Ball's position, which is the center of the overlappingBall plus the scaledDirectionVector.
-    ball.position = scaledDirectionVector.add( overlappingBall.position );
+    // Set ball1's, which is the center of ball2 plus the scaledDirectionVector.
+    ball1.position = scaledDirectionVector.add( ball2.position );
 
-    // Sanity check.
-    assert && assert( !BallUtils.areBallsOverlapping( ball, overlappingBall ) );
+    // Sanity check to ensure that the Balls are adjacent to each other.
+    assert && assert( !BallUtils.areBallsOverlapping( ball1, ball2 ) );
   }
 };
 
