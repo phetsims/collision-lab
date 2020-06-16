@@ -204,7 +204,7 @@ const BallUtils = {
    * @param {Ball} ball - the Ball that was just user-controlled.
    * @param {ObservableArray.<Ball>} balls - all the balls in the system
    */
-  moveBallAwayFromOtherBalls( ball, balls ) {
+  bumpBallFromOtherBalls( ball, balls ) {
     assert && assert( ball instanceof Ball && balls.contains( ball ), `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls

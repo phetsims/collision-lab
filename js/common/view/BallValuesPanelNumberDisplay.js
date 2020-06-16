@@ -148,7 +148,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           userControlledProperty.value = true;
 
           keypadDialog.beginEdit( ballProperty, editRange, unit, () => {
-            BallUtils.moveBallAwayFromOtherBalls( ball, balls );
+            BallUtils.bumpBallFromOtherBalls( ball, balls );
             userControlledProperty.value = false;
           } );
         },

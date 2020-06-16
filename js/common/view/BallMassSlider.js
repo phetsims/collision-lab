@@ -48,7 +48,7 @@ class BallMassSlider extends HSlider {
     // https://github.com/phetsims/collision-lab/issues/76
     options.startDrag = () => { ball.massUserControlledProperty.value = true; };
     options.endDrag = () => {
-      BallUtils.moveBallAwayFromOtherBalls( ball, balls );
+      BallUtils.bumpBallFromOtherBalls( ball, balls );
       ball.massUserControlledProperty.value = false;
     };
 

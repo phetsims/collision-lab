@@ -213,10 +213,10 @@ class BallNode extends Node {
     //   // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
     //   Property.lazyMultilink( [ ball.positionUserControlledProperty, ball.massUserControlledProperty ],
     //     ( positionUserControlled, massUserControlled ) => {
-    //       ( !positionUserControlled || !massUserControlled ) && this.moveBallAwayFromOtherBalls( ball, playArea );
+    //       ( !positionUserControlled || !massUserControlled ) && this.bumpBallFromOtherBalls( ball, playArea );
     //     } );
     // } );
-        BallUtils.moveBallAwayFromOtherBalls( ball, balls );
+        BallUtils.bumpBallFromOtherBalls( ball, balls );
         ball.positionUserControlledProperty.value = false;
       }
     } ) );
