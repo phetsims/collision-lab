@@ -51,7 +51,7 @@ const BallUtils = {
    *
    * @public
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
-   * @param {number} radius - the radius of the Ball, in meters
+   * @param {number} radius - the radius of the Ball, in meters.
    * @returns {Bounds2}
    */
   getBallGridSafeConstrainedBounds( playAreaBounds, radius ) {
@@ -68,7 +68,7 @@ const BallUtils = {
   },
 
   /**
-   * Gets the position of a Ball given the delta-time and the Ball, assuming the ball is undergoing ballistic
+   * Gets the position of a Ball given a time-delta and the Ball, assuming the ball is undergoing ballistic
    * motion and is not accelerating or colliding with anything. The delta-time can be negative to get the position
    * of the Ball in the past.
    * @public
@@ -148,11 +148,12 @@ const BallUtils = {
   },
 
   /**
-   * Returns a boolean that indicates if the passed-in balls are physically overlapping.
+   * Returns a boolean that indicates if the passed-in Balls are physically overlapping.
    * @public
    *
    * @param {Ball} ball1
    * @param {Ball} ball2
+   * @returns {boolean}
    */
   areBallsOverlapping( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
@@ -163,27 +164,34 @@ const BallUtils = {
     const distanceBetweenBalls = ball1.position.distance( ball2.position );
     const distanceThreshold = ball1.radius + ball2.radius;
 
-    // If the distance between the Balls is less the sum of the radii, they are overlapping.
+    // If the distance between the Balls is less the sum of the radii, they are overlapping. For the 'collision lab'
+    // simulation, if the distance between the Balls is exactly equal to the sum of their radii, which would mean that
+    // the Balls are tangent to each other, they are NOT overlapping. This is mainly due to Balls after inelastic
+    // collisions that are exactly next to each other but not colliding.
     return distanceBetweenBalls < distanceThreshold;
   },
 
   /**
-   * Gets the first Ball that is overlapping with the passed-in Ball of the system. If the passed-in Ball isn't
-   * overlapping with any of the other Balls in the system, null is returned.
+   * Gets the closest Ball in the system that is overlapping with the passed-in Ball. If the passed-in Ball isn't
+   * overlapping with any of the other Balls in the system, undefined is returned.
    * @public
    *
    * @param {Ball} ball
    * @param {ObservableArray.<Ball>} balls - all the balls in the system
-   * @returns {Ball|null}
+   * @returns {Ball|undefined}
    */
-  getOverlappingBall( ball, balls ) {
+  getClosestOverlappingBall( ball, balls ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls.contains( ball ) );
 
+    // Filter the Balls array to get the Balls that are overlapping with the passed-in Ball.
     const overlappingBalls = balls.filter( otherBall => {
       return otherBall !== ball && BallUtils.areBallsOverlapping( ball, otherBall );
     } );
-    return _.minBy( overlappingBalls, otherBall => otherBall.position.distance( ball.position ) );
+
+    // Get the closest overlappingBall, which has the smallest distance to the passed-in Ball.
+    return _.minBy( overlappingBalls, overlappingBall => ball.position.distance( overlappingBall.position ) );
   },
 
   /**
@@ -208,7 +216,7 @@ const BallUtils = {
 
     // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
     // are overlapping with the passed-in Ball.
-    let overlappingBall = BallUtils.getOverlappingBall( ball, balls );
+    let overlappingBall = BallUtils.getClosestOverlappingBall( ball, balls );
 
     // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
     const bumpedAwayFromBalls = [];
@@ -227,21 +235,21 @@ const BallUtils = {
       BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
       // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
       // before, reverse the directionVector and attempt to bump the Ball again.
-      if ( _.includes( bumpedAwayFromBalls, BallUtils.getOverlappingBall( ball, balls ) ) ) {
+      if ( _.includes( bumpedAwayFromBalls, BallUtils.getClosestOverlappingBall( ball, balls ) ) ) {
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
 
       }
 
       // Sanity check.
-      assert && assert( BallUtils.getOverlappingBall( ball, balls ) !== overlappingBall );
+      assert && assert( BallUtils.getClosestOverlappingBall( ball, balls ) !== overlappingBall );
 
       // Recompute the overlappingBall for the next iteration.
       bumpedAwayFromBalls.push( overlappingBall );
-      overlappingBall = BallUtils.getOverlappingBall( ball, balls );
+      overlappingBall = BallUtils.getClosestOverlappingBall( ball, balls );
     }
 
     // Sanity check.
-    assert && assert( !BallUtils.getOverlappingBall( ball, balls ) );
+    assert && assert( !BallUtils.getClosestOverlappingBall( ball, balls ) );
   },
 
   /**
