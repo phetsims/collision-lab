@@ -65,7 +65,7 @@ const CollisionLabUtils = {
    * Similar to Bounds2.prototype.roundedIn(), but instead of rounding in to the nearest whole number, it rounds inwards
    * to the nearest of any multiple.
    *
-   * For instance, roundedBoundsInToNearest( new Bounds2( -0.28, -0.25, 0.28, 0.25 ), 0.1 )
+   * For instance, roundBoundsInToNearest( new Bounds2( -0.28, -0.25, 0.28, 0.25 ), 0.1 )
    * would return new Bounds2( -0.2, -0.2, 0.2, 0.2 ).
    * @public
    *
@@ -73,11 +73,11 @@ const CollisionLabUtils = {
    * @param {number} multiple - the nearest multiple to round the Bounds in
    * @returns {Bounds2}
    */
-  roundedBoundsInToNearest( bounds, multiple ) {
+  roundBoundsInToNearest( bounds, multiple ) {
     assert && assert( bounds instanceof Bounds2, `invalid bounds: ${bounds}` );
     assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
 
-    return new Bounds2(
+    return bounds.setMinMax(
       Math.ceil( bounds.minX / multiple ) * multiple,
       Math.ceil( bounds.minY / multiple ) * multiple,
       Math.floor( bounds.maxX / multiple ) * multiple,

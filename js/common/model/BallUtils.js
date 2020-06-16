@@ -20,19 +20,19 @@ const BallUtils = {
 
   /**
    * Calculates the radius of a Ball. If the 'Constant Size' checkbox is checked, it uses the constant radius.
-   * Otherwise, the radius is derived from the mass and the density, which is uniform.
-   * @public
+   * Otherwise, the radius is derived from the mass and the uniform density of the Ball.
    *
    * Derivation:
    *   Volume = 4/3 PI * Radius^3
    *     => Density = Mass / Volume = Mass / ( 4/3 PI * Radius^3 )
    *     => Radius = (3/4 * Mass / Density / PI ) ^ 1/3
    *
-   * @param {number} mass - in kg
+   * @public
+   * @param {number} mass - mass of the Ball, in kg.
    * @param {boolean} isConstantSize - indicates if the 'Constant Size' checkbox is checked.
    * @returns {number} - in meters
    */
-  calculateRadius( mass, isConstantSize ) {
+  calculateBallRadius( mass, isConstantSize ) {
     assert && assert( typeof mass === 'number', `invalid mass: ${mass}` );
     assert && assert( typeof isConstantSize === 'boolean', `invalid isConstantSize: ${isConstantSize}` );
 
@@ -42,15 +42,15 @@ const BallUtils = {
   },
 
   /**
-   * Computes the Bounds of the center (position) of the Ball such that:
-   *   (1) The Bounds is constrained such that the Ball is fully inside the PlayArea bounds.
-   *   (2) The edge of the Bounds is on an exact grid-line.
-   * @public
+   * Computes the Bounds of the center-position of the Ball that satisfies the following invariants:
+   *   (1) The Bounds of the PlayArea is eroded inwards such that the Ball is fully inside the PlayArea bounds.
+   *   (2) The edge of the Bounds is eroded inwards further so that it is on an exact grid-line.
    *
    * This Bounds is used when the Ball is dragged with the grid visible to ensure that the Ball isn't snapped to a
-   * position that makes part of the Ball out of Bounds. Also used for position ranges in the Keypad.
+   * grid-line that makes part of the Ball out of Bounds. Also used for position ranges in the Keypad.
    *
-   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea
+   * @public
+   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    * @param {number} radius - the radius of the Ball, in meters
    * @returns {Bounds2}
    */
@@ -62,12 +62,9 @@ const BallUtils = {
     // is eroded by the radius of the ball since the Bounds is the bounding-box of the center of the Ball.
     const constrainedBounds = playAreaBounds.eroded( radius );
 
-    // Round the constrainedBounds inwards to the nearest grid-line to ensure that the Ball's center position is bounded
-    // on an exact grid-line and is fully inside the PlayArea.
-    return CollisionLabUtils.roundedBoundsInToNearest(
-      constrainedBounds,
-      CollisionLabConstants.MINOR_GRIDLINE_SPACING
-    );
+    // Round the constrainedBounds inwards to the nearest grid-line to ensure that the Ball's center-position is bounded
+    // on an exact grid-line AND is fully inside the PlayArea.
+    return CollisionLabUtils.roundBoundsInToNearest( constrainedBounds, CollisionLabConstants.MINOR_GRIDLINE_SPACING );
   },
 
   /**
