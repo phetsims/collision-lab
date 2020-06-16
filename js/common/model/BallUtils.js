@@ -207,7 +207,6 @@ const BallUtils = {
   moveBallAwayFromOtherBalls( ball, balls ) {
     assert && assert( ball instanceof Ball && balls.contains( ball ), `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-
     // Flag that points to the first Ball that overlaps with the passed-in Ball. Will be null if no other balls
     // are overlapping with the passed-in Ball.
     let overlappingBall = BallUtils.getOverlappingBall( ball, balls );
@@ -234,13 +233,19 @@ const BallUtils = {
 
         if ( !ball.playArea.fullyContainsBall( ball ) || BallUtils.getOverlappingBall( ball, balls ) ) {
           invalidOverlappingBalls.push( overlappingBall );
-          BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
+          continue;
         }
       }
       else {
 
         // Bump the Ball from the overlappingBall, using the directionVector,
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
+
+        // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
+        // direction. Rotate the directionVector in increments of Math.PI / 2.
+        while ( ball.playArea.dimensions === 2 && ( !ball.playArea.fullyContainsBall( ball ) || BallUtils.getOverlappingBall( ball, balls ) ) ) {
+          BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
+        }
       }
 
       // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
