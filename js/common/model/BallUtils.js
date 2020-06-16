@@ -211,50 +211,39 @@ const BallUtils = {
     // are overlapping with the passed-in Ball.
     let overlappingBall = BallUtils.getOverlappingBall( ball, balls );
 
-    // Array of the overlapingBalls that we have bumped away from that have led to an invalid bump position where
-    // either the Ball is bumped out-of-bounds or into another Ball. This is used to break infinite loops.
-    const invalidOverlappingBalls = [];
+    // Array of the overlapingBalls that we have bumped away from. This is used to break infinite loops.
+    const bumpedAwayFromBalls = [];
 
-    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where the
+    // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where
     // Ball is bumped to a position where it overlaps with another Ball. No matter what,
     // every Ball has a place where it is fully inside the PlayArea.
     while ( overlappingBall ) {
-
       // DirectionVector, which is the unit vector from the center of the colliding Ball that points in the direction of
       // the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of each other.
       const directionVector = !ball.position.equals( overlappingBall.position ) ?
                                 ball.position.minus( overlappingBall.position ).normalize() :
                                 Vector2.X_UNIT.copy();
 
-      if ( !invalidOverlappingBalls.includes( overlappingBall ) ) {
-
-        // Bump the Ball from the overlappingBall, using the directionVector,
-        BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
-
-        if ( !ball.playArea.fullyContainsBall( ball ) || BallUtils.getOverlappingBall( ball, balls ) ) {
-          invalidOverlappingBalls.push( overlappingBall );
-          continue;
-        }
-      }
-      else {
-
-        // Bump the Ball from the overlappingBall, using the directionVector,
+      // Bump the Ball from the overlappingBall, using the directionVector,
+      BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector );
+      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
+      // before, reverse the directionVector and attempt to bump the Ball again.
+      if ( !ball.playArea.fullyContainsBall( ball ) || _.includes( bumpedAwayFromBalls, BallUtils.getOverlappingBall( ball, balls ) ) ) {
         BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.multiply( -1 ) );
+
 
         // If, at this point, the Ball still isn't fully inside the PlayArea, we have to bump the Ball in a different
         // direction. Rotate the directionVector in increments of Math.PI / 2.
-        while ( ball.playArea.dimensions === 2 && ( !ball.playArea.fullyContainsBall( ball ) || BallUtils.getOverlappingBall( ball, balls ) ) ) {
+        while ( ball.playArea.dimensions === 2 && !ball.playArea.fullyContainsBall( ball ) ) {
           BallUtils.bumpBallFromOverlappingBall( ball, overlappingBall, directionVector.rotate( Math.PI / 2 ) );
         }
       }
-
-      // If the Ball isn't fully inside the PlayArea, or if this Ball has been bumped away from the overlappingBall
-      // before, reverse the directionVector and attempt to bump the Ball again.
 
       // Sanity check.
       assert && assert( BallUtils.getOverlappingBall( ball, balls ) !== overlappingBall );
 
       // Recompute the overlappingBall for the next iteration.
+      bumpedAwayFromBalls.push( overlappingBall );
       overlappingBall = BallUtils.getOverlappingBall( ball, balls );
     }
 
