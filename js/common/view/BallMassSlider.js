@@ -25,7 +25,7 @@ class BallMassSlider extends HSlider {
    */
   constructor( ball, ballSystem, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     options = merge( {
 

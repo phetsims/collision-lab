@@ -39,7 +39,7 @@ class KeypadDialog extends Dialog {
    * @param {Object} [options]
    */
   constructor( options ) {
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     options = merge( {}, CollisionLabColors.PANEL_COLORS, {
 

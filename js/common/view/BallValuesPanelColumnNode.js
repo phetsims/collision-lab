@@ -179,8 +179,5 @@ class BallValuesPanelColumnNode extends VBox {
   }
 }
 
-// @public {BallValuesPanelColumnTypes} - possible types of BallValuesPanelColumnNodes, which determines what is displayed.
-BallValuesPanelColumnNode.BallValuesPanelColumnTypes = BallValuesPanelColumnTypes;
-
 collisionLab.register( 'BallValuesPanelColumnNode', BallValuesPanelColumnNode );
 export default BallValuesPanelColumnNode;

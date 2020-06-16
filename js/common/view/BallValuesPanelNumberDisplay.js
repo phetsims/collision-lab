@@ -27,6 +27,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallSystem from '../model/BallSystem.js';
 import BallUtils from '../model/BallUtils.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
@@ -38,18 +39,22 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Ball} ball - the Ball model
-   * @param {BallValuesPanelColumnTypes} columnType - the Ball Quantity to display
+   * @param {BallValuesPanelColumnTypes} columnType - the type of column that this NumberDisplay appears in.
+   * @param {ballSystem} ballSystem
    * @param {KeypadDialog} keypadDialog
    * @param {Object} [options]
    */
   constructor( ball, columnType, ballSystem, keypadDialog, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+    assert && assert( BallValuesPanelColumnTypes.includes( columnType )
+      && columnType !== BallValuesPanelColumnTypes.BALL_ICONS
+      && columnType !== BallValuesPanelColumnTypes.MASS_SLIDERS, `invalid columnType: ${columnType}` );
 
     // Indicates if the Ball Property can be edited.
-    const canEdit = columnType !== BallValuesPanelColumnTypes.X_MOMENTUM && columnType !== BallValuesPanelColumnTypes.Y_MOMENTUM;
+    const canEdit = columnType !== BallValuesPanelColumnTypes.X_MOMENTUM &&
+                    columnType !== BallValuesPanelColumnTypes.Y_MOMENTUM;
 
     options = merge( {
       align: 'center',
@@ -81,34 +86,26 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
 
     //----------------------------------------------------------------------------------------
 
-    let fireListener; // reference to a FireListener if there is one.
-
     if ( canEdit ) {
+
+      // Get the userControlledProperty that is associated with the columnType.
       let userControlledProperty;
 
-      if ( columnType === BallValuesPanelColumnTypes.MASS ) {
-        userControlledProperty = ball.massUserControlledProperty;
-      }
-      else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) {
-        userControlledProperty = ball.xPositionUserControlledProperty;
-      }
-      else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) {
-        userControlledProperty = ball.yPositionUserControlledProperty;
-      }
-      else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) {
-        userControlledProperty = ball.xVelocityUserControlledProperty;
-      }
-      else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) {
-        userControlledProperty = ball.yVelocityUserControlledProperty;
-      }
+      if ( columnType === BallValuesPanelColumnTypes.MASS ) { userControlledProperty = ball.massUserControlledProperty; }
+      else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { userControlledProperty = ball.xPositionUserControlledProperty; }
+      else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { userControlledProperty = ball.yPositionUserControlledProperty; }
+      else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { userControlledProperty = ball.xVelocityUserControlledProperty; }
+      else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { userControlledProperty = ball.yVelocityUserControlledProperty; }
 
+      // Observe when the user is controlling the ball value that is associated with the column type and adjust the
+      // background fill. Link is never disposed since BallValuesPanelNumberDisplays are never disposed.
       userControlledProperty.link( userControlled => {
         this.backgroundFill = userControlled ? PhetColorScheme.BUTTON_YELLOW : options.backgroundFill;
       } );
 
-      // Create a FireListener that listens to presses and to fire the keypadDialog to allow the user to edit the
-      // ballProperty. Null if canEdit is false. Disposed in the dispose() method.
-      fireListener = new FireListener( {
+      // Observe when the user presses the NumberDisplay and open the KeypadDialog to allow the user to edit the
+      // ballProperty. Listener is never removed since BallValuesPanelNumberDisplays are never disposed.
+      this.addInputListener( new FireListener( {
         fire: () => {
 
           let editRange; // The editing range of the Ball Property.
@@ -144,36 +141,10 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           } );
         },
         fireOnDown: true
-      } );
-
-      this.addInputListener( fireListener );
+      } ) );
     }
-
-    //----------------------------------------------------------------------------------------
-
-    // @private {function} - function that removes listeners. This is called in the dispose() method.
-    this.disposeBallValuesPanelNumberDisplay = () => {
-      if ( this.hasInputListener( fireListener ) ) {
-        this.removeInputListener( fireListener );
-      }
-    };
-  }
-
-  /**
-   * Disposes the BallValuesPanelNumberDisplay, releasing all links that it maintained.
-   * @public
-   * @override
-   *
-   * Called when the Ball is removed from the PlayArea.
-   */
-  dispose() {
-    this.disposeBallValuesPanelNumberDisplay();
-    super.dispose();
   }
 }
-
-// @public {BallValuesPanelColumnTypes} - possible quantities to display and/or allow the user to edit.
-BallValuesPanelNumberDisplay.BallValuesPanelColumnTypes = BallValuesPanelColumnTypes;
 
 collisionLab.register( 'BallValuesPanelNumberDisplay', BallValuesPanelNumberDisplay );
 export default BallValuesPanelNumberDisplay;

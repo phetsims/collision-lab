@@ -27,7 +27,7 @@ class MomentaDiagramZoomControlSet extends HBox {
    */
   constructor( momentaDiagram, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     options = merge( {
 

@@ -22,7 +22,7 @@ class XNode extends PlusNode {
    * @param {Object} [options]
    */
   constructor( options ) {
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     options = merge( {}, CollisionLabColors.CENTER_OF_MASS_COLORS, {
 

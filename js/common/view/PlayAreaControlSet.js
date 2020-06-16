@@ -38,7 +38,7 @@ class PlayAreaControlSet extends VBox {
     assert && assert( numberOfBallsProperty instanceof Property && typeof numberOfBallsProperty.value === 'number', `invalid numberOfBallsProperty: ${numberOfBallsProperty}` );
     assert && assert( numberOfBallsRange instanceof Range, `invalid numberOfBallsRange: ${numberOfBallsRange}` );
     assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     options = merge( {
 

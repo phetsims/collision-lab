@@ -33,7 +33,7 @@ class PlayAreaNumberDisplay extends NumberDisplay {
   constructor( numberProperty, visibleProperty, options ) {
     assert && AssertUtils.assertPropertyOf( numberProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `invalid options: ${options}` );
+
 
     //----------------------------------------------------------------------------------------
 
