@@ -1,9 +1,10 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View-specific Properties for the sim. Can be subclassed to add more Properties.
+ * Properties that are only used within the view hierarchy of the 'Collision Lab' simulation.
  *
  * @author Martin Veillette
+ * @author Brandon Li
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
@@ -13,46 +14,34 @@ class CollisionLabViewProperties {
 
   constructor() {
 
-    // @public indicates if the velocity vector on each ball is visible
+    // @public {BooleanProperty} - indicates if the velocity vectors of Balls are visible.
     this.velocityVectorVisibleProperty = new BooleanProperty( true );
 
-    // @public indicates if the momentum vector on each ball is visible
+    // @public {BooleanProperty} - indicates if the momentum vectors of Balls are visible.
     this.momentumVectorVisibleProperty = new BooleanProperty( false );
 
-    // @public controls the visibility of the kinetic energy numberDisplay
-    this.kineticEnergyVisibleProperty = new BooleanProperty( false );
-
-    // @public indicates if the labels for the velocity and momentum are present on each ball
+    // @public {BooleanProperty} - indicates if the Ball 'values' NumberDisplays that appear next to Balls are visible.
     this.valuesVisibleProperty = new BooleanProperty( false );
 
-    // @public indicates if the momenta diagram is expanded.
-    this.momentaDiagramExpandedProperty = new BooleanProperty( false );
+    // @public {BooleanProperty} - indicates if the Kinetic Energy NumberDisplay is visible.
+    this.kineticEnergyVisibleProperty = new BooleanProperty( false );
 
-    // @public indicates if the momenta are arranged tip to tail in the momenta diagram
-    this.tipToTailProperty = new BooleanProperty( false );
-
-    // @public indicates if the more Data panel is visible
+    // @public {BooleanProperty} - indicates if the 'More Data' in the BallValuesPanel is visible.
     this.moreDataVisibleProperty = new BooleanProperty( false );
   }
 
   /**
-   * Resets the view properties
+   * Resets the CollisionLabViewProperties.
    * @public
+   *
+   * Called when the reset-all button is pressed.
    */
   reset() {
     this.velocityVectorVisibleProperty.reset();
     this.momentumVectorVisibleProperty.reset();
-    this.kineticEnergyVisibleProperty.reset();
     this.valuesVisibleProperty.reset();
-    this.momentaDiagramExpandedProperty.reset();
-    this.tipToTailProperty.reset();
-  }
-
-  /**
-   * @public
-   */
-  dispose() {
-    assert && assert( false, 'CollisionLabViewProperties are not intended to be disposed' );
+    this.kineticEnergyVisibleProperty.reset();
+    this.moreDataVisibleProperty.reset();
   }
 }
 
