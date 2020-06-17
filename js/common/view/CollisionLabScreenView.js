@@ -224,12 +224,11 @@ class CollisionLabScreenView extends ScreenView {
 
     // Add the PlayAreaControlSet if it is included.
     if ( options.includePlayAreaControlSet ) {
-
       const playAreaControlSet = new PlayAreaControlSet(
         model.ballSystem.numberOfBallsProperty,
         model.ballSystem.numberOfBallsRange,
         model.playArea.gridVisibleProperty, merge( {
-          left: playAreaViewBounds.left + 5,
+          left: playAreaViewBounds.right + 5,
           top: playAreaViewBounds.top + 5
         }, options.playAreaControlSetOptions ) );
 
