@@ -88,7 +88,7 @@ class CollisionLabScreenView extends ScreenView {
     // Create the view-specific properties for the screen.
     const viewProperties = new CollisionLabViewProperties();
 
-    // Convenience reference to the view-bounds of the PlayArea. Used for layouting.
+    // Convenience reference to the view-bounds of the PlayArea. Used for layout.
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( model.playArea.bounds );
 
     //----------------------------------------------------------------------------------------
