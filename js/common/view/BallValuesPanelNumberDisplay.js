@@ -26,6 +26,7 @@ import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -67,8 +68,8 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT
       },
-      backgroundStroke: canEdit ? 'black' : null,
-      backgroundFill: canEdit ? 'white' : null,
+      backgroundStroke: canEdit ? Color.BLACK : null,
+      backgroundFill: canEdit ? Color.WHITE : null,
       cursor: canEdit ? 'pointer' : null,
       backgroundLineWidth: 0.5,
       yMargin: 3,
