@@ -12,6 +12,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
@@ -29,6 +30,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
+   * @param {Object} [options]
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
@@ -36,7 +38,8 @@ class IntroControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
-               ballsConstantSizeProperty ) {
+               ballsConstantSizeProperty,
+               options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
     assert && assert( changeInMomentumVisibleProperty instanceof Property && typeof changeInMomentumVisibleProperty.value === 'boolean', `invalid changeInMomentumVisibleProperty: ${changeInMomentumVisibleProperty}` );
@@ -45,17 +48,20 @@ class IntroControlPanel extends CollisionLabControlPanel {
     assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
     assert && assert( ballsConstantSizeProperty instanceof Property && typeof ballsConstantSizeProperty.value === 'boolean', `invalid ballsConstantSizeProperty: ${ballsConstantSizeProperty}` );
 
+    options = merge( {
+      includeReflectingBorderCheckbox: false,
+      elasticityControlSetNodeOptions: {
+        includeStickSlipSwitch: false
+      }
+    }, options );
+
     super( viewProperties,
            centerOfMassVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,
-           ballsConstantSizeProperty, {
-             includeReflectingBorderCheckbox: false,
-             elasticityControlSetNodeOptions: {
-                includeStickSlipSwitch: false
-             }
-           } );
+           ballsConstantSizeProperty,
+           options );
 
     //----------------------------------------------------------------------------------------
 

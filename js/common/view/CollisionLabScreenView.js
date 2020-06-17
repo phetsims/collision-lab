@@ -247,9 +247,10 @@ class CollisionLabScreenView extends ScreenView {
    * @protected
    * @param {CollisionLabViewProperties} viewProperties
    * @param {CollisionLabModel} model
+   * @param {Object} [options]
    * @returns {CollisionLabControlPanel}
    */
-  createControlPanel( viewProperties, model ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createControlPanel( viewProperties, model, options ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * @abstract

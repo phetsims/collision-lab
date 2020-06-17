@@ -6,11 +6,14 @@
  * @author BrandonLi
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
+import merge from '../../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
+import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
+import IntroModel from '../model/IntroModel.js';
 import IntroBallSystemNode from './IntroBallSystemNode.js';
 import IntroControlPanel from './IntroControlPanel.js';
 
@@ -19,37 +22,68 @@ class IntroScreenView extends CollisionLabScreenView {
   /**
    * @param {IntroModel} model
    * @param {Tandem} tandem
+   * @param {Object} [options]
    */
-  constructor( model, tandem ) {
-
+  constructor( model, tandem, options ) {
+    assert && assert( model instanceof IntroModel, `invalid model: ${model}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( model, tandem, {
-      playAreaLeftTop: new Vector2( CollisionLabConstants.PLAY_AREA_LEFT, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D ),
+    options = merge( {
+
+      playAreaTop: CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D,
       playAreaControlSetOptions: {
         includeGridCheckbox: false
-      }
-    } );
+      },
+      includePlayAreaControlSet: false
+
+    }, options );
+
+    super( model, tandem, options );
   }
 
-  // @protected
-  createControlPanel( viewProperties, model ) {
-    return new IntroControlPanel( viewProperties,
+  /**
+   * Creates the CollisionLabControlPanel for the 'Explore 1D' screen. Called in the constructor of the super-class. For
+   * this screen, his method will instantiate a sub-type of CollisionLabControlPanel: IntroControlPanel.
+   *
+   * @override
+   * @protected
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {IntroModel} model
+   * @param {Object} [options]
+   * @returns {IntroControlPanel}
+   */
+  createControlPanel( viewProperties, model, options ) {
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( model instanceof IntroModel, `invalid model: ${model}` );
+
+    return new IntroControlPanel(
+      viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
       model.ballSystem.changeInMomentumVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.ballsConstantSizeProperty, {
-        elasticityControlSetNodeOptions: {
-          includeStickSlipSwitch: false
-        }
-      } );
+      model.ballSystem.ballsConstantSizeProperty,
+      options
+    );
   }
 
-
-  // @protected
+  /**
+   * Creates the BallSystemNode for the 'Explore 1D' screen. Called in the constructor of the super-class. For this
+   * screen, his method will instantiate a sub-type of BallSystemNode: IntroBallSystemNode.
+   *
+   * @override
+   * @protected
+   * @param {IntroModel} model
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {ModelViewTransform2} modelViewTransform
+   * @returns {IntroBallSystemNode}
+   */
   createBallSystemNode( model, viewProperties, modelViewTransform ) {
+    assert && assert( model instanceof IntroModel, `invalid model: ${model}` );
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
+
     return new IntroBallSystemNode( model.ballSystem,
         model.playArea,
         viewProperties.valuesVisibleProperty,

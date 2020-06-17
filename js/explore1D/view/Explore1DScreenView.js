@@ -7,23 +7,25 @@
  */
 
 import merge from '../../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
-import IntroModel from '../../intro/model/IntroModel.js';
+import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
+import Explore1DModel from '../../intro/model/Explore1DModel.js';
 
 class Explore1DScreenView extends CollisionLabScreenView {
 
   /**
-   * @param {IntroModel} model
+   * @param {Explore1DModel} model
    * @param {Tandem} tandem
    * @param {Object} [options]
    */
   constructor( model, tandem, options ) {
-    assert && assert( model instanceof IntroModel, `invalid model: ${model}` );
+    assert && assert( model instanceof Explore1DModel, `invalid model: ${model}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     options = merge( {
@@ -43,17 +45,22 @@ class Explore1DScreenView extends CollisionLabScreenView {
    * @override
    * @protected
    * @param {CollisionLabViewProperties} viewProperties
-   * @param {CollisionLabModel} model
+   * @param {Explore1DModel} model
+   * @param {Object} [options]
    * @returns {CollisionLabControlPanel}
    */
-  createControlPanel( viewProperties, model ) {
+  createControlPanel( viewProperties, model, options ) {
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( model instanceof Explore1DModel, `invalid model: ${model}` );
+
     return new CollisionLabControlPanel(
       viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.ballsConstantSizeProperty
+      model.ballSystem.ballsConstantSizeProperty,
+      options
     );
   }
 
@@ -62,19 +69,25 @@ class Explore1DScreenView extends CollisionLabScreenView {
    *
    * @override
    * @protected
-   * @param {CollisionLabModel} model
+   * @param {Explore1DModel} model
    * @param {CollisionLabViewProperties} viewProperties
    * @param {ModelViewTransform2} modelViewTransform
    * @returns {BallSystemNode}
    */
   createBallSystemNode( model, viewProperties, modelViewTransform ) {
-    return new BallSystemNode( model.ballSystem,
+    assert && assert( model instanceof Explore1DModel, `invalid model: ${model}` );
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
+
+    return new BallSystemNode(
+      model.ballSystem,
       model.playArea,
       viewProperties.valuesVisibleProperty,
       viewProperties.velocityVectorVisibleProperty,
       viewProperties.momentumVectorVisibleProperty,
       model.isPlayingProperty,
-      modelViewTransform );
+      modelViewTransform
+    );
   }
 }
 
