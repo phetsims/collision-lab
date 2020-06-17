@@ -129,8 +129,8 @@
   "momentumPattern": {
     "value": "|p| = {{value}} kg m/s"
   },
-  "changeInP": {
-    "value": "Change in p"
+  "changeInMomentum": {
+    "value": "Change in Momentum"
   },
   "balls": {
     "value": "Balls"

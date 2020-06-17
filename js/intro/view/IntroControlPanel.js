@@ -59,8 +59,8 @@ class IntroControlPanel extends CollisionLabControlPanel {
 
     //----------------------------------------------------------------------------------------
 
-    // 'Change in P' visibility Checkbox.
-    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, collisionLabStrings.changeInP );
+    // 'Change in Momentum' visibility Checkbox.
+    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, collisionLabStrings.changeInMomentum );
 
     // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.centerOfMassCheckbox ), changeInMomentumCheckbox );
