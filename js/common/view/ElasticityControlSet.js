@@ -17,6 +17,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
@@ -33,6 +34,7 @@ import InelasticCollisionTypes from '../model/InelasticCollisionTypes.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
+const ELASTICITY_PERCENT_INTERVAL = 5;
 const TOGGLE_SWITCH_SIZE = new Dimension2( 28, 12 );
 
 class ElasticityControlSet extends VBox {
@@ -104,6 +106,7 @@ class ElasticityControlSet extends VBox {
             { value: ELASTICITY_PERCENT_RANGE.min, label: inelasticLabel },
             { value: ELASTICITY_PERCENT_RANGE.max, label: elasticLabel }
           ],
+          constrainValue: value => Utils.roundToInterval( value, ELASTICITY_PERCENT_INTERVAL ),
           majorTickLength: 5,
           tickLabelSpacing: 10,
           thumbSize: new Dimension2( 14, 24 ),
