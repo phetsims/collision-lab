@@ -34,7 +34,6 @@ class PlayAreaNumberDisplay extends NumberDisplay {
     assert && AssertUtils.assertPropertyOf( numberProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
 
-
     //----------------------------------------------------------------------------------------
 
     options = merge( {
@@ -46,7 +45,7 @@ class PlayAreaNumberDisplay extends NumberDisplay {
       visibleProperty: null,
 
       // superclass options
-      align: 'left',
+      align: 'center',
       backgroundFill: CollisionLabColors.PLAY_AREA_NUMBER_DISPLAY_FILL,
       backgroundLineWidth: 0,
       maxWidth: 150,
