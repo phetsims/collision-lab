@@ -50,23 +50,16 @@ const MODEL_TO_VIEW_SCALE = 153; // Meter to view coordinates scale factor.
 const PLAY_AREA_LEFT = 55;
 const BALL_VALUES_PANEL_TOP = 420;
 
+// @abstract
 class CollisionLabScreenView extends ScreenView {
 
   /**
    * @param {CollisionLabModel} model
-   * @param {CollisionLabControlPanel} controlPanel
-   * @param {BallSystemNode} ballSystemNode
    * @param {Tandem} tandem
    * @param {Object} [options]
    */
-  constructor( model,
-               controlPanel,
-               ballSystemNode,
-               tandem,
-               options ) {
+  constructor( model, tandem, options ) {
     assert && assert( model instanceof CollisionLabModel, `invalid model: ${model}` );
-    assert && assert( controlPanel instanceof CollisionLabControlPanel, `invalid controlPanel: ${controlPanel}` );
-    assert && assert( ballSystemNode instanceof BallSystemNode, `invalid ballSystemNode: ${ballSystemNode}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     options = merge( {
@@ -109,6 +102,9 @@ class CollisionLabScreenView extends ScreenView {
       viewProperties.kineticEnergyVisibleProperty,
       modelViewTransform
     );
+
+    // BallSystem
+    const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
 
     // Scale Bar
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
@@ -194,9 +190,11 @@ class CollisionLabScreenView extends ScreenView {
       left: playAreaViewBounds.left
     } );
 
-    // Position the ControlPanel
-    controlPanel.right = this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
-    controlPanel.top = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
+    // ControlPanel
+    const controlPanel = this.createControlPanel( viewProperties, model, {
+      right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
+      top: CollisionLabConstants.SCREEN_VIEW_Y_MARGIN
+    } );
 
     // Momenta Diagram
     const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.ballSystem.balls, {
@@ -241,6 +239,32 @@ class CollisionLabScreenView extends ScreenView {
       playAreaControlSet.moveToBack();
     }
   }
+
+  /**
+   * @abstract
+   * Creates the ControlPanel for the screen. Called in the constructor of the CollisionLabScreenView. This is an
+   * abstract method because some screens use sub-types of CollisionLabControlPanel and have different APIs, but all
+   * screens have a CollisionLabControlPanel.
+   *
+   * @protected
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {CollisionLabModel} model
+   * @returns {CollisionLabControlPanel}
+   */
+  createControlPanel( viewProperties, model ) { assert && assert( false, 'abstract method must be overridden' ); }
+
+  /**
+   * @abstract
+   * Creates the ControlPanel for the screen. Called in the constructor of the CollisionLabScreenView. This is an
+   * abstract method because some screens use sub-types of BallSystemNode, but all screens have a BallSystemNode.
+   *
+   * @protected
+   * @param {CollisionLabModel} model
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {ModelViewTransform2} modelViewTransform
+   * @returns {BallSystemNode}
+   */
+  createBallSystemNode( model, viewProperties, modelViewTransform ) { assert && assert( false, 'abstract method must be overridden' ); }
 }
 
 collisionLab.register( 'CollisionLabScreenView', CollisionLabScreenView );

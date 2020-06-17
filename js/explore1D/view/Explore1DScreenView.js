@@ -18,10 +18,25 @@ class Explore1DScreenView extends CollisionLabScreenView {
   /**
    * @param {IntroModel} model
    * @param {Tandem} tandem
+   * @param {Object} [options]
    */
   constructor( model, tandem ) {
-
+    assert && assert( model instanceof IntroModel, `invalid model: ${model}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    // Create the ControlPanel for the 'Explore 1D' screen.
+    const controlPanel = new CollisionLabControlPanel( viewProperties,
+      model.ballSystem.centerOfMassVisibleProperty,
+      model.playArea.reflectingBorderProperty,
+      model.playArea.elasticityPercentProperty,
+      model.playArea.inelasticCollisionTypeProperty,
+      model.ballSystem.ballsConstantSizeProperty, {
+        elasticityControlSetNodeOptions: {
+          includeStickSlipSwitch: false
+        }
+      } );
+
+    // Create the BallSystemNode for the 'Explore 1D' screen.
 
     super( model, tandem, {
       playAreaLeftTop: new Vector2( CollisionLabConstants.PLAY_AREA_LEFT, CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D ),
@@ -33,16 +48,7 @@ class Explore1DScreenView extends CollisionLabScreenView {
 
   // @protected
   createControlPanel( viewProperties, model ) {
-    return new CollisionLabControlPanel( viewProperties,
-      model.ballSystem.centerOfMassVisibleProperty,
-      model.playArea.reflectingBorderProperty,
-      model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.ballsConstantSizeProperty, {
-        elasticityControlSetNodeOptions: {
-          includeStickSlipSwitch: false
-        }
-      } );
+    return
   }
 }
 
