@@ -2,7 +2,7 @@
 
 /**
  * A Ball is the model for a single spherical moving object and appears in all screens. Each Ball is a apart of a
- * isolated system of multiple Balls in BallSystem. Balls are implemented to work generally for both 1D and 2D
+ * isolated system of multiple Balls in a BallSystem. Balls are implemented to work generally for both 1D and 2D
  * screens.
  *
  * Primary responsibilities are:
