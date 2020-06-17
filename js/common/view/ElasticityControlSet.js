@@ -58,7 +58,7 @@ class ElasticityControlSet extends VBox {
       // {Object} - passed to the tick Text instances.
       tickTextOptions: {
         font: new PhetFont( 12 ),
-        maxWidth: 40 // constrain width for i18n, determined empirically
+        maxWidth: 45 // constrain width for i18n, determined empirically
       },
 
       // {boolean} - indicates if the stick-slip APSwitch is included
@@ -77,22 +77,21 @@ class ElasticityControlSet extends VBox {
 
     super( options );
 
-    //----------------------------------------------------------------------------------------
+    //------------------------------------------w----------------------------------------------
 
     // Create AlignGroups for the Text Nodes to match their widths.
-    const tickAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
     const stickSlipAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
     // Create the Text Nodes that appear in the ElasticityControlSet
-    const inelasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.inelastic, options.tickTextOptions ) );
-    const elasticLabel = tickAlignGroup.createBox( new Text( collisionLabStrings.elastic, options.tickTextOptions ) );
+    const inelasticLabel = new Text( collisionLabStrings.inelastic, options.tickTextOptions );
+    const elasticLabel = new Text( collisionLabStrings.elastic, options.tickTextOptions );
     const stickLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.stick, options.stickSlipTextOptions ) );
     const slipLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.slip, options.stickSlipTextOptions ) );
 
     //----------------------------------------------------------------------------------------
 
     // Compute the width of the track to ensure the NumberControl fits in control-panels.
-    const trackWidth = CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH - tickAlignGroup.maxWidth;
+    const trackWidth = CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH - ( inelasticLabel.width + elasticLabel.width ) / 2;
 
     // Create the 'Elasticity' NumberControl.
     const elasticityNumberControl = new NumberControl( collisionLabStrings.elasticity,
