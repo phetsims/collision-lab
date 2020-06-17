@@ -23,7 +23,6 @@ class XNode extends PlusNode {
    */
   constructor( options ) {
 
-
     options = merge( {}, CollisionLabColors.CENTER_OF_MASS_COLORS, {
 
       legThickness: 6, // {number} - thickness of the legs of the 'x'
