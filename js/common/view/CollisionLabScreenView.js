@@ -3,12 +3,11 @@
 /**
  * Root class (to be subclassed) for the top-level view of every screen in the 'Collision Lab' simulation.
  *
- * Contains these UI components:
+ * Displays these components:
  *   Balls
- *   PlayArea
+ *   PlayArea, Scale Bar, Kinetic Energy NumberDisplay
  *   PlayAreaControlSet
- *   Elapsed Time NumberDisplay
- *   Restart button
+ *   Restart button and Elapsed Time NumberDisplay
  *   BallValuesPanel
  *   Momenta Diagram
  *   Control Panel
