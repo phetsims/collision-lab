@@ -34,7 +34,7 @@ class Explore2DScreenView extends CollisionLabScreenView {
     return new Explore2DControlPanel(
       viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
-      model.ballSystem.changeInMomentumVisibleProperty,
+      model.ballSystem.pathVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,

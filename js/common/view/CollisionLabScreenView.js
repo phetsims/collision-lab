@@ -106,10 +106,10 @@ class CollisionLabScreenView extends ScreenView {
 
     // Scale Bar
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
-      scaleBarOrientation: model.playArea.dimensions === 1 ? Orientation.HORIZONTAL : Orientation.VERTICAL,
-      leftBottom: model.playArea.dimensions === 1 ? playAreaViewBounds.leftTop.minusXY( 0, 5 ) : null,
-      rightTop: model.playArea.dimensions === 2 ? playAreaViewBounds.leftTop.minusXY( 5, 0 ) : null
+      scaleBarOrientation: model.playArea.dimensions === 1 ? Orientation.HORIZONTAL : Orientation.VERTICAL
     } );
+    model.playArea.dimensions === 1 && scaleBar.setLeftBottom( playAreaViewBounds.leftTop.minusXY( 0, 5 ) );
+    model.playArea.dimensions === 2 && scaleBar.setRightTop( playAreaViewBounds.leftTop.minusXY( 5, 0 ) );
 
     // Kinetic Energy NumberDisplay
     const kineticEnergyNumberDisplay = new KineticEnergyNumberDisplay(

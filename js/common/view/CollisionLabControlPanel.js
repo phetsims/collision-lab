@@ -151,6 +151,9 @@ class CollisionLabControlPanel extends Panel {
       // Add the Reflecting Border Checkbox after the values Checkbox.
       contentNode.insertChild( contentNode.indexOfChild( this.valuesCheckbox ) + 1, reflectingBorderCheckbox );
     }
+
+    // Apply additional Bounds mutators.
+    this.mutate( options );
   }
 }
 
