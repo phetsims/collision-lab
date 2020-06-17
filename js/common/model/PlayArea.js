@@ -19,7 +19,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -147,7 +146,6 @@ class PlayArea {
   get right() { return this.bounds.maxX; }
   get bottom() { return this.bounds.minY; }
   get top() { return this.bounds.maxY; }
-  get leftTop() { return new Vector2( this.left, this.top ); }
 
   //----------------------------------------------------------------------------------------
 

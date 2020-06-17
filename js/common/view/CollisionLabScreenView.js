@@ -7,6 +7,7 @@
  *   Balls
  *   PlayArea, Scale Bar, Kinetic Energy NumberDisplay
  *   PlayAreaControlSet
+ *   Return Balls Button
  *   Restart button and Elapsed Time NumberDisplay
  *   BallValuesPanel
  *   Momenta Diagram
@@ -45,91 +46,101 @@ import RestartButton from './RestartButton.js';
 import ReturnBallsButton from './ReturnBallsButton.js';
 
 // constants
-const MODEL_TO_VIEW_SCALE = 153; // meter to view coordinates (1 m = 200 coordinates)
-const SCREEN_VIEW_X_MARGIN = CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
-const SCREEN_VIEW_Y_MARGIN = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
-const KINETIC_ENERGY_DISPLAY_MARGIN = 5;
+const MODEL_TO_VIEW_SCALE = 153; // Meter to view coordinates scale factor.
+const PLAY_AREA_LEFT = 55;
+const BALL_VALUES_PANEL_TOP = 420;
 
 class CollisionLabScreenView extends ScreenView {
 
   /**
    * @param {CollisionLabModel} model
+   * @param {CollisionLabControlPanel} controlPanel
+   * @param {BallSystemNode} ballSystemNode
    * @param {Tandem} tandem
+   * @param {Object} [options]
    */
-  constructor( model, tandem, options ) {
-
+  constructor( model,
+               controlPanel,
+               ballSystemNode,
+               tandem,
+               options ) {
     assert && assert( model instanceof CollisionLabModel, `invalid model: ${model}` );
+    assert && assert( controlPanel instanceof CollisionLabControlPanel, `invalid controlPanel: ${controlPanel}` );
+    assert && assert( ballSystemNode instanceof BallSystemNode, `invalid ballSystemNode: ${ballSystemNode}` );
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-    super();
 
     options = merge( {
 
-      playAreaLeftTop: new Vector2( CollisionLabConstants.PLAY_AREA_LEFT, SCREEN_VIEW_Y_MARGIN ),
+      // {number} - the top of the PlayArea, in view coordinates.
+      playAreaTop: CollisionLabConstants.SCREEN_VIEW_Y_MARGIN,
 
+      // {boolean} - indicates if the PlayAreaControlSet is included.
       includePlayAreaControlSet: true,
-      playAreaControlSetOptions: null,
 
-      controlPanelOptions: null
+      // {Object} - options to passed to the PlayAreaControlSet. Ignored if includePlayAreaControlSet is false.
+      playAreaControlSetOptions: null
 
     }, options );
 
+    super( options );
+
+    //----------------------------------------------------------------------------------------
+
+    // Create the ModelViewTransform for the view hierarchy, which maps the coordinates of the PlayArea (meters) to view
+    // coordinates. Uses an inverted mapping so that +y is downwards in the view coordinate frame.
     const modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      model.playArea.bounds.leftBottom,
-      options.playAreaLeftTop,
+      new Vector2( model.playArea.left, model.playArea.top ),
+      new Vector2( PLAY_AREA_LEFT, options.playAreaTop ),
       MODEL_TO_VIEW_SCALE
     );
 
-    // create the view properties for the view
+    // Create the view-specific properties for the screen.
     const viewProperties = new CollisionLabViewProperties();
 
-    // create the grid and border of the playArea
+    // Convenience reference to the view-bounds of the PlayArea. Used for layouting.
+    const playAreaViewBounds = modelViewTransform.modelToViewBounds( model.playArea.bounds );
+
+    //----------------------------------------------------------------------------------------
+
+    // PlayArea
     const playAreaNode = new PlayAreaNode(
       model.playArea,
       model.playArea.gridVisibleProperty,
       viewProperties.kineticEnergyVisibleProperty,
       modelViewTransform
     );
-    this.addChild( playAreaNode );
 
-    const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
-    this.addChild( ballSystemNode );
-
+    // Scale Bar
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
-      scaleBarOrientation: model.playArea.dimensions === 1 ? Orientation.HORIZONTAL : Orientation.VERTICAL
+      scaleBarOrientation: model.playArea.dimensions === 1 ? Orientation.HORIZONTAL : Orientation.VERTICAL,
+      leftBottom: model.playArea.dimensions === 1 ? playAreaViewBounds.leftTop.minusXY( 0, 5 ) : null,
+      rightTop: model.playArea.dimensions === 2 ? playAreaViewBounds.leftTop.minusXY( 5, 0 ) : null
     } );
-    if ( model.playArea.dimensions === 1 ) {
-      scaleBar.leftBottom = modelViewTransform.modelToViewPosition( model.playArea.leftTop ).minusXY( 0, 5 );
-    }
-    else {
-      scaleBar.rightTop = modelViewTransform.modelToViewPosition( model.playArea.leftTop ).minusXY( 5, 0 );
-    }
-    this.addChild( scaleBar );
 
-    const kineticEnergyDisplay = new KineticEnergyNumberDisplay( model.ballSystem.totalKineticEnergyProperty,
+    // Kinetic Energy NumberDisplay
+    const kineticEnergyNumberDisplay = new KineticEnergyNumberDisplay(
+      model.ballSystem.totalKineticEnergyProperty,
       viewProperties.kineticEnergyVisibleProperty, {
-        left: playAreaNode.left + KINETIC_ENERGY_DISPLAY_MARGIN,
-        bottom: playAreaNode.bottom - KINETIC_ENERGY_DISPLAY_MARGIN
+        left: playAreaViewBounds.left + 5,
+        bottom: playAreaViewBounds.bottom - 5
       } );
-    this.addChild( kineticEnergyDisplay );
 
+    // Return Balls Button
+    const returnBallsButton = new ReturnBallsButton( model.ballSystem.ballsNotInsidePlayAreaProperty, {
+      center: playAreaViewBounds.center,
+      listener: model.returnBalls.bind( model )
+    } );
 
+    //----------------------------------------------------------------------------------------
 
-    if ( options.includePlayAreaControlSet ) {
-      const playAreaControlSet = new PlayAreaControlSet( model.ballSystem.numberOfBallsProperty, model.ballSystem.numberOfBallsRange, model.playArea.gridVisibleProperty, merge( {
-        left: playAreaNode.right + 5,
-        top: modelViewTransform.modelToViewY( model.playArea.bounds.maxY ) + 5
-      }, options.playAreaControlSetOptions ) );
+    // Elapsed Time NumberDisplay
+    const elapsedTimeNumberDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty, {
+      left: playAreaViewBounds.left,
+      top: playAreaViewBounds.bottom + 10
+    } );
 
-      this.addChild( playAreaControlSet );
-    }
-
-    const timeDisplay = new ElapsedTimeNumberDisplay( model.elapsedTimeProperty );
-    this.addChild( timeDisplay );
-    timeDisplay.left = ( options.playAreaLeftTop.x );
-    timeDisplay.top = playAreaNode.bottom + 10;
-
-    const collisionLabTimeControlNode = new CollisionLabTimeControlNode(
+    // Time controls (play/pause, step buttons)
+    const timeControlNode = new CollisionLabTimeControlNode(
       model.isPlayingProperty,
       model.playArea.elasticityPercentProperty,
       model.elapsedTimeProperty,
@@ -138,94 +149,97 @@ class CollisionLabScreenView extends ScreenView {
       model.stepBackward.bind( model ),
       model.stepForward.bind( model )
     );
-    const playPauseButtonCenter = playAreaNode.centerBottom.plusXY( 0, collisionLabTimeControlNode.height / 2 + 10 );
-    collisionLabTimeControlNode.setPlayPauseButtonCenter( playPauseButtonCenter );
-    this.addChild( collisionLabTimeControlNode );
+    timeControlNode.setPlayPauseButtonCenter( playAreaViewBounds.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
 
-    // create and add restart button
+    // Restart Button
     const restartButton = new RestartButton( {
-      listener: () => {
-        model.restart();
-      },
-      right: playAreaNode.right,
-      centerY: timeDisplay.centerY
+      listener: model.restart.bind( model ),
+      right: playAreaViewBounds.right,
+      centerY: elapsedTimeNumberDisplay.centerY
     } );
-    this.addChild( restartButton );
 
+    // Reset All Button
     const resetAllButton = new ResetAllButton( {
       listener: () => {
         model.reset();
         viewProperties.reset();
       },
-      right: this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN,
-      bottom: this.layoutBounds.maxY - SCREEN_VIEW_Y_MARGIN,
-      tandem: tandem.createTandem( 'resetAllButton' )
+      right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
+      bottom: this.layoutBounds.maxY - CollisionLabConstants.SCREEN_VIEW_Y_MARGIN
     } );
-    this.addChild( resetAllButton );
 
+    //----------------------------------------------------------------------------------------
 
-    const playAreaControlPanel = this.createControlPanel( viewProperties, model );
-    playAreaControlPanel.right = this.layoutBounds.maxX - SCREEN_VIEW_X_MARGIN;
-    playAreaControlPanel.top = SCREEN_VIEW_Y_MARGIN;
-    this.addChild( playAreaControlPanel );
-
-
-    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.ballSystem.balls, {
-      dimensions: model.playArea.dimensions,
-      centerX: playAreaControlPanel.centerX,
-      top: playAreaControlPanel.bottom + 8
-    } );
-    this.addChild( momentaDiagram );
-
-    const keypad = new KeypadDialog( {
+    // KeypadDialog
+    const keypadDialog = new KeypadDialog( {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
-        keypadDialog.leftBottom = this.localToGlobalPoint( ballValuesPanel.rightBottom.plusXY( 10, 0 ) ).times( 1 / scale );
+        keypadDialog.leftBottom = this.localToGlobalPoint( ballValuesPanel.rightBottom.plusXY( 10, 0 ) )
+                                      .times( 1 / scale );
       }
     } );
 
-    const ballValuesPanel = new BallValuesPanel( model.ballSystem, viewProperties.moreDataVisibleProperty, model.playArea.dimensions, keypad );
-    this.addChild( ballValuesPanel );
-    ballValuesPanel.top = 420;
-    ballValuesPanel.left = ( options.playAreaLeftTop.x );
+    // BallValuesPanel
+    const ballValuesPanel = new BallValuesPanel(
+      model.ballSystem,
+      viewProperties.moreDataVisibleProperty,
+      model.playArea.dimensions,
+      keypadDialog, {
+        top: BALL_VALUES_PANEL_TOP,
+        left: playAreaViewBounds.left
+      } );
 
+    // More Data Checkbox
     const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
       bottom: ballValuesPanel.top - 4,
-      left: ( options.playAreaLeftTop.x )
+      left: playAreaViewBounds.left
     } );
-    this.addChild( moreDataCheckbox );
 
-    const returnBallsButton = new ReturnBallsButton( model.ballSystem.ballsNotInsidePlayAreaProperty, {
-      center: modelViewTransform.modelToViewPosition( model.playArea.bounds.center ),
-      listener: () => { model.returnBalls(); }
+    // Position the ControlPanel
+    controlPanel.right = this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN;
+    controlPanel.top = CollisionLabConstants.SCREEN_VIEW_Y_MARGIN;
+
+    // Momenta Diagram
+    const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.ballSystem.balls, {
+      dimensions: model.playArea.dimensions,
+      centerX: controlPanel.centerX,
+      top: controlPanel.bottom + 8
     } );
-    this.addChild( returnBallsButton );
 
-  }
+    //----------------------------------------------------------------------------------------
 
-  // @protected
-  createControlPanel( viewProperties, model ) {
-    return new CollisionLabControlPanel( viewProperties,
-      model.ballSystem.centerOfMassVisibleProperty,
-      model.playArea.reflectingBorderProperty,
-      model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.ballsConstantSizeProperty );
-  }
+    // Set the children in the correct rendering order.
+    this.children = [
+      playAreaNode,
+      scaleBar,
+      elapsedTimeNumberDisplay,
+      timeControlNode,
+      restartButton,
+      resetAllButton,
+      ballValuesPanel,
+      moreDataCheckbox,
+      controlPanel,
+      momentaDiagram,
+      ballSystemNode,
+      returnBallsButton,
+      kineticEnergyNumberDisplay
+    ];
 
-  // @protected
-  createBallSystemNode( model, viewProperties, modelViewTransform ) {
-    return new BallSystemNode( model.ballSystem,
-        model.playArea,
-        viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVectorVisibleProperty,
-        viewProperties.momentumVectorVisibleProperty,
-        model.isPlayingProperty,
-        modelViewTransform );
-  }
+    //----------------------------------------------------------------------------------------
 
-  // @public
-  step( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    // Add the PlayAreaControlSet if it is included.
+    if ( options.includePlayAreaControlSet ) {
+
+      const playAreaControlSet = new PlayAreaControlSet(
+        model.ballSystem.numberOfBallsProperty,
+        model.ballSystem.numberOfBallsRange,
+        model.playArea.gridVisibleProperty, merge( {
+          left: playAreaViewBounds.left + 5,
+          top: playAreaViewBounds.top + 5
+        }, options.playAreaControlSetOptions ) );
+
+      this.addChild( playAreaControlSet );
+      playAreaControlSet.moveToBack();
+    }
   }
 }
 
