@@ -215,9 +215,9 @@ class CollisionLabScreenView extends ScreenView {
       moreDataCheckbox,
       controlPanel,
       momentaDiagram,
+      kineticEnergyNumberDisplay,
       ballSystemNode,
-      returnBallsButton,
-      kineticEnergyNumberDisplay
+      returnBallsButton
     ];
 
     //----------------------------------------------------------------------------------------
