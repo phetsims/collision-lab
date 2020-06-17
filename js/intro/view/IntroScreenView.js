@@ -42,7 +42,7 @@ class IntroScreenView extends CollisionLabScreenView {
   }
 
   /**
-   * Creates the CollisionLabControlPanel for the 'Explore 1D' screen. Called in the constructor of the super-class. For
+   * Creates the CollisionLabControlPanel for the 'Intro' screen. Called in the constructor of the super-class. For
    * this screen, his method will instantiate a sub-type of CollisionLabControlPanel: IntroControlPanel.
    *
    * @override
@@ -69,7 +69,7 @@ class IntroScreenView extends CollisionLabScreenView {
   }
 
   /**
-   * Creates the BallSystemNode for the 'Explore 1D' screen. Called in the constructor of the super-class. For this
+   * Creates the BallSystemNode for the 'Intro' screen. Called in the constructor of the super-class. For this
    * screen, his method will instantiate a sub-type of BallSystemNode: IntroBallSystemNode.
    *
    * @override

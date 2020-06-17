@@ -29,6 +29,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
+   * @param {Object} [options]
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
@@ -36,7 +37,8 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
-               ballsConstantSizeProperty ) {
+               ballsConstantSizeProperty,
+               options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
@@ -49,7 +51,8 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,
-           ballsConstantSizeProperty  );
+           ballsConstantSizeProperty,
+           options );
 
     //----------------------------------------------------------------------------------------
 

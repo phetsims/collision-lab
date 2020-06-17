@@ -15,7 +15,7 @@ import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
-import Explore1DModel from '../../intro/model/Explore1DModel.js';
+import Explore1DModel from '../model/Explore1DModel.js';
 
 class Explore1DScreenView extends CollisionLabScreenView {
 

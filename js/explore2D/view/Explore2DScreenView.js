@@ -6,38 +6,59 @@
  * @author BrandonLi
  */
 
-import Tandem from '../../../../tandem/js/Tandem.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
+import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
+import Explore2DModel from '../model/Explore2DModel.js';
 import Explore2DBallSystemNode from './Explore2DBallSystemNode.js';
 import Explore2DControlPanel from './Explore2DControlPanel.js';
 
 class Explore2DScreenView extends CollisionLabScreenView {
 
   /**
+   * Creates the CollisionLabControlPanel for the 'Explore 2D' screen. Called in the constructor of the super-class. For
+   * this screen, his method will instantiate a sub-type of CollisionLabControlPanel: Explore2DControlPanel.
+   *
+   * @override
+   * @protected
+   * @param {CollisionLabViewProperties} viewProperties
    * @param {Explore2DModel} model
-   * @param {Tandem} tandem
+   * @param {Object} [options]
+   * @returns {Explore2DControlPanel}
    */
-  constructor( model, tandem ) {
+  createControlPanel( viewProperties, model, options ) {
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( model instanceof Explore2DModel, `invalid model: ${model}` );
 
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-    super( model, tandem );
-  }
-
-  // @protected
-  createControlPanel( viewProperties, model ) {
-    return new Explore2DControlPanel( viewProperties,
+    return new Explore2DControlPanel(
+      viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
-      model.ballSystem.pathVisibleProperty,
+      model.ballSystem.changeInMomentumVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
-      model.ballSystem.ballsConstantSizeProperty );
+      model.ballSystem.ballsConstantSizeProperty,
+      options
+    );
   }
 
-  // @protected
+  /**
+   * Creates the BallSystemNode for the 'Explore 2D' screen. Called in the constructor of the super-class. For this
+   * screen, his method will instantiate a sub-type of BallSystemNode: Explore2DBallSystemNode.
+   *
+   * @override
+   * @protected
+   * @param {Explore2DModel} model
+   * @param {CollisionLabViewProperties} viewProperties
+   * @param {ModelViewTransform2} modelViewTransform
+   * @returns {Explore2DBallSystemNode}
+   */
   createBallSystemNode( model, viewProperties, modelViewTransform ) {
+    assert && assert( model instanceof Explore2DModel, `invalid model: ${model}` );
+    assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
+
     return new Explore2DBallSystemNode( model.ballSystem,
         model.playArea,
         viewProperties.valuesVisibleProperty,
