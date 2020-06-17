@@ -1,6 +1,20 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
+ * Root class (to be subclassed) for the top-level view of every screen in the 'Collision Lab' simulation.
+ *
+ * Contains these UI components:
+ *   Balls
+ *   PlayArea
+ *   PlayAreaControlSet
+ *   Elapsed Time NumberDisplay
+ *   Restart button
+ *   BallValuesPanel
+ *   Momenta Diagram
+ *   Control Panel
+ *   Time controls (play/pause, step buttons)
+ *   Reset All Button
+ *
  * @author Brandon Li
  * @author Martin Veillette
  */
