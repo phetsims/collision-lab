@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * BallMomentumVectorNode is the BallVectorNode subtype for a single Ball's momentum vector. They appear in all screens
+ * BallMomentumVectorNode is a BallVectorNode subtype for a single Ball's momentum vector. They appear in all screens
  * of the 'Collision Lab' simulation when the 'Momentum' checkbox is checked.
  *
  * Currently, it adds no additional Properties to the super-class, but is provided for symmetry in the view hierarchy.

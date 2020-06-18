@@ -1,12 +1,19 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View for the vectors of Balls. See https://github.com/phetsims/collision-lab/issues/24 for
- * an overview of the BallVector view hierarchy.
+ * BallVelocityVectorNode is a BallVectorNode subtype for a single Ball's velocity vector. They appear in all screens
+ * of the 'Collision Lab' simulation when the 'Velocity' checkbox is checked.
  *
- * Responsible for:
- *  - Keeping the tail of the ArrowNode at the center of the Ball
- *  - Creating an API to update the direction and magnitude of the ArrowNode
+ * Adds the following functionality to BallVectorNode:
+ *   - Adds a circle at the tip of the Vector, with the velocity symbol on top of it. The tip and the symbol are only
+ *     visible if and only if the simulation is paused.
+ *
+ *   - If the tip of the Vector is dragged, the velocity of the Ball changes based on the new components of the
+ *     velocity vector. Dragging the dip of the vector indicates that the user is controlling both components of the
+ *     Ball's velocity.
+ *
+ * For the 'Collision Lab' sim, BallVelocityVectorNode are instantiated at the start and are never disposed.
+ * See BallVectorNode for more background.
  *
  * @author Brandon Li
  * @author Martin Veillette
