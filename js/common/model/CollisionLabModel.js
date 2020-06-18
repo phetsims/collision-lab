@@ -82,6 +82,26 @@ class CollisionLabModel {
     this.isPlayingProperty.lazyLink( isPlaying => {
       isPlaying && this.ballSystem.saveBallStates();
     } );
+
+    // Flag that indicates whether the sim was playing before it was programmatically paused.
+    let wasPlaying = this.isPlayingProperty.value;
+
+    this.ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
+
+      // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
+      // See https://github.com/phetsims/collision-lab/issues/49.
+      if ( ballSystemUserControlled ) {
+
+        // save playing state, pause the sim, and disable time controls
+        wasPlaying = this.isPlayingProperty.value;
+        this.isPlayingProperty.value = false;
+      }
+      else {
+
+        // enable time controls and restore playing state
+        this.isPlayingProperty.value = wasPlaying;
+      }
+    } );
   }
 
   /**

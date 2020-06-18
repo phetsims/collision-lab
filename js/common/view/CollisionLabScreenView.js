@@ -136,14 +136,16 @@ class CollisionLabScreenView extends ScreenView {
     // Time controls (play/pause, step buttons)
     const timeControlNode = new CollisionLabTimeControlNode(
       model.isPlayingProperty,
-      model.playArea.elasticityPercentProperty,
-      model.elapsedTimeProperty,
       model.timeSpeedProperty,
+      model.elapsedTimeProperty,
       model.ballSystem.ballSystemUserControlledProperty,
-      model.stepBackward.bind( model ),
-      model.stepForward.bind( model )
-    );
-    timeControlNode.setPlayPauseButtonCenter( playAreaViewBounds.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
+      model.playArea.elasticityPercentProperty, {
+        playPauseStepButtonOptions: {
+          stepBackwardButtonOptions: { listener: model.stepBackward.bind( model ) },
+          stepForwardButtonOptions: { listener: model.stepForward.bind( model ) }
+        }
+      } );
+    timeControlNode.setPlayPauseButtonCenter( playAreaNode.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
 
     // Restart Button
     const restartButton = new RestartButton( {
