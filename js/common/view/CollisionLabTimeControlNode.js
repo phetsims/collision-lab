@@ -1,8 +1,21 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * TimeControlNode specific to collision lab
+ * CollisionLabTimeControlNode is a subclass of TimeControlNode, specialized for the 'Collision Lab' simulation.
+ * Instances are positioned at the bottom-center of the PlayArea and appear in all screens.
  *
+ * The CollisionLabTimeControlNode consists of:
+ *   - Both step-forward and step-backward buttons.
+ *   - Play-Pause Button
+ *   - RadioButtons to control the speed of the simulation.
+ *
+ * Some specific functionality to 'Collision Lab':
+ *  - The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total
+ *    elapsed-time isn't 0.
+ *  - The entire TimeControlNode is disabled if the BallSystem is being user-controlled. See
+ *    https://github.com/phetsims/collision-lab/issues/49.
+ *
+ * @author Brandon Li
  * @author Martin Veillette
  */
 
