@@ -1,12 +1,19 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View for the vectors of Balls. See https://github.com/phetsims/collision-lab/issues/24 for
- * an overview of the BallVector view hierarchy.
+ * BallVectorNode is the root class (to be subclassed) view representation of a Ball's vector, used for the Ball's
+ * velocity and momentum vectors. They appear in all screens of the 'Collision Lab' simulation and are positioned
+ * on top of Balls.
  *
  * Responsible for:
  *  - Keeping the tail of the ArrowNode at the center of the Ball
  *  - Creating an API to update the direction and magnitude of the ArrowNode
+ *
+ * For the 'Collision Lab' sim, Balls are instantiated at the start of the sim are never disposed, even if they aren't
+ * in the system. Thus, BallVectorNode subtypes persist for the lifetime of the simulation and links are left as-is.
+ * See BallNode.js for more background.
+ *
+ * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
  *
  * @author Brandon Li
  */
