@@ -231,7 +231,6 @@ class BallNode extends Node {
       // Update the positioning of view components.
       ballCircle.center = viewPosition;
       labelNode.center = viewPosition;
-      vectorNodeContainer.translation = viewPosition;
 
       // Set the VectorNodes container to visible if the Ball's center is inside the PlayArea.
       vectorNodeContainer.visible = playAreaViewBounds.containsPoint( viewPosition );
