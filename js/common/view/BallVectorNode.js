@@ -6,8 +6,8 @@
  * on top of Balls.
  *
  * Responsible for:
- *  - Keeping the tail of the ArrowNode at the center of the Ball
- *  - Creating an API to update the direction and magnitude of the ArrowNode
+ *  - Translating this Node to the center of the Ball. The origin of this Node is the tail of the vector.
+ *  - Updating the tip of the Vector based on a ballValueProperty.
  *
  * For the 'Collision Lab' sim, Balls are instantiated at the start of the sim are never disposed, even if they aren't
  * in the system. Thus, BallVectorNode subtypes persist for the lifetime of the simulation and links are left as-is.
