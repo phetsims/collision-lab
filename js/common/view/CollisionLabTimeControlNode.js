@@ -28,10 +28,6 @@ import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-// constants
-const PLAY_PAUSE_BUTTON_RADIUS = 34;
-const STEP_BUTTON_RADIUS = 23;
-
 class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
@@ -57,9 +53,9 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     options = merge( {
       playPauseStepButtonOptions: {
         playPauseStepXSpacing: 9,
-        playPauseButtonOptions: { radius: PLAY_PAUSE_BUTTON_RADIUS },
-        stepBackwardButtonOptions: { radius: STEP_BUTTON_RADIUS },
-        stepForwardButtonOptions: { radius: STEP_BUTTON_RADIUS }
+        playPauseButtonOptions: { radius: 30 },
+        stepBackwardButtonOptions: { radius: 20 },
+        stepForwardButtonOptions: { radius: 20 }
       },
       speedRadioButtonGroupOptions: {
         labelOptions: {
@@ -77,18 +73,10 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     assert && assert( !options.enabledProperty, 'CollisionLabTimeControlNode sets options.enabledProperty' );
     assert && assert( !options.playPauseStepButtonOptions.includeStepBackwardButton, 'CollisionLabTimeControlNode sets includeStepBackwardButton' );
     assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.isPlayingProperty' );
-    assert && assert( !options.playPauseStepButtonOptions.playPauseButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
-    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
-    assert && assert( !options.playPauseStepButtonOptions.stepForwardButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
 
     // Set options that cannot be overridden.
     options.timeSpeedProperty = timeSpeedProperty;
     options.playPauseStepButtonOptions.includeStepBackwardButton = true;
-    options.playPauseStepButtonOptions.playPauseButtonOptions.radius = PLAY_PAUSE_BUTTON_RADIUS;
-    options.playPauseStepButtonOptions.stepBackwardButtonOptions.radius = STEP_BUTTON_RADIUS;
-    options.playPauseStepButtonOptions.stepForwardButtonOptions.radius = STEP_BUTTON_RADIUS;
-
-    //----------------------------------------------------------------------------------------
 
     // The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total elapsed
     // time isn't 0. There isn't any support to provide a custom enabledProperty to step-buttons. So, we use a
