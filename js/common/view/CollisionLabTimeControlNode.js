@@ -9,7 +9,7 @@
  *   - Play-Pause Button
  *   - RadioButtons to control the speed of the simulation.
  *
- * Some specific functionality to 'Collision Lab':
+ * Some functionality specific to 'Collision Lab':
  *  - The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total
  *    elapsed-time isn't 0.
  *  - The entire TimeControlNode is disabled if the BallSystem is being user-controlled. See
@@ -21,8 +21,10 @@
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
+import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import collisionLab from '../../collisionLab.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
@@ -30,29 +32,32 @@ class CollisionLabTimeControlNode extends TimeControlNode {
   /**
    * @param {Property.<boolean>} isPlayingProperty
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
+   * @param {Property.<number>} elapsedTimeProperty
    * @param {Property.<boolean>} ballSystemUserControlledProperty
-   * @param {Function} stepBackward
-   * @param {Function} stepForward
+   * @param {Property.<number>} elasticityProperty
    * @param {Object} [options]
    */
-  constructor( isPlayingProperty, elasticityProperty, elapsedTimeProperty, timeSpeedProperty, ballSystemUserControlledProperty,
-               stepBackward, stepForward, options ) {
+  constructor( isPlayingProperty,
+               timeSpeedProperty,
+               elapsedTimeProperty,
+               ballSystemUserControlledProperty,
+               elasticityProperty,
+               options ) {
+    assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
+    assert && AssertUtils.assertEnumerationPropertyOf( timeSpeedProperty, TimeSpeed );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+    assert && AssertUtils.assertPropertyOf( ballSystemUserControlledProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( elasticityProperty, 'number' );
 
 
-    super( isPlayingProperty, merge( {
-
-      // property associated with the slow/normal radio buttons
+    options = merge( {
       timeSpeedProperty: timeSpeedProperty,
-
       playPauseStepButtonOptions: {
         includeStepBackwardButton: true,
-        playPauseStepXSpacing: 9, // horizontal space between Play/Pause and Step buttons
-
-        // Options for the play pause buttons
+        playPauseStepXSpacing: 9,
         playPauseButtonOptions: {
           radius: 30
         },
-
         stepBackwardButtonOptions: {
           listener: () => stepBackward(),
 
@@ -70,19 +75,18 @@ class CollisionLabTimeControlNode extends TimeControlNode {
       },
 
       speedRadioButtonGroupOptions: {
-        // Options for the Normal/Slow text labels
         labelOptions: {
           font: new PhetFont( 13 ),
           maxWidth: 150
         },
-
-        // Options for the radio button group
         radioButtonGroupOptions: { spacing: 5 }
       },
-
-      // Spacing options
-      buttonGroupXSpacing: 20 // horizontal space between push buttons and radio buttons
-    }, options ) );
+      buttonGroupXSpacing: 20
+    }, options );
+    assert && assert( !options.startDrag, 'BallMassSlider sets startDrag.' );
+    assert && assert( !options.drag, 'BallMassSlider sets drag.' );
+    assert && assert( !options.endDrag, 'BallMassSlider sets endDrag.' );
+    super( isPlayingProperty, options );
 
 
     //----------------------------------------------------------------------------------------
