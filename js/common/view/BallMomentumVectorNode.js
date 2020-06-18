@@ -12,38 +12,39 @@
  * @author Martin Veillette
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallVectorNode from './BallVectorNode.js';
-
-const BALL_MOMENTUM_VECTOR_OPTIONS = merge(
-  CollisionLabColors.MOMENTUM_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
-);
 
 class BallMomentumVectorNode extends BallVectorNode {
 
   /**
-   * @param {Property.<Vector2>} momentumProperty
-   * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
+   * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball, in meters.
+   * @param {Property.<Vector2>} momentumProperty - the momentum of the Ball, in kg*(m/s).
+   * @param {Property.<boolean>} momentumVectorVisibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( momentumProperty, visibleProperty, modelViewTransform, options ) {
+  constructor( ballPositionProperty, momentumProperty, momentumVectorVisibleProperty, modelViewTransform, options ) {
+    assert && AssertUtils.assertPropertyOf( ballPositionProperty, Vector2 );
+    assert && AssertUtils.assertPropertyOf( momentumProperty, Vector2 );
+    assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
-    assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
-    assert && assert( modelViewTransform instanceof ModelViewTransform2,
-      `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-      `Extra prototype on Options: ${options}` );
+    options = merge( {
+
+      // super-class options
+      arrowOptions: CollisionLabColors.MOMENTUM_VECTOR_COLORS
+
+    }, options );
 
     //----------------------------------------------------------------------------------------
 
-    super( momentumProperty, visibleProperty, modelViewTransform, BALL_MOMENTUM_VECTOR_OPTIONS );
-
+    super( ballPositionProperty, momentumProperty, momentumVectorVisibleProperty, modelViewTransform, options );
   }
 }
 

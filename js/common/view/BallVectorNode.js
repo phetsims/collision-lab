@@ -28,7 +28,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 class BallVectorNode extends Node {
 
   /**
-   * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball.
+   * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball, in meters.
    * @param {Property.<Vector2>} ballValueProperty - either the momentum or velocity Ball-value Property. Regardless,
    *                                                 its value represents the components of the BallVectorNode.
    * @param {Property.<boolean>} visibleProperty
