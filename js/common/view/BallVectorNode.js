@@ -18,8 +18,9 @@
  * @author Brandon Li
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -30,47 +31,63 @@ class BallVectorNode extends Node {
 
   /**
    * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball.
-   * @param {Property.<Vector2>} valueProperty - either the momentum or velocity Ball-value Property. Regardless, its
-   *                                             value represents the components of the BallVectorNode.
+   * @param {Property.<Vector2>} ballValueProperty - either the momentum or velocity Ball-value Property. Regardless,
+   *                                                 its value represents the components of the BallVectorNode.
    * @param {Property.<boolean>} visibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( tipPositionProperty, visibleProperty, modelViewTransform, options ) {
+  constructor( ballPositionProperty, ballValueProperty, visibleProperty, modelViewTransform, options ) {
+    assert && AssertUtils.assertPropertyOf( ballPositionProperty, Vector2 );
+    assert && AssertUtils.assertPropertyOf( ballValueProperty, Vector2 );
+    assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
-    assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
-    assert && assert( modelViewTransform instanceof ModelViewTransform2,
-      `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-      `Extra prototype on Options: ${options}` );
-
-    //----------------------------------------------------------------------------------------
     options = merge( {
 
-      arrowOptions: {} // TODO
+      // {Object} - passed to the ArrowNode instance.
+      arrowOptions: CollisionLabConstants.ARROW_OPTIONS
+
     }, options );
 
-    const viewVector = modelViewTransform.modelToViewDelta( tipPositionProperty.value );
+    super( options );
 
-    super();
+    //----------------------------------------------------------------------------------------
 
-    // @public
-    this.arrowNode = new ArrowNode( 0, 0, viewVector.x, viewVector.y, options );
-    this.addChild( this.arrowNode );
+    // Create the ArrowNode that represents the Vector. Initialized at 0 for now. To be updated below.
+    const arrowNode = new ArrowNode( 0, 0, 0, 0, options.arrowOptions );
 
-    const tipPositionListener = vector => {
-      if ( vector.magnitude > CollisionLabConstants.ZERO_THRESHOLD ) {
-        const viewVector = modelViewTransform.modelToViewDelta( vector );
-        this.arrowNode.setTip( viewVector.x, viewVector.y );
+    // Observe when the Ball's position change and update the translation of this Node. The origin of this Node
+    // is the tail of the vector. Link is never unlinked since BallVectorNodes are never disposed.
+    ballPositionProperty.link( ballPosition => {
+      this.translation = modelViewTransform.modelToViewPosition( ballPosition );
+    } );
+
+    // Observe when the ballValueProperty change and update the tip position of this Node. Link is never unlinked since
+    // BallVectorNodes are never disposed.
+    ballValueProperty.link( ballValue => {
+
+      // Get the position of the tip in view coordinates. This is relative to our origin, which is the tail of the
+      // Vector.
+      const tipViewPosition = modelViewTransform.modelToViewDelta( ballValue );
+
+       // Only display the Vector if it has a magnitude that isn't effectively 0.
+      if ( tipViewPosition.magnitude > CollisionLabConstants.ZERO_THRESHOLD ) {
+        arrowNode.setTip( tipViewPosition.x, tipViewPosition.y );
       }
       else {
-        this.arrowNode.setTip( 0, 0 );
+        arrowNode.setTip( 0, 0 );
       }
-    };
+    } );
 
-    tipPositionProperty.link( tipPositionListener );
+    //----------------------------------------------------------------------------------------
 
+    // Observe when the visibleProperty change and update the visibility of this Node. Link is never unlinked since
+    // BallVectorNodes are never disposed.
     visibleProperty.linkAttribute( this, 'visible' );
+
+    // Finally, add the arrow as a child of this Node.
+    this.addChild( this.arrowNode );
   }
 }
 

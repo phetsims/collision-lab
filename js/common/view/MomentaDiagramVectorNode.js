@@ -128,7 +128,7 @@ class MomentaDiagramVectorNode extends Node {
           // Position the label which depends on the sign of the x-component of the Momenta Vector.
           labelNode.center = tipViewPosition.plusXY( Utils.sign( momentaDiagramVector.components.x ) * adjustedOffset, 0 );
         }
-     } );
+    } );
   }
 }
 
