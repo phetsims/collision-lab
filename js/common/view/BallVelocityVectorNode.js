@@ -109,24 +109,6 @@ class BallVelocityVectorNode extends BallVectorNode {
 
     //  make the tip invisible if the simulation is running
     isPlayingProperty.link( playListener );
-
-    // @private {function} disposeVelocityVectorNode - function to unlink listeners, called in dispose()
-    this.disposeVelocityVectorNode = () => {
-      isPlayingProperty.unlink( playListener );
-      velocityProperty.unlink( velocityListener );
-      tipPositionProperty.unlink( tipPositionListener );
-      tipTargetNode.removeInputListener( tipDragListener );
-      tipDragListener.dispose();
-    };
-  }
-
-  /**
-   * @public
-   * @override
-   */
-  dispose() {
-    this.disposeVelocityVectorNode();
-    super.dispose();
   }
 }
 

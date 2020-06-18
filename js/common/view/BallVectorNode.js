@@ -19,8 +19,6 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-// const Vector2 = require( '/dot/js/Vector2' );
-
 class BallVectorNode extends Node {
 
   /**
@@ -63,23 +61,7 @@ class BallVectorNode extends Node {
 
     tipPositionProperty.link( tipPositionListener );
 
-    const visiblePropertyHandle = visibleProperty.linkAttribute( this, 'visible' );
-
-    // @private {function} disposeBallVectorNode - function to unlink listeners, called in dispose()
-    this.disposeBallVectorNode = () => {
-      visibleProperty.unlinkAttribute( visiblePropertyHandle );
-      tipPositionProperty.unlink( tipPositionListener );
-    };
-
-  }
-
-  /**
-   * @public
-   * @override
-   */
-  dispose() {
-    this.disposeBallVectorNode();
-    super.dispose();
+    visibleProperty.linkAttribute( this, 'visible' );
   }
 }
 
