@@ -26,6 +26,11 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
+
+// constants
+const PLAY_PAUSE_BUTTON_RADIUS = 34;
+const STEP_BUTTON_RADIUS = 23;
 
 class CollisionLabTimeControlNode extends TimeControlNode {
 
@@ -49,68 +54,63 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     assert && AssertUtils.assertPropertyOf( ballSystemUserControlledProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityProperty, 'number' );
 
-
     options = merge( {
-      timeSpeedProperty: timeSpeedProperty,
       playPauseStepButtonOptions: {
-        includeStepBackwardButton: true,
         playPauseStepXSpacing: 9,
-        playPauseButtonOptions: {
-          radius: 30
-        },
-        stepBackwardButtonOptions: {
-          listener: () => stepBackward(),
-
-          // Workaround for https://github.com/phetsims/scenery-phet/issues/606.
-          // Also see https://github.com/phetsims/scenery-phet/issues/563
-          isPlayingProperty: new DerivedProperty( [ isPlayingProperty, elasticityProperty, elapsedTimeProperty ], ( playing, elasticity, elapsedTimeProperty ) => {
-            return elapsedTimeProperty === 0 || playing || elasticity < 100;
-          } ),
-          radius: 20
-        },
-        stepForwardButtonOptions: {
-          listener: () => stepForward(),
-          radius: 20
-        }
+        playPauseButtonOptions: { radius: PLAY_PAUSE_BUTTON_RADIUS },
+        stepBackwardButtonOptions: { radius: STEP_BUTTON_RADIUS },
+        stepForwardButtonOptions: { radius: STEP_BUTTON_RADIUS }
       },
-
       speedRadioButtonGroupOptions: {
         labelOptions: {
           font: new PhetFont( 13 ),
-          maxWidth: 150
+          maxWidth: 120
         },
         radioButtonGroupOptions: { spacing: 5 }
       },
       buttonGroupXSpacing: 20
     }, options );
-    assert && assert( !options.startDrag, 'BallMassSlider sets startDrag.' );
-    assert && assert( !options.drag, 'BallMassSlider sets drag.' );
-    assert && assert( !options.endDrag, 'BallMassSlider sets endDrag.' );
-    super( isPlayingProperty, options );
-
 
     //----------------------------------------------------------------------------------------
 
-    // Flag that indicates whether the sim was playing before it was programmatically paused.
-    let wasPlaying = isPlayingProperty.value;
+    assert && assert( !options.timeSpeedProperty, 'CollisionLabTimeControlNode sets options.timeSpeedProperty' );
+    assert && assert( !options.enabledProperty, 'CollisionLabTimeControlNode sets options.enabledProperty' );
+    assert && assert( !options.playPauseStepButtonOptions.includeStepBackwardButton, 'CollisionLabTimeControlNode sets includeStepBackwardButton' );
+    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.isPlayingProperty' );
+    assert && assert( !options.playPauseStepButtonOptions.playPauseButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
+    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
+    assert && assert( !options.playPauseStepButtonOptions.stepForwardButtonOptions.radius, 'CollisionLabTimeControlNode sets radius' );
 
-    ballSystemUserControlledProperty.link( playAreaUserControlled => {
-      // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
-      // See https://github.com/phetsims/collision-lab/issues/49.
-      if ( playAreaUserControlled ) {
+    // Set options that cannot be overridden.
+    options.timeSpeedProperty = timeSpeedProperty;
+    options.playPauseStepButtonOptions.includeStepBackwardButton = true;
+    options.playPauseStepButtonOptions.playPauseButtonOptions.radius = PLAY_PAUSE_BUTTON_RADIUS;
+    options.playPauseStepButtonOptions.stepBackwardButtonOptions.radius = STEP_BUTTON_RADIUS;
+    options.playPauseStepButtonOptions.stepForwardButtonOptions.radius = STEP_BUTTON_RADIUS;
 
-        // save playing state, pause the sim, and disable time controls
-        wasPlaying = isPlayingProperty.value;
-        isPlayingProperty.value = false;
-        this.enabledProperty.value = false;
-      }
-      else {
+    //----------------------------------------------------------------------------------------
 
-        // enable time controls and restore playing state
-        this.enabledProperty.value = true;
-        isPlayingProperty.value = wasPlaying;
-      }
-    } );
+    // The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total elapsed
+    // time isn't 0. There isn't any support to provide a custom enabledProperty to step-buttons. So, we use a
+    // a workaround. See https://github.com/phetsims/scenery-phet/issues/606 and
+    // https://github.com/phetsims/scenery-phet/issues/563.  DerivedProperty never disposed since
+    // CollisionLabTimeControlNode persists for the lifetime of simulation.
+    options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
+      [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
+        return isPlaying || elapsedTime === 0 || elasticity < CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
+      }, {
+        valueType: 'boolean'
+      } );
+
+    // The entire TimeControlNode is disabled if the BallSystem is being user-controlled. See
+    // https://github.com/phetsims/collision-lab/issues/49. DerivedProperty never disposed since
+    // CollisionLabTimeControlNode persists for the lifetime of simulation.
+    options.enabledProperty = new DerivedProperty( [ ballSystemUserControlledProperty ],
+      ballSystemUserControlled => !ballSystemUserControlled, {
+        valueType: 'boolean'
+      } );
+
+    super( isPlayingProperty, options );
   }
 }
 
