@@ -1,8 +1,8 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * BallVectorNode is the root class (to be subclassed) view representation of a Ball's vector, used for the Ball's
- * velocity and momentum vectors. They appear in all screens of the 'Collision Lab' simulation and are positioned
+ * BallVectorNode is the root class (to be subclassed) view representation of a single Ball's vector, used for the
+ * Ball's velocity and momentum vectors. They appear in all screens of the 'Collision Lab' simulation and are positioned
  * on top of Balls.
  *
  * Responsible for:
@@ -29,8 +29,10 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 class BallVectorNode extends Node {
 
   /**
-   * @param {Property.<Vector2>} tipPositionProperty
-   * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
+   * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball.
+   * @param {Property.<Vector2>} valueProperty - either the momentum or velocity Ball-value Property. Regardless, its
+   *                                             value represents the components of the BallVectorNode.
+   * @param {Property.<boolean>} visibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
