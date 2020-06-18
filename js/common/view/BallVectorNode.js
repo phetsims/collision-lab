@@ -13,8 +13,6 @@
  * in the system. Thus, BallVectorNode subtypes persist for the lifetime of the simulation and links are left as-is.
  * See BallNode.js for more background.
  *
- * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
- *
  * @author Brandon Li
  */
 

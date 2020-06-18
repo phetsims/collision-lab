@@ -1,11 +1,12 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * View for the Momentum Vector of Ball
+ * BallMomentumVectorNode is the BallVectorNode subtype for a single Ball's momentum vector. They appear in all screens
+ * of the 'Collision Lab' simulation when the 'Momentum' checkbox is checked.
  *
- * Responsible for:
- *  - Keeping the tail of the ArrowNode at the center of the Ball
- *  - Creating an API to update the direction and magnitude of the ArrowNode
+ * Currently, it adds no additional Properties to the super-class, but is provided for symmetry in the view hierarchy.
+ * Like its super-class, BallMomentumVectorNode persists for the lifetime of the simulation and are never disposed.
+ * See BallNode.js for more background.
  *
  * @author Brandon Li
  * @author Martin Veillette
