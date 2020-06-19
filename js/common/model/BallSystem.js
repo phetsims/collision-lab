@@ -123,7 +123,7 @@ class BallSystem {
       }
 
       // Ensure Balls are in ascending order by their indices if assertions are enabled.
-      assert && assert( CollisionLabUtils.isSorted( this.balls.map( _.property( 'index' ) ) ) );
+      assert && assert( CollisionLabUtils.isSortedBy( this.balls, _.property( 'index' ) ) );
     } );
 
     //----------------------------------------------------------------------------------------

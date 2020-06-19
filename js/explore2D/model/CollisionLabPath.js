@@ -144,7 +144,7 @@ class CollisionLabPath {
     }
 
     // Ensure that the dataPoints are strictly sorted by time.
-    assert && assert( CollisionLabUtils.isSorted( this.dataPoints.map( _.property( 'time' ) ) ) );
+    assert && assert( CollisionLabUtils.isSortedBy( this.dataPoints, _.property( 'time' ) ) );
 
     // Signal that the trailing 'Path' needs to be redrawn.
     this.redrawPathEmitter.emit();
