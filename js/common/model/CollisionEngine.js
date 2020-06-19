@@ -66,6 +66,8 @@ class CollisionEngine {
       normal: new Vector2( 0, 0 ),
       tangent: new Vector2( 0, 0 )
     };
+
+    this.compositeStuckBall = null;
   }
 
   /**
@@ -78,10 +80,19 @@ class CollisionEngine {
 
     // First step the position of the balls based on a ballistic motion model, assuming no collisions occur.
     // Then, step the collisionEngine after to detect if any collisions occurred and formulate a response.
-    this.ballSystem.step( dt );
+    this.ballSystem.balls.forEach( ball => {
+      if ( !this.compositeStuckBall || ( this.compositeStuckBall.ball1 !== ball && this.compositeStuckBall.ball2 !== ball ) )  {
 
+        ball.step( dt );
+      }
+    } );
+    this.compositeStuckBall && this.compositeStuckBall.step( dt );
     this.handleBallToBallCollisions( dt < 0 );
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+  }
+
+  reset() {
+    this.compositeStuckBall = null;
   }
 
   //----------------------------------------------------------------------------------------
@@ -142,6 +153,9 @@ class CollisionEngine {
 
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
+      if ( this.compositeStuckBall && ( this.compositeStuckBall.ball1 !== ball1 || this.compositeStuckBall.ball2 !== ball1 || this.compositeStuckBall.ball1 !== ball2 || this.compositeStuckBall.ball2 !== ball2 ) )  {
+        return;
+      }
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
       // If two balls are on top of each other, process the collision.
@@ -217,16 +231,16 @@ class CollisionEngine {
     const v2yP = normal.dotXY( v2tP, v2nP );
 
     if ( isSticky ) {
-            ball1.position = r1;
+      ball1.position = r1;
       ball2.position = r2;
-      new CompositeStuckBalls( ball1, ball2, this.ballSystem.centerOfMass );
+      this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, this.ballSystem.centerOfMass );
 
-          ball1.velocity = new Vector2( v1xP, v1yP );
-    ball2.velocity = new Vector2( v2xP, v2yP );
+      ball1.velocity = new Vector2( v1xP, v1yP );
+      ball2.velocity = new Vector2( v2xP, v2yP );
     }
     else {
-          ball1.velocity = new Vector2( v1xP, v1yP );
-    ball2.velocity = new Vector2( v2xP, v2yP )
+      ball1.velocity = new Vector2( v1xP, v1yP );
+      ball2.velocity = new Vector2( v2xP, v2yP );
       // Register the exact contact position of the collision for sub-classes.
       this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
 

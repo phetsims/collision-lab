@@ -140,6 +140,7 @@ class CollisionLabModel {
     this.playArea.reset();
     this.ballSystem.reset();
     this.momentaDiagram.reset();
+    this.collisionEngine.reset();
   }
 
   /**
