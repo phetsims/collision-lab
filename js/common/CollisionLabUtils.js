@@ -102,6 +102,23 @@ const CollisionLabUtils = {
       }
     } );
     return isSorted;
+  },
+
+  /**
+   * Determines whether an array, or an ObservableArray, is strictly sorted in ascending order (non-inclusive) by
+   * a criterion function that ranks each element. The criterion function is passed each element of the collection.
+   * @public
+   *
+   * @param {ObservableArray.<*>|*[]} collection
+   * @param {function(value:*)} criterion
+   * @returns {boolean}
+   */
+  isSortedBy( collection, criterion ) {
+    assert && assert( Array.isArray( collection ) || collection instanceof ObservableArray, `invalid collection: ${collection}` );
+    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
+
+    // Works for both ObservableArrays and native Arrays.
+    return CollisionLabUtils.isSorted( collection.map( criterion ) );
   }
 };
 
