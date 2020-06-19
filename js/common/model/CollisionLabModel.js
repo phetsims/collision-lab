@@ -192,10 +192,7 @@ class CollisionLabModel {
     // Update the elapsedTimeProperty.
     this.elapsedTimeProperty.value += dt;
 
-    // First step the position of the balls based on a ballistic motion model, assuming no collisions occur.
-    // Then, step the collisionEngine after to detect if any collisions occurred and formulate a response.
-    this.ballSystem.step( dt );
-    this.collisionEngine.step( dt < 0 );
+    this.collisionEngine.step( dt );
   }
 
   /**

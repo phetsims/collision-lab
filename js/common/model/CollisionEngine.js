@@ -74,11 +74,14 @@ class CollisionEngine {
    *
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  step( isReversing ) {
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+  step( dt ) {
 
-    this.handleBallToBallCollisions( isReversing );
-    this.playArea.reflectsBorder && this.handleBallToBorderCollisions( isReversing );
+    // First step the position of the balls based on a ballistic motion model, assuming no collisions occur.
+    // Then, step the collisionEngine after to detect if any collisions occurred and formulate a response.
+    this.ballSystem.step( dt );
+
+    this.handleBallToBallCollisions( dt < 0 );
+    this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
   }
 
   //----------------------------------------------------------------------------------------

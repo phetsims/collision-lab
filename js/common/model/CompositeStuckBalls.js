@@ -22,7 +22,7 @@ class CompositeStuckBalls {
     const momentOfI1 = 2 / 5 * ball1.mass * ( ball1.radius * ball1.radius ) + ball1.mass * ball1.position.minus( centerOfMass.position ).magnitudeSquared;
     const momentOfI2 = 2 / 5 * ball2.mass * ( ball2.radius * ball2.radius ) + ball2.mass * ball2.position.minus( centerOfMass.position ).magnitudeSquared;
 
-    // @private - about center of mass
+    // @private - about center of mass - one system, same axis, add moments.
     this.omega = this.totalAngularMomentum / ( momentOfI1 + momentOfI2 );
   }
 }
