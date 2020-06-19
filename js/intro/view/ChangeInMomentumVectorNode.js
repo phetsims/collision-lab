@@ -93,7 +93,8 @@ class ChangeInMomentumVectorNode extends Node {
       const ballViewPosition = modelViewTransform.modelToViewPosition( ballPosition );
 
       // Set the visibility of this Node to true if the Ball's center is inside the PlayArea and false otherwise.
-      this.visible = playAreaViewBounds.containsPoint( ballViewPosition );
+      this.visible = playAreaViewBounds.containsPoint( ballViewPosition )
+                     && changeInMomentum.magnitude > CollisionLabConstants.ZERO_THRESHOLD;
 
       // Update the positioning of the arrow and the connecting line if this Node is visible.
       if ( this.visible ) {

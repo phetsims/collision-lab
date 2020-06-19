@@ -69,7 +69,7 @@ class BallVectorNode extends Node {
       // Vector.
       const tipViewPosition = modelViewTransform.modelToViewDelta( ballValue );
 
-       // Only display the Vector if it has a magnitude that isn't effectively 0.
+      // Only display the Vector if it has a magnitude that isn't effectively 0.
       if ( tipViewPosition.magnitude > CollisionLabConstants.ZERO_THRESHOLD ) {
         arrowNode.setTip( tipViewPosition.x, tipViewPosition.y );
       }
