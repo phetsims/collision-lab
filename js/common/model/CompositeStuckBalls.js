@@ -32,6 +32,12 @@ class CompositeStuckBalls {
   }
 
   step( dt ) {
+
+        // parallel axis theorem
+    const momentOfI1 = 1 / 2 * this.ball1.mass * ( this.ball1.radius * this.ball1.radius ) + this.ball1.mass * this.ball1.position.minus( this.centerOfMass.position ).magnitudeSquared;
+    const momentOfI2 = 1 / 2 * this.ball2.mass * ( this.ball2.radius * this.ball2.radius ) + this.ball2.mass * this.ball2.position.minus( this.centerOfMass.position ).magnitudeSquared;
+
+    console.log( momentOfI1, momentOfI2 )
     const r1 = this.ball1.position.minus( this.centerOfMass.position );
     const r2 = this.ball2.position.minus( this.centerOfMass.position );
     const v1 = this.omega.cross( r1.toVector3() ).toVector2();

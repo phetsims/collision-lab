@@ -233,10 +233,10 @@ class CollisionEngine {
     if ( isSticky ) {
       ball1.position = r1;
       ball2.position = r2;
-      this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, this.ballSystem.centerOfMass );
-
       ball1.velocity = new Vector2( v1xP, v1yP );
       ball2.velocity = new Vector2( v2xP, v2yP );
+      this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, this.ballSystem.centerOfMass );
+      this.compositeStuckBall.step( overlappedTime );
     }
     else {
       ball1.velocity = new Vector2( v1xP, v1yP );

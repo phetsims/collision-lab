@@ -153,6 +153,7 @@ class CollisionLabModel {
     this.isPlayingProperty.value = false;
     this.elapsedTimeProperty.reset();
     this.ballSystem.restart();
+    this.collisionEngine.reset();
   }
 
   /**
