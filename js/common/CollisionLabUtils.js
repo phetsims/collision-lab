@@ -27,12 +27,10 @@ const CollisionLabUtils = {
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
     for ( let i = 1; i < collection.length; i++ ) {
-      if ( collection instanceof ObservableArray ) {
-        iterator( collection.get( i ), collection.get( i - 1 ) );
-      }
-      else {
-        iterator( collection[ i ], collection[ i - 1 ] );
-      }
+      const value = collection instanceof ObservableArray ? collection.get( i ) : collection[ i ];
+      const previousValue = collection instanceof ObservableArray ? collection.get( i - 1 ) : collection[ i - 1 ];
+
+      iterator( value, previousValue );
     }
   },
 
