@@ -6,12 +6,12 @@
  * @author Brandon Li
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 
 class CompositeStuckBalls {
 
   constructor( ball1, ball2, centerOfMass ) {
-    console.log( 'hereh' );
     const a = ball1.position.minus( centerOfMass.position ).crossScalar( ball1.velocity.minus( centerOfMass.velocity ).timesScalar( ball1.mass ) );
     const b = ball2.position.minus( centerOfMass.position ).crossScalar( ball2.velocity.minus( centerOfMass.velocity ).timesScalar( ball2.mass ) );
 
@@ -31,10 +31,20 @@ class CompositeStuckBalls {
   }
 
   step( dt ) {
-    this.ball1.velocity = this.centerOfMass.velocity.plus(  this.ball1.position.minus( this.centerOfMass.position ).timesScalar( this.omega ) );
-    this.ball2.velocity = this.centerOfMass.velocity.plus(  this.ball2.position.minus( this.centerOfMass.position ).timesScalar( this.omega ) );
+    const r1 = this.ball1.position.minus( this.centerOfMass.position );
+    const r2 = this.ball2.position.minus( this.centerOfMass.position );
+    const v1 = new Vector2( r1.magnitude * this.omega, 0 ).rotate( r1.angle + Math.PI / 2 );
+    const v2 = new Vector2( r2.magnitude * this.omega, 0 ).rotate( r2.angle + Math.PI / 2 );
+
+    this.ball1.velocity = this.centerOfMass.velocity.plus( v1 );
+    this.ball2.velocity = this.centerOfMass.velocity.plus( v2 );
     this.ball1.step( dt );
     this.ball2.step( dt );
+
+
+    const a = this.ball1.position.minus( this.centerOfMass.position ).crossScalar( this.ball1.velocity.minus( this.centerOfMass.velocity ).timesScalar( this.ball1.mass ) );
+    const b = this.ball2.position.minus( this.centerOfMass.position ).crossScalar( this.ball2.velocity.minus( this.centerOfMass.velocity ).timesScalar( this.ball2.mass ) );
+    console.log( this.totalAngularMomentum - a - b );
   }
 }
 
