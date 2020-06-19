@@ -19,103 +19,108 @@
  * @author Martin Veillette
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DragListener from '../../../../scenery/js/listeners/DragListener.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import Ball from '../model/Ball.js';
 import BallVectorNode from './BallVectorNode.js';
-
-const BALL_VELOCITY_VECTOR_OPTIONS = merge(
-  CollisionLabColors.VELOCITY_VECTOR_COLORS, CollisionLabConstants.ARROW_OPTIONS
-);
 
 class BallVelocityVectorNode extends BallVectorNode {
 
   /**
-   * @param {Property.<Vector2>} velocityProperty
-   * @param {Property.<boolean>} userControlledProperty
-   * @param {Property.<boolean>} visibleProperty - Property that indicates if this node is visible
-   * @param {Property.<boolean>} isPlayingProperty
+   * @param {Ball} ball - the ball model.
+   * @param {number} dimensions - the dimensions of the PlayArea.
+   * @param {Property.<boolean>} velocityVectorVisibleProperty
+   * @param {Property.<boolean>} isPlayingProperty - indicates if the sim is playing.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ball, velocityProperty, xUserControlledProperty, yUserControlledProperty, visibleProperty, isPlayingProperty, modelViewTransform, options ) {
+  constructor( ball, dimensions, velocityVectorVisibleProperty, isPlayingProperty, modelViewTransform, options ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
+    assert && AssertUtils.assertPropertyOf( velocityVectorVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
+    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
-    assert && assert( visibleProperty instanceof BooleanProperty, `invalid visibleProperty: ${visibleProperty}` );
-    assert && assert( modelViewTransform instanceof ModelViewTransform2,
-      `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype,
-      `Extra prototype on Options: ${options}` );
+    options = merge( {
+
+      // {number} - the radius of the tip-circle, in view coordinates.
+      tipCircleRadius: 13,
+
+      // super-class options
+      arrowOptions: CollisionLabColors.VELOCITY_VECTOR_COLORS
+
+    }, options );
+
+    super( ball.positionProperty, ball.velocityProperty, velocityVectorVisibleProperty, modelViewTransform, options );
 
     //----------------------------------------------------------------------------------------
 
-    super( velocityProperty, visibleProperty, modelViewTransform, BALL_VELOCITY_VECTOR_OPTIONS );
-
-    // create label for the tip of velocity vector
-    const tipLabelText = new Text( 'V', {
-      font: new PhetFont( 16 ),
-      center: Vector2.ZERO,
-      fill: 'black'
+    // Create the Text instance that displays the velocity symbol. Position to be updated later.
+    const velocitySymbolText = new Text( collisionLabStrings.symbol.velocity, {
+      font: CollisionLabConstants.CONTROL_FONT,
+      fill: Color.BLACK
     } );
 
-    // create circular outline for the tip of velocity vector
-    const tipCircle = new Circle( 13, { stroke: 'black' } );
+    // Create the circle at the tip of the vector. Position to be updated later.
+    const tipCircle = new Circle( options.tipCircleRadius, { stroke: Color.BLACK, cursor: 'pointer' } );
 
-    // create a layer node for the circular outline and tip label
-    const tipTargetNode = new Node();
-    tipTargetNode.addChild( tipCircle );
-    tipTargetNode.addChild( tipLabelText );
-    tipTargetNode.moveToBack();
-    this.addChild( tipTargetNode );
+    // Add the tipCircle and the velocitySymbolText as children of this Node.
+    this.addChild( tipCircle );
+    this.addChild( velocitySymbolText );
 
-    const tipPositionProperty = new Vector2Property( modelViewTransform.modelToViewDelta( velocityProperty.value ) );
+    //----------------------------------------------------------------------------------------
 
-    // create dragListener for the tip
-    const tipDragListener = new DragListener( {
-      positionProperty: tipPositionProperty,
-      start: () => {
-        xUserControlledProperty.value = true;
-        yUserControlledProperty.value = true;
+    // Add a DragListener to the Tip Circle. When this happens, the velocity of the Ball changes based on the new
+    // components of the velocity vector. Listener never removed since BallVelocityVectorNode are never disposed.
+    tipCircle.addInputListener( new DragListener( {
+      transform: modelViewTransform,
+      drag: ( event, listener ) => {
+
+        // Update the xVelocity of the Ball first.
+        ball.xVelocity = modelViewTransform.viewToModelDeltaX( listener.modelPoint.x );
+
+        // If the dimensional PlayArea is 2D, then update the yVelocity of the Ball as well.
+        ( dimensions === 2 ) && ( ball.yVelocity = modelViewTransform.viewToModelDeltaY( listener.modelPoint.y ) );
+      },
+
+      // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
+      start: ( event, listener ) => {
+        ball.xVelocityUserControlledProperty.value = true;
+        ( dimensions === 2 ) && ( ball.yVelocityUserControlledProperty.value = true );
       },
       end: () => {
-        xUserControlledProperty.value = false;
-        yUserControlledProperty.value = false;
+        ball.xVelocityUserControlledProperty.value = false;
+        ( dimensions === 2 ) && ( ball.yVelocityUserControlledProperty.value = false );
       }
+    } ) );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when the ballValueProperty changes and update the tip-circle position. Link is never unlinked since
+    // BallVectorNodes are never disposed.
+    ball.velocityProperty.link( velocity => {
+
+      // Get the position of the tip in view coordinates. This is relative to our origin, which is the tail of the
+      // Vector.
+      tipCircle.center = modelViewTransform.modelToViewDelta( velocity );
+      velocitySymbolText.center = tipCircle.center;
     } );
 
-    // add input listener to tip of the velocity vector
-    tipTargetNode.addInputListener( tipDragListener );
-
-    const velocityListener = vector => {
-      tipTargetNode.center = modelViewTransform.modelToViewDelta( vector );
-    };
-    velocityProperty.link( velocityListener );
-
-    const tipPositionListener = velocity => {
-      if ( ball.playArea.dimensions === 2 ) {
-        ball.velocity = modelViewTransform.viewToModelDelta( velocity );
-      }
-      else {
-        ball.xVelocity = modelViewTransform.viewToModelDeltaX( velocity.x );
-        ball.yVelocity = 0;
-      }
-    };
-    // update the velocity vector upon change of the tip position
-    tipPositionProperty.lazyLink( tipPositionListener );
-
-    const playListener = play => { tipTargetNode.visible = !play; };
-
-    //  make the tip invisible if the simulation is running
-    isPlayingProperty.link( playListener );
+    // Observe when the sim's isPlayingProperty changes and update the visibility of the tip. The tip and the symbol are
+    // only visible if and only if the simulation is paused. Link never unlinked BallVectorNodes are never disposed.
+    isPlayingProperty.link( isPlaying => {
+      tipCircle.visible = !isPlaying;
+      velocitySymbolText.visible = !isPlaying;
+    } );
   }
 }
 

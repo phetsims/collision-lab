@@ -61,7 +61,7 @@ class BallVectorNode extends Node {
       this.translation = modelViewTransform.modelToViewPosition( ballPosition );
     } );
 
-    // Observe when the ballValueProperty change and update the tip position of this Node. Link is never unlinked since
+    // Observe when the ballValueProperty changes and update the tip position of this Node. Link is never unlinked since
     // BallVectorNodes are never disposed.
     ballValueProperty.link( ballValue => {
 
