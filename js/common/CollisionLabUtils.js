@@ -106,11 +106,12 @@ const CollisionLabUtils = {
 
   /**
    * Determines whether an array, or an ObservableArray, is strictly sorted in ascending order (non-inclusive) by
-   * a criterion function that ranks each element. The criterion function is passed each element of the collection.
+   * a criterion function that numerically ranks each element of the array. The criterion function is passed each
+   * element of the collection.
    * @public
    *
    * @param {ObservableArray.<*>|*[]} collection
-   * @param {function(value:*)} criterion
+   * @param {function(value:*):number} criterion
    * @returns {boolean}
    */
   isSortedBy( collection, criterion ) {
