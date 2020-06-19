@@ -38,6 +38,7 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
+import CompositeStuckBalls from './CompositeStuckBalls.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import PlayArea from './PlayArea.js';
 
@@ -211,15 +212,25 @@ class CollisionEngine {
     const v2xP = tangent.dotXY( v2tP, v2nP );
     const v1yP = normal.dotXY( v1tP, v1nP );
     const v2yP = normal.dotXY( v2tP, v2nP );
-    ball1.velocity = new Vector2( v1xP, v1yP );
+
+    if ( isSticky ) {
+            ball1.position = r1;
+      ball2.position = r2;
+      new CompositeStuckBalls( ball1, ball2, this.ballSystem.centerOfMass );
+
+          ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
+    }
+    else {
+          ball1.velocity = new Vector2( v1xP, v1yP );
+    ball2.velocity = new Vector2( v2xP, v2yP )
+      // Register the exact contact position of the collision for sub-classes.
+      this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
 
-    // Register the exact contact position of the collision for sub-classes.
-    this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
-
-    // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
-    ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
-    ball2.position = r2.plus( ball2.velocity.times( overlappedTime ) );
+      // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
+      ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
+      ball2.position = r2.plus( ball2.velocity.times( overlappedTime ) );
+    }
   }
 
   /**

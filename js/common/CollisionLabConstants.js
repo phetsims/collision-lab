@@ -27,7 +27,7 @@ const CollisionLabConstants = {
   // Ranges
   MASS_RANGE: new Range( 0.1, 3.0 ),
   VELOCITY_RANGE: new Range( -4, 4 ),
-  ELASTICITY_PERCENT_RANGE: new RangeWithValue( 0, 100, 100 ),
+  ELASTICITY_PERCENT_RANGE: new RangeWithValue( 0, 100, 0 ),
 
   // Time
   TIME_STEP_DURATION: 0.03, // Seconds of real time per each press of the Step button.
