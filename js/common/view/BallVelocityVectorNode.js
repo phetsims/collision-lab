@@ -82,7 +82,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     // Add a DragListener to the Tip Circle. When this happens, the velocity of the Ball changes based on the new
     // components of the velocity vector. Listener never removed since BallVelocityVectorNode are never disposed.
     tipCircle.addInputListener( new DragListener( {
-      transform: modelViewTransform,
+      applyOffset: false,
       drag: ( event, listener ) => {
 
         // Update the xVelocity of the Ball first.

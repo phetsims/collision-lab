@@ -109,15 +109,14 @@ class BallNode extends Node {
 
     // Create the Vector Node for the velocity vector of the Ball. To be positioned later.
     const velocityVectorNode = new BallVelocityVectorNode( ball,
-      ball.velocityProperty,
-      ball.xVelocityUserControlledProperty,
-      ball.yVelocityUserControlledProperty,
+      ball.playArea.dimensions,
       velocityVectorVisibleProperty,
       isPlayingProperty,
       modelViewTransform );
 
     // Create the Vector Node for the momentum vector of the Ball. To be positioned later.
-    const momentumVectorNode = new BallMomentumVectorNode( ball.momentumProperty,
+    const momentumVectorNode = new BallMomentumVectorNode( ball.positionProperty,
+      ball.momentumProperty,
       momentumVectorVisibleProperty,
       modelViewTransform );
 

@@ -85,7 +85,7 @@ class BallVectorNode extends Node {
     visibleProperty.linkAttribute( this, 'visible' );
 
     // Finally, add the arrow as a child of this Node.
-    this.addChild( this.arrowNode );
+    this.addChild( arrowNode );
   }
 }
 
