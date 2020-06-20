@@ -23,8 +23,8 @@
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
  *
- *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
- *     standard rigid-body collision model as described in
+ *   - The algorithms for Ball collisions were adapted but severely improved from the flash implementation of Collision
+ *     Lab. They follow the standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
  *   - The HTML5 implementation of this simulation contains two types of perfectly inelastic collisions. See
