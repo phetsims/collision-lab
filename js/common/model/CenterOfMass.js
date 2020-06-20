@@ -44,11 +44,6 @@ class CenterOfMass {
     // @private {ObservableArray.<Ball>} - reference to the balls that were passed in.
     this.balls = balls;
 
-    // @private {Property.<boolean>} - reference to the centerOfMassVisibleProperty that was passed in.
-    this.centerOfMassVisibleProperty = centerOfMassVisibleProperty;
-
-    //----------------------------------------------------------------------------------------
-
     // Gather the massProperty, positionProperty, and velocityProperty of ALL possible balls into their respective
     // arrays. We use these as dependencies for the Properties below. This does not hinder the performance of the
     // simulation since Balls NOT in the system are not stepped and their Properties don't change.
@@ -68,7 +63,7 @@ class CenterOfMass {
     this.positionProperty = new DerivedProperty(
       [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballPositionProperties, balls.lengthProperty ],
       centerOfMassVisible => {
-        return centerOfMassVisible ? this.computePosition() : this.position; // Don't recompute if not visible.
+        return centerOfMassVisible ? CenterOfMass.computePosition( balls ) : this.position;
       }, {
         valueType: Vector2
       } );
@@ -87,7 +82,7 @@ class CenterOfMass {
     this.velocityProperty = new DerivedProperty(
       [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
       centerOfMassVisible => {
-        return centerOfMassVisible ? this.computeVelocity() : this.velocity; // Don't recompute if not visible.
+        return centerOfMassVisible ? CenterOfMass.computeVelocity( balls ) : this.velocity;
       }, {
         valueType: Vector2
       } );
@@ -103,7 +98,7 @@ class CenterOfMass {
    * @returns {Vector2} - in meter coordinates.
    */
   get position() {
-    return this.positionProperty ? this.positionProperty.value : this.computePosition();
+    return this.positionProperty ? this.positionProperty.value : CenterOfMass.computePosition( this.balls );
   }
 
   /**
@@ -113,65 +108,68 @@ class CenterOfMass {
    * @returns {Vector2} - in meters per second.
    */
   get velocity() {
-    return this.velocityProperty ? this.velocityProperty.value : this.computeVelocity();
+    return this.velocityProperty ? this.velocityProperty.value : CenterOfMass.computeVelocity( this.balls );
   }
 
   /*----------------------------------------------------------------------------*
-   * Private facing.
+   * Static Methods.
    *----------------------------------------------------------------------------*/
 
   /**
    * Computes the total mass of the Balls in the system.
    * @private
    *
+   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {number} - in kg.
    */
-  computeTotalBallMass() {
+  static computeTotalBallSystemMass( balls ) {
     let totalMass = 0;
 
-    this.balls.forEach( ball => {
+    balls.forEach( ball => {
       totalMass += ball.mass;
     } );
     return totalMass;
   }
 
   /**
-   * Computes the position of the center of mass. Normally  when the position of one of the Balls in the system
+   * Computes the position of the center of mass. Normally called when the position of one of the Balls in the system
    * is changing or when Balls are added/removed from the system.
-   * @private
+   * @public
    *
+   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {Vector2} - in meter coordinates.
    */
-  computePosition() {
+  static computePosition( balls ) {
 
     // Determine the total first moment (mass * position) of the system.
     const totalFirstMoment = Vector2.ZERO.copy();
-    this.balls.forEach( ball => {
+    balls.forEach( ball => {
       totalFirstMoment.add( ball.position.times( ball.mass ) );
     } );
 
     // The position of the center of mass is the total first moment divided by the total mass.
     // See https://en.wikipedia.org/wiki/Center_of_mass#A_system_of_particles for background on this formula.
-    return totalFirstMoment.dividedScalar( this.computeTotalBallMass() );
+    return totalFirstMoment.dividedScalar( CenterOfMass.computeTotalBallSystemMass( balls ) );
   }
 
   /**
    * Computes the velocity of the center of mass. Called when the momentum of one of the Balls in the system
    * is changing or when Balls are added/removed from the system.
-   * @private
+   * @public
    *
+   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {Vector2} - in meters per second.
    */
-  computeVelocity() {
+  static computeVelocity( balls ) {
 
     // Determine the total momentum of the system.
     const totalMomentum = Vector2.ZERO.copy();
-    this.balls.forEach( ball => {
+    balls.forEach( ball => {
       totalMomentum.add( ball.momentum );
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
-    return totalMomentum.dividedScalar( this.computeTotalBallMass() );
+    return totalMomentum.dividedScalar( CenterOfMass.computeTotalBallSystemMass( balls ) );
   }
 }
 
