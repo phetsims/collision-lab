@@ -40,23 +40,21 @@ class CompositeStuckBalls {
     // All in center-of-mass reference frame.
     const r1 = this.ball1.position.minus( this.centerOfMassPosition );
     const r2 = this.ball2.position.minus( this.centerOfMassPosition );
-    const v1 = this.omega.cross( r1.toVector3() ).toVector2();
-    const v2 = this.omega.cross( r2.toVector3() ).toVector2();
-    const r1p = r1.rotate( this.omega.magnitude * -dt );
-    const r2p = r2.rotate( this.omega.magnitude * -dt );
-        this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
+    this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
+    const r1p = r1.rotate( this.omega.magnitude * dt );
+    const r2p = r2.rotate( this.omega.magnitude * dt );
+    const v1p = this.omega.cross( r1p.toVector3() ).toVector2();
+    const v2p = this.omega.cross( r2p.toVector3() ).toVector2();
 
-    // console.log( r1p, r2p, v1, v2, a1, a2, r1, r2, this.centerOfMass.position )
     // Back in absolute reference frame.
     this.ball1.position = this.centerOfMassPosition.plus( r1p );
     this.ball2.position = this.centerOfMassPosition.plus( r2p );
-    this.ball1.velocity = this.centerOfMassVelocity.plus( v1 );
-    this.ball2.velocity = this.centerOfMassVelocity.plus( v2 );
+    this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
+    this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
 
-
-    const a = this.ball1.position.minus( this.centerOfMassPosition ).crossScalar( this.ball1.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball1.mass ) );
-    const b = this.ball2.position.minus( this.centerOfMassPosition ).crossScalar( this.ball2.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball2.mass ) );
-    console.log( this.totalAngularMomentum.magnitude - a - b );
+    // const a = this.ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball1.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball1.mass ).toVector3() );
+    // const b = this.ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball2.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball2.mass ).toVector3() );
+    // console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
   }
 }
 
