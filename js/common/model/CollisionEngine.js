@@ -192,8 +192,8 @@ class CollisionEngine {
     const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, isReversing );
 
     // Get exact positions when the Balls collided by rewinding by the overlapped time.
-    const r1 = BallUtils.computeBallPosition( ball1, -overlappedTime );
-    const r2 = BallUtils.computeBallPosition( ball2, -overlappedTime );
+    const r1 = BallUtils.computeUniformMotionBallPosition( ball1, -overlappedTime );
+    const r2 = BallUtils.computeUniformMotionBallPosition( ball2, -overlappedTime );
 
     // Convenience references to the other known Ball values.
     const m1 = ball1.mass;
@@ -339,7 +339,7 @@ class CollisionEngine {
         const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
 
         // Get exact position when the Ball collided by rewinding by the overlapped time.
-        const contactPosition = BallUtils.computeBallPosition( ball, -overlappedTime );
+        const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
         if ( elasticity === 0 && this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {

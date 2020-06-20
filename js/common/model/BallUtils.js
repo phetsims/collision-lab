@@ -68,16 +68,17 @@ const BallUtils = {
   },
 
   /**
-   * Gets the position of a Ball given a time-delta and the Ball, assuming the ball is undergoing ballistic
-   * motion and is not accelerating or colliding with anything. The delta-time can be negative to get the position
-   * of the Ball in the past.
+   * Gets the position of a Ball given a time-delta and the Ball, assuming the ball is undergoing uniform motion in
+   * a straight line and isn't accelerating or colliding with anything. The delta-time can be negative to get the
+   * position of the Ball in the past.
+   *
    * @public
    *
    * @param {Ball} ball
    * @param {number} dt - in seconds
    * @returns {Vector2} - in meters
    */
-  computeBallPosition( ball, dt ) {
+  computeUniformMotionBallPosition( ball, dt ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 

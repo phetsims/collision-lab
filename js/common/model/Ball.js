@@ -194,7 +194,7 @@ class Ball {
   stepUniformMotion( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    this.position = BallUtils.computeBallPosition( this, dt );
+    this.position = BallUtils.computeUniformMotionBallPosition( this, dt );
   }
 
   /**
