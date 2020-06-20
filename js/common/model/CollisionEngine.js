@@ -44,6 +44,7 @@ import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import CompositeStuckBalls from './CompositeStuckBalls.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
+import InelasticRotationEngine from './InelasticRotationEngine.js';
 import PlayArea from './PlayArea.js';
 
 class CollisionEngine {
@@ -62,6 +63,9 @@ class CollisionEngine {
     // @private {BallSystem} - reference to the passed-in BallSystem.
     this.ballSystem = ballSystem;
 
+    // @private {InelasticRotationEngine} - create the sub-model that handles all 'stick' inelastic collisions.
+    this.inelasticRotationEngine = new InelasticRotationEngine();
+
     // @protected {Object} - mutable vectors, reused in critical code for a slight performance optimization.
     this.mutableVectors = {
       deltaR: new Vector2( 0, 0 ),
@@ -70,32 +74,35 @@ class CollisionEngine {
       normal: new Vector2( 0, 0 ),
       tangent: new Vector2( 0, 0 )
     };
-
-    this.inelasticRotationEngine = new InelasticRotationEngine();
-
-    this.compositeStuckBall = null;
   }
 
   /**
-   * Steps the Collision Detector, which will handle all collisions involving Balls.
+   * Steps the CollisionEngine, which will handle all collisions involving Balls.
    * @public
    *
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   step( dt ) {
 
-    // First step the position of the balls based on a ballistic motion model, assuming no collisions occur.
-    // Then, step the collisionEngine after to detect if any collisions occurred and formulate a response.
+    // First step the position of the balls (that aren't being rotated by InelasticRotationEngine), assuming they are
+    // undergoing uniform motion and that there are no collisions (for now).
     this.ballSystem.balls.forEach( ball => {
-      if ( !this.compositeStuckBall || ( this.compositeStuckBall.ball1 !== ball && this.compositeStuckBall.ball2 !== ball ) )  {
 
-        ball.step( dt );
-      }
+      // Only step the Balls that aren't being handled by InelasticRotationEngine.
+      !this.inelasticRotationEngine.isHandling( ball ) && ball.stepUniformMotion( dt );
     } );
-    this.compositeStuckBall && this.compositeStuckBall.step( dt );
+
+    // Handle all collisions now that the Balls have been moved.
     this.handleBallToBallCollisions( dt < 0 );
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+
+    // Step the InelasticRotationEngine, which will move the Balls that are in a rotation cluster.
+    this.inelasticRotationEngine.step( dt );
   }
+
+
+
+
 
   reset() {
     this.compositeStuckBall = null;
