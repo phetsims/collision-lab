@@ -67,6 +67,8 @@ class CollisionEngine {
       tangent: new Vector2( 0, 0 )
     };
 
+    this.inelasticRotationEngine = new InelasticRotationEngine();
+
     this.compositeStuckBall = null;
   }
 
