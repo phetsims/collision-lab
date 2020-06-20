@@ -64,7 +64,7 @@ class CollisionEngine {
     this.ballSystem = ballSystem;
 
     // @private {InelasticRotationEngine} - create the sub-model that handles all 'stick' inelastic collisions.
-    this.inelasticRotationEngine = new InelasticRotationEngine();
+    this.inelasticRotationEngine = new InelasticRotationEngine( this.ballSystem.ballSystemUserControlledProperty );
 
     // @protected {Object} - mutable vectors, reused in critical code for a slight performance optimization.
     this.mutableVectors = {
@@ -100,12 +100,14 @@ class CollisionEngine {
     this.inelasticRotationEngine.step( dt );
   }
 
-
-
-
-
+  /**
+   * Resets the CollisionEngine.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
+   */
   reset() {
-    this.compositeStuckBall = null;
+    this.inelasticRotationEngine.reset();
   }
 
   //----------------------------------------------------------------------------------------
