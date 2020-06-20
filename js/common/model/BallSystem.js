@@ -196,21 +196,6 @@ class BallSystem {
   }
 
   /**
-   * Steps the BallSystem.
-   * @public
-   *
-   * @param {number} dt - in seconds
-   */
-  step( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
-    // Step each Ball in the BallSystem.
-    this.balls.forEach( ball => {
-      ball.step( dt );
-    } );
-  }
-
-  /**
    * 'Bumps' a ball way from the other Balls in the system that it is currently overlapping with. The 'bumped' ball
    * will be placed to a position adjacent to the other Balls. This method does nothing if the Ball isn't overlapping
    * with any other Balls. See https://github.com/phetsims/collision-lab/issues/100.
