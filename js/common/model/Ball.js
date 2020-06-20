@@ -185,13 +185,13 @@ class Ball {
   }
 
   /**
-   * Moves this Ball by one time step, assuming that the Ball isn't accelerating or colliding with other Balls. If this
-   * isn't the case, its motion is corrected in CollisionEngine.js
+   * Moves the ball by one time step, assuming that the Ball isn't accelerating and is in uniform motion in a straight
+   * line. If this isn't the case, its motion is corrected in CollisionEngine.js
    * @public
    *
    * @param {number} dt - time in seconds
    */
-  step( dt ) {
+  stepUniformMotion( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     this.position = BallUtils.computeBallPosition( this, dt );
