@@ -326,6 +326,11 @@ class CollisionEngine {
 
       // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
       if ( !this.playArea.fullyContainsBall( ball ) ) {
+        if ( this.compositeStuckBall && ( this.compositeStuckBall.ball1 !== ball || this.compositeStuckBall.ball2 !== ball ) ) {
+          this.compositeStuckBall.freeze();
+          return;
+        }
+
 
         // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
         // position when the ball first collided. Use the overlapped time to find the exact collision position.

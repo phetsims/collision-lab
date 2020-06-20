@@ -6,6 +6,8 @@
  * @author Brandon Li
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector3 from '../../../../dot/js/Vector3.js';
 import collisionLab from '../../collisionLab.js';
 
 class CompositeStuckBalls {
@@ -61,6 +63,13 @@ class CompositeStuckBalls {
     const b = this.omega.times( momentOfI2 );
 
     console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
+  }
+
+  freeze() {
+    this.ball1.velocity = Vector2.ZERO;
+    this.ball2.velocity = Vector2.ZERO;
+    this.centerOfMassVelocity.set( Vector2.ZERO );
+    this.omega.set( Vector3.ZERO );
   }
 }
 
