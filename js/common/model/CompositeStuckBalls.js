@@ -1,13 +1,11 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * This is a test class for #87. I don't think this will work. But maybe it will, and that would be rally nice.
+ * This is a test class for #87. I don't think this will work. But maybe it will, and that would be really nice.
  *
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
-import Vector3 from '../../../../dot/js/Vector3.js';
 import collisionLab from '../../collisionLab.js';
 
 class CompositeStuckBalls {
@@ -22,6 +20,7 @@ class CompositeStuckBalls {
     // @private
     this.totalAngularMomentum = a.plus( b );
 
+    // const v1
 
     // parallel axis theorem
     const momentOfI1 = 2 / 5 * ball1.mass * ( ball1.radius * ball1.radius ) + ball1.mass * ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
@@ -52,9 +51,16 @@ class CompositeStuckBalls {
     this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
     this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
 
+    const momentOfI1 = 1 / 2 * this.ball1.mass * ( this.ball1.radius * this.ball1.radius ) + this.ball1.mass * this.ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+    const momentOfI2 = 1 / 2 * this.ball2.mass * ( this.ball2.radius * this.ball2.radius ) + this.ball2.mass * this.ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+
+
     // const a = this.ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball1.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball1.mass ).toVector3() );
     // const b = this.ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball2.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball2.mass ).toVector3() );
-    // console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
+    const a = this.omega.times( momentOfI1 );
+    const b = this.omega.times( momentOfI2 );
+
+    console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
   }
 }
 
