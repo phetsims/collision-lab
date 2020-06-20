@@ -68,7 +68,7 @@ const BallUtils = {
   },
 
   /**
-   * Gets the position of a Ball given a time-delta and the Ball, assuming the ball is undergoing uniform motion in
+   * Gets the position of a Ball, given a time-delta and the Ball, assuming the ball is undergoing uniform motion in
    * a straight line and isn't accelerating or colliding with anything. The delta-time can be negative to get the
    * position of the Ball in the past.
    * @public
