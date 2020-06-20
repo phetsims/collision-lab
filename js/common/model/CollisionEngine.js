@@ -1,8 +1,8 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * CollisionEngine handles all collision detection and responses within a PlayArea. It is the physics engine for
- * all screens in the 'Collision Lab' simulation.
+ * CollisionEngine handles all collision detection and responses. It is the physics engine that is used for all screens
+ * of the 'Collision Lab' simulation.
  *
  * ## Collision detection:
  *
@@ -26,6 +26,10 @@
  *   - The algorithms for Ball collisions were adapted from the flash implementation of Collision Lab. They follow the
  *     standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+ *
+ *   - The HTML5 implementation of this simulation contains two types of perfectly inelastic collisions. See
+ *     InelasticCollisionTypes for more documentation. CollisionEngine itself ONLY handles 'slip' collisions and
+ *     defers all 'stick' collision responses to the InelasticRotationEngine sub-model. See InelasticRotationEngine.
  *
  * @author Brandon Li
  * @author Martin Veillette
