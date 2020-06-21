@@ -32,15 +32,35 @@
  * @author Brandon Li
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+import Ball from './Ball.js';
 
 class InelasticRotationEngine {
 
-
   constructor() {
 
-    this.stickyBallCluster = null;
+    // @private {Ball|null} - the Balls that are involved in the rotation. These Balls should not be handled by
+    //                        CollisionEngine. Currently, InelasticRotationEngine only supports handling 2 Balls.
+    //                        In the future, this may be changed to an array to consider more Balls in the rotation.
+    this.ball1;
+    this.ball2;
+
+    // @private {Vector2} - the position/velocity of the center of mass of the two balls involved in the collision.
+    //                      These vectors are convenience references for computations in step(). The velocity is mutated
+    //                      on each registerStickyCollision() call, and the position is mutated on each step() call.
+    this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
+    this.centerOfMassVelocity = Vector2.ZERO.copy(); // in meters per second.
+
+    // @private {number} - the angular velocity of the rotation of the two Balls, if they exist, around the center of
+    //                     mass, in radians per second. This value is set on each registerStickyCollision() call.
+    this.angularVelocity = 0;
+
+    // @private {number} - the magnitude of the total angular momentum of the two Balls **relative to the center of
+    //                     mass**. This is used internally for assertions to ensure that angular momentum is conserved.
+    this.totalAngularMomentum = 0;
   }
+
 
   registerStickyCollision( ball1, ball2 ) {
 
@@ -56,8 +76,70 @@ class InelasticRotationEngine {
 
     this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, new Vector2( v1xP, v1yP ) );
       this.compositeStuckBall.step( overlappedTime );
+
+
+
+
+
+    const a = ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( ball1.velocity.minus( centerOfMassVelocity ).timesScalar( ball1.mass ).toVector3() );
+    const b = ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( ball2.velocity.minus( centerOfMassVelocity ).timesScalar( ball2.mass ).toVector3() );
+
+
+
+    // const v1
+
+    // parallel axis theorem ?
+    const momentOfI1 = 2 / 5 * ball1.mass * ( ball1.radius * ball1.radius ) + ball1.mass * ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+    const momentOfI2 = 2 / 5 * ball2.mass * ( ball2.radius * ball2.radius ) + ball2.mass * ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+
+    // @private - about center of mass - one system, same axis, add moments.
+    this.omega = this.totalAngularMomentum.dividedScalar( momentOfI1 + momentOfI2 );
+
+    this.ball1 = ball1;
+    this.ball2 = ball2;
+    this.centerOfMassVelocity = centerOfMassVelocity;
   }
 
+
+
+
+
+
+  step( dt ) {
+
+    // All in center-of-mass reference frame.
+    const r1 = this.ball1.position.minus( this.centerOfMassPosition );
+    const r2 = this.ball2.position.minus( this.centerOfMassPosition );
+    this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
+    const r1p = r1.rotate( this.omega.magnitude * dt );
+    const r2p = r2.rotate( this.omega.magnitude * dt );
+    const v1p = this.omega.cross( r1p.toVector3() ).toVector2();
+    const v2p = this.omega.cross( r2p.toVector3() ).toVector2();
+
+    // Back in absolute reference frame.
+    this.ball1.position = this.centerOfMassPosition.plus( r1p );
+    this.ball2.position = this.centerOfMassPosition.plus( r2p );
+    this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
+    this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
+
+    const momentOfI1 = 1 / 2 * this.ball1.mass * ( this.ball1.radius * this.ball1.radius ) + this.ball1.mass * this.ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+    const momentOfI2 = 1 / 2 * this.ball2.mass * ( this.ball2.radius * this.ball2.radius ) + this.ball2.mass * this.ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+
+
+    // const a = this.ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball1.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball1.mass ).toVector3() );
+    // const b = this.ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball2.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball2.mass ).toVector3() );
+    const a = this.omega.times( momentOfI1 );
+    const b = this.omega.times( momentOfI2 );
+
+    console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
+  }
+
+  freeze() {
+    this.ball1.velocity = Vector2.ZERO;
+    this.ball2.velocity = Vector2.ZERO;
+    this.centerOfMassVelocity.set( Vector2.ZERO );
+    this.omega.set( Vector3.ZERO );
+  }
   step() {
 
   }
