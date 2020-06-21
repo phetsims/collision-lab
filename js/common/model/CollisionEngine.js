@@ -235,7 +235,7 @@ class CollisionEngine {
     // If the collision is perfectly inelastic and not 'slip', defer the collision response to the
     // InelasticRotationEngine sub-model. See InelasticRotationEngine
     if ( e === 0 && this.playArea.inelasticCollisionType !== InelasticCollisionTypes.SLIP ) {
-      this.inelasticRotationEngine.registerStickyCollision( ball1, ball2, r1, r2, overlappedTime, normal, tangent );
+      this.inelasticRotationEngine.registerStickyCollision( ball1, ball2, r1, r2, overlappedTime, tangent );
     }
     else {
 
