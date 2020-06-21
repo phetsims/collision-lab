@@ -17,8 +17,8 @@
  *    center of mass of 2 balls. We use the equation described in
  *    https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision.
  *
- *  - Using the conservation of Angular Momentum, the InelasticRotationEngine derives the angular velocity (omega) of
- *    the rotation of the balls (relative to the center of mass). See the following links for some general background:
+ *  - Using the conservation of Angular Momentum (L), the InelasticRotationEngine derives the angular velocity (omega)
+ *    of the rotation of the balls (relative to the center of mass). See the following for some general background:
  *      + https://en.wikipedia.org/wiki/Angular_momentum#Discussion
  *      + https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles
  *      + https://en.wikipedia.org/wiki/Angular_velocity
@@ -35,6 +35,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
+import CenterOfMass from './CenterOfMass.js';
 
 class InelasticRotationEngine {
 
@@ -48,58 +49,119 @@ class InelasticRotationEngine {
 
     // @private {Vector2} - the position/velocity of the center of mass of the two balls involved in the collision.
     //                      These vectors are convenience references for computations in step(). The velocity is mutated
-    //                      on each registerStickyCollision() call, and the position is mutated on each step() call.
+    //                      on each handleStickyCollision() call, and the position is mutated on each step() call.
     this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
     this.centerOfMassVelocity = Vector2.ZERO.copy(); // in meters per second.
 
-    // @private {number} - the angular velocity of the rotation of the two Balls, if they exist, around the center of
-    //                     mass, in radians per second. This value is set on each registerStickyCollision() call.
-    this.angularVelocity = 0;
+    // @private {number|null} - the angular velocity of the rotation of the two Balls, if they exist, around the center
+    //                          of mass, in radians per second. This value is set on each handleStickyCollision() call.
+    this.angularVelocity;
 
-    // @private {number} - the magnitude of the total angular momentum of the two Balls **relative to the center of
-    //                     mass**. This is used internally for assertions to ensure that angular momentum is conserved.
-    this.totalAngularMomentum = 0;
+    //----------------------------------------------------------------------------------------
+
+    // @private {number|null} - the magnitude of the total angular momentum of the two Balls **relative to the center of
+    //                          mass**. This is used for assertions to ensure that angular momentum is conserved.
+    this.totalAngularMomentum; // in kg*(m^2/s).
+
+    // @private {Vector2} - the total linear momentum of the two Balls. This is used internally for assertions to ensure
+    //                      that linear momentum is conserved.
+    this.totalLinearMomentum = Vector2.ZERO.copy(); // in kg*(m/s).
   }
 
+  //----------------------------------------------------------------------------------------
 
-  registerStickyCollision( ball1, ball2 ) {
+    /**
+   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
+   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+   * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
+   * @public
+   *
+   * @param {Ball} ball
+   * @returns {number} - in kg*(m^2/s).
+   */
+  computeAngularMomentum1( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( this.isHandling( ball ) );
 
-    // Convenience references to the other known Ball values.
-    const m1 = ball1.mass;
-    const m2 = ball2.mass;
-    const v1t = ball1.velocity.dot( tangent );
-    const v2t = ball2.velocity.dot( tangent );
-    const centerOFMassVel = ( m1 * v1t + m2 * v2t ) / ( m1 + m2 );
+    // Get the position vector (r) and momentum (p) relative to the center-of-mass
+    const r = ball.position.minus( this.centerOfMassPosition );
+    const p = ball.velocity.minus( this.centerOfMassVelocity ).multiplyScalar( ball2.mass );
 
-    ball1.position = r1;
-    ball2.position = r2;
+    // L = r x p  (relative to the center-of-mass)
+    return r.crossScalar( p );
+  }
 
-    this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, new Vector2( v1xP, v1yP ) );
-      this.compositeStuckBall.step( overlappedTime );
+  /**
+   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
+   * using the L = r^2 * m * omega formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+   * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
+   * @public
+   *
+   * @param {Ball} ball
+   * @returns {number} - in kg*(m^2/s).
+   */
+  computeAngularMomentum2( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( this.isHandling( ball ) );
+    assert && assert( Number.isFinite( this.angularVelocity ), 'omega not set' );
 
+    // L = r^2 * m * omega
+    return ball.radius * ball.radius * ball.mass * this.omega;
+  }
 
+  //----------------------------------------------------------------------------------------
 
+  /**
+   * Processes and responds to perfectly inelastic 'stick' collision between two Balls. In terms of the collision
+   * response described at the top of this file, this method is responsible for computing the velocity of the
+   * center of mass of the two balls, the total angular momentum, and the angular velocity.
+   * @public
+   *
+   * @param {Ball} ball1 - the first Ball involved in the collision.
+   * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
+   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
+   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
+   */
+  handleStickyCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
+    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
+    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
+    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-
-    const a = ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( ball1.velocity.minus( centerOfMassVelocity ).timesScalar( ball1.mass ).toVector3() );
-    const b = ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( ball2.velocity.minus( centerOfMassVelocity ).timesScalar( ball2.mass ).toVector3() );
-
-
-
-    // const v1
-
-    // parallel axis theorem ?
-    const momentOfI1 = 2 / 5 * ball1.mass * ( ball1.radius * ball1.radius ) + ball1.mass * ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
-    const momentOfI2 = 2 / 5 * ball2.mass * ( ball2.radius * ball2.radius ) + ball2.mass * ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared;
-
-    // @private - about center of mass - one system, same axis, add moments.
-    this.omega = this.totalAngularMomentum.dividedScalar( momentOfI1 + momentOfI2 );
-
+    // Update the internal ball references for the next step calls.
     this.ball1 = ball1;
     this.ball2 = ball2;
-    this.centerOfMassVelocity = centerOfMassVelocity;
-  }
 
+    // Set the position of the Balls to the collision positions.
+    ball1.position = collisionPosition1;
+    ball2.position = collisionPosition2;
+
+    //----------------------------------------------------------------------------------------
+
+    // Compute the velocity of the center of mass of the 2 Balls. The calculation is an vector extension of the formula
+    // described in https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision..
+    this.centerOfMassVelocity.set( ball1.momentum ).add( ball2.momentum ).divideScalar( ball1.mass + ball2.mass );
+
+    // Update the position of the center of mass of the 2 Balls. This is used as a convenience vector for computations
+    // in the step() method.
+    this.centerOfMassPosition.set( CenterOfMass.computePosition( [ ball1, ball2 ] ) );
+
+    //----------------------------------------------------------------------------------------
+
+    // Update the angular momentum reference.
+    this.totalAngularMomentum = this.computeAngularMomentum1( ball1 ) + this.computeAngularMomentum1( ball2 );
+
+    // Get the moment of inertia of both Balls, treated as point masses. The reason why we treat the Balls as point
+    // masses here is because of the formula L = r^2 * m * omega, which treats the mass as a point-mass.
+    const I1 = ball1.radius * ball1.radius * ball1.mass;
+    const I2 = ball2.radius * ball2.radius * ball2.mass;
+
+    // Update the angular velocity reference. Formula comes from
+    // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
+    this.angularVelocity = this.totalAngularMomentum / ( I1 + I2 );
+  }
 
 
 

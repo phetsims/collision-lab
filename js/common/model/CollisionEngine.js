@@ -180,7 +180,7 @@ class CollisionEngine {
   }
 
   /**
-   * Processes and responds to collision between two balls. Will update the velocity and position of both Balls. The
+   * Processes and responds to a collision between two balls. Will update the velocity and position of both Balls. The
    * collision algorithm follows the standard rigid-body collision model as described in
    * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
    *
