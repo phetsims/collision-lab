@@ -70,43 +70,38 @@ class InelasticRotationEngine {
 
   //----------------------------------------------------------------------------------------
 
-    /**
+  /**
+   * Returns a boolean that indicates if the InelasticRotationEngine is handling and responding to a Ball. Balls
+   * that are handled by InelasticRotationEngine should not be handled by CollisionEngine.
+   * @public
+   *
+   * @param {Ball} ball
+   * @returns {boolean}
+   */
+  isHandling( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    return this.ball1 === ball || this.ball2 === ball;
+  }
+
+  /**
    * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
    * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
    * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
-   * @public
+   * @private
    *
    * @param {Ball} ball
    * @returns {number} - in kg*(m^2/s).
    */
-  computeAngularMomentum1( ball ) {
+  computeAngularMomentum( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && assert( this.isHandling( ball ) );
 
     // Get the position vector (r) and momentum (p) relative to the center-of-mass
     const r = ball.position.minus( this.centerOfMassPosition );
-    const p = ball.velocity.minus( this.centerOfMassVelocity ).multiplyScalar( ball2.mass );
+    const p = ball.velocity.minus( this.centerOfMassVelocity ).multiplyScalar( ball.mass );
 
-    // L = r x p  (relative to the center-of-mass)
+    // L = r x p (relative to the center-of-mass)
     return r.crossScalar( p );
-  }
-
-  /**
-   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
-   * using the L = r^2 * m * omega formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-   * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
-   * @public
-   *
-   * @param {Ball} ball
-   * @returns {number} - in kg*(m^2/s).
-   */
-  computeAngularMomentum2( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( this.isHandling( ball ) );
-    assert && assert( Number.isFinite( this.angularVelocity ), 'omega not set' );
-
-    // L = r^2 * m * omega
-    return ball.radius * ball.radius * ball.mass * this.omega;
   }
 
   //----------------------------------------------------------------------------------------
@@ -151,12 +146,13 @@ class InelasticRotationEngine {
     //----------------------------------------------------------------------------------------
 
     // Update the angular momentum reference.
-    this.totalAngularMomentum = this.computeAngularMomentum1( ball1 ) + this.computeAngularMomentum1( ball2 );
+    this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
 
-    // Get the moment of inertia of both Balls, treated as point masses. The reason why we treat the Balls as point
-    // masses here is because of the formula L = r^2 * m * omega, which treats the mass as a point-mass.
-    const I1 = ball1.radius * ball1.radius * ball1.mass;
-    const I2 = ball2.radius * ball2.radius * ball2.mass;
+    // Get the moment of inertia of both Balls, treated as point masses rotating around the center of mass. The reason
+    // why we treat the Balls as point masses is because of the formula L = r^2 * m * omega, where r^2 * m is the moment
+    // of inertia of a point-mass. See in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+    const I1 = ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball1.mass;
+    const I2 = ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball2.mass;
 
     // Update the angular velocity reference. Formula comes from
     // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
