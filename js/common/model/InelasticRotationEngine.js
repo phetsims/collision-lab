@@ -25,6 +25,14 @@ class InelasticRotationEngine {
 
   }
 
+  reset() {
+
+  }
+
+  isHandling() {
+    return false;
+  }
+
   handleClusterToBorderCollisions() {
 
   }
