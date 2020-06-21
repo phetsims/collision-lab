@@ -32,10 +32,16 @@
  * @author Brandon Li
  */
 
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector3 from '../../../../dot/js/Vector3.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
+
+// constants
+const EPSILON = CollisionLabConstants.ZERO_THRESHOLD;
 
 class InelasticRotationEngine {
 
@@ -145,8 +151,9 @@ class InelasticRotationEngine {
 
     //----------------------------------------------------------------------------------------
 
-    // Update the angular momentum reference.
+    // Update the angular and linear momentum reference.
     this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
+    this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
 
     // Get the moment of inertia of both Balls, treated as point masses rotating around the center of mass. The reason
     // why we treat the Balls as point masses is because of the formula L = r^2 * m * omega, where r^2 * m is the moment
@@ -157,58 +164,74 @@ class InelasticRotationEngine {
     // Update the angular velocity reference. Formula comes from
     // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
     this.angularVelocity = this.totalAngularMomentum / ( I1 + I2 );
+
+    this.step( overlappedTime );
   }
 
-
-
-
-
+  /**
+   * Steps the InelasticRotationEngine, which will handle all continual ball-to-ball rotation responses for perfectly
+   * inelastic collisions that 'stick'.
+   * @public
+   *
+   * @param {number} dt - time in seconds
+   */
   step( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( dt >= 0, 'cannot reverse for perfectly inelastic' );
 
-    // All in center-of-mass reference frame.
-    const r1 = this.ball1.position.minus( this.centerOfMassPosition );
-    const r2 = this.ball2.position.minus( this.centerOfMassPosition );
-    this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
-    const r1p = r1.rotate( this.omega.magnitude * dt );
-    const r2p = r2.rotate( this.omega.magnitude * dt );
-    const v1p = this.omega.cross( r1p.toVector3() ).toVector2();
-    const v2p = this.omega.cross( r2p.toVector3() ).toVector2();
+    // Only handle responses for the Balls that InelasticRotationEngine is handling.
+    if ( this.ball1 && this.ball2 ) {
 
-    // Back in absolute reference frame.
-    this.ball1.position = this.centerOfMassPosition.plus( r1p );
-    this.ball2.position = this.centerOfMassPosition.plus( r2p );
-    this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
-    this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
+      // All in the center-of-mass reference frame.
+      const r1 = this.ball1.position.minus( this.centerOfMassPosition );
+      const r2 = this.ball2.position.minus( this.centerOfMassPosition );
+      this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
 
-    const momentOfI1 = 1 / 2 * this.ball1.mass * ( this.ball1.radius * this.ball1.radius ) + this.ball1.mass * this.ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared;
-    const momentOfI2 = 1 / 2 * this.ball2.mass * ( this.ball2.radius * this.ball2.radius ) + this.ball2.mass * this.ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared;
+      const r1p = r1.rotate( this.angularVelocity * dt );
+      const r2p = r2.rotate( this.angularVelocity * dt );
+      const v1p = new Vector3( 0, 0, this.angularVelocity ).cross( r1p.toVector3() ).toVector2();
+      const v2p = new Vector3( 0, 0, this.angularVelocity ).cross( r2p.toVector3() ).toVector2();
 
+      // Back in absolute reference frame.
+      this.ball1.position = this.centerOfMassPosition.plus( r1p );
+      this.ball2.position = this.centerOfMassPosition.plus( r2p );
+      this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
+      this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
 
-    // const a = this.ball1.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball1.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball1.mass ).toVector3() );
-    // const b = this.ball2.position.minus( this.centerOfMassPosition ).toVector3().cross( this.ball2.velocity.minus( this.centerOfMassVelocity ).timesScalar( this.ball2.mass ).toVector3() );
-    const a = this.omega.times( momentOfI1 );
-    const b = this.omega.times( momentOfI2 );
+      if ( assert ) {
+        const totalLinearMomentum = this.ball1.momentum.plus( this.ball2.momentum );
+        const totalAngularMomentum = this.computeAngularMomentum( this.ball1 ) + this.computeAngularMomentum( this.ball2 );
 
-    console.log( this.totalAngularMomentum.magnitude, this.totalAngularMomentum.minus( a.plus( b ) ).magnitude );
+        assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
+        assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
+      }
+    }
   }
+
+
+
+
+
+
 
   freeze() {
     this.ball1.velocity = Vector2.ZERO;
     this.ball2.velocity = Vector2.ZERO;
     this.centerOfMassVelocity.set( Vector2.ZERO );
-    this.omega.set( Vector3.ZERO );
-  }
-  step() {
-
+    this.angularVelocity = 0;
   }
 
   reset() {
-
+    this.ball1 = null;
+    this.ball2 = null;
+    this.angularVelocity = null;
+    this.centerOfMassPosition.set( Vector2.ZERO );
+    this.centerOfMassVelocity.set( Vector2.ZERO );
+    this.totalAngularMomentum = null;
+    this.totalLinearMomentum.set( Vector2.ZERO );
   }
 
-  isHandling() {
-    return false;
-  }
+
 
   handleClusterToBorderCollisions() {
 
