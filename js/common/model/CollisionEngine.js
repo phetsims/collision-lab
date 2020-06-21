@@ -42,7 +42,6 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
-import CompositeStuckBalls from './CompositeStuckBalls.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import InelasticRotationEngine from './InelasticRotationEngine.js';
 import PlayArea from './PlayArea.js';
@@ -166,11 +165,11 @@ class CollisionEngine {
   handleBallToBallCollisions( isReversing ) {
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
 
+    // Get the balls that aren't currently being handled by the InelasticRotationEngine.
+    const nonRotatingBalls = this.ballSystem.balls.filter( ball => !this.inelasticRotationEngine.isHandling( ball ) );
+
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
-    CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
-      if ( this.compositeStuckBall && ( this.compositeStuckBall.ball1 !== ball1 || this.compositeStuckBall.ball2 !== ball1 || this.compositeStuckBall.ball1 !== ball2 || this.compositeStuckBall.ball2 !== ball2 ) )  {
-        return;
-      }
+    CollisionLabUtils.forEachPossiblePair( nonRotatingBalls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
       // If two balls are on top of each other, process the collision.
@@ -199,6 +198,7 @@ class CollisionEngine {
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
     assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
 
     // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
     // when the balls first collided. Use the overlapped time to find the exact collision positions.
@@ -208,12 +208,6 @@ class CollisionEngine {
     const r1 = BallUtils.computeUniformMotionBallPosition( ball1, -overlappedTime );
     const r2 = BallUtils.computeUniformMotionBallPosition( ball2, -overlappedTime );
 
-    // Convenience references to the other known Ball values.
-    const m1 = ball1.mass;
-    const m2 = ball2.mass;
-    const v1 = ball1.velocity;
-    const v2 = ball2.velocity;
-
     // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
     const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
@@ -222,41 +216,40 @@ class CollisionEngine {
     // Tangential vector, called the 'plane of contact'.
     const tangent = this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
+    // Register the exact contact position of the collision for sub-classes.
+    this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
+
+    // Convenience references to the other known Ball values.
+    const m1 = ball1.mass;
+    const m2 = ball2.mass;
+    const v1 = ball1.velocity;
+    const v2 = ball2.velocity;
+    const e = this.playArea.elasticity;
+
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
     const v1n = v1.dot( normal );
     const v2n = v2.dot( normal );
     const v1t = v1.dot( tangent );
     const v2t = v2.dot( tangent );
 
-    // Convenience reference to the elasticity.
-    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
-    const e = this.playArea.elasticity;
-    const isSticky = e === 0 && this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK;
-
-    // Compute the 'normal' and 'tangential' components of velocities after collision (P for prime = after).
-    const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
-    const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
-    const v1tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v1t;
-    const v2tP = isSticky ? ( m1 * v1t + m2 * v2t ) / ( m1 + m2 ) : v2t;
-
-    // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = tangent.dotXY( v1tP, v1nP );
-    const v2xP = tangent.dotXY( v2tP, v2nP );
-    const v1yP = normal.dotXY( v1tP, v1nP );
-    const v2yP = normal.dotXY( v2tP, v2nP );
-
-    if ( isSticky ) {
-      ball1.position = r1;
-      ball2.position = r2;
-
-      this.compositeStuckBall = new CompositeStuckBalls( ball1, ball2, new Vector2( v1xP, v1yP ) );
-      this.compositeStuckBall.step( overlappedTime );
+    // If the collision is perfectly inelastic and not 'slip', defer the collision response to the
+    // InelasticRotationEngine sub-model. See InelasticRotationEngine
+    if ( e === 0 && this.playArea.inelasticCollisionType !== InelasticCollisionTypes.SLIP ) {
+      this.inelasticRotationEngine.registerStickyCollision( ball1, ball2, r1, r2, overlappedTime, normal, tangent );
     }
     else {
+
+      // Compute the 'normal' components of velocities after collision (P for prime = after).
+      const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
+      const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
+
+      // Change coordinate frames back into the standard x-y coordinate frame.
+      const v1xP = tangent.dotXY( v1t, v1nP );
+      const v2xP = tangent.dotXY( v2t, v2nP );
+      const v1yP = normal.dotXY( v1t, v1nP );
+      const v2yP = normal.dotXY( v2t, v2nP );
       ball1.velocity = new Vector2( v1xP, v1yP );
       ball2.velocity = new Vector2( v2xP, v2yP );
-      // Register the exact contact position of the collision for sub-classes.
-      this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
 
       // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
       ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
@@ -339,13 +332,9 @@ class CollisionEngine {
     // Loop through each Balls and check to see if it is colliding with the border.
     this.ballSystem.balls.forEach( ball => {
 
-      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
-      if ( !this.playArea.fullyContainsBall( ball ) ) {
-        if ( this.compositeStuckBall && ( this.compositeStuckBall.ball1 !== ball || this.compositeStuckBall.ball2 !== ball ) ) {
-          this.compositeStuckBall.freeze();
-          return;
-        }
-
+      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall. Also don't respond to
+      // balls that are currently being handled by the InelasticRotationEngine.
+      if ( !this.playArea.fullyContainsBall( ball ) && !this.inelasticRotationEngine.isHandling( ball ) ) {
 
         // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
         // position when the ball first collided. Use the overlapped time to find the exact collision position.
