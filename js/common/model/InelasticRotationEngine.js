@@ -3,11 +3,9 @@
 
 /**
  * InelasticRotationEngine handles all continual ball-to-ball collision responses for perfectly inelastic collisions
- * that 'stick'.
- *
- * Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation, where
- * Balls completely stick together and rotate around the center of mass of the cluster of Balls, if and only if the
- * collision isn't head-on.
+ * that 'stick'. Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation,
+ * where Balls completely stick together and rotate around the center of mass of the cluster of Balls, if and only if
+ * the collision is not head-on.
  *
  * Currently, InelasticRotationEngine only supports rotations of 2 Balls. If the elasticity is set to perfectly
  * inelastic collision that is sticky, there must only be 2 Balls in the BallSystem. See
@@ -15,64 +13,22 @@
  *
  * ## Collision Response
  *
- *  - When a collision between the 2 Balls is detected by CollisionEngine and the collision is a perfectly inelastic
- *    collisions that 'sticks,' the first calculation that InelasticRotationEngine computes is the velocity of the
- *    center of mass of 2 balls.
+ *  - When a collision between the 2 Balls is detected (by CollisionEngine), and the collision is a perfectly inelastic
+ *    collisions that 'sticks', the first calculation that InelasticRotationEngine computes is the velocity of the
+ *    center of mass of 2 balls. We use the equation described in
+ *    https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision.
  *
+ *  - Using the conservation of Angular Momentum, the InelasticRotationEngine derives the angular velocity (omega) of
+ *    the rotation of the balls (relative to the center of mass). See the following links for some general background:
+ *      + https://en.wikipedia.org/wiki/Angular_momentum#Discussion
+ *      + https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles
+ *      + https://en.wikipedia.org/wiki/Angular_velocity
  *
- * https://en.wikipedia.org/wiki/Angular_momentum
- *https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision
- *https://en.wikipedia.org/wiki/Moment_of_inertia
- *https://en.wikipedia.org/wiki/Parallel_axis_theorem
- *
- *
- *  * The algorithms for particle-particle collisions and particle-container collisions were adapted from the Java
- * implementation of Gas Properties. They differ from the standard rigid-body collision model as described in (e.g.)
- * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
- * For historical background on how the Java implementation informed this implementation, see:
- * https://github.com/phetsims/gas-properties/issues/37
- * https://github.com/phetsims/gas-properties/issues/40
- *
- * While code comments attempt to describe this implementation clearly, fully understanding the implementation may
- * require some general background in collisions detection and response. Some useful references include:
-
- *
- *
-  //
-  // The issue of rotations were first discussed in https://github.com/phetsims/collision-lab/issues/3 and
-  // later in https://github.com/phetsims/collision-lab/issues/87. The collision-response algorithms for this type of
-  // collision is handled in InelasticRotationEngine.js.
- *
- *
- * CollisionEngine handles all collision detection and responses. It is the physics engine that is used for all screens
- * of the 'Collision Lab' simulation.
- *
- * ## Collision detection:
- *
- *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Collisions
- *     are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
- *     with the border of the PlayArea.
- *
- *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
- *     Balls to check, so a spatial partitioning collision detection optimization is not used.
- *
- * ## Collision response:
- *
- *   - Collision response determines what affect a collision has on a Ball's motion. When a collision has been detected,
- *     it is processed by first analytically determining the how long the Balls have been overlapping. Using this time,
- *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and
- *     the position of Balls after the collision are updated to a more realistic position.
- *     The algorithms for finding the overlapping time of collisions can be found below:
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
- *
- *   - The algorithms for Ball collisions were adapted but severely improved from the flash implementation of Collision
- *     Lab. They follow the standard rigid-body collision model as described in
- *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
- *
- *   - The HTML5 implementation of this simulation contains two types of perfectly inelastic collisions. See
- *     InelasticCollisionTypes for more documentation. CollisionEngine itself ONLY handles 'slip' collisions and
- *     defers all 'stick' collision responses to the InelasticRotationEngine sub-model. See InelasticRotationEngine.
+ *  - Then, on each step of the simulation, the Balls are rotated around the center of mass. The InelasticRotationEngine
+ *    changes reference frames to the center of mass of the 2 Balls. From there, standard uniform circular motion
+ *    equations are used to compute the new velocity and position of each Ball. See:
+ *      + https://en.wikipedia.org/wiki/Frame_of_reference
+ *      + https://en.wikipedia.org/wiki/Circular_motion#Uniform_circular_motion
  *
  * @author Brandon Li
  */
