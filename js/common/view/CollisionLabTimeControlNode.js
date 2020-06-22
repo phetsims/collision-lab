@@ -81,7 +81,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total elapsed
     // time isn't 0. There isn't any support to provide a custom enabledProperty to step-buttons. So, we use a
     // a workaround. See https://github.com/phetsims/scenery-phet/issues/606 and
-    // https://github.com/phetsims/scenery-phet/issues/563.  DerivedProperty never disposed since
+    // https://github.com/phetsims/collision-lab/issues/66. DerivedProperty never disposed since
     // CollisionLabTimeControlNode persists for the lifetime of simulation.
     options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
       [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
