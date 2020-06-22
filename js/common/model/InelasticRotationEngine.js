@@ -250,7 +250,7 @@ class InelasticRotationEngine {
       // If any of the Balls is now overlapping with the Border and the PlayArea's border reflects, one of the Balls
       // is now colliding with the border.
       if ( this.playArea.reflectsBorder &&
-          ( !this.playArea.fullyContainsBall( this.ball1 ) || !this.playArea.fullyContainsBall( this.ball1 ) ) ) {
+          ( !this.playArea.fullyContainsBall( this.ball1 ) || !this.playArea.fullyContainsBall( this.ball2 ) ) ) {
         this.collideStickyBallsClusterWithBorder();
       }
     }
