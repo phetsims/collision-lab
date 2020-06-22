@@ -32,20 +32,27 @@
  * @author Brandon Li
  */
 
+import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Vector3 from '../../../../dot/js/Vector3.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
 import CenterOfMass from './CenterOfMass.js';
+import PlayArea from './PlayArea.js';
 
 // constants
 const EPSILON = CollisionLabConstants.ZERO_THRESHOLD;
 
 class InelasticRotationEngine {
 
-  constructor() {
+  /**
+   * @param {PlayArea} playArea
+   * @param {Property.<boolean>} ballSystemUserControlledProperty - indicates if any Balls are being user-controlled.
+   */
+  constructor( playArea, ballSystemUserControlledProperty ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( ballSystemUserControlledProperty, 'boolean' );
 
     // @private {Ball|null} - the Balls that are involved in the rotation. These Balls should not be handled by
     //                        CollisionEngine. Currently, InelasticRotationEngine only supports handling 2 Balls.
@@ -63,8 +70,6 @@ class InelasticRotationEngine {
     //                          of mass, in radians per second. This value is set on each handleStickyCollision() call.
     this.angularVelocity;
 
-    //----------------------------------------------------------------------------------------
-
     // @private {number|null} - the magnitude of the total angular momentum of the two Balls **relative to the center of
     //                          mass**. This is used for assertions to ensure that angular momentum is conserved.
     this.totalAngularMomentum; // in kg*(m^2/s).
@@ -72,6 +77,40 @@ class InelasticRotationEngine {
     // @private {Vector2} - the total linear momentum of the two Balls. This is used internally for assertions to ensure
     //                      that linear momentum is conserved.
     this.totalLinearMomentum = Vector2.ZERO.copy(); // in kg*(m/s).
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when any of the Balls in the system are being user-controlled or when the elasticity changes and
+    // reset the InelasticRotationEngine. Multilink persists for the lifetime of the sim since InelasticRotationEngines
+    // are never disposed.
+    Property.lazyMultilink( [ ballSystemUserControlledProperty, playArea.elasticityPercentProperty ],
+      ballSystemUserControlled => {
+        !ballSystemUserControlled && this.reset();
+      } );
+  }
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Resets the InelasticRotationEngine to its factory state.
+   * @public
+   *
+   * This is invoked in the following scenarios:
+   *   - the reset all button is pressed.
+   *   - the restart button is pressed.
+   *   - when any of the Balls involved in the rotation is user controlled, either by dragging or from the Keypad.
+   *   - when any of the Balls involved in the rotation collides with the border of the PlayArea.
+   *   - when the elasticity changes.
+   * See https://github.com/phetsims/collision-lab/issues/87.
+   */
+  reset() {
+    this.ball1 = null;
+    this.ball2 = null;
+    this.angularVelocity = null;
+    this.totalAngularMomentum = null;
+    this.centerOfMassPosition.set( Vector2.ZERO );
+    this.centerOfMassVelocity.set( Vector2.ZERO );
+    this.totalLinearMomentum.set( Vector2.ZERO );
   }
 
   /**
@@ -88,25 +127,17 @@ class InelasticRotationEngine {
   }
 
   /**
-   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
-   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-   * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
-   * @private
-   *
-   * @param {Ball} ball
-   * @returns {number} - in kg*(m^2/s).
+   * Called when any of the Balls of the rotation collides with the border of the PlayArea. In this scenario, **both**
+   * balls have 0 velocity. See https://github.com/phetsims/collision-lab/issues/87.
+   * @public
    */
-  computeAngularMomentum( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( this.isHandling( ball ) );
-
-    // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    const r = ball.position.minus( this.centerOfMassPosition );
-    const p = ball.velocity.minus( this.centerOfMassVelocity ).multiplyScalar( ball.mass );
-
-    // L = r x p (relative to the center-of-mass)
-    return r.crossScalar( p );
+  collideStickyBallsClusterWithBorder() {
+    this.ball1.velocity = Vector2.ZERO;
+    this.ball2.velocity = Vector2.ZERO;
+    this.reset();
   }
+
+  //----------------------------------------------------------------------------------------
 
   /**
    * Processes and responds to perfectly inelastic 'stick' collision between two Balls. In terms of the collision
@@ -211,40 +242,35 @@ class InelasticRotationEngine {
         assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
         assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
       }
+
+      // If any of the Balls is now overlapping with the Border and the PlayArea's border reflects, one of the Balls
+      // is now colliding with the border.
+      if ( this.playArea.reflectsBorder &&
+          ( !this.playArea.fullyContainsBall( this.ball1 ) || !this.playArea.fullyContainsBall( this.ball1 ) ) ) {
+        this.collideStickyBallsClusterWithBorder();
+      }
     }
   }
 
+  /**
+   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
+   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+   * The Ball must be one of the two Balls that the InelasticRotationEngine is handling.
+   * @private
+   *
+   * @param {Ball} ball
+   * @returns {number} - in kg*(m^2/s).
+   */
+  computeAngularMomentum( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( this.isHandling( ball ) );
 
+    // Get the position vector (r) and momentum (p) relative to the center-of-mass
+    const r = ball.position.minus( this.centerOfMassPosition );
+    const p = ball.velocity.minus( this.centerOfMassVelocity ).multiplyScalar( ball.mass );
 
-
-
-
-
-  freeze() {
-    this.ball1.velocity = Vector2.ZERO;
-    this.ball2.velocity = Vector2.ZERO;
-    this.centerOfMassVelocity.set( Vector2.ZERO );
-    this.angularVelocity = 0;
-  }
-
-  reset() {
-    this.ball1 = null;
-    this.ball2 = null;
-    this.angularVelocity = null;
-    this.centerOfMassPosition.set( Vector2.ZERO );
-    this.centerOfMassVelocity.set( Vector2.ZERO );
-    this.totalAngularMomentum = null;
-    this.totalLinearMomentum.set( Vector2.ZERO );
-  }
-
-
-
-  handleClusterToBorderCollisions() {
-
-  }
-
-  handleClusterToClusterCollisions() {
-    assert( false )
+    // L = r x p (relative to the center-of-mass)
+    return r.crossScalar( p );
   }
 }
 
