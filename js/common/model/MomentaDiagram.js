@@ -166,8 +166,8 @@ class MomentaDiagram {
     if ( this.dimensions === 2 ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
-      firstMomentaVector.tail = Vector2.ZERO;
-      this.totalMomentumVector.tail = Vector2.ZERO;
+      firstMomentaVector.tail = this.boundsProperty.value.center;
+      this.totalMomentumVector.tail = this.boundsProperty.value.center;
     }
     else {
 
