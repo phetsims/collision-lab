@@ -74,8 +74,6 @@ class InelasticRotationEngine {
     this.totalLinearMomentum = Vector2.ZERO.copy(); // in kg*(m/s).
   }
 
-  //----------------------------------------------------------------------------------------
-
   /**
    * Returns a boolean that indicates if the InelasticRotationEngine is handling and responding to a Ball. Balls
    * that are handled by InelasticRotationEngine should not be handled by CollisionEngine.
@@ -110,8 +108,6 @@ class InelasticRotationEngine {
     return r.crossScalar( p );
   }
 
-  //----------------------------------------------------------------------------------------
-
   /**
    * Processes and responds to perfectly inelastic 'stick' collision between two Balls. In terms of the collision
    * response described at the top of this file, this method is responsible for computing the velocity of the
@@ -142,7 +138,8 @@ class InelasticRotationEngine {
     //----------------------------------------------------------------------------------------
 
     // Compute the velocity of the center of mass of the 2 Balls. The calculation is an vector extension of the formula
-    // described in https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision..
+    // described in https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision. It is important
+    // to note that the velocity of the center of mass is the same before and after the collision.
     this.centerOfMassVelocity.set( ball1.momentum ).add( ball2.momentum ).divideScalar( ball1.mass + ball2.mass );
 
     // Update the position of the center of mass of the 2 Balls. This is used as a convenience vector for computations
@@ -151,7 +148,7 @@ class InelasticRotationEngine {
 
     //----------------------------------------------------------------------------------------
 
-    // Update the angular and linear momentum reference.
+    // Update the angular and linear momentum reference. Values are the same before and after the collision.
     this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
     this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
 
@@ -165,6 +162,7 @@ class InelasticRotationEngine {
     // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
     this.angularVelocity = this.totalAngularMomentum / ( I1 + I2 );
 
+    // Consider the time the Balls have been overlapping and start the rotation. See CollisionEngine.js.
     this.step( overlappedTime );
   }
 
@@ -182,22 +180,30 @@ class InelasticRotationEngine {
     // Only handle responses for the Balls that InelasticRotationEngine is handling.
     if ( this.ball1 && this.ball2 ) {
 
-      // All in the center-of-mass reference frame.
+      // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
       const r1 = this.ball1.position.minus( this.centerOfMassPosition );
       const r2 = this.ball2.position.minus( this.centerOfMassPosition );
+
+      // Rotate the position vectors to apply uniform circular motion about the center of mass.
+      r1.rotate( this.angularVelocity * dt );
+      r2.rotate( this.angularVelocity * dt );
+
+      // Compute the velocity of Both balls after this step, relative to the center of mass.
+      const v1 = new Vector2( -this.angularVelocity * r1.y, this.angularVelocity * r1.x );
+      const v2 = new Vector2( -this.angularVelocity * r2.y, this.angularVelocity * r2.x );
+
+      //----------------------------------------------------------------------------------------
+
+      // Move the center of mass to where it would be in this current frame.
       this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
 
-      const r1p = r1.rotate( this.angularVelocity * dt );
-      const r2p = r2.rotate( this.angularVelocity * dt );
-      const v1p = new Vector3( 0, 0, this.angularVelocity ).cross( r1p.toVector3() ).toVector2();
-      const v2p = new Vector3( 0, 0, this.angularVelocity ).cross( r2p.toVector3() ).toVector2();
+      // Set the position and velocity of the Balls back in absolute reference frame.
+      this.ball1.position = r1.add( this.centerOfMassPosition );
+      this.ball2.position = r2.add( this.centerOfMassPosition );
+      this.ball1.velocity = v1.add( this.centerOfMassVelocity );
+      this.ball2.velocity = v2.add( this.centerOfMassVelocity );
 
-      // Back in absolute reference frame.
-      this.ball1.position = this.centerOfMassPosition.plus( r1p );
-      this.ball2.position = this.centerOfMassPosition.plus( r2p );
-      this.ball1.velocity = this.centerOfMassVelocity.plus( v1p );
-      this.ball2.velocity = this.centerOfMassVelocity.plus( v2p );
-
+      // If assertions are enabled, then ensure that both linear and angular momentum were conserved in this step.
       if ( assert ) {
         const totalLinearMomentum = this.ball1.momentum.plus( this.ball2.momentum );
         const totalAngularMomentum = this.computeAngularMomentum( this.ball1 ) + this.computeAngularMomentum( this.ball2 );
