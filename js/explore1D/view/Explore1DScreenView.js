@@ -60,8 +60,11 @@ class Explore1DScreenView extends CollisionLabScreenView {
       model.playArea.elasticityPercentProperty,
       model.playArea.inelasticCollisionTypeProperty,
       model.ballSystem.ballsConstantSizeProperty,
-      options
-    );
+      merge( options, {
+        elasticityControlSetNodeOptions: {
+          includeStickSlipSwitch: false
+        }
+      } ) );
   }
 
   /**

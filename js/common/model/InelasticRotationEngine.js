@@ -210,7 +210,6 @@ class InelasticRotationEngine {
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    assert && assert( dt >= 0, 'cannot reverse for perfectly inelastic' );
 
     // Only handle responses for the Balls that InelasticRotationEngine is handling.
     if ( this.ball1 && this.ball2 ) {
