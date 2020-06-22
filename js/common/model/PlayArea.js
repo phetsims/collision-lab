@@ -76,7 +76,7 @@ class PlayArea {
 
     // @public {EnumerationProperty.<InelasticCollisionTypes} - the type of collision for perfectly inelastic collisions
     this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
-      InelasticCollisionTypes.STICK );
+      InelasticCollisionTypes.SLIP );
   }
 
   /**
