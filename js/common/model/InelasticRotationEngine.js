@@ -35,6 +35,7 @@
 import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
@@ -77,6 +78,9 @@ class InelasticRotationEngine {
     // @private {Vector2} - the total linear momentum of the two Balls. This is used internally for assertions to ensure
     //                      that linear momentum is conserved.
     this.totalLinearMomentum = Vector2.ZERO.copy(); // in kg*(m/s).
+
+    // @private {PlayArea} - reference to the passed-in PlayArea.
+    this.playArea = playArea;
 
     //----------------------------------------------------------------------------------------
 
