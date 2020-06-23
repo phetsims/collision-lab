@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2020, University of Colorado Boulder
 
 /**
  * InelasticRotationEngine handles all continual ball-to-ball collision responses for perfectly inelastic collisions
