@@ -173,7 +173,7 @@ class InelasticRotationEngine {
 
     //----------------------------------------------------------------------------------------
 
-    // Compute the velocity of the center of mass of the 2 Balls. The calculation is an vector extension of the formula
+    // Compute the velocity of the center of mass of the 2 Balls. The calculation is the vector extension of the formula
     // described in https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision. It is important
     // to note that the velocity of the center of mass is the same before and after the collision.
     this.centerOfMassVelocity.set( ball1.momentum ).add( ball2.momentum ).divideScalar( ball1.mass + ball2.mass );
@@ -188,9 +188,9 @@ class InelasticRotationEngine {
     this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
     this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
 
-    // Get the moment of inertia of both Balls, treated as point masses rotating around the center of mass. The reason
+    // Get the moment of inertia of both Balls, treated as point masses rotating around their center of mass. The reason
     // why we treat the Balls as point masses is because of the formula L = r^2 * m * omega, where r^2 * m is the moment
-    // of inertia of a point-mass. See in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+    // of inertia of a point-mass. See https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
     const I1 = ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball1.mass;
     const I2 = ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball2.mass;
 
@@ -198,7 +198,7 @@ class InelasticRotationEngine {
     // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
     this.angularVelocity = this.totalAngularMomentum / ( I1 + I2 );
 
-    // Consider the time the Balls have been overlapping and start the rotation. See CollisionEngine.js.
+    // Consider the time the Balls have been overlapping and start the rotation.
     this.step( overlappedTime );
   }
 
@@ -232,7 +232,7 @@ class InelasticRotationEngine {
       // Move the center of mass to where it would be in this current frame.
       this.centerOfMassPosition.add( this.centerOfMassVelocity.times( dt ) );
 
-      // Set the position and velocity of the Balls back in absolute reference frame.
+      // Set the position and velocity of the Balls back in the absolute reference frame.
       this.ball1.position = r1.add( this.centerOfMassPosition );
       this.ball2.position = r2.add( this.centerOfMassPosition );
       this.ball1.velocity = v1.add( this.centerOfMassVelocity );
