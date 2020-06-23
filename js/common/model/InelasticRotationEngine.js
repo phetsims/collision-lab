@@ -4,7 +4,7 @@
  * InelasticRotationEngine handles all continual ball-to-ball collision responses for perfectly inelastic collisions
  * that 'stick'. Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation,
  * where Balls completely stick together and rotate around the center of mass of the cluster of Balls, if and only if
- * the collision is not head-on.
+ * the collision isn't head-on.
  *
  * Currently, InelasticRotationEngine only supports rotations of 2 Balls. If the elasticity is set to perfectly
  * inelastic collision that is sticky, there must only be 2 Balls in the BallSystem. See
@@ -12,13 +12,14 @@
  *
  * ## Collision Response
  *
- *  - When a collision between the 2 Balls is detected (by CollisionEngine), and the collision is a perfectly inelastic
- *    collisions that 'sticks', the first calculation that InelasticRotationEngine computes is the velocity of the
- *    center of mass of 2 balls. We use the equation described in
+ *  - When a collision between the 2 Balls is detected by CollisionEngine, and the collision is a perfectly inelastic
+ *    collisions that 'sticks', the collision response is forwarded to the InelasticRotationEngine. The first
+ *    calculation that the InelasticRotationEngine computes is the velocity of the center of mass of 2 balls. We use
+ *    the vector-equivalent of the equation described in
  *    https://en.wikipedia.org/wiki/Inelastic_collision#Perfectly_inelastic_collision.
  *
  *  - Using the conservation of Angular Momentum (L), the InelasticRotationEngine derives the angular velocity (omega)
- *    of the rotation of the balls (relative to the center of mass). See the following for some general background:
+ *    of the rotation of the balls relative to the center of mass. See the following for some general background:
  *      + https://en.wikipedia.org/wiki/Angular_momentum#Discussion
  *      + https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles
  *      + https://en.wikipedia.org/wiki/Angular_velocity
@@ -67,7 +68,7 @@ class InelasticRotationEngine {
     this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
     this.centerOfMassVelocity = Vector2.ZERO.copy(); // in meters per second.
 
-    // @private {number|null} - the angular velocity of the rotation of the two Balls, if they exist, around the center
+    // @private {number|null} - the angular velocity of the rotation of the two Balls (if they exist) around the center
     //                          of mass, in radians per second. This value is set on each handleStickyCollision() call.
     this.angularVelocity;
 
@@ -144,7 +145,7 @@ class InelasticRotationEngine {
   //----------------------------------------------------------------------------------------
 
   /**
-   * Processes and responds to perfectly inelastic 'stick' collision between two Balls. In terms of the collision
+   * Processes and responds to perfectly inelastic 'stick' collisions between two Balls. In terms of the collision
    * response described at the top of this file, this method is responsible for computing the velocity of the
    * center of mass of the two balls, the total angular momentum, and the angular velocity.
    * @public
