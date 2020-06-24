@@ -74,7 +74,8 @@ class PlayArea {
       range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE
     } );
 
-    // @public {EnumerationProperty.<InelasticCollisionTypes} - the type of collision for perfectly inelastic collisions
+    // @public {EnumerationProperty.<InelasticCollisionTypes>} - the type of perfectly inelastic collision. Ignored
+    //                                                           the elasticity isn't 0.
     this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
       InelasticCollisionTypes.SLIP );
   }
