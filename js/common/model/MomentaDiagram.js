@@ -20,14 +20,10 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
@@ -170,22 +166,6 @@ class MomentaDiagram {
         momentaVector.tailY = previousMomentaVector.tailY - 1;
       }
     } );
-  }
-
-  /**
-   * Zooms the MomentaDiagram in. Called when the zoom-in button is pressed.
-   * @public
-   */
-  zoomIn() {
-    this.zoomProperty.value *= ZOOM_MULTIPLIER;
-  }
-
-  /**
-   * Zooms the MomentaDiagram out. Called when the zoom-out button is pressed.
-   * @public
-   */
-  zoomOut() {
-    this.zoomProperty.value /= ZOOM_MULTIPLIER;
   }
 }
 
