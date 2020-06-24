@@ -8,8 +8,8 @@
  */
 
 import merge from '../../../../phet-core/js/merge.js';
-import ColorConstants from '../../../../sun/js/ColorConstants.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import ColorConstants from '../../../../sun/js/ColorConstants.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 
