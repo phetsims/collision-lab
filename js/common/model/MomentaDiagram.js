@@ -6,7 +6,6 @@
  * separate coordinate frame from the PlayArea.
  *
  * Responsibilities are:
- *   - Keeping track of the zoom and Bounds of the MomentaDiagram.
  *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector. Momenta Diagram takes
  *     advantage of the prepopulatedBalls, which all Balls in the system must be apart of. Instead of creating a
  *     MomentaDiagramVector each time a Ball is added to the system, it creates one for each prepopulatedBall and
@@ -33,11 +32,6 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
 
-// constants
-const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
-const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
-const ZOOM_MULTIPLIER = 2;
-
 class MomentaDiagram {
 
   /**
@@ -51,27 +45,6 @@ class MomentaDiagram {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public {NumberProperty} - the zoom factor of the MomentaDiagram. This is set externally in the view.
-    this.zoomProperty = new NumberProperty( MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue, {
-      range: MOMENTA_DIAGRAM_ZOOM_RANGE
-    } );
-
-    // @public {DerivedProperty.<Bounds2>} - the Bounds of the MomentaDiagram, in kg*(m/s). Derived from the zoom factor
-    this.boundsProperty = new DerivedProperty( [ this.zoomProperty ], zoomFactor => {
-
-      // The center of the MomentaDiagram is the origin.
-      return new Bounds2(
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor
-      );
-    } );
-
-    //----------------------------------------------------------------------------------------
 
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
     //                             and components of the Momenta Vectors are only updated if this is true.
@@ -120,7 +93,6 @@ class MomentaDiagram {
    * Called when the reset-all button is pressed.
    */
   reset() {
-    this.zoomProperty.reset();
     this.expandedProperty.reset();
     this.ballToMomentaVectorMap.forEach( momentaVector => { momentaVector.reset(); } );
     this.totalMomentumVector.reset();
@@ -166,8 +138,8 @@ class MomentaDiagram {
     if ( this.dimensions === 2 ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
-      firstMomentaVector.tail = this.boundsProperty.value.center;
-      this.totalMomentumVector.tail = this.boundsProperty.value.center;
+      firstMomentaVector.tail = Vector2.ZERO;
+      this.totalMomentumVector.tail = Vector2.ZERO;
     }
     else {
 
