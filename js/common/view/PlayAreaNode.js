@@ -1,6 +1,18 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
+ * PlayAreaNode is the view representation of a single PlayArea, which appears in all screens of the 'Collision Lab'
+ * simulation. PlayAreaNode was implemented to work for both 1D and 2D screens, so no sub-types are needed.
+ *
+ * PlayAreaNode draws all of the components that are related to the 'play area', including its background, grid, and
+ * border. For the 1D screens, the grid is a series of tick-lines at the bottom of the PlayArea. When the PlayArea's
+ * border reflects, it has a 'thicker' border (and vise versa when its border doesn't reflect).
+ *
+ * For the 'Collision Lab' sim, there is 1 PlayAreaNode for each screen and they are created at the start if the sim,
+ * so they are never disposed.
+ *
+ * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
+ *
  * @author Brandon Li
  */
 
