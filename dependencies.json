@@ -1,11 +1,11 @@
 {
-  "comment": "# collision-lab 1.0.0-dev.22 Mon Jun 22 2020 10:39:53 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.0-dev.23 Wed Jun 24 2020 18:32:39 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "73ed687cbea36db888079159cf9b43d41b8b8854",
     "branch": "master"
   },
   "axon": {
-    "sha": "5f6ac7a0fb0bbb36fdc12ec167d1e276449e98b6",
+    "sha": "9b918a1225cf817d2c43e2140f5906729486edbc",
     "branch": "master"
   },
   "brand": {
@@ -13,11 +13,11 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "985a7dbb6ce503898afce625ddba906a11ad7a21",
+    "sha": "4d932f82c3c800b5dbb092767ba3d2d302e3f3a4",
     "branch": "master"
   },
   "collision-lab": {
-    "sha": "93bfe4c751eef351b0a9f9f117cc58b669ff8a94",
+    "sha": "be19280d8c9882b4bca9e998eea6f7a26b4afc81",
     "branch": "master"
   },
   "dot": {
@@ -25,7 +25,7 @@
     "branch": "master"
   },
   "joist": {
-    "sha": "e44f4d84f7cfa7ee401cbe4db7d3a8fd536d3379",
+    "sha": "b18a7a4235ad860311aefa3d95637910684a4686",
     "branch": "master"
   },
   "kite": {
@@ -33,7 +33,7 @@
     "branch": "master"
   },
   "phet-core": {
-    "sha": "b2eab99438bb517ae3ac06f9917c97be73ff16bc",
+    "sha": "24eac19a9b1d0729f893f8aeae1c86f26e87b748",
     "branch": "master"
   },
   "phet-io": {
@@ -57,7 +57,7 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "fb92dd83d18ff8788cd2e319a3fe2bb6c599215a",
+    "sha": "88cf88096f3a0cf5b73994fbde81055d8ec11bcf",
     "branch": "master"
   },
   "scenery-phet": {
@@ -69,15 +69,15 @@
     "branch": "master"
   },
   "studio": {
-    "sha": "cf41e6b3d96e2264f8776b4d18ed8cb54d822e30",
+    "sha": "2b6d48e5e87c0c9a5dd9050dbf4377255b653c6d",
     "branch": "master"
   },
   "sun": {
-    "sha": "e1c1ee5e431f5828b3bde97adc18b47edbb8ab84",
+    "sha": "1541c75a7cc7eaf4c903830111cfd5b6d36d4f68",
     "branch": "master"
   },
   "tambo": {
-    "sha": "ab28d38e943cc6ad26c7b9201a3090eb2cd63ef7",
+    "sha": "dba93ba415b9e5e5dc739ac059a0124db756ef5f",
     "branch": "master"
   },
   "tandem": {
