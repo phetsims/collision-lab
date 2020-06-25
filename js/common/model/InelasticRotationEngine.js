@@ -90,7 +90,7 @@ class InelasticRotationEngine {
     // are never disposed.
     Property.lazyMultilink( [ ballSystemUserControlledProperty, playArea.elasticityPercentProperty ],
       ballSystemUserControlled => {
-        !ballSystemUserControlled && this.reset();
+        this.reset();
       } );
   }
 
