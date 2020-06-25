@@ -16,10 +16,11 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import GridNode from '../../../../griddle/js/GridNode.js';
 import Shape from '../../../../kite/js/Shape.js';
+import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
@@ -30,40 +31,69 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from '../model/PlayArea.js';
 
 // constants
-const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // model
-const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // model
-const MAJOR_TICK_LENGTH = 0.09; // model units
-const MINOR_TICK_LENGTH = 0.06; // model units
-const MAJOR_GRIDLINE_WIDTH = 2; // view units
-const MINOR_GRIDLINE_WIDTH = 1; // view units
+const MINOR_GRIDLINE_SPACING = CollisionLabConstants.MINOR_GRIDLINE_SPACING; // In model units.
+const MAJOR_GRIDLINE_SPACING = CollisionLabConstants.MAJOR_GRIDLINE_SPACING; // In model units.
 
 class PlayAreaNode extends Node {
 
   /**
    * @param {PlayArea} playArea
    * @param {Property.<boolean>} gridVisibleProperty
-   * @param {Property.<boolean>} kineticEnergyVisibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( playArea,
-               gridVisibleProperty,
-               kineticEnergyVisibleProperty,
-               modelViewTransform,
-               options ) {
+  constructor( playArea, gridVisibleProperty, modelViewTransform, options ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( gridVisibleProperty instanceof Property && typeof gridVisibleProperty.value === 'boolean', `invalid gridVisibleProperty: ${gridVisibleProperty}` );
-    assert && assert( kineticEnergyVisibleProperty instanceof Property && typeof kineticEnergyVisibleProperty.value === 'boolean', `invalid kineticEnergyVisibleProperty: ${gridVisibleProperty}` );
+    assert && AssertUtils.assertPropertyOf( gridVisibleProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `Extra prototype on options: ${options}` );
 
-    super( options );
+    options = merge( {
+
+      // grid
+      majorGridLineWidth: 2, // {number} - the line-width of the major grid-lines, in view units.
+      minorGridLineWidth: 1, // {number} - the line-width of the major grid-lines, in view units.
+
+      // ticks
+      majorTickLength: 0.09, // {number} - the vertical length of major tick-lines, in model units.
+      minorTickLength: 0.06, // {number} - the vertical length of major tick-lines, in model units.
+      tickLineWidth: 1,      // {number} - the line-width of tick-lines, in view units.
+
+      // border
+      reflectingBorderLineWidth: 3,   // {number} - the line-width of the border when the border doesn't reflect.
+      nonReflectingBorderLineWidth: 1 // {number} - the line-width of the border when the border doesn't reflect.
+
+    }, options );
+
+    assert && assert( !options.children, 'PlayAreaNode sets children' );
 
     //----------------------------------------------------------------------------------------
 
+    // Convenience reference to the view-bounds of the PlayArea.
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( playArea.bounds );
 
+    // Create the background Rectangle, which appears behind the grid/ticks.
     const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
+
+    // Create the border Rectangle, which appears in front of the grid/ticks.
+    const border = new Rectangle( playAreaViewBounds );
+
+    // Observe when PlayArea's reflectingBorderProperty changes and update the appearance of the border. Link
+    // is never unlinked since PlayAreaNodes are never disposed.
+    playArea.reflectingBorderProperty.link( reflectingBorder => {
+
+      // Update the line-width of the Border. The border's bounds is dilated so that it fully encapsulates the PlayArea.
+      border.lineWidth = reflectingBorder ? options.reflectingBorderLineWidth : options.nonReflectingBorderLineWidth;
+      border.rectBounds = playAreaViewBounds.dilated( border.lineWidth / 2 );
+
+      // Update the stroke color of the Border.
+      border.stroke = reflectingBorder ?
+        CollisionLabColors.REFLECTING_GRID_BORDER_COLOR :
+        CollisionLabColors.NON_REFLECTING_GRID_BORDER_COLOR;
+    } );
+
+    //----------------------------------------------------------------------------------------
+
+
     const children = [
       background
     ];
@@ -98,13 +128,11 @@ class PlayAreaNode extends Node {
 
     }
 
-    const border = new Rectangle( playAreaViewBounds, {
-      stroke: CollisionLabColors.GRID_BORDER_COLOR,
-      lineWidth: 3
-    } );
-    children.push( border );
 
     this.children = children;
+
+        super( options );
+
   }
 }
 
