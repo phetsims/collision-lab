@@ -151,11 +151,11 @@ class BallNode extends Node {
 
     // Set the children of the Ball Node in the correct rendering order.
     this.children = [
+      leaderLinesNode,
       ballCircleAndLabelContainer,
       vectorNodeContainer,
       speedNumberDisplay,
-      momentumNumberDisplay,
-      leaderLinesNode
+      momentumNumberDisplay
     ];
 
     //----------------------------------------------------------------------------------------
