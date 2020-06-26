@@ -74,8 +74,7 @@ const CollisionLabColors = {
   MOMENTUM_VECTOR_COLORS: {
     fill: 'rgb( 255, 255, 0 )',
     stroke: Color.BLACK
-  },
-  PLAY_AREA_NUMBER_DISPLAY_FILL: Color.WHITE
+  }
 };
 
 collisionLab.register( 'CollisionLabColors', CollisionLabColors );
