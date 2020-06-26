@@ -18,6 +18,9 @@
  * @author Alex Schor
  */
 
+import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Shape from '../../../../kite/js/Shape.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -35,13 +38,21 @@ class CenterOfMassNode extends Node {
    * @param {CenterOfMass} centerOfMass
    * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {Property.<boolean>} valuesVisibleProperty
+   * @param {Bounds2} playAreaBounds
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( centerOfMass, centerOfMassVisibleProperty, valuesVisibleProperty, modelViewTransform, options ) {
+  constructor( centerOfMass,
+               centerOfMassVisibleProperty,
+               valuesVisibleProperty,
+               playAreaBounds,
+               modelViewTransform,
+               options
+             ) {
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( valuesVisibleProperty, 'boolean' );
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2 );
 
     super( options );
@@ -59,7 +70,14 @@ class CenterOfMassNode extends Node {
 
     // Set the children in the correct rendering order.
     this.children = [
-      xNode,
+
+      // Wrap the XNode in a Node and apply a local ClipArea so that the XNode doesn't appear outside of the PlayArea.
+      // This container is not translated so its local Bounds is the same as the parent bounds of the XNode.
+      new Node( {
+        children: [ xNode ],
+        clipArea: Shape.bounds( modelViewTransform.modelToViewBounds( playAreaBounds ) )
+      } ),
+
       speedNumberDisplay
     ];
 
@@ -72,9 +90,14 @@ class CenterOfMassNode extends Node {
       speedNumberDisplay.centerBottom = xNode.centerTop.subtractXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
     } );
 
-    // Observe when the centerOfMassVisibleProperty changes and update the visibility of this Node. Link is never
-    // unlinked since CenterOfMassNodes are never disposed.
-    centerOfMassVisibleProperty.linkAttribute( this, 'visible' );
+    // Observe when the centerOfMassVisibleProperty or when the CenterOfMass's position changes and update the
+    // visibility of this Node. This Node is only visible if the CenterOfMass is visible AND the position is inside
+    // the PlayArea's Bounds. Link is never unlinked since CenterOfMassNodes are never disposed.
+    Property.multilink(
+      [ centerOfMassVisibleProperty, centerOfMass.positionProperty ],
+      ( centerOfMassVisible, position ) => {
+        this.visible = centerOfMassVisible && playAreaBounds.containsPoint( position );
+      } );
   }
 }
 

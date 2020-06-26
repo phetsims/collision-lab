@@ -145,16 +145,21 @@ class BallNode extends Node {
       clipArea: Shape.bounds( playAreaViewBounds )
     } );
 
-    // Wrap the Vector Nodes in a container to apply visibility changes for when the Ball is out of the PlayArea.
-    const vectorNodeContainer = new Node( { children: [ momentumVectorNode, velocityVectorNode ] } );
+    // Wrap the components that are only visible when the Ball is inside of the PlayArea.
+    const ballInsideVisibleContainer = new Node( {
+      children: [
+        momentumVectorNode,
+        velocityVectorNode,
+        speedNumberDisplay,
+        momentumNumberDisplay
+      ]
+    } );
 
     // Set the children of the Ball Node in the correct rendering order.
     this.children = [
       leaderLinesNode,
       ballCircleAndLabelContainer,
-      vectorNodeContainer,
-      speedNumberDisplay,
-      momentumNumberDisplay
+      ballInsideVisibleContainer
     ];
 
     //----------------------------------------------------------------------------------------
@@ -220,8 +225,8 @@ class BallNode extends Node {
       ballCircle.center = viewPosition;
       labelNode.center = viewPosition;
 
-      // Set the VectorNodes container to visible if the Ball's center is inside the PlayArea.
-      vectorNodeContainer.visible = playAreaViewBounds.containsPoint( viewPosition );
+      // Set the ballInsideVisibleContainer to visible if the Ball's center is inside the PlayArea.
+      ballInsideVisibleContainer.visible = playAreaViewBounds.containsPoint( viewPosition );
     } );
 
     // Observe when either the position of the Ball changes or when the radius of the Ball changes, which changes
