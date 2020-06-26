@@ -12,10 +12,10 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
-import Explore1DModel from './model/Explore1DModel.js';
-import Explore1DScreenView from './view/Explore1DScreenView.js';
+import InelasticModel from './model/InelasticModel.js';
+import InelasticScreenView from './view/InelasticScreenView.js';
 
-class Explore1DScreen extends Screen {
+class InelasticScreen extends Screen {
 
   /**
    * @param {Tandem} tandem
@@ -25,18 +25,18 @@ class Explore1DScreen extends Screen {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
     const options = {
-      name: collisionLabStrings.screen.explore1D,
+      name: collisionLabStrings.screen.inelastic,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       tandem: tandem
     };
 
     super(
-      () => new Explore1DModel( tandem.createTandem( 'explore1DModel' ) ),
-      model => new Explore1DScreenView( model, tandem.createTandem( 'explore1DScreenView' ) ),
+      () => new InelasticModel( tandem.createTandem( 'inelasticModel' ) ),
+      model => new InelasticScreenView( model, tandem.createTandem( 'inslasticScreenView' ) ),
       options
     );
   }
 }
 
-collisionLab.register( 'Explore1DScreen', Explore1DScreen );
-export default Explore1DScreen;
+collisionLab.register( 'InelasticScreen', InelasticScreen );
+export default InelasticScreen;

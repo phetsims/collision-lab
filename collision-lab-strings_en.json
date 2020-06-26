@@ -12,6 +12,10 @@
   "screen.explore2D": {
     "value": "Explore 2D"
   },
+  "screen.inelastic": {
+    "value": "Inelastic"
+  },
+
 
   "pattern.range": {
     "value": "{{min}} to {{max}} {{units}}"
