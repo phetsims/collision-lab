@@ -94,12 +94,7 @@ class CollisionLabScreenView extends ScreenView {
     //----------------------------------------------------------------------------------------
 
     // PlayArea
-    const playAreaNode = new PlayAreaNode(
-      model.playArea,
-      model.playArea.gridVisibleProperty,
-      viewProperties.kineticEnergyVisibleProperty,
-      modelViewTransform
-    );
+    const playAreaNode = new PlayAreaNode( model.playArea, model.playArea.gridVisibleProperty, modelViewTransform );
 
     // BallSystem
     const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );

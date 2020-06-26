@@ -5,7 +5,7 @@
  * simulation. PlayAreaNode was implemented to work for both 1D and 2D screens, so no sub-types are needed.
  *
  * PlayAreaNode draws all of the components that are related to the 'play area', including its background, grid, and
- * border. For the 1D screens, the grid is a series of tick-lines at the bottom of the PlayArea. When the PlayArea's
+ * border. For the 1D screens, the grid is a series of tick-lines at the top of the PlayArea. When the PlayArea's
  * border reflects, it has a 'thicker' border (and vise versa when its border doesn't reflect).
  *
  * For the 'Collision Lab' sim, there is 1 PlayAreaNode for each screen and they are created at the start if the sim,
@@ -16,7 +16,6 @@
  * @author Brandon Li
  */
 
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import GridNode from '../../../../griddle/js/GridNode.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -93,95 +92,77 @@ class PlayAreaNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-
-    const children = [
-      background
-    ];
-
     if ( playArea.dimensions === 2 ) {
 
+      // Create the GridNode for 2D screens.
       const gridNode = new GridNode( playAreaViewBounds.width, playAreaViewBounds.height, {
         majorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MAJOR_GRIDLINE_SPACING ),
         majorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MAJOR_GRIDLINE_SPACING ),
         minorHorizontalLineSpacing: -modelViewTransform.modelToViewDeltaY( MINOR_GRIDLINE_SPACING ),
         minorVerticalLineSpacing: modelViewTransform.modelToViewDeltaX( MINOR_GRIDLINE_SPACING ),
         majorLineOptions: {
-          lineWidth: MAJOR_GRIDLINE_WIDTH,
+          lineWidth: options.majorGridLineWidth,
           stroke: CollisionLabColors.MAJOR_GRIDLINE_COLOR
         },
         minorLineOptions: {
-          lineWidth: MINOR_GRIDLINE_WIDTH,
+          lineWidth: options.minorGridLineWidth,
           stroke: CollisionLabColors.MINOR_GRIDLINE_COLOR
         },
         center: playAreaViewBounds.center
       } );
 
+      // Observe when the gridVisibleProperty changes and update the visibility of the GridNode. Link is never unlinked
+      // since PlayAreaNodes are never disposed.
       gridVisibleProperty.linkAttribute( gridNode, 'visible' );
 
-      children.push( gridNode );
+      // Set the children in the correct rendering order.
+      options.children = [
+        background,
+        gridNode,
+        border
+      ];
     }
     else {
-      const ticksNode = new TicksNode( playArea.bounds, modelViewTransform );
 
+      // For 1D screens, drag tick-lines at the top of the PlayArea.
+      const minorTickLinesShape = new Shape();
+      const majorTickLinesShape = new Shape();
+
+      // Minor Tick lines
+      for ( let xValue = playArea.left; xValue <= playArea.right; xValue += MINOR_GRIDLINE_SPACING ) {
+        minorTickLinesShape.moveTo( xValue, playArea.top ).verticalLineToRelative( -options.minorTickLength );
+      }
+
+      // Major Tick lines
+      for ( let xValue = playArea.left; xValue <= playArea.right; xValue += MAJOR_GRIDLINE_SPACING ) {
+        majorTickLinesShape.moveTo( xValue, playArea.top ).verticalLineToRelative( -options.majorTickLength );
+      }
+
+      // Create the Paths for the minor and major Ticks.
+      const minorTickLinesPath = new Path( modelViewTransform.modelToViewShape( minorTickLinesShape ), {
+        lineWidth: options.tickLineWidth,
+        stroke: CollisionLabColors.TICK_LINE_COLOR
+      } );
+      const majorTickLinesPath = new Path( modelViewTransform.modelToViewShape( majorTickLinesShape ), {
+        lineWidth: options.tickLineWidth,
+        stroke: CollisionLabColors.TICK_LINE_COLOR
+      } );
+
+      // Ensure that the grid (ticks) are always visible in 1D screens.
       assert && playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible' ) );
-      children.push( ticksNode );
 
+      // Set the children in the correct rendering order.
+      options.children = [
+        background,
+        minorTickLinesPath,
+        majorTickLinesPath,
+        border
+      ];
     }
 
-
-    this.children = children;
-
-        super( options );
-
+    super( options );
   }
 }
-
-
-// Draws vertical and horizontal grid-lines with the given spacing. Used for major and minor axes. Handles visibility.
-class TicksNode extends Node {
-
-  /**
-   * @param {ModelViewTransform2} modelViewTransform
-   * @param {Object} [options]
-   */
-  constructor( playAreaBounds, modelViewTransform ) {
-    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
-    assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
-
-    //----------------------------------------------------------------------------------------
-
-    // Convenience variables
-    const gridMinX = playAreaBounds.minX;
-    const gridMaxX = playAreaBounds.maxX;
-    const gridMinY = playAreaBounds.minY;
-    const minorGridLinesShape = new Shape();
-    const majorGridLinesShape = new Shape();
-
-    // Minor Grid lines
-    for ( let xValue = gridMinX; xValue <= gridMaxX; xValue += MINOR_GRIDLINE_SPACING ) {
-      minorGridLinesShape.moveTo( xValue, gridMinY ).verticalLineToRelative( MINOR_TICK_LENGTH );
-    }
-
-    // Major Grid lines
-    for ( let xValue = gridMinX; xValue <= gridMaxX; xValue += MAJOR_GRIDLINE_SPACING ) {
-      majorGridLinesShape.moveTo( xValue, gridMinY ).verticalLineToRelative( MAJOR_TICK_LENGTH );
-    }
-
-    super( {
-      children: [
-        new Path( modelViewTransform.modelToViewShape( minorGridLinesShape ), {
-          lineWidth: MINOR_GRIDLINE_WIDTH,
-          stroke: CollisionLabColors.MINOR_GRIDLINE_COLOR
-        } ),
-        new Path( modelViewTransform.modelToViewShape( majorGridLinesShape ), {
-          lineWidth: MINOR_GRIDLINE_WIDTH,
-          stroke: CollisionLabColors.MAJOR_GRIDLINE_COLOR
-        } )
-      ]
-    } );
-  }
-}
-
 
 collisionLab.register( 'PlayAreaNode', PlayAreaNode );
 export default PlayAreaNode;

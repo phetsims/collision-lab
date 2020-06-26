@@ -10,6 +10,8 @@
 import Color from '../../../scenery/js/util/Color.js';
 import collisionLab from '../collisionLab.js';
 
+const LIGHT_GRAY = 'rgb( 225, 225, 225 )';
+
 const CollisionLabColors = {
 
   // General
@@ -23,10 +25,10 @@ const CollisionLabColors = {
   // Grid
   GRID_BACKGROUND_COLOR: 'rgb( 255, 254, 255 )',
   MAJOR_GRIDLINE_COLOR: 'rgb( 212, 212, 212 )',
-  MINOR_GRIDLINE_COLOR: 'rgb( 225, 225, 225 )',
+  MINOR_GRIDLINE_COLOR: LIGHT_GRAY,
   REFLECTING_GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
   NON_REFLECTING_GRID_BORDER_COLOR: Color.BLACK,
-
+  TICK_LINE_COLOR: LIGHT_GRAY,
 
 
   CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR: 'rgb( 182, 181, 182 )',
