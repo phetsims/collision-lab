@@ -19,6 +19,7 @@
  * @author Martin Veillette
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -32,6 +33,14 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallVectorNode from './BallVectorNode.js';
+
+// constants
+const VELOCITY_BOUNDS = new Bounds2(
+  CollisionLabConstants.VELOCITY_RANGE.min,
+  CollisionLabConstants.VELOCITY_RANGE.min,
+  CollisionLabConstants.VELOCITY_RANGE.max,
+  CollisionLabConstants.VELOCITY_RANGE.max
+);
 
 class BallVelocityVectorNode extends BallVectorNode {
 
@@ -85,11 +94,15 @@ class BallVelocityVectorNode extends BallVectorNode {
       applyOffset: false,
       drag: ( event, listener ) => {
 
+        // Get the new components of the velocity vector based on where the user dragged the tip. The point is
+        // constrained to a max magnitude. See https://github.com/phetsims/collision-lab/issues/102
+        const velocity = VELOCITY_BOUNDS.closestPointTo( modelViewTransform.viewToModelDelta( listener.modelPoint ) );
+
         // Update the xVelocity of the Ball first.
-        ball.xVelocity = modelViewTransform.viewToModelDeltaX( listener.modelPoint.x );
+        ball.xVelocity = velocity.x;
 
         // If the dimensional PlayArea is 2D, then update the yVelocity of the Ball as well.
-        ( dimensions === 2 ) && ( ball.yVelocity = modelViewTransform.viewToModelDeltaY( listener.modelPoint.y ) );
+        ( dimensions === 2 ) && ( ball.yVelocity = velocity.y );
       },
 
       // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
