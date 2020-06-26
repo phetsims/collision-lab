@@ -86,19 +86,26 @@ class CollisionLabModel {
     // Flag that indicates whether the sim was playing before it was programmatically paused.
     let wasPlaying = this.isPlayingProperty.value;
 
+    // Observe when the user manipulates any of the Balls and pause the simulation. The sim is un-paused when the user
+    // is finished controlling the Ball if and only if the sim was playing before the user starting controlling.
+    // Also set the elapsedTime to 0 when the user manipulates a Ball. See
+    // https://github.com/phetsims/collision-lab/issues/85#issuecomment-650271055. Link persists for the simulations.
     this.ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
 
       // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
       // See https://github.com/phetsims/collision-lab/issues/49.
       if ( ballSystemUserControlled ) {
 
-        // save playing state, pause the sim, and disable time controls
+        // Save playing state and pause the sim.
         wasPlaying = this.isPlayingProperty.value;
         this.isPlayingProperty.value = false;
+
+        // Reset elapsed-time.
+        this.elapsedTimeProperty.reset();
       }
       else {
 
-        // enable time controls and restore playing state
+        // Restore playing state
         this.isPlayingProperty.value = wasPlaying;
       }
     } );
