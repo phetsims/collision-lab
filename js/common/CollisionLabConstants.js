@@ -62,6 +62,9 @@ const CollisionLabConstants = {
   // Rounding
   DISPLAY_DECIMAL_PLACES: 2,
 
+  // Margins
+  VALUE_DISPLAY_MARGIN: 2,
+
   // ArrowNodes
   ARROW_OPTIONS: {
     headWidth: 12,

@@ -19,6 +19,7 @@ import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -44,6 +45,9 @@ class PlayAreaNumberDisplay extends NumberDisplay {
       // {null|Property.<boolean>} - optional visibility property, which toggles the visibility of this Node.
       visibleProperty: null,
 
+      // {number} - the opacity (alpha) of the background of the NumberDisplay.
+      backgroundOpacity: 0.6,
+
       // superclass options
       align: 'center',
       backgroundFill: CollisionLabColors.PLAY_AREA_NUMBER_DISPLAY_FILL,
@@ -54,6 +58,9 @@ class PlayAreaNumberDisplay extends NumberDisplay {
         font: CollisionLabConstants.DISPLAY_FONT
       }
     }, options );
+
+    // Set the background opacity of the NumberDisplay.
+    options.backgroundFill = PaintDef.toColor( options.backgroundFill ).setAlpha( options.backgroundOpacity );
 
     super( numberProperty, options.displayRange, options );
 

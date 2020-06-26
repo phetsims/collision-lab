@@ -75,7 +75,7 @@ const CollisionLabColors = {
     fill: 'rgb( 255, 255, 0 )',
     stroke: Color.BLACK
   },
-  PLAY_AREA_NUMBER_DISPLAY_FILL: 'rgba( 255, 255, 255, 0.6 )'
+  PLAY_AREA_NUMBER_DISPLAY_FILL: Color.WHITE
 };
 
 collisionLab.register( 'CollisionLabColors', CollisionLabColors );

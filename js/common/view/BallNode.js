@@ -50,7 +50,6 @@ const MASS_RANGE = CollisionLabConstants.MASS_RANGE;
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 const LABEL_FONT = new PhetFont( 20 );
 const LINE_WIDTH_RANGE = new Range( 1, 3 );
-const VALUE_DISPLAY_MARGIN = 2;
 
 class BallNode extends Node {
 
@@ -232,8 +231,8 @@ class BallNode extends Node {
       if ( valuesVisible ) { // Only update positioning if the NumberDisplays are visible.
 
         // Update the position of the velocity and momentum NumberDisplays.
-        speedNumberDisplay.centerBottom = ballCircle.centerTop.minusXY( 0, VALUE_DISPLAY_MARGIN );
-        momentumNumberDisplay.centerTop = ballCircle.centerBottom.addXY( 0, VALUE_DISPLAY_MARGIN );
+        speedNumberDisplay.centerBottom = ballCircle.centerTop.minusXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
+        momentumNumberDisplay.centerTop = ballCircle.centerBottom.addXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
       }
     } );
   }
