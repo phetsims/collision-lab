@@ -18,11 +18,11 @@ const BallValuesPanelColumnTypes = Enumeration.byKeys( [
   'MASS',         // Column of mass NumberDisplays. Editable by the user.
   'MASS_SLIDERS', // Column of sliders to change the Mass of a Ball. Only shown when 'More Data' is unchecked.
   'X_POSITION',   // Column of x-position NumberDisplays. Editable by the user.
-  'Y_POSITION',   // Column of y-position NumberDisplays. Editable by the user and shown for 'Explore 2D' only.
+  'Y_POSITION',   // Column of y-position NumberDisplays. Editable by the user and shown for 2D screens only.
   'X_VELOCITY',   // Column of x-velocity NumberDisplays. Editable by the user.
-  'Y_VELOCITY',   // Column of y-velocity NumberDisplays. Editable by the user and shown for 'Explore 2D' only.
+  'Y_VELOCITY',   // Column of y-velocity NumberDisplays. Editable by the user and shown for 2D screens only.
   'X_MOMENTUM',   // Column of x-momentum NumberDisplays. NOT editable by the user.
-  'Y_MOMENTUM'    // Column of y-momentum NumberDisplays. NOT editable by the user and shown for 'Explore 2D' only.
+  'Y_MOMENTUM'    // Column of y-momentum NumberDisplays. NOT editable by the user and shown for 2D screens only.
 
 ] );
 
