@@ -201,20 +201,10 @@ class BallNode extends Node {
       end: () => {
         leaderLinesNode.visible = false;
 
-    //         // Loop through each possible Ball to move Balls away from other Balls that overlap with it after the user
-    // // manipulates the position or radius of the Ball.
-    // this.prepopulatedBalls.forEach( ball => {
-
-    //   // Observe when the user is finished controlling the mass of the Ball, which changes the radius of the Ball, or
-    //   // when the user is finished controlling the position of the Ball, either through the Keypad or by dragging.
-    //   // When this happens, the Ball should be moved away from other Balls that overlap with it. See
-    //   // https://github.com/phetsims/collision-lab/issues/100. Link is never disposed since Balls are never disposed.
-    //   Property.lazyMultilink( [ ball.positionUserControlledProperty, ball.massUserControlledProperty ],
-    //     ( positionUserControlled, massUserControlled ) => {
-    //       ( !positionUserControlled || !massUserControlled ) && this.bumpBallAwayFromOtherBalls( ball, playArea );
-    //     } );
-    // } );
+        // When the user is finished dragging the Ball, bump the Ball away from the other Balls that it is overlapping
+        // with. See https://github.com/phetsims/collision-lab/issues/100.
         ballSystem.bumpBallAwayFromOtherBalls( ball );
+
         ball.xPositionUserControlledProperty.value = false;
         ball.yPositionUserControlledProperty.value = false;
       }
