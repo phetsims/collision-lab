@@ -8,6 +8,7 @@
  *   - Handling the different Bounds of PlayAreas in each screen.
  *   - Handling and referencing the different dimensions of each screen.
  *   - PlayArea-related Properties, such as Grid visibility and Reflecting Border.
+ *   - Keeping track of the elasticity of collisions.
  *   - Convenience methods related to the PlayArea.
  *
  * PlayAreas are created at the start of the sim and is never disposed, so no dispose method is necessary.
@@ -16,14 +17,12 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 
 class PlayArea {
 
@@ -31,8 +30,6 @@ class PlayArea {
    * @param {Object} [options]
    */
   constructor( options ) {
-    assert && assert( !options || !options.dimensions || options.dimensions === 1 || options.dimensions === 2 );
-    assert && assert( !options || !options.bounds || options.bounds instanceof Bounds2 );
 
     options = merge( {
 
@@ -50,6 +47,9 @@ class PlayArea {
 
     }, options );
 
+    assert && assert( options.dimensions === 1 || options.dimensions === 2 , `invalid dimensions: ${options.dimensions}` );
+    assert && assert( options.bounds instanceof Bounds2, `invalid bounds: ${options.bounds}` );
+
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Bounds2} - the model bounds of the PlayArea, in meters.
@@ -66,29 +66,23 @@ class PlayArea {
     //                             since the visibility of the grid affects the drag-snapping of Balls.
     this.gridVisibleProperty = new BooleanProperty( options.isGridVisibleInitially );
 
-    //----------------------------------------------------------------------------------------
-
     // @public {NumberProperty} - Property of the elasticity of all collisions in the PlayArea, as a percentage. See
     //                            https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( CollisionLabConstants.ELASTICITY_PERCENT_RANGE.defaultValue, {
       range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE
     } );
-
-    // @public {EnumerationProperty.<InelasticCollisionTypes>} - the type of perfectly inelastic collision. Ignored
-    //                                                           if the elasticity isn't 0.
-    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
-      InelasticCollisionTypes.SLIP );
   }
 
   /**
-   * Resets the PlayArea. Called when the reset-all button is pressed.
+   * Resets the PlayArea.
    * @public
+   *
+   * Called when the reset-all button is pressed.
    */
   reset() {
     this.reflectingBorderProperty.reset();
     this.gridVisibleProperty.reset();
     this.elasticityPercentProperty.reset();
-    this.inelasticCollisionTypeProperty.reset();
   }
 
   //----------------------------------------------------------------------------------------
@@ -108,16 +102,6 @@ class PlayArea {
    * @returns {number}
    */
   get elasticity() { return this.elasticityPercentProperty.value / 100; }
-
-  /**
-   * Convenience method to get the inelastic collision type.
-   * @public
-   *
-   * @returns {InelasticCollisionTypes}
-   */
-  get inelasticCollisionType() { return this.inelasticCollisionTypeProperty.value; }
-
-  //----------------------------------------------------------------------------------------
 
   /**
    * Gets the width of the PlayArea, in meters.
@@ -203,7 +187,7 @@ class PlayArea {
   }
 }
 
-// @public (read-only) {Bounds2} - the default bounds of the PlayArea
+// @public (read-only) {Bounds2} - the default bounds of the PlayArea.
 PlayArea.DEFAULT_BOUNDS = new Bounds2( -2, -1, 2, 1 );
 
 collisionLab.register( 'PlayArea', PlayArea );
