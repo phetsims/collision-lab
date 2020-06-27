@@ -1,14 +1,13 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Root class (to be subclassed) for the top-level model of every screen in the 'Collision Lab' simulation.
+ * Root class for the top-level model of every screen in the 'Collision Lab' simulation. Should be subclassed for
+ * screen-specific fields and sub-classes.
  *
  * Mainly responsible for:
- *   - Time Control Properties and stepping the simulation.
- *   - Instantiation of a single PlayArea.
- *   - BallSystem creator abstract method.
- *   - Instantiation of a MomentaDiagram.
- *   - CollisionEngine creator abstract method.
+ *   - creation of a PlayArea, BallSystem, and CollisionEngine.
+ *   - instantiation of a MomentaDiagram.
+ *   - control of time (play, pause, step, speed).
  *
  * @author Brandon Li
  * @author Martin Veillette
