@@ -34,10 +34,7 @@ class IntroCollisionEngine extends CollisionEngine {
     assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    super( playArea, ballSystem );
-
-    // @private {Property.<number>} - reference to the passed-in elapsedTimeProperty.
-    this.elapsedTimeProperty = elapsedTimeProperty;
+    super( playArea, ballSystem, elapsedTimeProperty );
   }
 
   /**
@@ -77,20 +74,6 @@ class IntroCollisionEngine extends CollisionEngine {
       // Pass the calculated information to the IntroBallSystem.
       this.ballSystem.registerChangeInMomentumCollision( collisionPoint, collisionTime );
     }
-  }
-
-  /**
-   * Registers the exact position of a ball-to-border collision. Overridden to ensure that there are no ball-to-border
-   * collisions in the 'Intro' screen, since the PlayArea's border doesn't reflect.
-   * @override
-   * @protected
-   *
-   * @param {Ball} ball
-   * @param {Vector2} collisionPosition
-   * @param {number} overlappedTime
-   */
-  registerExactBallToBorderCollision( ball, collisionPosition, overlappedTime ) {
-    assert && assert( false, 'There are no Ball to Border collisions in the Intro screen' );
   }
 }
 

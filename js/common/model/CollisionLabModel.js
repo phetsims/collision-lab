@@ -64,7 +64,7 @@ class CollisionLabModel {
     this.playArea = new PlayArea( options.playAreaOptions );
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = this.createBallSystem( this.playArea );
+    this.ballSystem = this.createBallSystem( this.playArea, this.elapsedTimeProperty );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
     this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls,
@@ -73,7 +73,7 @@ class CollisionLabModel {
     );
 
     // @private {CollisionEngine} - the CollisionEngine of the simulation.
-    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem );
+    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
 
     //----------------------------------------------------------------------------------------
 
@@ -119,9 +119,10 @@ class CollisionLabModel {
    *
    * @protected
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {BallSystem}
    */
-  createBallSystem( playArea ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createBallSystem( playArea, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * @abstract
@@ -132,9 +133,10 @@ class CollisionLabModel {
    * @protected
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
    * @param {BallSystem} ballSystem - the BallSystem instance of the sim.
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * Resets the model. Called when the reset-all button is pressed.

@@ -6,6 +6,7 @@
  * @author Brandon Li
  */
 
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
@@ -48,12 +49,14 @@ class IntroModel extends CollisionLabModel {
    * @protected
    *
    * @param {PlayArea} playArea - the PlayArea instance of the screen.
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {IntroBallSystem}
    */
-  createBallSystem( playArea ) {
+  createBallSystem( playArea, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new IntroBallSystem( playArea, this.elapsedTimeProperty );
+    return new IntroBallSystem( playArea, elapsedTimeProperty );
   }
 
   /**
@@ -65,13 +68,15 @@ class IntroModel extends CollisionLabModel {
    *
    * @param {PlayArea} playArea - the PlayArea instance of the screen.
    * @param {IntroBallSystem} ballSystem - the BallSystem instance of the screen.
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem ) {
+  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new IntroCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+    return new IntroCollisionEngine( playArea, ballSystem, elapsedTimeProperty );
   }
 }
 
