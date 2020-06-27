@@ -9,6 +9,7 @@
  *  1. Track the position of the center of mass in meters.
  *  2. Track the velocity of the center of mass, in m/s.
  *  3. Track the speed of the center of mass, in m/s.
+ *  4. Create the trailing 'Path' behind the CenterOfMass.
  *
  * NOTE: CenterOfMasses are designed and implemented to be minimally invasive to optimize the performance of the
  *       simulation. The position and velocity (and speed) are not re-updated when the CenterOfMass isn't visible and
@@ -19,25 +20,38 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
+import CollisionLabPath from './CollisionLabPath.js';
 
 class CenterOfMass {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
    * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
-   * @param {Property.<number>} numberOfBallsProperty
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           This is needed for performance; the position and velocity
    *                                                           are only updated if this is true.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing 'Path' is visible
+   * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
+   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
-  constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty ) {
+  constructor( prepopulatedBalls,
+               balls,
+               centerOfMassVisibleProperty,
+               pathVisibleProperty,
+               elapsedTimeProperty,
+               playAreaBounds
+             ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
 
     //----------------------------------------------------------------------------------------
 
@@ -89,6 +103,23 @@ class CenterOfMass {
 
     // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ) );
+
+    //----------------------------------------------------------------------------------------
+
+    // Get the Property that indicates if the center-of-mass Path is visible, which occurs when both the CenterOfMass
+    // and Paths are visible. DerivedProperty is never disposed since CenterOfMasses are never disposed.
+    const centerOfMassPathVisibleProperty = new DerivedProperty( [ pathVisibleProperty, centerOfMassVisibleProperty ],
+      ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible, {
+        valueType: 'boolean'
+      } );
+
+    // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the CenterOfMass.
+    this.path = new CollisionLabPath(
+      this.positionProperty,
+      centerOfMassPathVisibleProperty,
+      elapsedTimeProperty,
+      playAreaBounds
+    );
   }
 
   /**
