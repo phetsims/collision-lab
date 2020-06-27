@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A Ball is the model for a single spherical moving object and appears in all screens. Each Ball is a apart of a
+ * A Ball is the model for a single spherical moving object that appears in all screens. Each Ball is a apart of a
  * isolated system of multiple Balls in a BallSystem. Balls are implemented to work generally for both 1D and 2D
  * screens.
  *
@@ -54,8 +54,6 @@ class Ball {
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && AssertUtils.assertPositiveInteger( index );
 
-    //----------------------------------------------------------------------------------------
-
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
     //                            individually display each component and to allow the user to manipulate separately.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
@@ -65,11 +63,6 @@ class Ball {
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
-
-    // @public (read-only) {NumberProperty} - Property of the mass of the Ball, in kg. Manipulated in the view.
-    this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
-
-    //----------------------------------------------------------------------------------------
 
     // @public {NumberProperty} - the Ball's velocity, in m/s. Separated into components to individually display each
     //                            component and to allow the user to manipulate separately.
@@ -89,6 +82,9 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
+    // @public (read-only) {NumberProperty} - Property of the mass of the Ball, in kg. Manipulated in the view.
+    this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
+
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
       ( mass, velocity ) => velocity.timesScalar( mass ),
@@ -102,8 +98,8 @@ class Ball {
 
     // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
     //                                                  display individually.
-    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ) );
-    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ) );
+    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
+    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
 
     //----------------------------------------------------------------------------------------
 
@@ -139,8 +135,8 @@ class Ball {
     this.xVelocityUserControlledProperty = new BooleanProperty( false );
     this.yVelocityUserControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user in any
-    //                                                   way, either by dragging or editing a value through the Keypad.
+    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user
+    //                                                   in any way, either by dragging or through the Keypad.
     this.userControlledProperty = new DerivedProperty( [ this.massUserControlledProperty,
       this.xPositionUserControlledProperty,
       this.yPositionUserControlledProperty,
@@ -173,15 +169,15 @@ class Ball {
   reset() {
     this.xPositionProperty.reset();
     this.yPositionProperty.reset();
-    this.massProperty.reset();
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
+    this.massProperty.reset();
+    this.path.clear();
     this.massUserControlledProperty.reset();
     this.xPositionUserControlledProperty.reset();
     this.yPositionUserControlledProperty.reset();
     this.xVelocityUserControlledProperty.reset();
     this.yVelocityUserControlledProperty.reset();
-    this.path.clear();
   }
 
   /**
@@ -190,9 +186,7 @@ class Ball {
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
-  restart() {
-    this.setState( this.restartState );
-  }
+  restart() { this.setState( this.restartState ); }
 
   /**
    * Moves the ball by one time step, assuming that the Ball isn't accelerating and is in uniform motion in a straight
@@ -213,12 +207,10 @@ class Ball {
    *
    * This is called when the user presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
    */
-  saveState() {
-    this.restartState.saveState( this.position, this.velocity, this.mass );
-  }
+  saveState() { this.restartState.saveState( this.position, this.velocity, this.mass ); }
 
   /**
-   * Sets the Properties of this Ball to match the passed-in BallState.
+   * Sets the Properties of this Ball to match the passed-in BallState. Setting a state will clear the trailing 'Path'.
    * @public
    *
    * @param {BallState} BallState

@@ -11,7 +11,7 @@
  *
  * PathCanvasNodes are created for each Ball, which are never disposed, meaning PathCanvasNodes are also never disposed
  * disposed and internal links are left as-is. This doesn't negatively impact performance since Balls that aren't in the
- * system aren't stepped and their positions don't change. See Explore2DBallSystem for more context.
+ * system aren't stepped and their positions don't change. See TracedBallSystem for more context.
  *
  * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
  *
