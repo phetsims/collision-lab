@@ -40,6 +40,7 @@ class CollisionLabControlPanel extends Panel {
   /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
+   * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
@@ -48,6 +49,7 @@ class CollisionLabControlPanel extends Panel {
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
+               pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                inelasticCollisionTypeProperty,
@@ -55,6 +57,7 @@ class CollisionLabControlPanel extends Panel {
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
     assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
@@ -67,6 +70,9 @@ class CollisionLabControlPanel extends Panel {
 
        // {boolean} - indicates if the reflecting border checkbox is included.
       includeReflectingBorderCheckbox: true,
+
+      // {boolean} - indicates if the 'Path' checkbox is included.
+      includePathCheckbox: true,
 
       // {Object} - passed to the ElasticityControlSet
       elasticityControlSetNodeOptions: null
@@ -114,8 +120,8 @@ class CollisionLabControlPanel extends Panel {
       collisionLabStrings.kineticEnergy
     );
 
-    // @protected {Checkbox} - 'Values' visibility Checkbox. This is referenced for ordering in sub-classes.
-    this.valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
+    // 'Values' visibility Checkbox. This is referenced for ordering in sub-classes.
+    const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
     // 'Elasticity' control
     const elasticityControlSetNode = new ElasticityControlSet(
@@ -126,6 +132,10 @@ class CollisionLabControlPanel extends Panel {
     // 'Constant Radius' Checkbox
     const constantRadiusCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
 
+    // HSeparator
+    const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
+
+    //----------------------------------------------------------------------------------------
 
     // Set the children of the content in the correct order.
     contentNode.children = [
@@ -133,13 +143,8 @@ class CollisionLabControlPanel extends Panel {
       momentumCheckbox,
       this.centerOfMassCheckbox,
       kineticEnergyCheckbox,
-      this.valuesCheckbox,
-      new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } ),
-      elasticityControlSetNode,
-      constantRadiusCheckbox
+      valuesCheckbox
     ];
-
-    //----------------------------------------------------------------------------------------
 
     // Add the reflecting border Checkbox if it is included.
     if ( options.includeReflectingBorderCheckbox ) {
@@ -149,8 +154,24 @@ class CollisionLabControlPanel extends Panel {
         collisionLabStrings.reflectingBorder );
 
       // Add the Reflecting Border Checkbox after the values Checkbox.
-      contentNode.insertChild( contentNode.indexOfChild( this.valuesCheckbox ) + 1, reflectingBorderCheckbox );
+      contentNode.addChild( reflectingBorderCheckbox );
     }
+
+    // Add the path Checkbox if it is included.
+    if ( options.includePathCheckbox ) {
+
+
+      // Create the 'Path' visibility Checkbox.
+      const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
+
+      // Add the 'Path' Checkbox after the 'Values' Checkbox.
+      contentNode.addChild( pathCheckbox );
+    }
+
+    contentNode.addChild( hSeparator );
+    contentNode.addChild( elasticityControlSetNode );
+    contentNode.addChild( constantRadiusCheckbox );
+
 
     // Apply additional Bounds mutators.
     this.mutate( options );
