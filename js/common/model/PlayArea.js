@@ -75,7 +75,7 @@ class PlayArea {
     } );
 
     // @public {EnumerationProperty.<InelasticCollisionTypes>} - the type of perfectly inelastic collision. Ignored
-    //                                                           the elasticity isn't 0.
+    //                                                           if the elasticity isn't 0.
     this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
       InelasticCollisionTypes.SLIP );
   }

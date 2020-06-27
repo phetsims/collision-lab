@@ -4,15 +4,15 @@
  * IntroControlPanel is a CollisionLabControlPanel sub-type for the 'Intro' screen, which appears on the
  * upper-right corner of the screen.
  *
- * It adds a 'Change in P' Checkbox to allow the user to toggle the visibility of the change in momentum vectors. The
+ * It adds a 'Change in Momentum' Checkbox to allow the user to toggle the visibility of the change in momentum vectors. The
  * checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
  * 'Reflecting Border' Checkbox and the stick vs slip ABSwitch.
  *
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
@@ -25,6 +25,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
+   * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
@@ -34,6 +35,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
+               pathVisibleProperty,
                changeInMomentumVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
@@ -41,15 +43,17 @@ class IntroControlPanel extends CollisionLabControlPanel {
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
-    assert && assert( centerOfMassVisibleProperty instanceof Property && typeof centerOfMassVisibleProperty.value === 'boolean', `invalid centerOfMassVisibleProperty: ${centerOfMassVisibleProperty}` );
-    assert && assert( changeInMomentumVisibleProperty instanceof Property && typeof changeInMomentumVisibleProperty.value === 'boolean', `invalid changeInMomentumVisibleProperty: ${changeInMomentumVisibleProperty}` );
-    assert && assert( reflectingBorderProperty instanceof Property && typeof reflectingBorderProperty.value === 'boolean', `invalid reflectingBorderProperty: ${reflectingBorderProperty}` );
-    assert && assert( elasticityPercentProperty instanceof Property && typeof elasticityPercentProperty.value === 'number', `invalid elasticityPercentProperty: ${elasticityPercentProperty}` );
-    assert && assert( inelasticCollisionTypeProperty instanceof Property && InelasticCollisionTypes.includes( inelasticCollisionTypeProperty.value ), `invalid inelasticCollisionTypeProperty: ${inelasticCollisionTypeProperty}` );
-    assert && assert( ballsConstantSizeProperty instanceof Property && typeof ballsConstantSizeProperty.value === 'boolean', `invalid ballsConstantSizeProperty: ${ballsConstantSizeProperty}` );
+    assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( changeInMomentumVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
+    assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
+    assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
     options = merge( {
       includeReflectingBorderCheckbox: false,
+      includePathCheckbox: false,
       elasticityControlSetNodeOptions: {
         includeStickSlipSwitch: false
       }
@@ -57,6 +61,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
 
     super( viewProperties,
            centerOfMassVisibleProperty,
+           pathVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
            inelasticCollisionTypeProperty,

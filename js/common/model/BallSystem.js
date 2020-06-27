@@ -199,7 +199,7 @@ class BallSystem {
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
       if ( ballSystemUserControlled ) {
         this.balls.filter( ball => ball.userControlledProperty.value ).forEach( ball => { ball.path.clear(); } );
-        this.centerOfMassPath.clear();
+        this.centerOfMass.path.clear();
       }
     } );
   }

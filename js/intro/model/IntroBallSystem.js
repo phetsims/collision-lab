@@ -60,7 +60,7 @@ class IntroBallSystem extends BallSystem {
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && assert( !playArea.reflectsBorder, 'PlayArea cannot have a reflecting border in Intro' );
 
-    super( INTRO_INITIAL_BALL_STATES, playArea, {
+    super( INTRO_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, {
       numberOfBallsRange: NUMBER_OF_BALLS_RANGE,
       pathVisibleInitially: false
     } );
