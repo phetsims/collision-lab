@@ -10,6 +10,7 @@
  *     number of Balls, so Balls are created here at the start of the sim.
  *   - CenterOfMass model instantiation for the system of Balls.
  *   - Keeping track of the total kinetic energy of the system.
+ *   - Tracking the visibility of trailing 'Paths' in a Property.
  *   - Tracking if there are any Balls that are being controlled by the user.
  *   - Tracking if the Balls in the system are inside of the PlayArea.
  *
@@ -40,12 +41,13 @@ class BallSystem {
   /**
    * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {PlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @param {Object} [options]
    */
-  constructor( initialBallStates, playArea, options ) {
+  constructor( initialBallStates, playArea, elapsedTimeProperty, options ) {
     assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( !options || !options.numberOfBallsRange || options.numberOfBallsRange instanceof RangeWithValue );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
     options = merge( {
 
@@ -58,7 +60,6 @@ class BallSystem {
 
     // Ensure a consistent configuration of initialBallStates and numberOfBallsRange.
     assert && assert( options.numberOfBallsRange.max === initialBallStates.length );
-    assert && playArea.dimensions === 1 && assert( _.every( initialBallStates, ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
 
     // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
     this.numberOfBallsRange = options.numberOfBallsRange;
@@ -72,6 +73,13 @@ class BallSystem {
     //                             Also used in sub-classes for other performance optimizations.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
+    // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
+    //                             model since paths only show the path of the moving object after the visibility
+    //                             checkbox is checked and are empty when false.
+    this.pathVisibleProperty = new BooleanProperty( false );
+
+    //----------------------------------------------------------------------------------------
+
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation
     //                                 and are never disposed. However, these Balls are NOT necessarily the Balls
     //                                 currently within the system. This is just used so that the same Ball
@@ -80,6 +88,8 @@ class BallSystem {
       ballState,
       this.ballsConstantSizeProperty,
       playArea,
+      this.pathVisibleProperty,
+      elapsedTimeProperty,
       index + 1
     ) );
 
@@ -132,7 +142,10 @@ class BallSystem {
     this.centerOfMass = new CenterOfMass(
       this.prepopulatedBalls,
       this.balls,
-      this.centerOfMassVisibleProperty
+      this.centerOfMassVisibleProperty,
+      this.pathVisibleProperty,
+      elapsedTimeProperty,
+      playArea.bounds
     );
 
     // @public (read-only) {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
@@ -168,6 +181,24 @@ class BallSystem {
       length => this.balls.count( ball => !ball.insidePlayAreaProperty.value ) === length, {
         valueType: 'boolean'
       } );
+
+    //----------------------------------------------------------------------------------------
+
+    // Observe when Balls are removed from the system and clear their trailing Paths. Listener lasts for the life-time
+    // of the simulation.
+    this.balls.addItemRemovedListener( ball => {
+      ball.path.clear();
+    } );
+
+    // Observe when the user is controlling any of the Balls to clear the trailing Path of the CenterOfMass. See
+    // https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
+    // the sim as PlayAreas are never disposed.
+    this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
+      if ( ballSystemUserControlled ) {
+        this.balls.filter( ball => ball.userControlledProperty.value ).forEach( ball => { ball.path.clear(); } );
+        this.centerOfMassPath.clear();
+      }
+    } );
   }
 
   /**
@@ -181,6 +212,7 @@ class BallSystem {
     this.centerOfMassVisibleProperty.reset();
     this.numberOfBallsProperty.reset();
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
+    this.centerOfMass.reset();
   }
 
   /**
@@ -193,6 +225,7 @@ class BallSystem {
     this.balls.forEach( ball => {
       ball.restart();
     } );
+    this.centerOfMass.reset();
   }
 
   /**

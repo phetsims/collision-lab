@@ -142,6 +142,16 @@ class CenterOfMass {
     return this.velocityProperty ? this.velocityProperty.value : CenterOfMass.computeVelocity( this.balls );
   }
 
+  /**
+   * Resets the CenterOfMass.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
+   */
+  reset() {
+    this.path.clear();
+  }
+
   /*----------------------------------------------------------------------------*
    * Static Methods.
    *----------------------------------------------------------------------------*/
