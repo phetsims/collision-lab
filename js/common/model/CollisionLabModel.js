@@ -20,8 +20,11 @@ import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionEngine from './CollisionEngine.js';
 import MomentaDiagram from './MomentaDiagram.js';
+import PlayArea from './PlayArea.js';
 
+// @abstract
 class CollisionLabModel {
 
   /**
@@ -34,7 +37,7 @@ class CollisionLabModel {
     this.isPlayingProperty = new BooleanProperty( false );
 
     // @public (read-only) {Property.<number>} - the total elapsed time of the simulation, in seconds.
-    this.elapsedTimeProperty = new NumberProperty( 0 );
+    this.elapsedTimeProperty = new NumberProperty( 0, { isValidValue: value => value >= 0 } );
 
     // @public {EnumerationProperty.<TimeSpeed>} - the speed rate of the simulation. Set externally in the view.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
@@ -88,34 +91,37 @@ class CollisionLabModel {
   }
 
   /**
-   * @abstract
-   * Creates the BallSystem for the screen. Called in the constructor of the CollisionLabModel. This is an abstract
-   * method because some screens have different initial BallStates and some screens use sub-types of BallSystem, but
-   * all screens have a BallSystem.
-   *
+   * Creates the PlayArea for the screen using the Factory Method Pattern, which allows sub-types to utilize
+   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
-   * @param {Property.<number>} elapsedTimeProperty
+   *
+   * @returns {PlayArea}
+   */
+  createPlayArea() { return new PlayArea(); }
+
+  /**
+   * @abstract
+   * Creates the BallSystem for the screen using the Factory Method Pattern, which allows sub-types to utilize
+   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
+   * @protected
+   *
    * @returns {BallSystem}
    */
-  createBallSystem( playArea, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createBallSystem() { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
-   * @abstract
-   * Creates the CollisionEngine for the screen. Called in the constructor of the CollisionLabModel. This is an abstract
-   * method because some screens use sub-types of CollisionEngine and have different APIs, but all screens have a
-   * CollisionEngine.
-   *
+   * Creates the CollisionEngine for the screen using the Factory Method Pattern, which allows sub-types to utilize
+   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
-   * @param {BallSystem} ballSystem - the BallSystem instance of the sim.
-   * @param {Property.<number>} elapsedTimeProperty
+   *
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createCollisionEngine() { return new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty ); }
+
+  //----------------------------------------------------------------------------------------
 
   /**
-   * Resets the model. Called when the reset-all button is pressed.
+   * Resets the screen. Called when the reset-all button is pressed.
    * @public
    */
   reset() {
@@ -128,7 +134,7 @@ class CollisionLabModel {
   }
 
   /**
-   * Restarts this model.
+   * Restarts this screen.
    * @public
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
@@ -145,18 +151,16 @@ class CollisionLabModel {
    *
    * Currently, it does the same thing as restarting. See https://github.com/phetsims/collision-lab/issues/90.
    */
-  returnBalls(d) { this.restart(); }
+  returnBalls() { this.restart(); }
 
   /**
-   * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the
-   * sim is paused.
+   * Steps the model forward in time. This should only be called directly by Sim.js. Does nothing if the sim is paused.
    * @public
    *
    * @param {number} dt - time since the last step, in seconds.
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
     const timeSpeedFactor = this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
                               CollisionLabConstants.NORMAL_SPEED_FACTOR :
                               CollisionLabConstants.SLOW_SPEED_FACTOR;
@@ -169,15 +173,14 @@ class CollisionLabModel {
    * that step the simulation through step-buttons or used by the main step method when the sim isn't paused.
    * @private
    *
-   * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor.
+   * @param {number} dt - time delta, in seconds. Should be already scaled to the time speed factor, if needed.
    */
   stepManual( dt ) {
     assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
 
-    // Update the elapsedTimeProperty.
-    this.elapsedTimeProperty.value += dt;
-
+    // Step the Physics Engine and update the elapsedTimeProperty value.
     this.collisionEngine.step( dt );
+    this.elapsedTimeProperty.value += dt;
   }
 
   /**
@@ -188,7 +191,7 @@ class CollisionLabModel {
    */
   stepBackward() {
 
-    // Step backwards by the minimum of one step of the current elapsed time to ensure that elapsed time is positive.
+    // Step backwards by the minimum of one step and the current elapsed time to ensure that elapsed time is positive.
     this.stepManual( -1 * Math.min( CollisionLabConstants.TIME_STEP_DURATION, this.elapsedTimeProperty.value ) );
   }
 
