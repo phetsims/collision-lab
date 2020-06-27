@@ -264,6 +264,17 @@ class Ball {
    *----------------------------------------------------------------------------*/
 
   /**
+   * ES5 getters for the location of the edges of the Ball, in meters.
+   * @public
+   *
+   * @returns {number} - in meters.
+   */
+  get left() { return this.position.x - this.radius; }
+  get right() { return this.position.x + this.radius; }
+  get top() { return this.position.y + this.radius; }
+  get bottom() { return this.position.y - this.radius; }
+
+  /**
    * Gets the Ball's mass, in kg.
    * @public
    *
@@ -306,38 +317,6 @@ class Ball {
     this.xPositionProperty.value = position.x;
     this.yPositionProperty.value = position.y;
   }
-
-  /**
-   * Gets the x-coordinate of the left side of the Ball.
-   * @public
-   *
-   * @returns {number} - in meters
-   */
-  get left() { return this.position.x - this.radius; }
-
-  /**
-   * Gets the x-coordinate of the right side of the Ball.
-   * @public
-   *
-   * @returns {number} - in meters
-   */
-  get right() { return this.position.x + this.radius; }
-
-  /**
-   * Gets the y-coordinate of the top side of the Ball.
-   * @public
-   *
-   * @returns {number} - in meters
-   */
-  get top() { return this.position.y + this.radius; }
-
-  /**
-   * Gets the y-coordinate of the bottom side of the Ball.
-   * @public
-   *
-   * @returns {number} - in meters
-   */
-  get bottom() { return this.position.y - this.radius; }
 
   /**
    * Gets the horizontal velocity of the Ball, in m/s.
