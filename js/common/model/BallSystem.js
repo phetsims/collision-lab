@@ -52,7 +52,10 @@ class BallSystem {
     options = merge( {
 
       // {RangeWithValue} - the range of the number of Balls in the system.
-      numberOfBallsRange: new RangeWithValue( 1, 4, 2 )
+      numberOfBallsRange: new RangeWithValue( 1, 4, 2 ),
+
+      // {boolean} - indicates if the Paths are visible initially.
+      pathVisibleInitially: false
 
     }, options );
 
@@ -76,7 +79,7 @@ class BallSystem {
     // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
-    this.pathVisibleProperty = new BooleanProperty( false );
+    this.pathVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
 
     //----------------------------------------------------------------------------------------
 
