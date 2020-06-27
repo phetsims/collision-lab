@@ -6,7 +6,9 @@
  *
  * The BallSystemNode displays:
  *   - BallNodes for each Ball in the system.
- *   - Displaying the Center of Mass
+ *   - Displaying the Center of Mass.
+ *   - A PathCanvasNode for all possible Balls.
+ *   - A PathCanvasNode for the center of mass.
  *
  * BallSystemNode takes advantage of the prepopulatedBalls in the BallSystem, which all Balls in the system must be apart
  * of. Instead of creating a BallNode each time a Ball is added to the system, it creates a BallNode for each
@@ -22,10 +24,12 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
 import BallNode from './BallNode.js';
 import CenterOfMassNode from './CenterOfMassNode.js';
+import PathCanvasNode from './PathCanvasNode.js';
 
 class BallSystemNode extends Node {
 
@@ -62,6 +66,9 @@ class BallSystemNode extends Node {
     // Create the container for all Ball Nodes.
     const ballNodeContainer = new Node();
 
+    // Create the container for all Ball Paths.
+    const ballPathsContainer = new Node();
+
     // Loop through each possible Ball. These Balls are NOT necessarily the Balls currently within the BallSystem,
     // so we are responsible for updating its visibility based on whether or not it is the system.
     ballSystem.prepopulatedBalls.forEach( ball => {
@@ -88,6 +95,18 @@ class BallSystemNode extends Node {
       // Observe when the user controls the Ball and move the BallNode to the front of its layer. Link is never
       // unlinked since Balls are never disposed.
       ball.userControlledProperty.link( userControlled => { userControlled && ballNode.moveToFront(); } );
+
+      //----------------------------------------------------------------------------------------
+
+      // Create the corresponding PathCanvasNode for each Path.  Since the pathVisibleProperty (see BallSystem) is in
+      // the model, there is no need to adjust the visibility of PathCanvasNodes since Paths are empty in the model when
+      // they are not visible.
+      const pathNode = new PathCanvasNode( ball.path, modelViewTransform, {
+        pathBaseColor: CollisionLabColors.BALL_COLORS[ ball.index - 1 ]
+      } );
+
+      // Add the PathNode to the container.
+      ballPathsContainer.addChild( pathNode );
     } );
 
     //----------------------------------------------------------------------------------------
@@ -101,8 +120,17 @@ class BallSystemNode extends Node {
       modelViewTransform
     );
 
+    // Create the corresponding view for the Path of the center of mass.
+    const centerOfMassPath = new PathCanvasNode( ballSystem.centerOfMass.path, modelViewTransform, {
+      pathBaseColor: CollisionLabColors.CENTER_OF_MASS_COLORS.fill
+    } );
+
+    //----------------------------------------------------------------------------------------
+
     // Set the children of this Node to the correct rendering order.
     this.children = [
+      ballPathsContainer,
+      centerOfMassPath,
       ballNodeContainer,
       centerOfMassNode
     ];

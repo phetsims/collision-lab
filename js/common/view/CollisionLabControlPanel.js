@@ -172,7 +172,6 @@ class CollisionLabControlPanel extends Panel {
     contentNode.addChild( elasticityControlSetNode );
     contentNode.addChild( constantRadiusCheckbox );
 
-
     // Apply additional Bounds mutators.
     this.mutate( options );
   }
