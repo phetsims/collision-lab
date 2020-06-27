@@ -12,6 +12,7 @@
  *   - Radius Property.
  *   - Track the kinetic energy of the Ball.
  *   - Dragging, user-control, restarting, etc.
+ *   - Creating the trailing 'Path' behind the Ball.
  *
  * For the 'Collision Lab' sim, the same Ball instances are used with the same number of Balls. See BallSystem for more
  * context. Thus, Balls are created at the start of the sim and persist for the lifetime of the sim, so no dispose
@@ -30,6 +31,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
+import CollisionLabPath from './CollisionLabPath.js';
 import PlayArea from './PlayArea.js';
 
 class Ball {
@@ -38,15 +40,21 @@ class Ball {
    * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
    * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
+   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing 'Path' is visible
+   * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialBallState, isConstantSizeProperty, playArea, index ) {
+  constructor( initialBallState, isConstantSizeProperty, playArea, pathVisibleProperty, elapsedTimeProperty, index ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && AssertUtils.assertPositiveInteger( index );
+
+    //----------------------------------------------------------------------------------------
 
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
     //                            individually display each component and to allow the user to manipulate separately.
@@ -115,6 +123,9 @@ class Ball {
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
 
+    // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the Ball.
+    this.path = new CollisionLabPath( this.positionProperty, pathVisibleProperty, elapsedTimeProperty, playArea.bounds );
+
     //----------------------------------------------------------------------------------------
 
     // @public {BooleanProperty} - indicates if the Ball's mass is being manipulated by the user. Set in the view.
@@ -170,6 +181,7 @@ class Ball {
     this.yPositionUserControlledProperty.reset();
     this.xVelocityUserControlledProperty.reset();
     this.yVelocityUserControlledProperty.reset();
+    this.path.clear();
   }
 
   /**
@@ -216,6 +228,7 @@ class Ball {
     this.position = ballState.position;
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
+    this.path.clear();
   }
 
   /**
