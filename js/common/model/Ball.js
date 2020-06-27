@@ -179,9 +179,7 @@ class Ball {
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
   restart() {
-    this.position = this.restartState.position;
-    this.velocity = this.restartState.velocity;
-    this.mass = this.restartState.mass;
+    this.setState( this.restartState );
   }
 
   /**
@@ -205,6 +203,19 @@ class Ball {
    */
   saveState() {
     this.restartState.saveState( this.position, this.velocity, this.mass );
+  }
+
+  /**
+   * Sets the Properties of this Ball to match the passed-in BallState.
+   * @public
+   *
+   * @param {BallState} BallState
+   */
+  setState( ballState ) {
+    assert && assert( ballState instanceof BallState, `invalid ballState: ${ballState}` );
+    this.position = ballState.position;
+    this.velocity = ballState.velocity;
+    this.mass = ballState.mass;
   }
 
   /**
