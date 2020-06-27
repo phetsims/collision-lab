@@ -5,7 +5,7 @@
  * screen-specific fields and sub-classes.
  *
  * Mainly responsible for:
- *   - creation of a PlayArea, BallSystem, and CollisionEngine.
+ *   - creation of a PlayArea, BallSystem and CollisionEngine using the Factory Method Pattern.
  *   - instantiation of a MomentaDiagram.
  *   - control of time (play, pause, step, speed).
  *
@@ -16,68 +16,51 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import merge from '../../../../phet-core/js/merge.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import MomentaDiagram from './MomentaDiagram.js';
-import PlayArea from './PlayArea.js';
 
-// constants
-const TIME_STEP_DURATION = CollisionLabConstants.TIME_STEP_DURATION;
-
-// @abstract
 class CollisionLabModel {
 
   /**
    * @param {Tandem} tandem
-   * @param {Object} [options]
    */
-  constructor( tandem, options ) {
+  constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    options = merge( {
-
-      // {Object} - passed to the PlayArea instance
-      playAreaOptions: null
-
-    }, options );
-
-    //----------------------------------------------------------------------------------------
-
-    // @public {BooleanProperty} - indicates the play/pause state of the screen. Generally manipulated externally
-    //                             in the view.
+    // @public {BooleanProperty} - indicates the play/pause state of the screen. Usually manipulated in the view.
     this.isPlayingProperty = new BooleanProperty( false );
 
-    // @public (read-only) {Property.<number>} - the total elapsed time (in seconds) of the simulation. Set internally.
+    // @public (read-only) {Property.<number>} - the total elapsed time of the simulation, in seconds.
     this.elapsedTimeProperty = new NumberProperty( 0 );
 
-    // @public {EnumerationProperty.<TimeSpeed>} - indicates the speed rate of the simulation. Set externally in the
-    //                                             view.
+    // @public {EnumerationProperty.<TimeSpeed>} - the speed rate of the simulation. Set externally in the view.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {PlayArea} - create the PlayArea of the screen.
-    this.playArea = new PlayArea( options.playAreaOptions );
+    // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
+    this.playArea = this.createPlayArea();
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = this.createBallSystem( this.playArea, this.elapsedTimeProperty );
+    this.ballSystem = this.createBallSystem();
+
+    // @private {CollisionEngine} - create the CollisionEngine of the screen.
+    this.collisionEngine = this.createCollisionEngine();
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
-    this.momentaDiagram = new MomentaDiagram( this.ballSystem.prepopulatedBalls,
+    this.momentaDiagram = new MomentaDiagram(
+      this.ballSystem.prepopulatedBalls,
       this.ballSystem.balls,
       this.playArea.dimensions
     );
 
-    // @private {CollisionEngine} - the CollisionEngine of the simulation.
-    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
-
     //----------------------------------------------------------------------------------------
 
     // Observe when the sim goes from paused to playing to save the states of the Balls in the BallSystem for the next
-    // restart() call. Link is never removed and lasts for the lifetime of the simulation.
+    // restart call. Link is never removed and lasts for the lifetime of the simulation.
     this.isPlayingProperty.lazyLink( isPlaying => {
       isPlaying && this.ballSystem.saveBallStates();
     } );
@@ -85,26 +68,20 @@ class CollisionLabModel {
     // Flag that indicates whether the sim was playing before it was programmatically paused.
     let wasPlaying = this.isPlayingProperty.value;
 
-    // Observe when the user manipulates any of the Balls and pause the simulation. The sim is un-paused when the user
-    // is finished controlling the Ball if and only if the sim was playing before the user starting controlling.
-    // Also set the elapsedTime to 0 when the user manipulates a Ball. See
-    // https://github.com/phetsims/collision-lab/issues/85#issuecomment-650271055. Link persists for the simulations.
+    // Observe when the user manipulates any of the Balls and pause the simulation. If the sim was playing before, the
+    // sim is un-paused when the user is finished controlling the Ball. The elapsedTimeProperty is also reset when the
+    // user manipulates a Ball. See https://github.com/phetsims/collision-lab/issues/85#issuecomment-650271055.
     this.ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
-
-      // When the play area is being controlled, the sim is paused and is the play-pause button is disabled.
-      // See https://github.com/phetsims/collision-lab/issues/49.
       if ( ballSystemUserControlled ) {
 
-        // Save playing state and pause the sim.
+        // If a Ball is being controlled, pause the sim and reset the elapsedTimeProperty.
         wasPlaying = this.isPlayingProperty.value;
         this.isPlayingProperty.value = false;
-
-        // Reset elapsed-time.
         this.elapsedTimeProperty.reset();
       }
       else {
 
-        // Restore playing state
+        // Restore playing state.
         this.isPlayingProperty.value = wasPlaying;
       }
     } );
@@ -212,7 +189,7 @@ class CollisionLabModel {
   stepBackward() {
 
     // Step backwards by the minimum of one step of the current elapsed time to ensure that elapsed time is positive.
-    this.stepManual( -1 * Math.min( TIME_STEP_DURATION, this.elapsedTimeProperty.value ) );
+    this.stepManual( -1 * Math.min( CollisionLabConstants.TIME_STEP_DURATION, this.elapsedTimeProperty.value ) );
   }
 
   /**
@@ -221,7 +198,7 @@ class CollisionLabModel {
    *
    * Called when the user presses the step-forward button.
    */
-  stepForward() { this.stepManual( TIME_STEP_DURATION ); }
+  stepForward() { this.stepManual( CollisionLabConstants.TIME_STEP_DURATION ); }
 }
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );
