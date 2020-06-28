@@ -37,7 +37,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
-import PlayArea from '../../common/model/PlayArea.js';
+import IntroPlayArea from './IntroPlayArea.js';
 
 // constants
 const CHANGE_IN_MOMENTUM_VISIBLE_PERIOD = CollisionLabQueryParameters.changeInMomentumVisiblePeriod;
@@ -52,13 +52,12 @@ const INTRO_INITIAL_BALL_STATES = [
 class IntroBallSystem extends BallSystem {
 
   /**
-   * @param {PlayArea} playArea
+   * @param {IntroPlayArea} playArea
    * @param {Property.<number>} elapsedTimeProperty
    */
   constructor( playArea, elapsedTimeProperty ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( playArea instanceof IntroPlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
-    assert && assert( !playArea.reflectsBorder, 'PlayArea cannot have a reflecting border in Intro' );
 
     super( INTRO_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, {
       numberOfBallsRange: NUMBER_OF_BALLS_RANGE,

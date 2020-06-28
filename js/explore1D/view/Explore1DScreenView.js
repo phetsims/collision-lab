@@ -56,14 +56,12 @@ class Explore1DScreenView extends CollisionLabScreenView {
     return new CollisionLabControlPanel(
       viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
+      model.ballSystem.pathVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
       model.ballSystem.ballsConstantSizeProperty,
       merge( options, {
-        elasticityControlSetNodeOptions: {
-          includeStickSlipSwitch: false
-        }
+        includePathCheckbox: false
       } ) );
   }
 
