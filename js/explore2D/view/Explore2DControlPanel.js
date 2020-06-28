@@ -11,6 +11,7 @@
  * @author Brandon Li
  */
 
+import Property from '../../../../axon/js/Property.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
@@ -33,12 +34,19 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                ballsConstantSizeProperty,
+               elasticityPercentRange,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
+
+    options = options || {};
+    options.elasticityNumberControlOptions = options.elasticityNumberControlOptions || {};
+
+    assert && assert( !options.elasticityNumberControlOptions.enabledRangeProperty, 'Explore2DControlPanel sets enabledRangeProperty' );
+    options.elasticityNumberControlOptions.enabledRangeProperty = new Property( elasticityPercentRange );
 
     super( viewProperties,
            centerOfMassVisibleProperty,
