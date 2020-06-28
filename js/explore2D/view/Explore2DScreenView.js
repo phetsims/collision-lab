@@ -8,10 +8,10 @@
 
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
+import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 import Explore2DModel from '../model/Explore2DModel.js';
-import Explore2DBallSystemNode from './Explore2DBallSystemNode.js';
 import Explore2DControlPanel from './Explore2DControlPanel.js';
 
 class Explore2DScreenView extends CollisionLabScreenView {
@@ -37,7 +37,6 @@ class Explore2DScreenView extends CollisionLabScreenView {
       model.ballSystem.pathVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
       model.ballSystem.ballsConstantSizeProperty,
       options
     );
@@ -59,7 +58,7 @@ class Explore2DScreenView extends CollisionLabScreenView {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
-    return new Explore2DBallSystemNode( model.ballSystem,
+    return new BallSystemNode( model.ballSystem,
         model.playArea,
         viewProperties.valuesVisibleProperty,
         viewProperties.velocityVectorVisibleProperty,

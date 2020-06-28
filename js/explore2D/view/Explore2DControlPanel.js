@@ -13,9 +13,6 @@
 
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
-import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
-import CollisionLabCheckbox from '../../common/view/CollisionLabCheckbox.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 
@@ -27,7 +24,6 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
    * @param {Object} [options]
    */
@@ -36,31 +32,22 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
-               inelasticCollisionTypeProperty,
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
-    assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
     super( viewProperties,
            centerOfMassVisibleProperty,
+           pathVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
-           inelasticCollisionTypeProperty,
            ballsConstantSizeProperty,
            options );
 
-    //----------------------------------------------------------------------------------------
-
-    // Create the 'Path' visibility Checkbox.
-    const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
-
-    // Add the 'Path' Checkbox after the 'Values' Checkbox.
-    this.contentNode.insertChild( this.contentNode.indexOfChild( this.valuesCheckbox ) + 1, pathCheckbox );
   }
 }
 
