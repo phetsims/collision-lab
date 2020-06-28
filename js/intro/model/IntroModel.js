@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
@@ -31,7 +30,7 @@ class IntroModel extends CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    super( tandem, { playAreaOptions: PLAY_AREA_OPTIONS } );
+    super( tandem );
 
     //----------------------------------------------------------------------------------------
 
@@ -42,41 +41,34 @@ class IntroModel extends CollisionLabModel {
   }
 
   /**
-   * Creates the BallSystem for the 'Intro' screen. Called in the constructor of the super-class. For this screen,
-   * this method will instantiate a sub-type of BallSystem: IntroBallSystem.
-   *
+   * Creates the PlayArea for the 'Intro' screen, which uses a sub-type of PlayArea.
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the screen.
-   * @param {Property.<number>} elapsedTimeProperty
+   * @returns {PlayArea}
+   */
+  createPlayArea() { return new PlayArea( PLAY_AREA_OPTIONS ); }
+
+  /**
+   * Creates the BallSystem for the 'Intro' screen, which uses a sub-type of BallSystem.
+   * @override
+   * @protected
+   *
    * @returns {IntroBallSystem}
    */
-  createBallSystem( playArea, elapsedTimeProperty ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
-
-    return new IntroBallSystem( playArea, elapsedTimeProperty );
+  createBallSystem() {
+    return new IntroBallSystem( this.playArea, this.elapsedTimeProperty );
   }
 
   /**
-   * Creates the CollisionEngine for the 'Intro' screen. Called in the constructor of the super-class. For this
-   * screen, this method will instantiate a sub-type of CollisionEngine: IntroCollisionEngine.
-   *
+   * Creates the CollisionEngine for the 'Intro' screen, which uses a sub-type of CollisionEngine.
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the screen.
-   * @param {IntroBallSystem} ballSystem - the BallSystem instance of the screen.
-   * @param {Property.<number>} elapsedTimeProperty
-   * @returns {CollisionEngine}
+   * @returns {IntroCollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( ballSystem instanceof IntroBallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
-
-    return new IntroCollisionEngine( playArea, ballSystem, elapsedTimeProperty );
+  createCollisionEngine() {
+    return new IntroCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 }
 

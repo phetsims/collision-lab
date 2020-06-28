@@ -15,7 +15,6 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
-import InelasticCollisionTypes from '../../common/model/InelasticCollisionTypes.js';
 import CollisionLabCheckbox from '../../common/view/CollisionLabCheckbox.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -24,39 +23,35 @@ class IntroControlPanel extends CollisionLabControlPanel {
 
  /**
    * @param {CollisionLabViewProperties} viewProperties
+   * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {Property.<boolean>} pathVisibleProperty
-   * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
    * @param {Object} [options]
    */
   constructor( viewProperties,
+               changeInMomentumVisibleProperty,
                centerOfMassVisibleProperty,
                pathVisibleProperty,
-               changeInMomentumVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
-               inelasticCollisionTypeProperty,
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
+    assert && AssertUtils.assertPropertyOf( changeInMomentumVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( changeInMomentumVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
-    assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
     options = merge( {
+
       includeReflectingBorderCheckbox: false,
-      includePathCheckbox: false,
-      elasticityControlSetNodeOptions: {
-        includeStickSlipSwitch: false
-      }
+      includePathCheckbox: false
+
     }, options );
 
     super( viewProperties,
@@ -64,7 +59,6 @@ class IntroControlPanel extends CollisionLabControlPanel {
            pathVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
-           inelasticCollisionTypeProperty,
            ballsConstantSizeProperty,
            options );
 

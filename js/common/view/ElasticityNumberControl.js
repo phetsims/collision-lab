@@ -21,7 +21,6 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import VBox from '../../../../scenery/js/nodes/VBox.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -31,7 +30,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 const ELASTICITY_PERCENT_INTERVAL = 5;
 
-class ElasticityNumberControl extends VBox {
+class ElasticityNumberControl extends NumberControl {
 
   /**
    * @param {Property.<number>} elasticityPercentProperty
@@ -85,13 +84,13 @@ class ElasticityNumberControl extends VBox {
                        - ( inelasticLabel.width + elasticLabel.width ) / 2;
 
     // Set options that cannot be overridden.
-    options.slider.trackSize = new Dimension2( trackWidth, 0.1 );
+    options.sliderOptions.trackSize = new Dimension2( trackWidth, 0.1 );
     options.sliderOptions.majorTicks = [
       { value: ELASTICITY_PERCENT_RANGE.min, label: inelasticLabel },
       { value: ELASTICITY_PERCENT_RANGE.max, label: elasticLabel }
     ];
 
-    super( options );
+    super( collisionLabStrings.elasticity, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, options );
   }
 }
 

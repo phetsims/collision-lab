@@ -117,8 +117,8 @@ class CollisionLabControlPanel extends Panel {
     // 'Elasticity' control
     const elasticityNumberControl = new ElasticityNumberControl( elasticityPercentProperty, options.elasticityNumberControlOptions );
 
-    // 'Constant Radius' Checkbox
-    const constantRadiusCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
+    // 'Constant Size' Checkbox
+    const constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
 
     // HSeparator
     const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
@@ -158,7 +158,7 @@ class CollisionLabControlPanel extends Panel {
 
     contentNode.addChild( hSeparator );
     contentNode.addChild( elasticityNumberControl );
-    contentNode.addChild( constantRadiusCheckbox );
+    contentNode.addChild( constantSizeCheckbox );
 
     // Apply additional Bounds mutators.
     this.mutate( options );

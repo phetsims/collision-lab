@@ -39,7 +39,6 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
 import PlayArea from './PlayArea.js';
 
 class CollisionEngine {
@@ -330,22 +329,15 @@ class CollisionEngine {
         const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
 
         // Update the velocity after the collision.
-        if ( elasticity === 0 && this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {
+        if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
 
-          // If the collision is inelastic and sticky, the Ball has zero velocity after the collision.
-          ball.velocity = Vector2.ZERO;
+          // Left and Right Border wall collisions incur a flip in horizontal velocity.
+          ball.xVelocity *= -elasticity;
         }
-        else {
-          if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
+        if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
 
-            // Left and Right Border wall collisions incur a flip in horizontal velocity.
-            ball.xVelocity *= -elasticity;
-          }
-          if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
-
-            // Top and Bottom Border wall collisions incur a flip in vertical velocity.
-            ball.yVelocity *= -elasticity;
-          }
+          // Top and Bottom Border wall collisions incur a flip in vertical velocity.
+          ball.yVelocity *= -elasticity;
         }
 
         // Record the exact contact position of the collision for sub-classes.
