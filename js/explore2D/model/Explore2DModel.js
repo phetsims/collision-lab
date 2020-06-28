@@ -7,45 +7,32 @@
  */
 
 import collisionLab from '../../collisionLab.js';
-import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
-import PlayArea from '../../common/model/PlayArea.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
-import Explore2DCollisionEngine from './Explore2DCollisionEngine.js';
+import Explore2DPlayArea from './Explore2DPlayArea.js';
+import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO: #13
 
 class Explore2DModel extends CollisionLabModel {
 
   /**
-   * Creates the BallSystem for the 'Explore 2D' screen. Called in the constructor of the super-class. For this screen,
-   * this method will instantiate a sub-type of BallSystem: Explore2DBallSystem.
-   *
+   * Creates the PlayArea for the 'Explore 2D' screen, which uses a sub-type of PlayArea.
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the screen.
-   * @returns {Explore2DBallSystem}
+   * @returns {Explore2DPlayArea}
    */
-  createBallSystem( playArea ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-
-    return new Explore2DBallSystem( playArea, this.elapsedTimeProperty );
+  createPlayArea() {
+    return new Explore2DPlayArea();
   }
 
   /**
-   * Creates the CollisionEngine for the 'Explore 2D' screen. Called in the constructor of the super-class. For this
-   * screen, this method will instantiate a sub-type of CollisionEngine: Explore2DCollisionEngine.
-   *
+   * Creates the BallSystem for the 'Explore2D' screen, which uses a sub-type of BallSystem.
    * @override
    * @protected
    *
-   * @param {PlayArea} playArea - the PlayArea instance of the screen.
-   * @param {Explore2DBallSystem} ballSystem - the BallSystem instance of the screen.
-   * @returns {CollisionEngine}
+   * @returns {Explore2DBallSystem}
    */
-  createCollisionEngine( playArea, ballSystem ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( ballSystem instanceof Explore2DBallSystem, `invalid ballSystem: ${ballSystem}` );
-
-    return new Explore2DCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+  createBallSystem() {
+    return new Explore2DBallSystem( this.playArea, this.elapsedTimeProperty );
   }
 }
 
