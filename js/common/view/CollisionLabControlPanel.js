@@ -29,11 +29,10 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import InelasticCollisionTypes from '../model/InelasticCollisionTypes.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
-import ElasticityControlSet from './ElasticityControlSet.js';
+import ElasticityNumberControl from './ElasticityNumberControl.js';
 
 class CollisionLabControlPanel extends Panel {
 
@@ -43,7 +42,6 @@ class CollisionLabControlPanel extends Panel {
    * @param {Property.<boolean>} pathVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
-   * @param {Property.<InelasticCollisionTypes>} inelasticCollisionTypeProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
    * @param {Object} [options]
    */
@@ -52,7 +50,6 @@ class CollisionLabControlPanel extends Panel {
                pathVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
-               inelasticCollisionTypeProperty,
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
@@ -60,7 +57,6 @@ class CollisionLabControlPanel extends Panel {
     assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
-    assert && AssertUtils.assertProperty( inelasticCollisionTypeProperty, inelasticCollisionType => InelasticCollisionTypes.includes( inelasticCollisionType ) );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
@@ -74,8 +70,8 @@ class CollisionLabControlPanel extends Panel {
       // {boolean} - indicates if the 'Path' checkbox is included.
       includePathCheckbox: true,
 
-      // {Object} - passed to the ElasticityControlSet
-      elasticityControlSetNodeOptions: null
+      // {Object} - passed to the ElasticityNumberControl
+      elasticityNumberControlOptions: null
 
     }, options );
 
@@ -98,36 +94,28 @@ class CollisionLabControlPanel extends Panel {
     //----------------------------------------------------------------------------------------
 
     // 'Velocity' visibility Checkbox
-    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVectorVisibleProperty,
-      collisionLabStrings.velocity, {
-        icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS )
-      } );
+    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVectorVisibleProperty, collisionLabStrings.velocity, {
+      icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.VELOCITY_VECTOR_COLORS )
+    } );
 
     // 'Momentum' visibility Checkbox
-    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVectorVisibleProperty,
-      collisionLabStrings.momentum, {
-        icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS )
-      } );
+    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVectorVisibleProperty, collisionLabStrings.momentum, {
+      icon: CollisionLabIconFactory.createVectorIcon( CollisionLabColors.MOMENTUM_VECTOR_COLORS )
+    } );
 
     // @protected {Checkbox} - 'Center of Mass' visibility Checkbox. This is referenced for ordering in sub-classes.
-    this.centerOfMassCheckbox = new CollisionLabCheckbox( centerOfMassVisibleProperty,
-      collisionLabStrings.centerOfMass, {
-        icon: CollisionLabIconFactory.createCenterOfMassIcon()
-      } );
+    this.centerOfMassCheckbox = new CollisionLabCheckbox( centerOfMassVisibleProperty, collisionLabStrings.centerOfMass, {
+      icon: CollisionLabIconFactory.createCenterOfMassIcon()
+    } );
 
     // 'Kinetic Energy' visibility Checkbox
-    const kineticEnergyCheckbox = new CollisionLabCheckbox( viewProperties.kineticEnergyVisibleProperty,
-      collisionLabStrings.kineticEnergy
-    );
+    const kineticEnergyCheckbox = new CollisionLabCheckbox( viewProperties.kineticEnergyVisibleProperty, collisionLabStrings.kineticEnergy );
 
     // 'Values' visibility Checkbox. This is referenced for ordering in sub-classes.
     const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
     // 'Elasticity' control
-    const elasticityControlSetNode = new ElasticityControlSet(
-      elasticityPercentProperty,
-      inelasticCollisionTypeProperty,
-      options.elasticityControlSetNodeOptions );
+    const elasticityNumberControl = new ElasticityNumberControl( elasticityPercentProperty, options.elasticityNumberControlOptions );
 
     // 'Constant Radius' Checkbox
     const constantRadiusCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
@@ -169,7 +157,7 @@ class CollisionLabControlPanel extends Panel {
     }
 
     contentNode.addChild( hSeparator );
-    contentNode.addChild( elasticityControlSetNode );
+    contentNode.addChild( elasticityNumberControl );
     contentNode.addChild( constantRadiusCheckbox );
 
     // Apply additional Bounds mutators.
