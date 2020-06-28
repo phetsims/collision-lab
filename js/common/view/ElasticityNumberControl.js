@@ -47,6 +47,9 @@ class ElasticityNumberControl extends NumberControl {
         maxWidth: 45 // constrain width for i18n, determined empirically
       },
 
+      // {number} - the height of the track of the Slider.
+      trackHeight: 0.1,
+
       // superclass options
       layoutFunction: NumberControl.createLayoutFunction4(),
       includeArrowButtons: false,
@@ -84,7 +87,7 @@ class ElasticityNumberControl extends NumberControl {
                        - ( inelasticLabel.width + elasticLabel.width ) / 2;
 
     // Set options that cannot be overridden.
-    options.sliderOptions.trackSize = new Dimension2( trackWidth, 0.1 );
+    options.sliderOptions.trackSize = new Dimension2( trackWidth, options.trackHeight );
     options.sliderOptions.majorTicks = [
       { value: ELASTICITY_PERCENT_RANGE.min, label: inelasticLabel },
       { value: ELASTICITY_PERCENT_RANGE.max, label: elasticLabel }

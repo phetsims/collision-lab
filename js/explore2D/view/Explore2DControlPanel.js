@@ -47,6 +47,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
 
     assert && assert( !options.elasticityNumberControlOptions.enabledRangeProperty, 'Explore2DControlPanel sets enabledRangeProperty' );
     options.elasticityNumberControlOptions.enabledRangeProperty = new Property( elasticityPercentRange );
+    options.elasticityNumberControlOptions.trackHeight = 3;
 
     super( viewProperties,
            centerOfMassVisibleProperty,
