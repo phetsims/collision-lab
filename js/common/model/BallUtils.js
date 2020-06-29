@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallUtils is a collection of utility functions related to Balls.
+ * BallUtils is a collection of utility functions that are related to Balls.
  *
  * @author Brandon Li
  */
@@ -167,7 +167,7 @@ const BallUtils = {
     // If the distance between the Balls is less the sum of the radii, they are overlapping. For the 'collision lab'
     // simulation, if the distance between the Balls is exactly equal to the sum of their radii, which would mean that
     // the Balls are tangent to each other, they are NOT overlapping. This is mainly due to Balls after inelastic
-    // collisions that are exactly next to each other but not colliding.
+    // collisions that are exactly next to each other but not necessarily colliding.
     return distanceBetweenBalls < distanceThreshold;
   },
 
@@ -199,8 +199,8 @@ const BallUtils = {
    * https://github.com/phetsims/collision-lab/issues/100 for context.
    *
    * This method uses the directionVector, which is the vector from the center of the ball2 that points in the
-   * direction of where to set ball1's position. Note that ball2's position is not mutated. The directionVector's
-   * magnitude is set to the sum of the radii of ball1 and ball2 so that ball1 is adjacent to ball2.
+   * direction of where to set ball1's position. Note that ball2's position is not mutated. The directionVector is
+   * copied and its magnitude is set to the sum of the radii of ball1 and ball2 so that ball1 is adjacent to ball2.
    *
    * @public
    * @param {Ball} ball1 - Position is set.
