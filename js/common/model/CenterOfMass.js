@@ -30,8 +30,8 @@ class CenterOfMass {
    * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           Needed since the CenterOfMass's trailing 'Path' is empty
-   *                                                           if this is false and can only updated if this is true.
-   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
+   *                                                           if this is false and can only be updated if this is true.
+   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the 'Path' checkbox is checked.
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
@@ -64,8 +64,8 @@ class CenterOfMass {
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
     //
     // For the dependencies, we use:
-    //  - position Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
-    //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - position Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
+    //  - mass Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
     //  - balls.lengthProperty - since removing or adding a Ball changes the position of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
@@ -75,13 +75,11 @@ class CenterOfMass {
         valueType: Vector2
       } );
 
-    //----------------------------------------------------------------------------------------
-
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the COM, in meters per second.
     //
     // For the dependencies, we use:
-    //  - velocity Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
-    //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
+    //  - velocity Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
+    //  - mass Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
     //  - balls.lengthProperty - since removing or adding a Ball changes the velocity of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.

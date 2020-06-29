@@ -70,7 +70,7 @@ class BallSystem {
     //                             is manipulated externally in the view.
     this.ballsConstantSizeProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
+    // @public {BooleanProperty} - indicates if the Ball and center of mass trailing 'paths' are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
     this.pathsVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
