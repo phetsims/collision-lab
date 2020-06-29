@@ -156,10 +156,6 @@ class Ball {
 
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
-
-    // Ensure that our yPosition and yVelocity are always 0 for 1D screens. Persists for the lifetime of the sim.
-    assert && this.playArea.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
-    assert && this.playArea.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
   }
 
   /**

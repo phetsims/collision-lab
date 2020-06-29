@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Root class for the top-level model of every screen in the 'Collision Lab' simulation. Should be subclassed for
+ * Abstract class for the top-level model of every screen in the 'Collision Lab' simulation. Should be subclassed for
  * screen-specific fields and sub-classes.
  *
  * Mainly responsible for:
@@ -22,7 +22,6 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionEngine from './CollisionEngine.js';
 import MomentaDiagram from './MomentaDiagram.js';
-import PlayArea from './PlayArea.js';
 
 // @abstract
 class CollisionLabModel {
@@ -44,7 +43,7 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
+    // @public (read-only) {PlayArea} - create the PlayArea of the screen.
     this.playArea = this.createPlayArea();
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
@@ -53,7 +52,7 @@ class CollisionLabModel {
     // @private {CollisionEngine} - create the CollisionEngine of the screen.
     this.collisionEngine = this.createCollisionEngine();
 
-    // @public (read-only) {MomentaDiagram} - create the MomentaDiagram model.
+    // @public (read-only) {MomentaDiagram} - create the MomentaDiagram of the screen.
     this.momentaDiagram = new MomentaDiagram(
       this.ballSystem.prepopulatedBalls,
       this.ballSystem.balls,
@@ -91,18 +90,21 @@ class CollisionLabModel {
   }
 
   /**
-   * Creates the PlayArea for the screen using the Factory Method Pattern, which allows sub-types to utilize
-   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
+   * Creates the PlayArea for the screen using the Factory Method Pattern, which allows sub-types to create
+   * screen-specific sub-types. Called in CollisionLabModel's constructor.
+   *
+   * @abstract
    * @protected
    *
    * @returns {PlayArea}
    */
-  createPlayArea() { return new PlayArea(); }
+  createPlayArea() { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
+   * Creates the BallSystem for the screen using the Factory Method Pattern, which allows sub-types to create
+   * screen-specific sub-types. Called in CollisionLabModel's constructor.
+   *
    * @abstract
-   * Creates the BallSystem for the screen using the Factory Method Pattern, which allows sub-types to utilize
-   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
    * @protected
    *
    * @returns {BallSystem}
@@ -110,8 +112,8 @@ class CollisionLabModel {
   createBallSystem() { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
-   * Creates the CollisionEngine for the screen using the Factory Method Pattern, which allows sub-types to utilize
-   * screen-specific sub-types or configurations, if needed. Called in CollisionLabModel's constructor.
+   * Creates the CollisionEngine for the screen using the Factory Method Pattern, which allows sub-types to create
+   * screen-specific sub-types, if needed. Called in CollisionLabModel's constructor.
    * @protected
    *
    * @returns {CollisionEngine}
@@ -179,8 +181,8 @@ class CollisionLabModel {
     assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
 
     // Step the Physics Engine and update the elapsedTimeProperty value.
-    this.collisionEngine.step( dt );
     this.elapsedTimeProperty.value += dt;
+    this.collisionEngine.step( dt );
   }
 
   /**
