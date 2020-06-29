@@ -143,7 +143,7 @@ const BallUtils = {
   calculateBallKineticEnergy( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    // K=1/2*m*|v|^2
+    // K = 1/2*m*|v|^2
     return 0.5 * ball.mass * ball.velocity.magnitudeSquared;
   },
 
