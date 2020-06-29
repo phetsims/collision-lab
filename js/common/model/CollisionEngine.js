@@ -23,8 +23,8 @@
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
  *
- *   - The algorithms for Ball collisions were adapted but severely improved from the flash implementation of Collision
- *     Lab. They follow the standard rigid-body collision model as described in
+ *   - The algorithms for Ball collisions were adapted but significantly improved from the flash implementation of
+ *     Collision Lab. They follow the standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
  * @author Brandon Li
@@ -91,36 +91,14 @@ class CollisionEngine {
     this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
   }
 
-  //----------------------------------------------------------------------------------------
-
   /**
-   * Registers the exact position of a ball-to-ball collision.
-   * This method is meant to be overridden in subclasses, but it isn't required. It's default behavior is to do nothing.
-   *
-   * When a collision between two balls occurs, its position and their overlapping time is taken into consideration,
-   * and Balls are set to a different position. See collideBall() for background. However, this brings up issues for
-   * some screens. For instance,for the 'Intro' screen, the 'Change in Momentum' text needs to be positioned above the
-   * exact collision point of the balls. Thus, when a collision is detected, this exact colliding point needs to be
-   * computed and passed to the IntroBallSystem. See https://github.com/phetsims/collision-lab/issues/85.
-   * @protected
-   *
-   * @param {Ball} ball1 - the first Ball involved in the collision.
-   * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the exact position of where the first Ball collided with the second Ball.
-   * @param {Vector2} collisionPosition2 - the exact position of where the second Ball collided with the first Ball.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
-   */
-  registerExactBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    /** Do nothing. Override for functionality. */
-  }
-
-  /**
-   * Records the exact position of any collision involving Balls in the Ball's path.
+   * Records the exact position of a collision involving Balls in the Ball's trailing 'path'.
    *
    * When a collision involving balls occurs, its position and the overlapping time is taken into consideration,
    * and Balls are set to a different position. However, this brings up issues for Ball Paths, which work by recording
-   * the position of a Ball. However, Ball positions are never set to the position where the collision actually
-   * occurred, and this separation becomes obvious to the user. See https://github.com/phetsims/collision-lab/issues/75.
+   * the position of a Ball at each frame. Since Ball positions are never set to the position where the collision
+   * actually occurred, this separation becomes obvious to the user, particularly at high velocities.
+   * See https://github.com/phetsims/collision-lab/issues/75.
    *
    * Instead of setting the position of the Ball to the exact collision position, which brought performance issues and
    * doesn't take the overlapping time into consideration of the PathDataPoints, this method is our fix for this issue,
@@ -128,7 +106,7 @@ class CollisionEngine {
    *
    * @private
    * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the exact position of where the Ball collided.
+   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with another object.
    * @param {number} overlappedTime - the time the Ball has been overlapping with the object that it is colliding with.
    */
   recordCollisionPosition( ball, collisionPosition, overlappedTime ) {
@@ -136,10 +114,10 @@ class CollisionEngine {
     assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-    // Only record Path's of the Balls if Paths are visible, and the overlapped time is non-zero.
-    if ( this.ballSystem.pathsVisibleProperty.value &&
-        this.elapsedTimeProperty.value - overlappedTime >= 0 &&
-        overlappedTime !== 0 ) {
+    // Only record Path's of the Balls if Paths are visible and the overlapped time is non-zero.
+    if ( this.ballSystem.pathsVisibleProperty.value
+         && this.elapsedTimeProperty.value - overlappedTime >= 0
+         && overlappedTime !== 0 ) {
 
       ball.path.updatePath( collisionPosition, this.elapsedTimeProperty.value - overlappedTime );
     }
@@ -151,14 +129,18 @@ class CollisionEngine {
 
   /**
    * A time-discretization approach to detecting and processing ball-ball collisions within the BallSystem. Collisions
-   * are detected after the collision occurs by checking if any two Balls physically overlap and processed using the
-   * collideBalls() method.
+   * are detected after the collision occurs by checking if any two Balls physically overlap.
+   *
+   * When a ball-to-ball collision is detected, this method will do some of the preliminary work to formulating a
+   * collision response by computing the overlapping time and the normal and tangent axes described in
+   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
    *
    * @private
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBallCollisions( isReversing ) {
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
 
     // Loop through each unique possible pair of Balls and check to see if they are colliding.
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
@@ -166,7 +148,29 @@ class CollisionEngine {
 
       // If two balls are on top of each other, process the collision.
       if ( BallUtils.areBallsOverlapping( ball1, ball2 ) ) {
-        this.collideBalls( ball1, ball2, isReversing );
+
+        // When a collision is detected, Balls have already overlapped, so the current positions are not the exact
+        // positions when the balls first collided. Use the overlapped time to find the exact collision positions.
+        const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, isReversing );
+
+        // Get exact positions when the Balls collided by rewinding by the overlapped time.
+        const r1 = BallUtils.computeUniformMotionBallPosition( ball1, -overlappedTime );
+        const r2 = BallUtils.computeUniformMotionBallPosition( ball2, -overlappedTime );
+
+        // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
+        // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
+        !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
+                           this.mutableVectors.normal.set( Vector2.X_UNIT );
+
+        // Set the Tangential vector, called the 'plane of contact'.
+        this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
+
+        // Register the exact contact position of the collision for sub-classes.
+        this.recordCollisionPosition( ball1, r1, overlappedTime );
+        this.recordCollisionPosition( ball2, r2, overlappedTime );
+
+        // Forward the rest of the collision response to the collide-balls method.
+        this.collideBalls( ball1, ball2, r1, r2, overlappedTime );
       }
     } );
   }
@@ -179,39 +183,21 @@ class CollisionEngine {
    * Our version deals with normalized dot product projections to switch coordinate frames. Please reference
    * https://en.wikipedia.org/wiki/Dot_product.
    *
-   * @private
+   * @protected - can be overridden in subclasses.
    *
-   * @param {Ball} ball1 - the first Ball involved in the collision
+   * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   * @param {Vector2} collisionPosition1 - the center-position of the first Ball when it exactly collided with ball2.
+   * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
+   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  collideBalls( ball1, ball2, isReversing ) {
+  collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
     assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
-    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
-
-    // When a collision is detected, Balls have already overlapped, so the current positions are not the exact positions
-    // when the balls first collided. Use the overlapped time to find the exact collision positions.
-    const overlappedTime = this.getBallToBallCollisionOverlapTime( ball1, ball2, isReversing );
-
-    // Get exact positions when the Balls collided by rewinding by the overlapped time.
-    const r1 = BallUtils.computeUniformMotionBallPosition( ball1, -overlappedTime );
-    const r2 = BallUtils.computeUniformMotionBallPosition( ball2, -overlappedTime );
-
-    // Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
-    // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    const normal = !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
-                                      this.mutableVectors.normal.set( Vector2.X_UNIT );
-
-    // Tangential vector, called the 'plane of contact'.
-    const tangent = this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
-
-    // Register the exact contact position of the collision for sub-classes.
-    this.registerExactBallToBallCollision( ball1, ball2, r1, r2, overlappedTime );
-    this.recordCollisionPosition( ball1, r1, overlappedTime );
-    this.recordCollisionPosition( ball2, r2, overlappedTime );
+    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
+    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
+    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
     // Convenience references to the other known Ball values.
     const m1 = ball1.mass;
@@ -221,26 +207,26 @@ class CollisionEngine {
     const e = this.playArea.elasticity;
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = v1.dot( normal );
-    const v2n = v2.dot( normal );
-    const v1t = v1.dot( tangent );
-    const v2t = v2.dot( tangent );
+    const v1n = v1.dot( this.mutableVectors.normal );
+    const v2n = v2.dot( this.mutableVectors.normal );
+    const v1t = v1.dot( this.mutableVectors.tangent );
+    const v2t = v2.dot( this.mutableVectors.tangent );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
     const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
 
     // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = tangent.dotXY( v1t, v1nP );
-    const v2xP = tangent.dotXY( v2t, v2nP );
-    const v1yP = normal.dotXY( v1t, v1nP );
-    const v2yP = normal.dotXY( v2t, v2nP );
+    const v1xP = this.mutableVectors.tangent.dotXY( v1t, v1nP );
+    const v2xP = this.mutableVectors.tangent.dotXY( v2t, v2nP );
+    const v1yP = this.mutableVectors.normal.dotXY( v1t, v1nP );
+    const v2yP = this.mutableVectors.normal.dotXY( v2t, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
-    ball1.position = r1.plus( ball1.velocity.times( overlappedTime ) );
-    ball2.position = r2.plus( ball2.velocity.times( overlappedTime ) );
+    ball1.position = ball1.velocity.times( overlappedTime ).add( collisionPosition1 );
+    ball2.position = ball2.velocity.times( overlappedTime ).add( collisionPosition2 );
   }
 
   /**
@@ -253,7 +239,6 @@ class CollisionEngine {
    * @param {Ball} ball1 - the first Ball involved in the collision
    * @param {Ball} ball2 - the second Ball involved in the collision.
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
-   *
    * @returns {number} contactTime - in seconds
    */
   getBallToBallCollisionOverlapTime( ball1, ball2, isReversing ) {
@@ -344,7 +329,7 @@ class CollisionEngine {
         this.recordCollisionPosition( ball, contactPosition, overlappedTime );
 
         // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
-        ball.position = contactPosition.plus( ball.velocity.times( overlappedTime ) );
+        ball.position = ball.velocity.times( overlappedTime ).add( contactPosition );
       }
     } );
   }
