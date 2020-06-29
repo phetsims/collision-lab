@@ -22,7 +22,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} pathVisibleProperty
+   * @param {Property.<boolean>} pathsVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
@@ -30,7 +30,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
-               pathVisibleProperty,
+               pathsVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                ballsConstantSizeProperty,
@@ -51,7 +51,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
 
     super( viewProperties,
            centerOfMassVisibleProperty,
-           pathVisibleProperty,
+           pathsVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
            ballsConstantSizeProperty,

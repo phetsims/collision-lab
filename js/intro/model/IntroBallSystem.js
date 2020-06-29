@@ -68,7 +68,7 @@ class IntroBallSystem extends BallSystem {
     assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS_RANGE.max ) );
 
     // Ensure that Paths are never visible for the 'Intro' screen.
-    assert && this.pathVisibleProperty.link( pathVisible => {
+    assert && this.pathsVisibleProperty.link( pathVisible => {
       assert( !pathVisible, 'Grids must be visible in the Intro screen.' );
     } );
 

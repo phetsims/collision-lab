@@ -40,17 +40,17 @@ class Ball {
    * @param {BallState} initialBallState - starting state of the Ball.
    * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing 'Path' is visible
+   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialBallState, playArea, isConstantSizeProperty, pathVisibleProperty, elapsedTimeProperty, index ) {
+  constructor( initialBallState, playArea, isConstantSizeProperty, pathsVisibleProperty, elapsedTimeProperty, index ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && AssertUtils.assertPositiveInteger( index );
 
@@ -120,7 +120,7 @@ class Ball {
       { valueType: 'boolean' } );
 
     // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the Ball.
-    this.path = new CollisionLabPath( this.positionProperty, pathVisibleProperty, elapsedTimeProperty, playArea.bounds );
+    this.path = new CollisionLabPath( this.positionProperty, pathsVisibleProperty, elapsedTimeProperty, playArea.bounds );
 
     //----------------------------------------------------------------------------------------
 

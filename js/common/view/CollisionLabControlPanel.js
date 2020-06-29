@@ -39,7 +39,7 @@ class CollisionLabControlPanel extends Panel {
   /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} pathVisibleProperty
+   * @param {Property.<boolean>} pathsVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
@@ -47,14 +47,14 @@ class CollisionLabControlPanel extends Panel {
    */
   constructor( viewProperties,
                centerOfMassVisibleProperty,
-               pathVisibleProperty,
+               pathsVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
@@ -150,7 +150,7 @@ class CollisionLabControlPanel extends Panel {
 
 
       // Create the 'Path' visibility Checkbox.
-      const pathCheckbox = new CollisionLabCheckbox( pathVisibleProperty, collisionLabStrings.path );
+      const pathCheckbox = new CollisionLabCheckbox( pathsVisibleProperty, collisionLabStrings.path );
 
       // Add the 'Path' Checkbox after the 'Values' Checkbox.
       contentNode.addChild( pathCheckbox );

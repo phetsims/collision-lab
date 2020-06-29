@@ -60,7 +60,7 @@ class IntroScreenView extends CollisionLabScreenView {
       viewProperties,
       model.ballSystem.changeInMomentumVisibleProperty,
       model.ballSystem.centerOfMassVisibleProperty,
-      model.ballSystem.pathVisibleProperty,
+      model.ballSystem.pathsVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
       model.ballSystem.ballsConstantSizeProperty,

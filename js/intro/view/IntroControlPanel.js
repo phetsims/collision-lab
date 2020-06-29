@@ -25,7 +25,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} centerOfMassVisibleProperty
-   * @param {Property.<boolean>} pathVisibleProperty
+   * @param {Property.<boolean>} pathsVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
    * @param {Property.<boolean>} ballsConstantSizeProperty
@@ -34,7 +34,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
   constructor( viewProperties,
                changeInMomentumVisibleProperty,
                centerOfMassVisibleProperty,
-               pathVisibleProperty,
+               pathsVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
                ballsConstantSizeProperty,
@@ -42,7 +42,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( changeInMomentumVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( reflectingBorderProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
@@ -56,7 +56,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
 
     super( viewProperties,
            centerOfMassVisibleProperty,
-           pathVisibleProperty,
+           pathsVisibleProperty,
            reflectingBorderProperty,
            elasticityPercentProperty,
            ballsConstantSizeProperty,

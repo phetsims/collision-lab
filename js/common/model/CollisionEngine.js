@@ -137,7 +137,7 @@ class CollisionEngine {
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
     // Only record Path's of the Balls if Paths are visible, and the overlapped time is non-zero.
-    if ( this.ballSystem.pathVisibleProperty.value &&
+    if ( this.ballSystem.pathsVisibleProperty.value &&
         this.elapsedTimeProperty.value - overlappedTime >= 0 &&
         overlappedTime !== 0 ) {
 

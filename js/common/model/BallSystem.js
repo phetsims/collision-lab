@@ -78,7 +78,7 @@ class BallSystem {
     // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
-    this.pathVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
+    this.pathsVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
 
     //----------------------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ class BallSystem {
       ballState,
       playArea,
       this.ballsConstantSizeProperty,
-      this.pathVisibleProperty,
+      this.pathsVisibleProperty,
       elapsedTimeProperty,
       index + 1
     ) );
@@ -145,7 +145,7 @@ class BallSystem {
       this.prepopulatedBalls,
       this.balls,
       this.centerOfMassVisibleProperty,
-      this.pathVisibleProperty,
+      this.pathsVisibleProperty,
       elapsedTimeProperty,
       playArea.bounds
     );
@@ -210,7 +210,7 @@ class BallSystem {
   reset() {
     this.ballsConstantSizeProperty.reset();
     this.centerOfMassVisibleProperty.reset();
-    this.pathVisibleProperty.reset();
+    this.pathsVisibleProperty.reset();
     this.numberOfBallsProperty.reset();
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
     this.centerOfMass.reset();

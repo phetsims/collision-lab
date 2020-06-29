@@ -98,7 +98,7 @@ class BallSystemNode extends Node {
 
       //----------------------------------------------------------------------------------------
 
-      // Create the corresponding PathCanvasNode for each Path.  Since the pathVisibleProperty (see BallSystem) is in
+      // Create the corresponding PathCanvasNode for each Path. Since the pathsVisibleProperty (see BallSystem) is in
       // the model, there is no need to adjust the visibility of PathCanvasNodes since Paths are empty in the model when
       // they are not visible.
       const pathNode = new PathCanvasNode( ball.path, modelViewTransform, {

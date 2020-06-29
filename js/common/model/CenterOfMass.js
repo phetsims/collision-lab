@@ -35,21 +35,21 @@ class CenterOfMass {
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           This is needed for performance; the position and velocity
    *                                                           are only updated if this is true.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing 'Path' is visible
+   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
   constructor( prepopulatedBalls,
                balls,
                centerOfMassVisibleProperty,
-               pathVisibleProperty,
+               pathsVisibleProperty,
                elapsedTimeProperty,
                playAreaBounds
              ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
 
@@ -108,7 +108,7 @@ class CenterOfMass {
 
     // Get the Property that indicates if the center-of-mass Path is visible, which occurs when both the CenterOfMass
     // and Paths are visible. DerivedProperty is never disposed since CenterOfMasses are never disposed.
-    const centerOfMassPathVisibleProperty = new DerivedProperty( [ pathVisibleProperty, centerOfMassVisibleProperty ],
+    const centerOfMassPathVisibleProperty = new DerivedProperty( [ pathsVisibleProperty, centerOfMassVisibleProperty ],
       ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible, {
         valueType: 'boolean'
       } );

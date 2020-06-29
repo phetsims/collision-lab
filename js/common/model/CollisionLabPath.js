@@ -36,14 +36,14 @@ class CollisionLabPath {
 
   /**
    * @param {Property.<Vector2>} positionProperty - the position of the moving object, in meters.
-   * @param {Property.<boolean>} pathVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
+   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
    *                                                   only recorded if this is true and are cleared when set to false.
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
-  constructor( positionProperty, pathVisibleProperty, elapsedTimeProperty, playAreaBounds ) {
+  constructor( positionProperty, pathsVisibleProperty, elapsedTimeProperty, playAreaBounds ) {
     assert && AssertUtils.assertPropertyOf( positionProperty, Vector2 );
-    assert && AssertUtils.assertPropertyOf( pathVisibleProperty, 'boolean' );
+    assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
 
@@ -66,12 +66,12 @@ class CollisionLabPath {
     // current elapsedTime and position, if paths are visible. This link persists for the lifetime of the simulation
     // since CollisionLabPaths are never disposed.
     elapsedTimeProperty.link( elapsedTime => {
-      pathVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTime );
+      pathsVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTime );
     } );
 
-    // Observe when the pathVisibleProperty is manipulated to clear the 'Path' when set to false.
+    // Observe when the pathsVisibleProperty is manipulated to clear the 'Path' when set to false.
     // Link lasts for the lifetime of the simulation and is never disposed.
-    pathVisibleProperty.lazyLink( pathVisible => {
+    pathsVisibleProperty.lazyLink( pathVisible => {
       !pathVisible && this.clear();
     } );
 
