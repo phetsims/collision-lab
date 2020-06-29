@@ -110,33 +110,9 @@ class BallSystem {
     this.balls = new ObservableArray();
 
     // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
-    // to match the numberOfBallsProperty's value.
-    //
-    // The same Balls are in the system with the same numberOfBalls value. Link is never disposed as BallSystems
-    // are never disposed.
-    this.numberOfBallsProperty.link( numberOfBalls => {
-
-      // If the numberOfBalls is greater than the balls in the system, Balls need to be added to the system.
-      if ( numberOfBalls > this.balls.length ) {
-
-        // Add the correct number of Balls, referencing an index of the prepopulatedBalls so that the same Balls are
-        // added with the same numberOfBalls value.
-        for ( let i = this.balls.length; i < numberOfBalls; i++ ) {
-          this.balls.push( this.prepopulatedBalls[ i ] );
-        }
-      }
-      else {
-
-        // Otherwise, the number of balls in the system is greater than numberOfBalls, meaning Balls need to be removed.
-        // Remove the correct number of Balls from the end of the system.
-        while ( this.balls.length !== numberOfBalls ) {
-          this.balls.pop();
-        }
-      }
-
-      // Ensure Balls are in ascending order by their indices if assertions are enabled.
-      assert && assert( CollisionLabUtils.isSortedBy( this.balls, _.property( 'index' ) ) );
-    } );
+    // to match the numberOfBallsProperty's value. The same Balls are in the system with the same number of Balls value.
+    // Link is never disposed as BallSystems are never disposed.
+    this.numberOfBallsProperty.link( this.updateBalls.bind( this ) );
 
     //----------------------------------------------------------------------------------------
 
@@ -214,6 +190,38 @@ class BallSystem {
     this.numberOfBallsProperty.reset();
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
     this.centerOfMass.reset();
+  }
+
+  /**
+   * Updates the Balls in the BallSystem to match the numberOfBallsProperty's value. If the Balls are out of sync, this
+   * method will add or remove (but not dispose) the correct number of Balls from the system.
+   * @private
+   *
+   * Called when the user changes the number of balls in the system.
+   * @returns {[type]} [description]
+   */
+  updateBalls() {
+
+    // If the number of balls is greater than the Balls currently in the system, Balls need to be added to the system.
+    if ( this.numberOfBallsProperty.value > this.balls.length ) {
+
+      // Add the correct number of Balls, referencing an index of the prepopulatedBalls so that the same Balls are
+      // added with the same numberOfBallsProperty value.
+      for ( let i = this.balls.length; i < this.numberOfBallsProperty.value; i++ ) {
+        this.balls.push( this.prepopulatedBalls[ i ] );
+      }
+    }
+    else {
+
+      // Otherwise, the number of balls in the system is greater than numberOfBallsProperty value, meaning Balls need
+      // to be removed. Remove the correct number of Balls from the end of the system.
+      while ( this.balls.length !== this.numberOfBallsProperty.value ) {
+        this.balls.pop();
+      }
+    }
+
+    // Ensure Balls are in ascending order by their indices if assertions are enabled.
+    assert && assert( CollisionLabUtils.isSortedBy( this.balls, _.property( 'index' ) ) );
   }
 
   /**
