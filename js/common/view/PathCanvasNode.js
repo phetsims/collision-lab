@@ -69,7 +69,7 @@ class PathCanvasNode extends CanvasNode {
 
     // Observe when the Path trail of the MovingObject should be redrawn. This is never removed since
     // PathCanvasNodes are never disposed and persist for the lifetime of the simulation.
-    path.redrawPathEmitter.addListener( () => {
+    path.pathChangedEmitter.addListener( () => {
       this.invalidatePaint();
     } );
   }

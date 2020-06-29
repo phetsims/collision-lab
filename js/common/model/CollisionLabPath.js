@@ -12,9 +12,9 @@
  * CollisionLabPath will also remove PathDataPoints that are past the set time period, which allows the trailing 'Path'
  * to fade over time. See https://github.com/phetsims/collision-lab/issues/61.
  *
- * CollisionLabPaths are created for each Ball, which are never disposed, meaning CollisionLabPaths are
- * also never disposed and internal links are left as-is. This doesn't negatively impact performance since
- * Balls that aren't in the system aren't stepped and their positions don't change.
+ * CollisionLabPaths are created for each Ball, which are never disposed, meaning CollisionLabPaths are also never
+ * disposed and internal links are left as-is. This doesn't negatively impact performance since Balls that aren't in the
+ * system aren't stepped and their positions don't change.
  *
  * @author Brandon Li
  */
@@ -53,30 +53,27 @@ class CollisionLabPath {
     //                                         time period, which is PATH_DATA_POINT_LIFETIME seconds.
     this.dataPoints = [];
 
-    // @public (read-only) {Emitter} - Emits when the trailing path needs to be redrawn. Using an ObservableArray
+    // @public (read-only) {Emitter} - Emits when the trailing 'path' has changed in any form. Using an ObservableArray
     //                                 was considered for the dataPoints array instead of this, but ObservableArray's
     //                                 itemRemovedEmitter emits after each item removed, which would result in redrawing
-    //                                 too many times when the multiple dataPoints are cleared. Thus, this is used for a
-    //                                 performance boost.
-    this.redrawPathEmitter = new Emitter();
+    //                                 too many times when multiple dataPoints are cleared. Thus, this is used for a
+    //                                 slight performance boost.
+    this.pathChangedEmitter = new Emitter();
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the position of the elapsedTimeProperty of the sim changes and record a new PathDataPoint at the
-    // current elapsedTime and position, if paths are visible. This link persists for the lifetime of the simulation
-    // since CollisionLabPaths are never disposed.
-    positionProperty.link( () => {
-
-      pathsVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTimeProperty.value );
+    // Observe when the position of the moving object changes and record a new PathDataPoint at the current elapsedTime
+    // and position, if paths are visible. This link persists for the lifetime of the simulation since CollisionLabPaths
+    // are never disposed.
+    positionProperty.link( position => {
+      pathsVisibleProperty.value && this.updatePath( positionProperty, elapsedTimeProperty.value );
     } );
 
-    // Observe when the pathsVisibleProperty is manipulated to clear the 'Path' when set to false.
+    // Observe when the pathsVisibleProperty is manipulated and clear the 'Path' when set to false.
     // Link lasts for the lifetime of the simulation and is never disposed.
     pathsVisibleProperty.lazyLink( pathVisible => {
       !pathVisible && this.clear();
     } );
-
-    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Bounds2} - reference to the playAreaBounds. PathDataPoints are only recorded if the
     //                                 position is inside this bounds. It is also used for the view's canvas bounds.
@@ -99,8 +96,8 @@ class CollisionLabPath {
       this.dataPoints.pop();
     }
 
-    // Signal once that the trailing 'Path' needs to be redrawn.
-    this.redrawPathEmitter.emit();
+    // Signal once that the trailing 'Path' has changed.
+    this.pathChangedEmitter.emit();
   }
 
   /**
@@ -140,15 +137,15 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Add a new PathDataPoint for the current position of the moving object.
-    // if ( this.playAreaBounds.containsPoint( position ) ) {
+    if ( this.playAreaBounds.containsPoint( position ) ) {
       this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
-    // }
+    }
 
     // Ensure that the dataPoints are strictly sorted by time.
     assert && assert( CollisionLabUtils.isSortedBy( this.dataPoints, _.property( 'time' ) ) );
 
-    // Signal that the trailing 'Path' needs to be redrawn.
-    this.redrawPathEmitter.emit();
+    // Signal that the trailing 'Path' has changed.
+    this.pathChangedEmitter.emit();
   }
 }
 
