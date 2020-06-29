@@ -80,11 +80,9 @@ class CollisionEngine {
    */
   step( dt ) {
 
-    // First step the position of the balls (that aren't being rotated by InelasticRotationEngine), assuming they are
-    // undergoing uniform motion and that there are no collisions (for now).
-    this.ballSystem.balls.forEach( ball => {
-      ball.stepUniformMotion( dt );
-    } );
+    // First step the position of the balls, assuming they are undergoing uniform motion and that there are no
+    // collisions (for now).
+    this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt ); } );
 
     // Handle all collisions now that the Balls have been moved.
     this.handleBallToBallCollisions( dt < 0 );
@@ -165,7 +163,7 @@ class CollisionEngine {
         // Set the Tangential vector, called the 'plane of contact'.
         this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
-        // Register the exact contact position of the collision for sub-classes.
+        // Record the collision in both of the Ball's trailing 'paths'.
         this.recordCollisionPosition( ball1, r1, overlappedTime );
         this.recordCollisionPosition( ball2, r2, overlappedTime );
 
@@ -231,15 +229,15 @@ class CollisionEngine {
 
   /**
    * Reconstructs uniform motion of two colliding Balls that are currently overlapping to compute the elapsed time
-   * from the when the Balls first exactly collided to their overlapped positions. The contact time is positive if the
-   * collision occurred in the past and negative if the contact time is in the future (which happens if the simulation
-   * is ran in reverse).
+   * from the time when the Balls first exactly collided to their overlapped positions. The contact time is positive if
+   * the collision occurred in the past and negative if the contact time is in the future (which happens if the
+   * simulation is ran in reverse).
    * @private
    *
    * @param {Ball} ball1 - the first Ball involved in the collision
    * @param {Ball} ball2 - the second Ball involved in the collision.
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
-   * @returns {number} contactTime - in seconds
+   * @returns {number} - in seconds
    */
   getBallToBallCollisionOverlapTime( ball1, ball2, isReversing ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
@@ -290,7 +288,7 @@ class CollisionEngine {
    *
    * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
-   * @private
+   * @protected
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBorderCollisions( isReversing ) {
@@ -336,15 +334,14 @@ class CollisionEngine {
 
   /**
    * Reconstructs uniform motion of a Ball that is currently overlapping with a border to compute the elapsed time
-   * from the when the Ball first exactly collided to its overlapped position. The contact time is positive if the
+   * from the time when the Ball first exactly collided to its overlapped position. The contact time is positive if the
    * contact time occurred in the past and negative if the contact time is in the future (which happens if the
    * simulation is ran in reverse).
    * @private
    *
    * @param {Ball} ball - the ball involved in the collision
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
-   *
-   * @returns {number} contactTime - in seconds
+   * @returns {number} - in seconds
    */
   getBallToBorderCollisionOverlapTime( ball, isReversing ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
