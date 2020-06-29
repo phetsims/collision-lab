@@ -7,10 +7,10 @@
  *
  * Primary responsibilities are:
  *   - Center-position Property.
- *   - Track the Mass of the Ball in a Property.
- *   - Velocity and Momentum vector Properties.
+ *   - Mass Property.
+ *   - Velocity and Momentum Properties.
  *   - Radius Property.
- *   - Track the kinetic energy of the Ball.
+ *   - Kinetic energy.
  *   - Dragging, user-control, restarting, etc.
  *   - Creating the trailing 'Path' behind the Ball.
  *
