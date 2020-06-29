@@ -11,10 +11,6 @@
  *  3. Track the speed of the center of mass, in m/s.
  *  4. Create the trailing 'Path' behind the CenterOfMass.
  *
- * NOTE: CenterOfMasses are designed and implemented to be minimally invasive to optimize the performance of the
- *       simulation. The position and velocity (and speed) are not re-updated when the CenterOfMass isn't visible and
- *       are only recalculated when its visibility is set to true.
- *
  * @author Brandon Li
  * @author Martin Veillette
  */
@@ -33,8 +29,8 @@ class CenterOfMass {
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
    * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
-   *                                                           This is needed for performance; the position and velocity
-   *                                                           are only updated if this is true.
+   *                                                           Needed since the CenterOfMass's trailing 'Path' is empty
+   *                                                           if this is false and can only updated if this is true.
    * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
@@ -68,17 +64,14 @@ class CenterOfMass {
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
     //
     // For the dependencies, we use:
-    //  - centerOfMassVisibleProperty - for performance reasons, the COM position isn't calculated if it isn't visible.
     //  - position Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - balls.lengthProperty - since removing or adding a Ball changes the position of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
     this.positionProperty = new DerivedProperty(
-      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballPositionProperties, balls.lengthProperty ],
-      centerOfMassVisible => {
-        return centerOfMassVisible ? CenterOfMass.computePosition( balls ) : this.position;
-      }, {
+      [ ...ballMassProperties, ...ballPositionProperties, balls.lengthProperty ],
+      () => this.computePosition(), {
         valueType: Vector2
       } );
 
@@ -87,17 +80,14 @@ class CenterOfMass {
     // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the COM, in meters per second.
     //
     // For the dependencies, we use:
-    //  - centerOfMassVisibleProperty - for performance reasons, the COM velocity isn't calculated if it isn't visible.
     //  - velocity Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - mass Properties of the prepopulatedBalls. Only the balls in the play-area are used in the calculation.
     //  - balls.lengthProperty - since removing or adding a Ball changes the velocity of the COM.
     //
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
     this.velocityProperty = new DerivedProperty(
-      [ centerOfMassVisibleProperty, ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
-      centerOfMassVisible => {
-        return centerOfMassVisible ? CenterOfMass.computeVelocity( balls ) : this.velocity;
-      }, {
+      [ ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
+      () => this.computeVelocity( balls ), {
         valueType: Vector2
       } );
 
@@ -106,7 +96,7 @@ class CenterOfMass {
 
     //----------------------------------------------------------------------------------------
 
-    // Get the Property that indicates if the center-of-mass Path is visible, which occurs when both the CenterOfMass
+    // Get the Property that indicates if the CenterOfMass's Path is visible, which occurs when both the CenterOfMass
     // and Paths are visible. DerivedProperty is never disposed since CenterOfMasses are never disposed.
     const centerOfMassPathVisibleProperty = new DerivedProperty( [ pathsVisibleProperty, centerOfMassVisibleProperty ],
       ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible, {
@@ -129,7 +119,7 @@ class CenterOfMass {
    * @returns {Vector2} - in meter coordinates.
    */
   get position() {
-    return this.positionProperty ? this.positionProperty.value : CenterOfMass.computePosition( this.balls );
+    return this.positionProperty.value;
   }
 
   /**
@@ -139,7 +129,7 @@ class CenterOfMass {
    * @returns {Vector2} - in meters per second.
    */
   get velocity() {
-    return this.velocityProperty ? this.velocityProperty.value : CenterOfMass.computeVelocity( this.balls );
+    return this.velocityProperty.value;
   }
 
   /**
@@ -153,20 +143,19 @@ class CenterOfMass {
   }
 
   /*----------------------------------------------------------------------------*
-   * Static Methods.
+   * Private Methods.
    *----------------------------------------------------------------------------*/
 
   /**
    * Computes the total mass of the Balls in the system.
    * @private
    *
-   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {number} - in kg.
    */
-  static computeTotalBallSystemMass( balls ) {
+  computeTotalBallSystemMass() {
     let totalMass = 0;
 
-    balls.forEach( ball => {
+    this.balls.forEach( ball => {
       totalMass += ball.mass;
     } );
     return totalMass;
@@ -177,20 +166,19 @@ class CenterOfMass {
    * is changing or when Balls are added/removed from the system.
    * @public
    *
-   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {Vector2} - in meter coordinates.
    */
-  static computePosition( balls ) {
+  computePosition() {
 
     // Determine the total first moment (mass * position) of the system.
     const totalFirstMoment = Vector2.ZERO.copy();
-    balls.forEach( ball => {
+    this.balls.forEach( ball => {
       totalFirstMoment.add( ball.position.times( ball.mass ) );
     } );
 
     // The position of the center of mass is the total first moment divided by the total mass.
     // See https://en.wikipedia.org/wiki/Center_of_mass#A_system_of_particles for background on this formula.
-    return totalFirstMoment.dividedScalar( CenterOfMass.computeTotalBallSystemMass( balls ) );
+    return totalFirstMoment.dividedScalar( this.computeTotalBallSystemMass() );
   }
 
   /**
@@ -198,19 +186,18 @@ class CenterOfMass {
    * is changing or when Balls are added/removed from the system.
    * @public
    *
-   * @param {ObservableArray.<Ball>|Ball[]} balls - the balls in the system.
    * @returns {Vector2} - in meters per second.
    */
-  static computeVelocity( balls ) {
+  computeVelocity() {
 
     // Determine the total momentum of the system.
     const totalMomentum = Vector2.ZERO.copy();
-    balls.forEach( ball => {
+    this.balls.forEach( ball => {
       totalMomentum.add( ball.momentum );
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
-    return totalMomentum.dividedScalar( CenterOfMass.computeTotalBallSystemMass( balls ) );
+    return totalMomentum.dividedScalar( this.computeTotalBallSystemMass() );
   }
 }
 

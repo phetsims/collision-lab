@@ -70,15 +70,15 @@ class BallSystem {
     //                             is manipulated externally in the view.
     this.ballsConstantSizeProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model for performance as
-    //                             the position and the velocity of the CenterOfMass are only updated if this is true.
-    //                             Additionally, PathDataPoints of the CenterOfMass are only recorded if this is true.
-    this.centerOfMassVisibleProperty = new BooleanProperty( false );
-
     // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
     this.pathsVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
+
+    // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model since the
+    //                             CenterOfMass's trailing 'Path' is empty if this is false and PathDataPoints for
+    //                             the CenterOfMass are only recorded if this is true and paths are visible.
+    this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
     //----------------------------------------------------------------------------------------
 

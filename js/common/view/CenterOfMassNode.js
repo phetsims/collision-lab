@@ -83,20 +83,20 @@ class CenterOfMassNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the CenterOfMass's position changes and update the positioning of the xNode and speedNumberDisplay.
-    // Link is never unlinked since CenterOfMassNodes are never disposed.
-    centerOfMass.positionProperty.link( position => {
-      xNode.center = modelViewTransform.modelToViewPosition( position );
-      speedNumberDisplay.centerBottom = xNode.centerTop.subtractXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
-    } );
-
     // Observe when the centerOfMassVisibleProperty or when the CenterOfMass's position changes and update the
-    // visibility of this Node. This Node is only visible if the CenterOfMass is visible AND the position is inside
-    // the PlayArea's Bounds. Link is never unlinked since CenterOfMassNodes are never disposed.
+    // positioning of the xNode and speedNumberDisplay and the visibility of this Node. This Node is only visible if the
+    // CenterOfMass is visible AND the position is inside the PlayArea's Bounds. Link is never unlinked since
+    // CenterOfMassNodes are never disposed.
     Property.multilink(
       [ centerOfMassVisibleProperty, centerOfMass.positionProperty ],
       ( centerOfMassVisible, position ) => {
         this.visible = centerOfMassVisible && playAreaBounds.containsPoint( position );
+
+        // Only update positioning if the CenterOfMass is visible for a slight performance optimization.
+        if ( this.visible ) {
+          xNode.center = modelViewTransform.modelToViewPosition( position );
+          speedNumberDisplay.centerBottom = xNode.centerTop.subtractXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
+        }
       } );
   }
 }
