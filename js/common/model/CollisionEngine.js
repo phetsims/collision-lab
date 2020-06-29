@@ -230,7 +230,7 @@ class CollisionEngine {
   }
 
   /**
-   * Reconstructs ballistic motion of two colliding Balls that are currently overlapping to compute the elapsed time
+   * Reconstructs uniform motion of two colliding Balls that are currently overlapping to compute the elapsed time
    * from the when the Balls first exactly collided to their overlapped positions. The contact time is positive if the
    * collision occurred in the past and negative if the contact time is in the future (which happens if the simulation
    * is ran in reverse).
@@ -335,7 +335,7 @@ class CollisionEngine {
   }
 
   /**
-   * Reconstructs ballistic motion of a Ball that is currently overlapping with a border to compute the elapsed time
+   * Reconstructs uniform motion of a Ball that is currently overlapping with a border to compute the elapsed time
    * from the when the Ball first exactly collided to its overlapped position. The contact time is positive if the
    * contact time occurred in the past and negative if the contact time is in the future (which happens if the
    * simulation is ran in reverse).
