@@ -240,7 +240,7 @@ class BallSystem {
   }
 
   /**
-   * 'Bumps' a ball way from the other Balls in the system that it is currently overlapping with. The 'bumped' ball
+   * Bumps a ball way from the other Balls in the system that it is currently overlapping with. The 'bumped' ball
    * will be placed to a position adjacent to the other Balls. This method does nothing if the Ball isn't overlapping
    * with any other Balls. See https://github.com/phetsims/collision-lab/issues/100.
    *
