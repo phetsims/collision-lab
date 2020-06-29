@@ -89,8 +89,8 @@ class BallSystem {
     //                                 instances are used with the same number of balls.
     this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
-      this.ballsConstantSizeProperty,
       playArea,
+      this.ballsConstantSizeProperty,
       this.pathVisibleProperty,
       elapsedTimeProperty,
       index + 1
