@@ -321,14 +321,6 @@ class Ball {
   get yVelocity() { return this.yVelocityProperty.value; }
 
   /**
-   * Gets the kinetic energy of this Ball, in J.
-   * @public
-   *
-   * @returns {number} - in J.
-   */
-  get kineticEnergy() { return this.kineticEnergyProperty.value; }
-
-  /**
    * Gets the linear momentum of this Ball, in kg*(m/s).
    * @public
    *

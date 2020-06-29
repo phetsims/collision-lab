@@ -59,10 +59,9 @@ class BallSystem {
 
     }, options );
 
-    //----------------------------------------------------------------------------------------
-
-    // Ensure a consistent configuration of initialBallStates and numberOfBallsRange.
     assert && assert( options.numberOfBallsRange.max === initialBallStates.length );
+
+    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
     this.numberOfBallsRange = options.numberOfBallsRange;
@@ -73,7 +72,7 @@ class BallSystem {
 
     // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model for performance as
     //                             the position and the velocity of the CenterOfMass are only updated if this is true.
-    //                             Also used in sub-classes for other performance optimizations.
+    //                             Additionally, PathDataPoints of the CenterOfMass are only recorded if this is true.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
 
     // @public {BooleanProperty} - indicates if the Ball and center of mass trailing paths are visible. This is in the
@@ -85,8 +84,8 @@ class BallSystem {
 
     // @public (read-only) {Balls[]} - an array of all possible balls. Balls are created at the start of the Simulation
     //                                 and are never disposed. However, these Balls are NOT necessarily the Balls
-    //                                 currently within the system. This is just used so that the same Ball
-    //                                 instances are used with the same number of balls.
+    //                                 currently in the system. This is just used so that the same Ball instances are
+    //                                 used with the same number of balls.
     this.prepopulatedBalls = initialBallStates.map( ( ballState, index ) => new Ball(
       ballState,
       playArea,
@@ -106,8 +105,8 @@ class BallSystem {
     } );
 
     // @public (read-only) {ObservableArray.<Ball>} - an array of the balls currently within the system. Balls
-    //                                                **must** be from prepopulatedBalls. Its length should
-    //                                                match the numberOfBallsProperty's value.
+    //                                                **must** be from prepopulatedBalls. Its length should match the
+    //                                                numberOfBallsProperty's value.
     this.balls = new ObservableArray();
 
     // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
@@ -160,12 +159,10 @@ class BallSystem {
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty(
       [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
-      () =>  _.sum( this.balls.map( ball => ball.kineticEnergy ) ), {
+      () =>  _.sum( this.balls.map( ball => ball.kineticEnergyProperty.value ) ), {
         valueType: 'number',
         isValidValue: value => value >= 0
       } );
-
-    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled.
     //                                                   Uses the userControlledProperty of all possible Balls as
@@ -188,7 +185,7 @@ class BallSystem {
     //----------------------------------------------------------------------------------------
 
     // Observe when Balls are removed from the system and clear their trailing Paths. Listener lasts for the life-time
-    // of the simulation.
+    // of the simulation since BallSystems are never disposed.
     this.balls.addItemRemovedListener( ball => {
       ball.path.clear();
     } );
@@ -213,6 +210,7 @@ class BallSystem {
   reset() {
     this.ballsConstantSizeProperty.reset();
     this.centerOfMassVisibleProperty.reset();
+    this.pathVisibleProperty.reset();
     this.numberOfBallsProperty.reset();
     this.prepopulatedBalls.forEach( ball => { ball.reset(); } ); // Reset All Possible Balls.
     this.centerOfMass.reset();
@@ -228,6 +226,8 @@ class BallSystem {
     this.balls.forEach( ball => {
       ball.restart();
     } );
+
+    // Reset the center-of-mass.
     this.centerOfMass.reset();
   }
 
@@ -240,6 +240,7 @@ class BallSystem {
    * Keypad or by dragging the Ball, that now overlaps with another Ball. It was decided that it was most natural and
    * smooth to 'bump' Balls away after the user interaction, instead of continually invoking this method as the user
    * is dragging the ball. Only the ball that the user was controlling will get 'Bumped' away, and won't affect the
+   * position of the other Balls.
    *
    * Rather than observing when specific user-controlled properties are set to false to invoke this method, it is
    * instead invoked in the view. We do this because, currently, the model pauses the sim when the user is controlling
@@ -261,7 +262,7 @@ class BallSystem {
     const bumpedAwayFromBalls = [];
 
     // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where Balls
-    // are placed in a cluster, and 'bumping' a Ball may lead to it overlapping with another Ball.
+    // are placed in the middle of a cluster, and 'bumping' a Ball may lead to it overlapping with another Ball.
     while ( overlappingBall ) {
 
       // Get the DirectionVector, which is the unit vector from the center of the overlappingBall that points in the
@@ -295,7 +296,7 @@ class BallSystem {
    */
   saveBallStates() {
 
-    // Save the state of each Ball in the BallSystem that are inside the PlayArea.
+    // Save the state of each Ball in the BallSystem that is fully inside the PlayArea.
     this.balls.forEach( ball => {
       ball.insidePlayAreaProperty.value && ball.saveState();
     } );
