@@ -37,7 +37,7 @@ class CollisionLabPath {
   /**
    * @param {Property.<Vector2>} positionProperty - the position of the moving object, in meters.
    * @param {Property.<boolean>} pathsVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
-   *                                                   only recorded if this is true and are cleared when set to false.
+   *                                                    only recorded if this is true and are cleared when set to false.
    * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
