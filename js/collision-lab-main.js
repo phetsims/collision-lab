@@ -12,8 +12,9 @@ import Tandem from '../../tandem/js/Tandem.js';
 import collisionLabStrings from './collisionLabStrings.js';
 import Explore1DScreen from './explore1D/Explore1DScreen.js';
 import Explore2DScreen from './explore2D/Explore2DScreen.js';
-// import InelasticScreen from './inelastic/InelasticScreen.js';
 import IntroScreen from './intro/IntroScreen.js';
+
+// import InelasticScreen from './inelastic/InelasticScreen.js';
 
 const simOptions = {
   credits: {
