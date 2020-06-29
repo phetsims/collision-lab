@@ -51,6 +51,19 @@ class BallState {
   }
 
   /**
+   * Returns a boolean that indicates if this BallState is equal to given BallState.
+   * @public
+   *
+   * @param {BallState} ballState
+   * @returns {boolean}
+   */
+  equals( ballState ) {
+    return this.position.equals( ballState.position )
+        && this.velocity.equals( ballState.velocity )
+        && this.mass === ballState.mass;
+  }
+
+  /**
    * Debugging string for the BallState.
    * @public
    *

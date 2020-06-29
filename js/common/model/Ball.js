@@ -90,16 +90,16 @@ class Ball {
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
+    // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
+    //                                                  display individually.
+    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
+    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
+
     // @public (read-only) {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
     this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ), {
       isValidValue: value => value >= 0,
       valueType: 'number'
     } );
-
-    // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
-    //                                                  display individually.
-    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
-    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
 
     //----------------------------------------------------------------------------------------
 
@@ -151,11 +151,11 @@ class Ball {
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
+    // @private {BallState} - the saved state of the Ball for resetting. See BallState.js for context.
+    this.restartState = initialBallState;
+
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
-
-    // @private {BallState}
-    this.restartState = initialBallState;
 
     // Ensure that our yPosition and yVelocity are always 0 for 1D screens. Persists for the lifetime of the sim.
     assert && this.playArea.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
@@ -210,7 +210,7 @@ class Ball {
   saveState() { this.restartState = new BallState( this.position, this.velocity, this.mass ); }
 
   /**
-   * Sets the Properties of this Ball to match the passed-in BallState. Setting a state will clear the trailing 'Path'.
+   * Sets the Properties of this Ball to match the passed-in BallState.
    * @public
    *
    * @param {BallState} BallState
@@ -220,7 +220,7 @@ class Ball {
     this.position = ballState.position;
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
-    this.path.clear();
+    this.path.clear(); // Setting a state will clear the trailing 'Path'
   }
 
   /**
@@ -288,14 +288,6 @@ class Ball {
   get mass() { return this.massProperty.value; }
 
   /**
-   * Sets the Ball's mass, in kg.
-   * @public
-   *
-   * @param {number} mass - in kg
-   */
-  set mass( mass ) { this.massProperty.value = mass; }
-
-  /**
    * Gets the Ball's radius, in meters.
    * @public
    *
@@ -304,56 +296,12 @@ class Ball {
   get radius() { return this.radiusProperty.value; }
 
   /**
-   * Gets the center position of the Ball, in meters.
+   * Gets the center-position of the Ball, in meters.
    * @public
    *
    * @returns {Vector2} - in meters
    */
   get position() { return this.positionProperty.value; }
-
-  /**
-   * Sets the center position of the Ball, in meters.
-   * @public
-   *
-   * @param {Vector2} position - in meters
-   */
-  set position( position ) {
-    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-    this.xPositionProperty.value = position.x;
-    this.yPositionProperty.value = position.y;
-  }
-
-  /**
-   * Gets the horizontal velocity of the Ball, in m/s.
-   * @public
-   *
-   * @returns {number} xVelocity, in m/s.
-   */
-  get xVelocity() { return this.xVelocityProperty.value; }
-
-  /**
-   * Sets the horizontal velocity of the Ball, in m/s.
-   * @public
-   *
-   * @param {number} xVelocity, in m/s.
-   */
-  set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
-
-  /**
-   * Gets the vertical velocity of the Ball, in m/s.
-   * @public
-   *
-   * @returns {number} yVelocity, in m/s.
-   */
-  get yVelocity() { return this.yVelocityProperty.value; }
-
-  /**
-   * Sets the vertical velocity of the Ball, in m/s.
-   * @public
-   *
-   * @param {number} yVelocity, in m/s.
-   */
-  set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
 
   /**
    * Gets the velocity of the Ball, in m/s.
@@ -364,16 +312,13 @@ class Ball {
   get velocity() { return this.velocityProperty.value; }
 
   /**
-   * Sets the velocity of the Ball, in m/s.
+   * ES5 getters of the components of this Ball's velocity, in m/s.
    * @public
    *
-   * @param {Vector2} velocity, in m/s.
+   * @returns {number} - in m/s.
    */
-  set velocity( velocity ) {
-    assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-    this.xVelocity = velocity.x;
-    this.yVelocity = velocity.y;
-  }
+  get xVelocity() { return this.xVelocityProperty.value; }
+  get yVelocity() { return this.yVelocityProperty.value; }
 
   /**
    * Gets the kinetic energy of this Ball, in J.
@@ -390,6 +335,56 @@ class Ball {
    * @returns {Vector2} - in kg*(m/s).
    */
   get momentum() { return this.momentumProperty.value; }
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Sets the Ball's mass, in kg.
+   * @public
+   *
+   * @param {number} mass - in kg
+   */
+  set mass( mass ) { this.massProperty.value = mass; }
+
+  /**
+   * Sets the center-position of the Ball, in meters.
+   * @public
+   *
+   * @param {Vector2} position - in meters
+   */
+  set position( position ) {
+    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+    this.xPositionProperty.value = position.x;
+    this.yPositionProperty.value = position.y;
+  }
+
+  /**
+   * Sets the velocity of the Ball, in m/s.
+   * @public
+   *
+   * @param {Vector2} velocity, in m/s.
+   */
+  set velocity( velocity ) {
+    assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+    this.xVelocity = velocity.x;
+    this.yVelocity = velocity.y;
+  }
+
+  /**
+   * Sets the horizontal velocity of the Ball, in m/s.
+   * @public
+   *
+   * @param {number} xVelocity, in m/s.
+   */
+  set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
+
+  /**
+   * Sets the vertical velocity of the Ball, in m/s.
+   * @public
+   *
+   * @param {number} yVelocity, in m/s.
+   */
+  set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
 }
 
 collisionLab.register( 'Ball', Ball );
