@@ -65,8 +65,9 @@ class CollisionLabPath {
     // Observe when the position of the elapsedTimeProperty of the sim changes and record a new PathDataPoint at the
     // current elapsedTime and position, if paths are visible. This link persists for the lifetime of the simulation
     // since CollisionLabPaths are never disposed.
-    elapsedTimeProperty.link( elapsedTime => {
-      pathsVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTime );
+    positionProperty.link( () => {
+
+      pathsVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTimeProperty.value );
     } );
 
     // Observe when the pathsVisibleProperty is manipulated to clear the 'Path' when set to false.
@@ -139,9 +140,9 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Add a new PathDataPoint for the current position of the moving object.
-    if ( this.playAreaBounds.containsPoint( position ) ) {
+    // if ( this.playAreaBounds.containsPoint( position ) ) {
       this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
-    }
+    // }
 
     // Ensure that the dataPoints are strictly sorted by time.
     assert && assert( CollisionLabUtils.isSortedBy( this.dataPoints, _.property( 'time' ) ) );

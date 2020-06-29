@@ -38,9 +38,7 @@ class Explore1DBallSystem extends BallSystem {
     super( EXPLORE_1D_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
 
     //----------------------------------------------------------------------------------------
-    // Ensure that our yPosition and yVelocity are always 0 for 1D screens. Persists for the lifetime of the sim.
-    assert && this.playArea.dimensions === 1 && this.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
-    assert && this.playArea.dimensions === 1 && this.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
+
     assert && assert( _.every( EXPLORE_1D_INITIAL_BALL_STATES, ballState => {
       return ballState.position.y === 0 && ballState.velocity.y === 0;
     } ), 'balls in explore 1D must have yVelocity and yPosition equal to 0.' );
