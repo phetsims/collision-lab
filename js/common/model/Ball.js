@@ -37,7 +37,7 @@ import PlayArea from './PlayArea.js';
 class Ball {
 
   /**
-   * @param {BallState} initialBallState - starting state of the Ball. Will be mutated for restarting purposes.
+   * @param {BallState} initialBallState - starting state of the Ball.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
    * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
    * @param {Property.<boolean>} pathVisibleProperty - indicates if the trailing 'Path' is visible
@@ -154,7 +154,7 @@ class Ball {
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
 
-    // @private {BallState} - reference the initialBallState, which will track our restarting state. See BallState.js
+    // @private {BallState}
     this.restartState = initialBallState;
 
     // Ensure that our yPosition and yVelocity are always 0 for 1D screens. Persists for the lifetime of the sim.
@@ -207,7 +207,7 @@ class Ball {
    *
    * This is called when the user presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
    */
-  saveState() { this.restartState.saveState( this.position, this.velocity, this.mass ); }
+  saveState() { this.restartState = new BallState( this.position, this.velocity, this.mass ); }
 
   /**
    * Sets the Properties of this Ball to match the passed-in BallState. Setting a state will clear the trailing 'Path'.

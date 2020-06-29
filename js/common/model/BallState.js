@@ -1,22 +1,26 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A mutable state of a Ball that contains information about the mass, position, and velocity of a Ball.
+ * A multipurpose 'state' of a Ball that contains information about the mass, position, and velocity of a Ball. Doesn't
+ * hold onto any listeners or Properties, so no dispose method is needed.
  *
- * Used in the constructor of Balls to save and update their state when the restart button is pressed.
- * IMPORTANT: Restarting is different from resetting:
+ * ## Usages of BallState
  *
- *  'Reset All':
- *    - Like a traditional sim, this resets all model Properties back to the values that they were initialized to.
+ *   - BallStates are generally used to hold information about the starting values of a Ball. They are used in the
+ *     'Inelastic' screen to save several pre-defined states of Balls in different modes.
  *
- *  'Restart':
- *    - Pauses the sim.
- *    - Sets the elapsed time to 0.
- *    - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
- *      is saved when the sim play button is pressed.
- *    - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their states saved.
+ *   - Used internally in Ball to save and update a Ball's state when the restart button is pressed.
+ *     Restarting is different from resetting:
  *
- * BallStates are given to each Ball, and since Balls are never disposed, BallStates are also never disposed.
+ *       Reset All:
+ *         - Like a traditional sim, this resets all model Properties back to the values that they were initialized to.
+ *
+ *       Restart:
+ *         - Pauses the sim.
+ *         - Sets the elapsed time to 0.
+ *         - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
+ *           is saved when the sim play button is pressed.
+ *         - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their states saved.
  *
  * @author Brandon Li
  */
@@ -36,33 +40,13 @@ class BallState {
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
     assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
 
-    // @public (read-only) {Vector2} - reference to the passed-in position. Make a copy so that we can mutate.
-    this.position = position.copy();
+    // @public (read-only) {Vector2} - reference to the passed-in position.
+    this.position = position;
 
-    // @public (read-only) {Vector2} - reference to the passed-in velocity. Make a copy so that we can mutate.
-    this.velocity = velocity.copy();
+    // @public (read-only) {Vector2} - reference to the passed-in velocity.
+    this.velocity = velocity;
 
     // @public (read-only) {number} - reference to the passed-in mass.
-    this.mass = mass;
-  }
-
-  /**
-   * Saves a new state of the Ball. As documented above, this is called when the user presses the play button (from
-   * paused to play). If the restart button is then pressed, the Ball is set to this state.
-   * @public
-   *
-   * @param {Vector2} position - position of the center of the ball, in meters.
-   * @param {Vector2} velocity - velocity of the ball, in m/s.
-   * @param {number} mass - mass of the ball, in kg.
-   */
-  saveState( position, velocity, mass ) {
-    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-    assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-    assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
-
-    // Save the new BallState.
-    this.position.set( position );
-    this.velocity.set( velocity );
     this.mass = mass;
   }
 
