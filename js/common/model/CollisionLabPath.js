@@ -4,7 +4,7 @@
  * Model for the trailing 'Path' behind a moving object, including Balls and the Center of Mass. Originally called
  * 'Path' but changed to 'CollisionLabPath'. See https://github.com/phetsims/collision-lab/issues/79.
  *
- * Its main responsibility is to keep track of PathDataPoints that map out the trail of a Ball or a Center of Mass as
+ * Its main responsibility is to keep track of PathDataPoints that map out the trail of a Ball or the Center of Mass as
  * time progresses. In the design, the trailing 'Paths' only shows the recent path of the moving object AFTER the
  * visibility checkbox is checked, meaning the Path is always empty if the checkbox isn't checked and PathDataPoints
  * are only recorded if the checkbox is checked.
@@ -69,8 +69,8 @@ class CollisionLabPath {
       pathsVisibleProperty.value && this.updatePath( positionProperty, elapsedTimeProperty.value );
     } );
 
-    // Observe when the pathsVisibleProperty is manipulated and clear the 'Path' when set to false.
-    // Link lasts for the lifetime of the simulation and is never disposed.
+    // Observe when the pathsVisibleProperty is manipulated and clear the 'Path' when set to false. Link lasts for the
+    // lifetime of the simulation and is never disposed.
     pathsVisibleProperty.lazyLink( pathVisible => {
       !pathVisible && this.clear();
     } );
