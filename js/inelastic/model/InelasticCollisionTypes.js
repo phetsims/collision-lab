@@ -3,7 +3,7 @@
 /**
  * Enumeration of the possible 'types' of perfectly inelastic collisions. A perfectly inelastic happens when the
  * elasticity (and the coefficient of restitution) is 0. The documentation in this file is not exhaustive. Please also
- * see ColisionEngine.js and InelasticRotationEngine.js for complete background.
+ * see CollisionEngine.js and InelasticRotationEngine.js for complete background.
  *
  * @author Brandon Li
  */
