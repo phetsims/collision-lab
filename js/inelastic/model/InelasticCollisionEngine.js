@@ -88,7 +88,12 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Observe when any of the Balls in the system are being user-controlled and reset the InelasticCollisionEngine.
     // Link persists for the lifetime of the sim since InelasticCollisionEngines are never disposed.
-    ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => { this.reset(); } );
+    ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
+
+      this.reset();
+      this.ballSystem.balls.forEach( ball => { ball.rotationProperty.reset(); } );
+
+    } );
   }
 
   /**
@@ -109,7 +114,6 @@ class InelasticCollisionEngine extends CollisionEngine {
     this.totalAngularMomentum = null;
     this.centerOfMassPosition.set( Vector2.ZERO );
     this.totalLinearMomentum.set( Vector2.ZERO );
-    this.ballSystem.balls.forEach( ball => { ball.rotationProperty.reset(); } );
   }
 
   /**
