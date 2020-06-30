@@ -53,7 +53,7 @@ class CollisionLabModel {
     this.ballSystem = this.createBallSystem( this.playArea, this.elapsedTimeProperty );
 
     // @private {CollisionEngine} - create the CollisionEngine of the screen.
-    this.collisionEngine = this.createCollisionEngine();
+    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram of the screen.
     this.momentaDiagram = new MomentaDiagram(

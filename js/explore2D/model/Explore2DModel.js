@@ -15,7 +15,8 @@ import CollisionLabModel from '../../common/model/CollisionLabModel.js'; // TODO
 class Explore2DModel extends CollisionLabModel {
 
   /**
-   * Creates the PlayArea for the 'Explore 2D' screen, which uses a sub-type of PlayArea.
+   * Creates the PlayArea for the 'Explore 2D' screen, which uses a screen-specific sub-type of PlayArea. Called in the
+   * constructor of the super-class, which uses the Factory Method Pattern.
    * @override
    * @protected
    *
@@ -26,10 +27,13 @@ class Explore2DModel extends CollisionLabModel {
   }
 
   /**
-   * Creates the BallSystem for the 'Explore2D' screen, which uses a sub-type of BallSystem.
+   * Creates the BallSystem for the 'Explore 2D' screen, which uses a screen-specific sub-type of BallSystem. Called in
+   * the constructor of the super-class, which uses the Factory Method Pattern.
    * @override
    * @protected
    *
+   * @param {Explore2DPlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {Explore2DBallSystem}
    */
   createBallSystem( playArea, elapsedTimeProperty ) {
