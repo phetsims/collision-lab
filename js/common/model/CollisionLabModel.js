@@ -16,12 +16,15 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import BallSystem from './BallSystem.js';
 import CollisionEngine from './CollisionEngine.js';
 import MomentaDiagram from './MomentaDiagram.js';
+import PlayArea from './PlayArea.js';
 
 // @abstract
 class CollisionLabModel {
@@ -107,18 +110,29 @@ class CollisionLabModel {
    * @abstract
    * @protected
    *
+   * @param {PlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {BallSystem}
    */
-  createBallSystem() { assert && assert( false, 'abstract method must be overridden' ); }
+  createBallSystem( playArea, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * Creates the CollisionEngine for the screen using the Factory Method Pattern, which allows sub-types to create
    * screen-specific sub-types, if needed. Called in CollisionLabModel's constructor.
    * @protected
    *
+   * @param {PlayArea} playArea
+   * @param {BallSystem} ballSystem
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {CollisionEngine}
    */
-  createCollisionEngine() { return new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty ); }
+  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
+    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+
+    return new CollisionEngine( playArea, ballSystem, elapsedTimeProperty );
+  }
 
   //----------------------------------------------------------------------------------------
 
