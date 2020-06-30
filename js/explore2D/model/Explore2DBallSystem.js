@@ -3,8 +3,9 @@
 /**
  * Explore2DBallSystem is a BallSystem sub-type for the 'Explore 2D' screen.
  *
- * It adds no additional Properties to the super class, but is provided for symmetry in the model-view type hierarchy.
- * It also ensures a correct configuration of initialBallStates.
+ * Although it adds no additional functionality to the super-class, it is added for symmetry within the screen-specific
+ * model-view type hierarchy. It also ensures a correct configuration of initialBallStates for 2D and gives the
+ * initial BallStates for the Explore 2D screen.
  *
  * @author Brandon Li
  */
@@ -37,7 +38,18 @@ class Explore2DBallSystem extends BallSystem {
 
     super( EXPLORE_2D_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
 
-    assert && assert( EXPLORE_2D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
+    //----------------------------------------------------------------------------------------
+
+    // Ensure a correct configuration of Balls that conforms to the invariants for 2D screens, but bury behind assert
+    // so it doesn't impact production performance.
+    if ( assert ) {
+
+      // Ensure that the correct number of BallStates were provided.
+      assert( EXPLORE_2D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
+
+      // Ensure that the position of BallStates were inside the PlayArea's bounds.
+      assert( EXPLORE_2D_INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
+    }
   }
 }
 
