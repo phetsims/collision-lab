@@ -113,6 +113,10 @@ class Ball {
       ( mass, speed ) => BallUtils.calculateBallKineticEnergy( this ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
+    // @public = {NumberProperty} - Property of the rotation of the Ball around its center, in radians. This is used for
+    //                              the 'Inelastic' screen.
+    this.rotationProperty = new NumberProperty( 0 );
+
     // @public (read-only) {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
     //                                                   PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
@@ -168,6 +172,7 @@ class Ball {
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
     this.massProperty.reset();
+    this.rotationProperty.reset();
     this.path.clear();
     this.massUserControlledProperty.reset();
     this.xPositionUserControlledProperty.reset();

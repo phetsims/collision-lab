@@ -216,10 +216,16 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
     const r1 = ball1.position.minus( this.centerOfMassPosition );
     const r2 = ball2.position.minus( this.centerOfMassPosition );
+    const changeInAngle = this.angularVelocity * dt;
 
     // Rotate the position vectors to apply uniform circular motion about the center of mass.
-    r1.rotate( this.angularVelocity * dt );
-    r2.rotate( this.angularVelocity * dt );
+    r1.rotate( changeInAngle );
+    r2.rotate( changeInAngle );
+
+    // Rotate the balls around their centers to provide a more realistic rotation experience. See
+    // https://github.com/phetsims/collision-lab/issues/87
+    ball1.rotationProperty.value += changeInAngle;
+    ball2.rotationProperty.value += changeInAngle;
 
     // Compute the velocity of Both balls after this step, relative to the center of mass.
     const v1 = new Vector2( -this.angularVelocity * r1.y, this.angularVelocity * r1.x );

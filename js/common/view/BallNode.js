@@ -240,6 +240,12 @@ class BallNode extends Node {
         momentumNumberDisplay.centerTop = ballCircle.centerBottom.addXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
       }
     } );
+
+    // Observe when the rotationProperty of the Ball changes and rotate the label of the BallNode. The ballCircle
+    // doesn't need to be rotated. Link persists for the lifetime of the simulation.
+    ball.rotationProperty.link( rotation => {
+      labelNode.rotation = -rotation;
+    } );
   }
 }
 
