@@ -310,5 +310,6 @@ class BallSystem {
     } );
   }
 }
+
 collisionLab.register( 'BallSystem', BallSystem );
 export default BallSystem;
