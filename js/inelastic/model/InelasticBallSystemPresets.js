@@ -23,26 +23,26 @@ class InelasticBallSystemPreset {
 
   // @public
   setBallSystem( ballSystem ) {
-    ballSystem.balls.get( 0 ).setState( this.ballState1 );
-    ballSystem.balls.get( 1 ).setState( this.ballState2 );
+
+    if ( this.ballState1 ) {
+      ballSystem.balls.get( 0 ).setState( this.ballState1 );
+      ballSystem.balls.get( 1 ).setState( this.ballState2 );
+    }
   }
 }
 
 const InelasticBallSystemPresets = Enumeration.byMap( {
 
-  CUSTOM: new InelasticBallSystemPreset(
-    new BallState( new Vector2( -1.00, 0.00 ), new Vector2( 1.00, 0.30 ), 0.50 ),
-    new BallState( new Vector2( 0.00, 0.50 ), new Vector2( -0.50, -0.50 ), 1.50 )
-  ),
+  CUSTOM: new InelasticBallSystemPreset(),
 
   NAME_1: new InelasticBallSystemPreset(
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 1.00, 0.5 ), 0.50 ),
-    new BallState( new Vector2( 0.5, 0.00 ), new Vector2( 1.00, -0.50 ), 0.5 )
+    new BallState( new Vector2( 0.5, 0.00 ), new Vector2( -1.00, 0.5 ), 0.5 )
   ),
 
   NAME_2: new InelasticBallSystemPreset(
-    new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0, 0.5 ), 0.5 ),
-    new BallState( new Vector2( 0.5, 0.00 ), new Vector2( 0, -0.50 ), 0.5 )
+    new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0.5, 0 ), 0.5 ),
+    new BallState( new Vector2( 0.5, 0.00 ), new Vector2( -0.5, 0 ), 0.5 )
   )
 } );
 

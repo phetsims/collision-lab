@@ -41,7 +41,7 @@ class InelasticModel extends CollisionLabModel {
     assert && assert( playArea instanceof InelasticPlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new InelasticBallSystem( playArea, elapsedTimeProperty );
+    return new InelasticBallSystem( playArea, elapsedTimeProperty, this.isPlayingProperty );
   }
 
   /**
