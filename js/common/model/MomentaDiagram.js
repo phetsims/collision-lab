@@ -1,18 +1,21 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * The Model representation for the 'Momenta Diagram' accordion box, which appears at the bottom right of each screen.
- * Features the momentum Vectors of each Ball in the BallSystem, along with a 'total' momentum vector, in a completely
- * separate coordinate frame from the PlayArea.
+ * The Model representation for the 'Momenta Diagram', which appears at the bottom right of each screen. Features the
+ * momentum Vectors of each Ball in the BallSystem, along with a 'total' momentum vector, in a completely separate
+ * coordinate frame from the PlayArea.
  *
  * Responsibilities are:
  *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector. Momenta Diagram takes
  *     advantage of the prepopulatedBalls, which all Balls in the system must be apart of. Instead of creating a
  *     MomentaDiagramVector each time a Ball is added to the system, it creates one for each prepopulatedBall and
- *     only updates it if its associated Ball is in the system, meaning there is no performance loss and eliminates
- *     the necessity to dispose MomentaDiagramVectors.
- *   - Update the tail positions and components of the MomentaDiagramVectors when necessary. The positioning
- *     differs depending on the dimensions of the PlayArea.
+ *     only updates it if the associated Ball is in the system, which eliminates the necessity to dispose
+ *     MomentaDiagramVectors.
+ *
+ *   - Update the tail positions and components of the MomentaDiagramVectors when necessary. MomentaDiagrams are
+ *     designed and implemented to be minimally invasive to optimize the performance of the simulation. The position
+ *     and components of the MomentaDiagramVectors are only updated if the Momenta Diagram accordion box is expanded.
+ *     The positioning also differs depending on the dimensions of the PlayArea.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -31,13 +34,11 @@ import MomentaDiagramVector from './MomentaDiagramVector.js';
 class MomentaDiagram {
 
   /**
-   * @param {Balls[]} prepopulatedBalls - an array of ALL possible balls.
-   * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system. All Balls must be apart of the
-   *                                         prepopulatedBalls array.
+   * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
+   * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {number} dimensions - the dimensions of the PlayArea, used for positioning differences. Either 1 or 2.
-   * @param {Object} [options]
    */
-  constructor( prepopulatedBalls, balls, dimensions, options ) {
+  constructor( prepopulatedBalls, balls, dimensions ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
@@ -46,7 +47,7 @@ class MomentaDiagram {
     //                             and components of the Momenta Vectors are only updated if this is true.
     this.expandedProperty = new BooleanProperty( false );
 
-    // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBalls to its associated Momenta Vector.
+    // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBalls to an associated Momenta Vector.
     this.ballToMomentaVectorMap = new Map();
 
     // Populate the Map with MomentaDiagramVectors.
@@ -107,7 +108,7 @@ class MomentaDiagram {
    *
    *   For 1D screens:
    *     - The momentum vectors are stacked vertically on top of each other, with the first vector on top and
-   *       where the tailY coordinates of the other vectors are one-off of each other.
+   *       the tailY coordinates of the other vectors are one-off of each other.
    *     - The first momentum Vector and the total momentum Vector's tailX are placed at x = 0. The vectors are then
    *       placed tipX-to-tailX.
    */
@@ -155,10 +156,12 @@ class MomentaDiagram {
       const previousMomentaVector = this.ballToMomentaVectorMap.get( previousBall );
 
       if ( this.dimensions === 2 ) {
+
         // tip-to-tail
         momentaVector.tail = previousMomentaVector.tip;
       }
       else {
+
         // tipX-to-tailX
         momentaVector.tailX = previousMomentaVector.tipX;
 
