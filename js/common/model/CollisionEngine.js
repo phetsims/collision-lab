@@ -288,7 +288,7 @@ class CollisionEngine {
    *
    * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
-   * @private
+   * @protected
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBorderCollisions( isReversing ) {

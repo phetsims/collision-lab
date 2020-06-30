@@ -126,7 +126,12 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // If we are currently handling the 2 Balls in the system, rotate the Balls around the center of mass. This
     // overrides the collision response of the super-class.
-    if ( this.isRotatingBalls ) { this.rotateBalls( dt ); }
+    if ( this.isRotatingBalls ) {
+      this.rotateBalls( dt );
+
+      // Handle scenario where Balls are rotated into the border.
+      this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+    }
     else {
 
       // Forward the collision-response to the super-class.
@@ -257,31 +262,48 @@ class InelasticCollisionEngine extends CollisionEngine {
       assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
       assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
     }
-
-    // Handle scenario where Balls are rotated into the border.
-    this.playArea.reflectsBorder && this.handleRotatingBallClusterToBorderCollisions();
   }
 
   /**
-   * A time-discretization approach to detecting and processing ball-border collisions when the InelasticCollisionEngine
-   * is rotating the Balls in the system. If a Ball that is rotating hits the border, then all Balls in the cluster have
-   * 0 velocity.
+   * A time-discretization approach to detecting and processing ball-border collisions. Overridden to respond to
+   * ball-border collisions that 'stick'. If a Ball that is rotating hits the border, then all Balls in the cluster have
+   * 0 velocity. When a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball has
+   * 0 velocity. Otherwise, the collision response is forwarded to the super-class.
    *
-   * NOTE: this method assumes that the InelasticCollisionEngine is rotating the balls of the system. Don't call this
-   *       method if it isn't.
-   *
+   * @override
    * @protected
+   *
+   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  handleRotatingBallClusterToBorderCollisions() {
-    assert && assert( this.isRotatingBalls );
+  handleBallToBorderCollisions( isReversing ) {
+    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
-    // If a Ball that is rotating hits the border, then all Balls in the cluster have 0 velocity.
-    if ( this.ballSystem.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
+    // Handle collisions that 'stick'.
+    if ( this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {
 
-      // Set the velocity of the Balls to 0.
-      this.ballSystem.balls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
-      this.reset();
+      // Get the balls that are colliding with the border.
+      const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
+
+      // If a Ball that is rotating hits the border, then all Balls in the cluster have 0 velocity.
+      if ( this.isRotatingBalls && collidingBalls.length ) {
+
+        // Set the velocity of the Balls to 0.
+        this.ballSystem.balls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+        this.reset();
+      }
+      else {
+
+        // Otherwise, if a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball
+        // has 0 velocity
+        collidingBalls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+      }
+    }
+    else {
+
+      // Forward the collision-response to the super-class.
+      super.handleBallToBorderCollisions( isReversing );
     }
   }
 
