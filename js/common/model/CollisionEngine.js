@@ -76,7 +76,7 @@ class CollisionEngine {
    * Steps the CollisionEngine, which will handle all collisions involving Balls.
    * @public
    *
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   * @param {number} dt - time in seconds
    */
   step( dt ) {
 
@@ -288,7 +288,7 @@ class CollisionEngine {
    *
    * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
-   * @protected
+   * @private
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBorderCollisions( isReversing ) {
