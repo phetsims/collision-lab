@@ -232,6 +232,9 @@ class CollisionLabScreenView extends ScreenView {
       this.addChild( playAreaControlSet );
       playAreaControlSet.moveToBack();
     }
+
+    // @protected
+    this.playAreaViewBounds = playAreaViewBounds;
   }
 
   /**

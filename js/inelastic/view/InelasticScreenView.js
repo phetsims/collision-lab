@@ -6,16 +6,48 @@
  * @author BrandonLi
  */
 
+import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 import InelasticModel from '../model/InelasticModel.js';
+import InelasticBallSystemPresetsComboBox from './InelasticBallSystemPresetsComboBox.js';
 import InelasticControlPanel from './InelasticControlPanel.js';
 
 class InelasticScreenView extends CollisionLabScreenView {
 
+  /**
+   * @param {InelasticModel} model
+   * @param {Tandem} tandem
+   * @param {Object} [options]
+   */
+  constructor( model, tandem, options ) {
+    assert && assert( model instanceof InelasticModel, `invalid model: ${model}` );
+    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
+
+    options = merge( {
+
+      playAreaControlSetOptions: {
+        includeNumberOfBallsSpinner: false
+      }
+
+    }, options );
+
+    super( model, tandem, options );
+
+    //----------------------------------------------------------------------------------------
+
+    const inelasticBallSystemPresetsComboBox = new InelasticBallSystemPresetsComboBox( model.ballSystem.inelasticBallSystemPresetProperty, this, {
+      rightTop: this.playAreaViewBounds.rightBottom.addXY( 0, 100 )
+    } );
+
+
+    this.addChild( inelasticBallSystemPresetsComboBox );
+    inelasticBallSystemPresetsComboBox.moveToBack();
+  }
 
   /**
    * Creates the CollisionLabControlPanel for the 'Inelastic' screen. Called in the constructor of the super-class.
