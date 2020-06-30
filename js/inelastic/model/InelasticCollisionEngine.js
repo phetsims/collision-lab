@@ -239,8 +239,6 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
     if ( assert ) {
-      assert( this.ballSystem.centerOfMass.position.equalsEpsilon( this.centerOfMassPosition, EPSILON ) );
-      assert( this.ballSystem.centerOfMass.velocity.equalsEpsilon( centerOfMassVelocity, EPSILON ) );
 
       const totalLinearMomentum = ball1.momentum.plus( ball2.momentum );
       const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
