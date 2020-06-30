@@ -10,7 +10,7 @@
  *   - Convenience methods for setting the tail, tip, components.
  *
  * MomentaDiagramVectors should only be positioned in MomentaDiagram.js. Since Balls are never disposed,
- * MomentaDiagramVectors are also never disposed, even when they are removed from the PlayArea. See MomentaDiagram.js.
+ * MomentaDiagramVectors are also never disposed, even when they are removed from the system. See MomentaDiagram.js.
  *
  * @author Brandon Li
  */
@@ -30,7 +30,7 @@ class MomentaDiagramVector {
     this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
 
     // @public {Vector2Property} - the Momentum Vector's components, which are its x and y scalar values. Initialized
-    //                              at the origin and to be updated later in MomentaDiagram.js
+    //                             at zero and to be updated later in MomentaDiagram.js
     this.componentsProperty = new Vector2Property( Vector2.ZERO );
 
     // @public {DerivedProperty.<Vector2>} - the tip position of the Vector. Never disposed since MomentaDiagramVectors
@@ -45,8 +45,9 @@ class MomentaDiagramVector {
    * Resets the Vector. Called when the reset-all button is pressed.
    * @public
    *
-   * Technically, since the tail and tip are set externally, which depends on Balls momentums, this method isn't needed.
-   * However, the PhET convention is to completely reset when the reset all button is pressed, so we follow that here.
+   * Technically, since the tail and tip are set externally, which depends on the Ball's momentums, this method isn't
+   * needed. However, the PhET convention is to completely reset when the reset all button is pressed, so we follow that
+   * here.
    */
   reset() {
     this.tailPositionProperty.reset();
@@ -66,7 +67,7 @@ class MomentaDiagramVector {
   get tail() { return this.tailPositionProperty.value; }
 
   /**
-   * Gets the tail's y coordinate, in kg*(m/s).
+   * Gets the tail's y-coordinate, in kg*(m/s).
    * @public
    *
    * @returns {number}
@@ -74,7 +75,7 @@ class MomentaDiagramVector {
   get tailY() { return this.tail.y; }
 
   /**
-   * Gets the tail's x coordinate, in kg*(m/s).
+   * Gets the tail's x-coordinate, in kg*(m/s).
    * @public
    *
    * @returns {number}
@@ -90,7 +91,7 @@ class MomentaDiagramVector {
   set tail( tail ) { this.tailPositionProperty.value = tail; }
 
   /**
-   * Sets the tail's x coordinate, keeping the components constant.
+   * Sets the tail's x-coordinate, keeping the components constant.
    * @public
    *
    * @param {number} tailX - in kg*(m/s).
@@ -98,7 +99,7 @@ class MomentaDiagramVector {
   set tailX( tailX ) { this.tail = new Vector2( tailX, this.tailY ); }
 
   /**
-   * Sets the tail's y coordinate, keeping the components constant.
+   * Sets the tail's y-coordinate, keeping the components constant.
    * @public
    *
    * @param {number} tailY - in kg*(m/s).
@@ -116,7 +117,7 @@ class MomentaDiagramVector {
   get tip() { return this.tipPositionProperty.value; }
 
   /**
-   * Gets the tip's x coordinate.
+   * Gets the tip's x-coordinate.
    * @public
    *
    * @returns {number} - in kg*(m/s)
@@ -124,7 +125,7 @@ class MomentaDiagramVector {
   get tipX() { return this.tip.x; }
 
   /**
-   * Gets the tip's y coordinate.
+   * Gets the tip's y-coordinate.
    * @public
    *
    * @returns {number} - in kg*(m/s)
@@ -170,7 +171,7 @@ class MomentaDiagramVector {
    * vector has 0 magnitude.
    * @public
    *
-   * @returns {number|null}
+   * @returns {number|null} - in radians.
    */
   get angle() {
     return this.magnitude <= CollisionLabConstants.ZERO_THRESHOLD ? null : this.components.angle;
