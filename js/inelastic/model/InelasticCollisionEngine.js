@@ -229,16 +229,18 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Move the center of mass to where it would be in this current frame.
     this.centerOfMassPosition.add( this.ballSystem.centerOfMass.velocity.times( dt ) );
+    const centerOfMassVelocity = this.ballSystem.centerOfMass.velocity;
 
     // Set the position and velocity of the Balls back in the absolute reference frame.
     ball1.position = r1.add( this.centerOfMassPosition );
     ball2.position = r2.add( this.centerOfMassPosition );
-    ball1.velocity = v1.add( this.ballSystem.centerOfMass.velocity );
-    ball2.velocity = v2.add( this.ballSystem.centerOfMass.velocity );
+    ball1.velocity = v1.add( centerOfMassVelocity );
+    ball2.velocity = v2.add( centerOfMassVelocity );
 
     // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
     if ( assert ) {
       assert( this.ballSystem.centerOfMass.position.equalsEpsilon( this.centerOfMassPosition, EPSILON ) );
+      assert( this.ballSystem.centerOfMass.velocity.equalsEpsilon( centerOfMassVelocity, EPSILON ) );
 
       const totalLinearMomentum = ball1.momentum.plus( ball2.momentum );
       const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
@@ -266,10 +268,10 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     // If a Ball that is rotating hits the border, then all Balls in the cluster have 0 velocity.
-    if ( this.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
+    if ( this.ballSystem.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
 
       // Set the velocity of the Balls to 0.
-      this.balls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+      this.ballSystem.balls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
       this.reset();
     }
   }
