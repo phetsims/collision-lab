@@ -6,51 +6,61 @@
  * @author Brandon Li
  */
 
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionEngine from '../../common/model/CollisionEngine.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
-import PlayArea from '../../common/model/PlayArea.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
+import InelasticCollisionEngine from './InelasticCollisionEngine.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
 
 class InelasticModel extends CollisionLabModel {
 
   /**
-   * @public
+   * Creates the PlayArea for the 'Inelastic' screen, which uses a screen-specific sub-type of PlayArea. Called in the
+   * constructor of the super-class, which uses the Factory Method Pattern.
+   * @override
+   * @protected
+   *
+   * @returns {InelasticPlayArea}
    */
   createPlayArea() {
     return new InelasticPlayArea();
   }
+
   /**
+   * Creates the BallSystem for the 'Inelastic' screen, which uses a screen-specific sub-type of BallSystem. Called in
+   * the constructor of the super-class, which uses the Factory Method Pattern.
    * @override
-   * Creates the BallSystem for the 'Inelastic' screen. Called in the constructor of the super-class. For this screen,
-   * this method will instantiate a sub-type of BallSystem: InelasticBallSystem. It also has its own custom
-   * initial BallStates.
-   *
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
+   *
+   * @param {InelasticPlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {InelasticBallSystem}
    */
   createBallSystem( playArea, elapsedTimeProperty ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( playArea instanceof InelasticPlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
     return new InelasticBallSystem( playArea, elapsedTimeProperty );
   }
 
   /**
+   * Creates the CollisionEngine for the 'Inelastic' screen, which uses a screen-specific sub-type of CollisionEngine.
+   * Called in the constructor of the super-class, which uses the Factory Method Pattern.
    * @override
-   * Creates the CollisionEngine for the 'Inelastic' screen. Called in the constructor of the super-class.
-   *
    * @protected
-   * @param {PlayArea} playArea - the PlayArea instance of the sim.
-   * @param {InelasticBallSystem} ballSystem - the BallSystem instance of the sim.
-   * @returns {CollisionEngine}
+   *
+   * @param {InelasticPlayArea} playArea
+   * @param {InelasticBallSystem} introBallSystem
+   * @param {Property.<number>} elapsedTimeProperty
+   * @returns {InelasticCollisionEngine}
    */
   createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
-    // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    // assert && assert( ballSystem instanceof InelasticBallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && assert( playArea instanceof InelasticPlayArea, `invalid playArea: ${playArea}` );
+    assert && assert( ballSystem instanceof InelasticBallSystem, `invalid ballSystem: ${ballSystem}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+    return new InelasticCollisionEngine( playArea, ballSystem, elapsedTimeProperty );
   }
 }
 

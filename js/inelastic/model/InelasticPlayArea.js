@@ -7,6 +7,7 @@
  */
 
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import InelasticCollisionTypes from './InelasticCollisionTypes.js';
@@ -18,6 +19,12 @@ class InelasticPlayArea extends PlayArea {
    */
   constructor( options ) {
 
+    options = merge( {
+
+      initialElasticityPercent: 0
+
+    }, options );
+
     super( options );
 
     //----------------------------------------------------------------------------------------
@@ -26,6 +33,10 @@ class InelasticPlayArea extends PlayArea {
     //                                                           if the elasticity isn't 0.
     this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
       InelasticCollisionTypes.SLIP );
+
+
+    // Verify that Paths are never visible for the 'Explore 1D' screen.
+    this.elasticityPercentProperty.link( elasticityPercent => assert( elasticityPercent === 0 ) );
   }
 
   /**

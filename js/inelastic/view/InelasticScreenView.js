@@ -9,10 +9,10 @@
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
-import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 import InelasticModel from '../model/InelasticModel.js';
+import InelasticControlPanel from './InelasticControlPanel.js';
 
 class InelasticScreenView extends CollisionLabScreenView {
 
@@ -31,14 +31,14 @@ class InelasticScreenView extends CollisionLabScreenView {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && assert( model instanceof InelasticModel, `invalid model: ${model}` );
 
-    return new CollisionLabControlPanel(
+    return new InelasticControlPanel(
       viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
       model.ballSystem.pathsVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
-      // model.playArea.inelasticCollisionTypeProperty,
       model.ballSystem.ballsConstantSizeProperty,
+      model.playArea.inelasticCollisionTypeProperty,
       options );
   }
 

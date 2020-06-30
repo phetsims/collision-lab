@@ -123,6 +123,9 @@ class CollisionLabControlPanel extends Panel {
     // HSeparator
     const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
 
+    // @protected
+    this.elasticityControls = new VBox( { children: [ elasticityNumberControl ], spacing: 3.5 } );
+
     //----------------------------------------------------------------------------------------
 
     // Set the children of the content in the correct order.
@@ -157,7 +160,7 @@ class CollisionLabControlPanel extends Panel {
     }
 
     contentNode.addChild( hSeparator );
-    contentNode.addChild( elasticityNumberControl );
+    contentNode.addChild( this.elasticityControls );
     contentNode.addChild( constantSizeCheckbox );
 
     // Apply additional Bounds mutators.
