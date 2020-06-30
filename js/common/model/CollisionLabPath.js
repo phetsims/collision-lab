@@ -66,7 +66,7 @@ class CollisionLabPath {
     // and position, if paths are visible. This link persists for the lifetime of the simulation since CollisionLabPaths
     // are never disposed.
     positionProperty.link( position => {
-      pathsVisibleProperty.value && this.updatePath( positionProperty, elapsedTimeProperty.value );
+      pathsVisibleProperty.value && this.updatePath( position, elapsedTimeProperty.value );
     } );
 
     // Observe when the pathsVisibleProperty is manipulated and clear the 'Path' when set to false. Link lasts for the
