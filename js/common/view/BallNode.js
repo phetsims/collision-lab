@@ -245,6 +245,7 @@ class BallNode extends Node {
     // doesn't need to be rotated. Link persists for the lifetime of the simulation.
     ball.rotationProperty.link( rotation => {
       labelNode.rotation = -rotation;
+      labelNode.center = ballCircle.center;
     } );
   }
 }

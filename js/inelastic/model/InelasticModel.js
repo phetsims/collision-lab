@@ -62,6 +62,30 @@ class InelasticModel extends CollisionLabModel {
 
     return new InelasticCollisionEngine( playArea, ballSystem, elapsedTimeProperty );
   }
+
+  //----------------------------------------------------------------------------------------
+
+  /**
+   * Resets the 'Inelastic' screen. Called when the reset-all button is pressed.
+   *
+   * @override
+   * @public
+   */
+  reset() {
+    super.reset();
+    this.collisionEngine.reset();
+  }
+
+  /**
+   * Resets the 'Inelastic' screen.
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    super.restart();
+    this.collisionEngine.reset();
+  }
 }
 
 collisionLab.register( 'InelasticModel', InelasticModel );

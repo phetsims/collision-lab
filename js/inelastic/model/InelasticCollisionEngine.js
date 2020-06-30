@@ -109,6 +109,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     this.totalAngularMomentum = null;
     this.centerOfMassPosition.set( Vector2.ZERO );
     this.totalLinearMomentum.set( Vector2.ZERO );
+    this.ballSystem.balls.forEach( ball => { ball.rotationProperty.reset(); } );
   }
 
   /**
