@@ -12,6 +12,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
@@ -42,12 +43,16 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
     assert && AssertUtils.assertPropertyOf( elasticityPercentProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballsConstantSizeProperty, 'boolean' );
 
-    options = options || {};
-    options.elasticityNumberControlOptions = options.elasticityNumberControlOptions || {};
+    options = merge( {
+
+      elasticityNumberControlOptions: {
+        trackHeight: 3
+      }
+
+    }, options );
 
     assert && assert( !options.elasticityNumberControlOptions.enabledRangeProperty, 'Explore2DControlPanel sets enabledRangeProperty' );
     options.elasticityNumberControlOptions.enabledRangeProperty = new Property( enabledElasticityRange );
-    options.elasticityNumberControlOptions.trackHeight = 3;
 
     super( viewProperties,
            centerOfMassVisibleProperty,
