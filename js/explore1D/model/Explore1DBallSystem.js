@@ -3,8 +3,9 @@
 /**
  * Explore1DBallSystem is a BallSystem sub-type for the 'Explore 1D' screen.
  *
- * It adds no additional Properties to the super class, but is provided for symmetry in the model-view type hierarchy.
- * It also ensures a correct configuration of initialBallStates.
+ * Although it adds no additional functionality to the super-class, it is added for symmetry within the screen-specific
+ * model-view type hierarchy. It also ensures a correct configuration of initialBallStates for 1D and that Balls
+ * always have a yPosition and yVelocity of 0.
  *
  * @author Brandon Li
  */
@@ -39,11 +40,18 @@ class Explore1DBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    assert && assert( _.every( EXPLORE_1D_INITIAL_BALL_STATES, ballState => {
-      return ballState.position.y === 0 && ballState.velocity.y === 0;
-    } ), 'balls in explore 1D must have yVelocity and yPosition equal to 0.' );
+    if ( assert ) {
+      assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
 
-    assert && assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
+      assert( EXPLORE_1D_INITIAL_BALL_STATES.every( ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
+
+      this.prepopulatedBalls.forEach( ball => {
+
+        // Ensure that our yPosition and yVelocity are always 0. Link lasts for the lifetime of the sim.
+        ball.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
+        ball.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
+      } );
+    }
   }
 }
 
