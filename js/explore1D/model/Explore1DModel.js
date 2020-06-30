@@ -6,6 +6,7 @@
  * @author Brandon Li
  */
 
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import Explore1DBallSystem from './Explore1DBallSystem.js';
@@ -14,7 +15,8 @@ import Explore1DPlayArea from './Explore1DPlayArea.js';
 class Explore1DModel extends CollisionLabModel {
 
   /**
-   * Creates the PlayArea for the 'Explore1D' screen, which uses a sub-type of PlayArea.
+   * Creates the PlayArea for the 'Explore 1D' screen, which uses a screen-specific sub-type of PlayArea. Called in the
+   * constructor of the super-class, which uses the Factory Method Pattern.
    * @override
    * @protected
    *
@@ -25,14 +27,20 @@ class Explore1DModel extends CollisionLabModel {
   }
 
   /**
-   * Creates the BallSystem for the 'Explore1D' screen, which uses a sub-type of BallSystem.
+   * Creates the BallSystem for the 'Explore 1D' screen, which uses a screen-specific sub-type of BallSystem. Called in
+   * the constructor of the super-class, which uses the Factory Method Pattern.
    * @override
    * @protected
    *
+   * @param {Explore1DPlayArea} playArea
+   * @param {Property.<number>} elapsedTimeProperty
    * @returns {Explore1DBallSystem}
    */
-  createBallSystem() {
-    return new Explore1DBallSystem( this.playArea, this.elapsedTimeProperty );
+  createBallSystem( playArea, elapsedTimeProperty ) {
+    assert && assert( playArea instanceof Explore1DPlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
+
+    return new Explore1DBallSystem( playArea, elapsedTimeProperty );
   }
 }
 
