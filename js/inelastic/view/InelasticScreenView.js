@@ -6,11 +6,8 @@
  * @author BrandonLi
  */
 
-import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
@@ -19,25 +16,6 @@ import InelasticModel from '../model/InelasticModel.js';
 
 class InelasticScreenView extends CollisionLabScreenView {
 
-  /**
-   * @param {InelasticModel} model
-   * @param {Tandem} tandem
-   * @param {Object} [options]
-   */
-  constructor( model, tandem, options ) {
-    assert && assert( model instanceof InelasticModel, `invalid model: ${model}` );
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-    options = merge( {
-
-      playAreaTop: CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D,
-      playAreaControlSetOptions: {
-        includeGridCheckbox: false
-      }
-    }, options );
-
-    super( model, tandem, options );
-  }
 
   /**
    * Creates the CollisionLabControlPanel for the 'Inelastic' screen. Called in the constructor of the super-class.
@@ -56,15 +34,12 @@ class InelasticScreenView extends CollisionLabScreenView {
     return new CollisionLabControlPanel(
       viewProperties,
       model.ballSystem.centerOfMassVisibleProperty,
+      model.ballSystem.pathsVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
-      model.playArea.inelasticCollisionTypeProperty,
+      // model.playArea.inelasticCollisionTypeProperty,
       model.ballSystem.ballsConstantSizeProperty,
-      merge( options, {
-        elasticityControlSetNodeOptions: {
-          includeStickSlipSwitch: false
-        }
-      } ) );
+      options );
   }
 
   /**

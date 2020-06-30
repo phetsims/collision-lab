@@ -3,48 +3,64 @@
 /**
  * InelasticBallSystem is a BallSystem sub-type for the 'Inelastic' screen.
  *
- * It adds no additional Properties to the super class, but is provided for symmetry in the model-view type hierarchy.
- * It also ensures a correct configuration of initialBallStates.
- *
- *
  * ENSURE 2Balls,
  * Presets
  *
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
+import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
+import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
-import PlayArea from '../../common/model/PlayArea.js';
+import InelasticBallSystemPresets from './InelasticBallSystemPresets.js';
+import InelasticPlayArea from './InelasticPlayArea.js';
 
 // constants
-const EXPLORE_1D_INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
-  new BallState( new Vector2( 0, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
-  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.0 ),
-  new BallState( new Vector2( 1.5, 0 ), new Vector2( 1.1, 0 ), 1.0 )
-];
+const NUMBER_OF_BALLS = 2;
+const DEFAULT_PRESET = InelasticBallSystemPresets.CUSTOM;
 
 class InelasticBallSystem extends BallSystem {
 
   /**
-   * @param {PlayArea} playArea
+   * @param {InelasticPlayArea} playArea
    * @param {Object} [options]
    */
-  constructor( playArea, options ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+  constructor( playArea, elapsedTimeProperty, options ) {
+    assert && assert( playArea instanceof InelasticPlayArea, `invalid playArea: ${playArea}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    super( EXPLORE_1D_INITIAL_BALL_STATES, playArea, options );
+    options = merge( {
+
+      numberOfBallsRange: new RangeWithValue( NUMBER_OF_BALLS, NUMBER_OF_BALLS, NUMBER_OF_BALLS ),
+      pathVisibleInitially: false
+
+    }, options );
+
+    super( [ DEFAULT_PRESET.ballState1, DEFAULT_PRESET.ballState2 ], playArea, elapsedTimeProperty, options );
+
+    // Verify that there is a fixed number of Balls in the 'Intro' screen.
+    assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS ) );
 
     //----------------------------------------------------------------------------------------
 
-    assert && assert( _.every( EXPLORE_1D_INITIAL_BALL_STATES, ballState => {
-      return ballState.position.y === 0 && ballState.velocity.y === 0;
-    } ), 'balls in Inelastic must have yVelocity and yPosition equal to 0.' );
+    // @public {EnumerationProperty.<InelasticBallSystemPresets>} - the type of perfectly inelastic collision. Ignored
+    //                                                           if the elasticity isn't 0.
+    this.inelasticBallSystemPresetProperty = new EnumerationProperty( InelasticBallSystemPresets, DEFAULT_PRESET );
 
-    assert && assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
+
+    this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
+      ballSystemUserControlled && ( this.inelasticBallSystemPresetProperty.value = InelasticBallSystemPresets.CUSTOM );
+    } );
+
+
+    this.inelasticBallSystemPresetProperty.link( inelasticBallSystemPreset => {
+      this.balls.forEach( ( ball, index ) => {
+        inelasticBallSystemPreset.setBallSystem( this );
+      } );
+    } );
   }
 }
 

@@ -6,35 +6,21 @@
  * @author Brandon Li
  */
 
-import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
+import InelasticPlayArea from './InelasticPlayArea.js';
 
 class InelasticModel extends CollisionLabModel {
 
   /**
-   * @param {Tandem} tandem
+   * @public
    */
-  constructor( tandem ) {
-    assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
-
-    super( tandem, {
-      playAreaOptions: {
-        dimensions: 1,
-        isGridVisibleInitially: true,
-        bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
-      }
-    } );
-
-    //----------------------------------------------------------------------------------------
-
-    assert && this.playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible in Inelastic' ) );
+  createPlayArea() {
+    return new InelasticPlayArea();
   }
-
   /**
    * @override
    * Creates the BallSystem for the 'Inelastic' screen. Called in the constructor of the super-class. For this screen,
@@ -45,10 +31,10 @@ class InelasticModel extends CollisionLabModel {
    * @param {PlayArea} playArea - the PlayArea instance of the sim.
    * @returns {InelasticBallSystem}
    */
-  createBallSystem( playArea ) {
+  createBallSystem( playArea, elapsedTimeProperty ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
 
-    return new InelasticBallSystem( playArea );
+    return new InelasticBallSystem( playArea, elapsedTimeProperty );
   }
 
   /**
@@ -60,11 +46,11 @@ class InelasticModel extends CollisionLabModel {
    * @param {InelasticBallSystem} ballSystem - the BallSystem instance of the sim.
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem ) {
-    assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && assert( ballSystem instanceof InelasticBallSystem, `invalid ballSystem: ${ballSystem}` );
+  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
+    // assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
+    // assert && assert( ballSystem instanceof InelasticBallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    return new CollisionEngine( this.playArea, this.ballSystem );
+    return new CollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
   }
 }
 
