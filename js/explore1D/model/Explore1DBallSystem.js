@@ -40,16 +40,18 @@ class Explore1DBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
+    // Ensure a correct configuration of Balls that conforms to the invariants for 1D screens, but bury behind assert
+    // so it doesn't impact production performance.
     if ( assert ) {
+
+      // Ensure that the correct number of BallStates were provided.
       assert( EXPLORE_1D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
 
-      assert( EXPLORE_1D_INITIAL_BALL_STATES.every( ballState => ballState.position.y === 0 && ballState.velocity.y === 0 ) );
-
+      // Ensure that every Ball's yPosition and yVelocity is always 0. Links lasts for the lifetime of the sim.
       this.prepopulatedBalls.forEach( ball => {
 
-        // Ensure that our yPosition and yVelocity are always 0. Link lasts for the lifetime of the sim.
-        ball.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ) );
-        ball.yPositionProperty.link( yPosition => assert( yPosition === 0 ) );
+        ball.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ), 'yVelocity must be 0 for Explore 1D' );
+        ball.yPositionProperty.link( yPosition => assert( yPosition === 0 ), 'yPosition must be 0 for Explore 1D' );
       } );
     }
   }
