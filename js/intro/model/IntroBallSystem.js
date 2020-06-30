@@ -1,8 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen. See BallSystem for context. IntroBallSystems
- * only have 2 fixed Balls and the numberOfBallsProperty cannot be mutated.
+ * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen. IntroBallSystems only have 2 fixed Balls and the
+ * numberOfBallsProperty cannot be mutated.
  *
  * In the 'Intro' screen, there are 'Change in Momentum' vectors that appear 'briefly' when the momentum of a Ball
  * collides and changes momentum with another Ball. IntroBallSystem will keep track of the momentum of the two Balls
@@ -32,6 +32,7 @@ import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
+import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
@@ -42,7 +43,7 @@ import IntroPlayArea from './IntroPlayArea.js';
 // constants
 const CHANGE_IN_MOMENTUM_VISIBLE_PERIOD = CollisionLabQueryParameters.changeInMomentumVisiblePeriod;
 const CHANGE_IN_MOMENTUM_FADE_PERIOD = CollisionLabQueryParameters.changeInMomentumFadePeriod;
-const NUMBER_OF_BALLS_RANGE = new RangeWithValue( 2, 2, 2 );
+const NUMBER_OF_BALLS = 2;
 const OPACITY_RANGE = new Range( 0, 1 );
 const INTRO_INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
@@ -54,23 +55,26 @@ class IntroBallSystem extends BallSystem {
   /**
    * @param {IntroPlayArea} playArea
    * @param {Property.<number>} elapsedTimeProperty
+   * @param {Object} [options]
    */
-  constructor( playArea, elapsedTimeProperty ) {
+  constructor( playArea, elapsedTimeProperty, options ) {
     assert && assert( playArea instanceof IntroPlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    super( INTRO_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, {
-      numberOfBallsRange: NUMBER_OF_BALLS_RANGE,
+    options = merge( {
+
+      numberOfBallsRange: new RangeWithValue( NUMBER_OF_BALLS, NUMBER_OF_BALLS, NUMBER_OF_BALLS ),
       pathVisibleInitially: false
-    } );
 
-    // Ensure a fixed number of Balls in the 'Intro' screen.
-    assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS_RANGE.max ) );
+    }, options );
 
-    // Ensure that Paths are never visible for the 'Intro' screen.
-    assert && this.pathsVisibleProperty.link( pathVisible => {
-      assert( !pathVisible, 'Grids must be visible in the Intro screen.' );
-    } );
+    super( INTRO_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
+
+    // Verify that there is a fixed number of Balls in the 'Intro' screen.
+    assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS ) );
+
+    // Verify that Paths are never visible for the 'Explore 1D' screen.
+    assert && this.pathsVisibleProperty.link( pathVisible => assert( !pathVisible ) );
 
     //----------------------------------------------------------------------------------------
 

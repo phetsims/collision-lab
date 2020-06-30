@@ -6,6 +6,10 @@
  * It adds no additional Properties to the super class, but is provided for symmetry in the model-view type hierarchy.
  * It also ensures a correct configuration of initialBallStates.
  *
+ *
+ * ENSURE 2Balls,
+ * Presets
+ *
  * @author Brandon Li
  */
 
