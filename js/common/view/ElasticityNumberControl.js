@@ -28,7 +28,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
-const ELASTICITY_PERCENT_INTERVAL = 5;
+const ELASTICITY_PERCENT_INTERVAL = CollisionLabConstants.ELASTICITY_PERCENT_INTERVAL;
 
 class ElasticityNumberControl extends NumberControl {
 

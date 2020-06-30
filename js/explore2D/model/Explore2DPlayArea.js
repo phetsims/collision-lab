@@ -11,6 +11,10 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import PlayArea from '../../common/model/PlayArea.js';
 
+// constants
+const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
+const ELASTICITY_PERCENT_INTERVAL = CollisionLabConstants.ELASTICITY_PERCENT_INTERVAL;
+
 class Explore2DPlayArea extends PlayArea {
 
   /**
@@ -22,10 +26,14 @@ class Explore2DPlayArea extends PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {Range} - the constrained range of the elasticity.
-    this.elasticityPercentRange = new Range( 5, CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max );
+    assert && this.elasticityPercentProperty.link( elasticityPercent => {
+      assert( elasticityPercent !== 0, 'No perfectly inelastic collisions for Explore 2D' );
+    } );
 
-    this.elasticityPercentProperty.range = this.elasticityPercentRange;
+    // @public
+    this.enabledElasticityRange = new Range( ELASTICITY_PERCENT_INTERVAL, ELASTICITY_PERCENT_RANGE.max );
+
+    this.elasticityPercentProperty.range = this.enabledElasticityRange;
   }
 }
 

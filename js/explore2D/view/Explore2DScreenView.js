@@ -37,8 +37,8 @@ class Explore2DScreenView extends CollisionLabScreenView {
       model.ballSystem.pathsVisibleProperty,
       model.playArea.reflectingBorderProperty,
       model.playArea.elasticityPercentProperty,
+      model.playArea.enabledElasticityRange,
       model.ballSystem.ballsConstantSizeProperty,
-      model.playArea.elasticityPercentRange,
       options
     );
   }

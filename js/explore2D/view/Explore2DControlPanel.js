@@ -33,8 +33,8 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                pathsVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
+               enabledElasticityRange,
                ballsConstantSizeProperty,
-               elasticityPercentRange,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
@@ -46,7 +46,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
     options.elasticityNumberControlOptions = options.elasticityNumberControlOptions || {};
 
     assert && assert( !options.elasticityNumberControlOptions.enabledRangeProperty, 'Explore2DControlPanel sets enabledRangeProperty' );
-    options.elasticityNumberControlOptions.enabledRangeProperty = new Property( elasticityPercentRange );
+    options.elasticityNumberControlOptions.enabledRangeProperty = new Property( enabledElasticityRange );
     options.elasticityNumberControlOptions.trackHeight = 3;
 
     super( viewProperties,

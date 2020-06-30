@@ -11,7 +11,7 @@
  *   - Keeping track of the elasticity of collisions.
  *   - Convenience methods related to the PlayArea.
  *
- * PlayAreas are created at the start of the sim and is never disposed, so no dispose method is necessary.
+ * PlayAreas are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -23,6 +23,9 @@ import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from './Ball.js';
+
+// constants
+const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 
 class PlayArea {
 
@@ -43,7 +46,10 @@ class PlayArea {
       isGridVisibleInitially: false,
 
       // {boolean} - indicates if the PlayArea's borders reflect initially.
-      reflectsBorderInitially: true
+      reflectsBorderInitially: true,
+
+      // {number} - the initial elasticity of the PlayArea, as a percentage.
+      initialElasticityPercent: ELASTICITY_PERCENT_RANGE.max
 
     }, options );
 
@@ -68,8 +74,8 @@ class PlayArea {
 
     // @public {NumberProperty} - Property of the elasticity of all collisions in the PlayArea, as a percentage. See
     //                            https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
-    this.elasticityPercentProperty = new NumberProperty( CollisionLabConstants.ELASTICITY_PERCENT_RANGE.defaultValue, {
-      range: CollisionLabConstants.ELASTICITY_PERCENT_RANGE
+    this.elasticityPercentProperty = new NumberProperty( options.initialElasticityPercent, {
+      range: ELASTICITY_PERCENT_RANGE
     } );
   }
 
