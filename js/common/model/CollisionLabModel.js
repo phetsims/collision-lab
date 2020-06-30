@@ -47,7 +47,7 @@ class CollisionLabModel {
     this.playArea = this.createPlayArea();
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = this.createBallSystem();
+    this.ballSystem = this.createBallSystem( this.playArea, this.elapsedTimeProperty );
 
     // @private {CollisionEngine} - create the CollisionEngine of the screen.
     this.collisionEngine = this.createCollisionEngine();
