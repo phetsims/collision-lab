@@ -76,7 +76,7 @@ class CollisionLabPath {
     } );
 
     // @public (read-only) {Bounds2} - reference to the playAreaBounds. PathDataPoints are only recorded if the
-    //                                 position is inside this bounds. It is also used for the view's canvas bounds.
+    //                                 position is inside this bounds.
     this.playAreaBounds = playAreaBounds;
   }
 
