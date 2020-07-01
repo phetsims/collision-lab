@@ -219,8 +219,6 @@ class Ball {
     this.position = ballState.position;
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
-    this.path.clear(); // Setting a state will clear the trailing 'Path'
-    this.rotationProperty.reset();
   }
 
   /**
