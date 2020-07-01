@@ -53,7 +53,7 @@ class InelasticPreset {
 
 //----------------------------------------------------------------------------------------
 
-const InelasticBallPresets = Enumeration.byMap( {
+const InelasticPresets = Enumeration.byMap( {
 
   // The custom preset, which indicates that the user can set up a 'custom' collision scenario. When the preset
   // is set to CUSTOM, none of the balls are changed, so there are no BallStates that are associated with this Preset.
@@ -76,5 +76,5 @@ const InelasticBallPresets = Enumeration.byMap( {
 
 } );
 
-collisionLab.register( 'InelasticBallPresets', InelasticBallPresets );
-export default InelasticBallPresets;
+collisionLab.register( 'InelasticPresets', InelasticPresets );
+export default InelasticPresets;
