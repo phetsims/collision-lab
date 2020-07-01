@@ -109,7 +109,7 @@ class Ball {
 
     // @public {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
-      () => BallUtils.calculateBallKineticEnergy( this ),
+      BallUtils.calculateBallKineticEnergy,
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
     // @public {NumberProperty} - Property of the rotation of the Ball relative to its own center, in radians. This is

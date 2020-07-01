@@ -137,14 +137,16 @@ const BallUtils = {
    * See https://en.wikipedia.org/wiki/Kinetic_energy for background.
    * @public
    *
-   * @param {Ball} ball
+   * @param {number} mass - in kg.
+   * @param {number} speed - in m/s.
    * @returns {number} - in Joules
    */
-  calculateBallKineticEnergy( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+  calculateBallKineticEnergy( mass, speed ) {
+    assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
+    assert && assert( typeof speed === 'number' && speed >= 0, `invalid speed: ${speed}` );
 
     // K = 1/2*m*|v|^2
-    return 0.5 * ball.mass * ball.velocity.magnitudeSquared;
+    return 0.5 * mass * speed * speed;
   },
 
   /**
