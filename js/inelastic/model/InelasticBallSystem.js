@@ -4,11 +4,12 @@
  * InelasticBallSystem is a BallSystem sub-type for the 'Inelastic' screen. InelasticBallSystems only have 2 fixed Balls
  * and the numberOfBallsProperty cannot be mutated.
  *
- * In the 'Inelastic' screen, there are different 'presets' of Balls. Changing a preset of a Ball does the following:
- *   - Pauses the sim.
- *   - Sets the elapsed time to 0.
- *   - The states of the Ball's are saved for the next restart call.
- *   - Sets the every Ball's position, mass, and velocity to a preset BallStates, if the preset is not set to CUSTOM.
+ * In the 'Inelastic' screen, there are different 'presets' of Balls. When the user changes a the preset,
+ * InelasticBallSystem will do the following:
+ *   - Pause the sim.
+ *   - Set the elapsed time to 0.
+ *   - Save the states of all Balls for the next restart call.
+ *   - Set every Ball's position, mass, and velocity to the preset's BallStates, if the preset is not set to CUSTOM.
  *     Setting the preset to CUSTOM doesn't change any of the Balls.
  *   - If the user manipulates any of the two Balls, the preset is set to CUSTOM.
  *
@@ -93,7 +94,7 @@ class InelasticBallSystem extends BallSystem {
       // Save the states of the Balls for the next restart call.
       this.saveBallStates();
 
-      // Set every Ball's position, mass, and velocity to the presets BallStates.
+      // Set every Ball's position, mass, and velocity to the preset's BallStates.
       inelasticPreset.setBalls( this.balls );
     } );
   }
@@ -104,8 +105,7 @@ class InelasticBallSystem extends BallSystem {
    *
    * @returns {InelasticPresets}
    */
-  get inelasticBallPreset() { return this.inelasticPresetProperty.value; }
-
+  get inelasticPreset() { return this.inelasticPresetProperty.value; }
 
   /**
    * Sets the value of the inelasticPresetProperty.
