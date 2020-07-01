@@ -67,7 +67,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
 
     //----------------------------------------------------------------------------------------
 
-    // Ensure only some options were provided.
+    // Verify that only some options were provided.
     assert && assert( !options.orientation, 'PlayAreaScaleBarNode sets orientation' );
     assert && assert( !options.spacing, 'PlayAreaScaleBarNode sets spacing' );
     assert && assert( !options.children, 'PlayAreaScaleBarNode sets children' );

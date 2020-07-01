@@ -4,7 +4,7 @@
  * Explore1DPlayArea is a PlayArea sub-type for the 'Explore 1D' screen.
  *
  * Although it adds no additional functionality to the super-class, it is added for symmetry within the screen-specific
- * sub-types of  PlayArea. It is responsible for providing a correct configuration of the super-class for the 'Intro'
+ * sub-types of  PlayArea. It is responsible for providing a correct configuration of the super-class for the 'Explore 2D'
  * screen, which includes specifying the dimensions, initial Property values, and disabling Properties.
  *
  * @author Brandon Li
@@ -34,9 +34,9 @@ class Explore1DPlayArea extends PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // Ensure that Grids are always visible for the 'Intro' screen.
+    // Verify that Grids are always visible for the 'Explore 2D' screen.
     assert && this.gridVisibleProperty.link( gridVisible => {
-      assert( gridVisible === true, 'Grids must be visible in the Intro screen.' );
+      assert( gridVisible === true, 'Grids must be visible in the Explore 2D screen.' );
     } );
   }
 }

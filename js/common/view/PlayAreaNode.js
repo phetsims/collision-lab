@@ -148,7 +148,7 @@ class PlayAreaNode extends Node {
         stroke: CollisionLabColors.TICK_LINE_COLOR
       } );
 
-      // Ensure that the grid (ticks) are always visible in 1D screens.
+      // Verify that the grid (ticks) are always visible in 1D screens.
       assert && playArea.gridVisibleProperty.link( gridVisible => assert( gridVisible, 'grids must be visible' ) );
 
       // Set the children in the correct rendering order.

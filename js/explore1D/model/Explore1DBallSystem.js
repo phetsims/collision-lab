@@ -19,10 +19,10 @@ import Explore1DPlayArea from './Explore1DPlayArea.js';
 
 // constants
 const EXPLORE_1D_INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
-  new BallState( new Vector2( 0, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
-  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.0 ),
-  new BallState( new Vector2( 1.5, 0 ), new Vector2( 1.1, 0 ), 1.0 )
+  new BallState( new Vector2( -1.0, 0 ), new Vector2( 1.00, 0 ), 0.5 ),
+  new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
+  new BallState( new Vector2( 1.00, 0 ), new Vector2( -0.5, 0 ), 1.0 ),
+  new BallState( new Vector2( 1.50, 0 ), new Vector2( 1.10, 0 ), 1.0 )
 ];
 
 class Explore1DBallSystem extends BallSystem {

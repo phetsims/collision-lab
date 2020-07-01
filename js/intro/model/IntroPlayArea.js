@@ -35,12 +35,12 @@ class IntroPlayArea extends PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // Ensure that Grids are always visible for the 'Intro' screen.
+    // Verify that Grids are always visible for the 'Intro' screen.
     assert && this.gridVisibleProperty.link( gridVisible => {
       assert( gridVisible === true, 'Grids must be visible in the Intro screen.' );
     } );
 
-    // Ensure that the border never reflects for the 'Intro' screen.
+    // Verify that the border never reflects for the 'Intro' screen.
     assert && this.reflectingBorderProperty.link( reflectsBorder => {
       assert( reflectsBorder === false, 'No reflecting borders for the Intro screen.' );
     } );
