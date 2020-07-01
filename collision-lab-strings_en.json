@@ -63,6 +63,16 @@
   },
 
 
+  "inelasticPresets.title": {
+    "value": "Presets"
+  },
+  "inelasticPresets.name1": {
+    "value": "Name 1"
+  },
+  "inelasticPresets.name2": {
+    "value": "Name 2"
+  },
+
   "mass": {
     "value": "Mass"
   },

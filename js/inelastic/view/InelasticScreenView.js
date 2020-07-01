@@ -14,7 +14,7 @@ import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 import InelasticModel from '../model/InelasticModel.js';
-import InelasticBallPresetsComboBox from './InelasticBallPresetsComboBox.js';
+import InelasticPresetsComboBox from './InelasticPresetsComboBox.js';
 import InelasticControlPanel from './InelasticControlPanel.js';
 
 class InelasticScreenView extends CollisionLabScreenView {
@@ -40,7 +40,7 @@ class InelasticScreenView extends CollisionLabScreenView {
 
     //----------------------------------------------------------------------------------------
 
-    const inelasticBallSystemPresetsComboBox = new InelasticBallPresetsComboBox( model.ballSystem.inelasticBallSystemPresetProperty, this, {
+    const inelasticBallSystemPresetsComboBox = new InelasticPresetsComboBox( model.ballSystem.inelasticBallSystemPresetProperty, this, {
       rightTop: this.playAreaViewBounds.rightBottom.addXY( 0, 100 )
     } );
 
