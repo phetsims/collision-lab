@@ -112,7 +112,8 @@ class InelasticBallSystem extends BallSystem {
   set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
 
   /**
-   * Restarts the InelasticBallSystem.
+   * Restarts the InelasticBallSystem. Restarting the InelasticBallSystem will first restart normally, then set the
+   * Ball's values to the preset's BallStates.
    *
    * @override
    * @public
