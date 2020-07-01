@@ -40,8 +40,8 @@ class Explore1DBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    // Verify a correct configuration of Balls that conforms to the invariants for 1D screens, but bury behind assert
-    // so it doesn't impact production performance.
+    // Verify that the configuration of Balls conforms to the invariants for 1D screens, but bury behind assert so it
+    // doesn't impact production performance.
     if ( assert ) {
 
       // Verify that the correct number of BallStates were provided.

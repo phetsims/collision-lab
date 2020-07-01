@@ -11,40 +11,37 @@ import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 
-class InelasticBallSystemPreset {
+class InelasticBallPreset {
 
-  constructor( ballState1, ballState2 ) {
+  constructor( ballStates ) {
 
 
     // @public
-    this.ballState1 = ballState1;
-    this.ballState2 = ballState2;
+    this.ballState = ballStates;
   }
 
   // @public
-  setBallSystem( ballSystem ) {
+  setBallSystem( balls ) {
 
-    if ( this.ballState1 ) {
-      ballSystem.balls.get( 0 ).setState( this.ballState1 );
-      ballSystem.balls.get( 1 ).setState( this.ballState2 );
-    }
+    this.ballStates.forEach( ( ballState, index ) => {
+      balls.get( index ).setState( ballState );
+    } );
   }
 }
 
-const InelasticBallSystemPresets = Enumeration.byMap( {
+const InelasticBallPresets = Enumeration.byMap( {
 
-  CUSTOM: new InelasticBallSystemPreset(),
+  CUSTOM: null,
 
-  NAME_1: new InelasticBallSystemPreset(
+  NAME_1: new InelasticBallPreset( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 1.00, 0.5 ), 0.50 ),
     new BallState( new Vector2( 0.5, 0.00 ), new Vector2( -1.00, 0.5 ), 0.5 )
-  ),
-
-  NAME_2: new InelasticBallSystemPreset(
+  ] ),
+  NAME_2: new InelasticBallPreset( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0.5, 0 ), 0.5 ),
     new BallState( new Vector2( 0.5, 0.00 ), new Vector2( -0.5, 0 ), 0.5 )
-  )
+  ] )
 } );
 
-collisionLab.register( 'InelasticBallSystemPresets', InelasticBallSystemPresets );
-export default InelasticBallSystemPresets;
+collisionLab.register( 'InelasticBallPresets', InelasticBallPresets );
+export default InelasticBallPresets;

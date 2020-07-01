@@ -10,15 +10,15 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import ComboBox from '../../../../sun/js/ComboBox.js';
 import ComboBoxItem from '../../../../sun/js/ComboBoxItem.js';
 import collisionLab from '../../collisionLab.js';
-import InelasticBallSystemPresets from '../model/InelasticBallSystemPresets.js';
+import InelasticBallPresets from '../model/InelasticBallPresets.js';
 
 // constants
 const FONT = new PhetFont( 22 );
 
-class InelasticBallSystemPresetsComboBox extends ComboBox {
+class InelasticBallPresetsComboBox extends ComboBox {
 
   /**
-   * @param {EnumerationProperty.<InelasticBallSystemPresets>} inelasticBallSystemPresetProperty
+   * @param {EnumerationProperty.<InelasticBallPresets>} inelasticBallSystemPresetProperty
    * @param {Node} listParent node that will be used as the list's parent, use this to ensure that the list is in front of everything else
    * @param {Object} [options]
    */
@@ -40,9 +40,9 @@ class InelasticBallSystemPresetsComboBox extends ComboBox {
 
     const items = [
 
-      new ComboBoxItem( new Text( 'custom', { font: FONT } ), InelasticBallSystemPresets.CUSTOM ),
-      new ComboBoxItem( new Text( 'name 1', { font: FONT } ), InelasticBallSystemPresets.NAME_1 ),
-      new ComboBoxItem( new Text( 'name 2', { font: FONT } ), InelasticBallSystemPresets.NAME_2 )
+      new ComboBoxItem( new Text( 'custom', { font: FONT } ), InelasticBallPresets.CUSTOM ),
+      new ComboBoxItem( new Text( 'name 1', { font: FONT } ), InelasticBallPresets.NAME_1 ),
+      new ComboBoxItem( new Text( 'name 2', { font: FONT } ), InelasticBallPresets.NAME_2 )
 
     ];
 
@@ -50,5 +50,5 @@ class InelasticBallSystemPresetsComboBox extends ComboBox {
   }
 }
 
-collisionLab.register( 'InelasticBallSystemPresetsComboBox', InelasticBallSystemPresetsComboBox );
-export default InelasticBallSystemPresetsComboBox;
+collisionLab.register( 'InelasticBallPresetsComboBox', InelasticBallPresetsComboBox );
+export default InelasticBallPresetsComboBox;
