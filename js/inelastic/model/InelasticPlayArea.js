@@ -36,7 +36,7 @@ class InelasticPlayArea extends PlayArea {
 
 
     // Verify that Paths are never visible for the 'Explore 1D' screen.
-    this.elasticityPercentProperty.link( elasticityPercent => assert( elasticityPercent === 0 ) );
+    assert && this.elasticityPercentProperty.link( elasticityPercent => assert( elasticityPercent === 0 ) );
   }
 
   /**
