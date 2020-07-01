@@ -166,11 +166,11 @@ class BallSystem {
       ball.path.clear();
     } );
 
-    // Observe when the user is controlling any of the Balls to clear the trailing Paths of all Balls and the Path of
-    // the CenterOfMass. See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for
-    // the life-time of the sim as BallSystems are never disposed.
+    // Observe when the user is done controlling any of the Balls to clear the trailing Paths of all Balls and the Path
+    // of the CenterOfMass. See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts
+    // for the life-time of the sim as BallSystems are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
-      if ( ballSystemUserControlled ) {
+      if ( !ballSystemUserControlled ) {
         this.balls.forEach( ball => { ball.path.clear(); } );
         this.centerOfMass.path.clear();
       }
