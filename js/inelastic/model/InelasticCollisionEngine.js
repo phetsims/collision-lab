@@ -264,18 +264,22 @@ class InelasticCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * A time-discretization approach to detecting and processing ball-border collisions. Overridden to respond to
-   * ball-border collisions that 'stick'. If a Ball that is rotating hits the border, then all Balls in the cluster have
-   * 0 velocity. When a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball has
-   * 0 velocity. Otherwise, the collision response is forwarded to the super-class.
+   * Processes ball-to-border collisions. Overridden to respond to ball-border collisions that 'stick'. If a Ball that
+   * is rotating hits the border, then all Balls in the cluster have 0 velocity. When a Ball that is not rotating that
+   * hits the border, and the collision is 'sticky', then the Ball has 0 velocity. Otherwise, the collision response is
+   * forwarded to the super-class.
    *
    * @override
    * @protected
    *
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   * @param {Ball} ball - the Ball involved in the collision.
+   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
+   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
    */
-  handleBallToBorderCollisions( isReversing ) {
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+  collideBallWithBorder( ball, collisionPosition, overlappedTime ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
+    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
     assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
@@ -297,12 +301,15 @@ class InelasticCollisionEngine extends CollisionEngine {
         // Otherwise, if a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball
         // has 0 velocity
         collidingBalls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+
+        // Adjust the position of the Ball to take into account its overlapping time.
+        ball.position = collisionPosition;
       }
     }
     else {
 
       // Forward the collision-response to the super-class.
-      super.handleBallToBorderCollisions( isReversing );
+      super.collideBallWithBorder( ball, collisionPosition, overlappedTime );
     }
   }
 

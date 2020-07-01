@@ -281,22 +281,13 @@ class CollisionEngine {
    * A time-discretization approach to detecting and processing ball-border collisions. This checks to see if any balls
    * are overlapping with the border in the last time step, which means the Ball has collided with the border.
    *
-   * If a Ball is detected to have collided with the border, then the collision is processed and the velocity and the
-   * position of the Ball is updated. The collision algorithm follows the standard rigid-body collision model as
-   * described in
-   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
-   *
    * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
    *
-   * @protected
+   * @private
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   handleBallToBorderCollisions( isReversing ) {
     assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
-
-    // Convenience reference to the elasticity.
-    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
-    const elasticity = this.playArea.elasticity;
 
     // Loop through each Balls and check to see if it is colliding with the border.
     this.ballSystem.balls.forEach( ball => {
@@ -311,25 +302,47 @@ class CollisionEngine {
         // Get exact position when the Ball collided by rewinding by the overlapped time.
         const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
 
-        // Update the velocity after the collision.
-        if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
-
-          // Left and Right Border wall collisions incur a flip in horizontal velocity.
-          ball.xVelocity *= -elasticity;
-        }
-        if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
-
-          // Top and Bottom Border wall collisions incur a flip in vertical velocity.
-          ball.yVelocity *= -elasticity;
-        }
-
-        // Record the exact contact position of the collision for sub-classes.
-        this.recordCollisionPosition( ball, contactPosition, overlappedTime );
-
-        // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
-        ball.position = ball.velocity.times( overlappedTime ).add( contactPosition );
+        // Forward the rest of the collision response to the collide-ball-with-border method.
+        this.collideBallWithBorder( ball, contactPosition, overlappedTime );
       }
     } );
+  }
+
+  /**
+   * Processes a ball-to-border collision and updates the velocity and the position of the Ball. The collision algorithm
+   * follows the standard rigid-body collision model as described in
+   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+   * @protected
+   *
+   * @param {Ball} ball - the Ball involved in the collision.
+   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
+   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
+   */
+  collideBallWithBorder( ball, collisionPosition, overlappedTime ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
+    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+
+    // Convenience reference to the elasticity.
+    const elasticity = this.playArea.elasticity;
+
+    // Update the velocity after the collision.
+    if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
+
+      // Left and Right Border wall collisions incur a flip in horizontal velocity.
+      ball.xVelocity *= -elasticity;
+    }
+    if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
+
+      // Top and Bottom Border wall collisions incur a flip in vertical velocity.
+      ball.yVelocity *= -elasticity;
+    }
+
+    // Record the exact contact position of the collision for sub-classes.
+    this.recordCollisionPosition( ball, collisionPosition, overlappedTime );
+
+    // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
+    ball.position = ball.velocity.times( overlappedTime ).add( collisionPosition );
   }
 
   /**
