@@ -40,7 +40,7 @@ class InelasticScreenView extends CollisionLabScreenView {
 
     //----------------------------------------------------------------------------------------
 
-    const inelasticBallSystemPresetsComboBox = new InelasticPresetsComboBox( model.ballSystem.inelasticBallSystemPresetProperty, this, {
+    const inelasticBallSystemPresetsComboBox = new InelasticPresetsComboBox( model.ballSystem.inelasticPresetProperty, this, {
       rightTop: this.playAreaViewBounds.rightBottom.addXY( 0, 100 )
     } );
 

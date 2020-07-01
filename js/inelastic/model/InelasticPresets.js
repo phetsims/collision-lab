@@ -28,7 +28,7 @@ class InelasticPreset {
    *                                        that are associated with the preset.
    */
   constructor( ballStates ) {
-    assert && AssertUtils.assertArrayOf( ballStates, BallState );
+    assert && ballStates && AssertUtils.assertArrayOf( ballStates, BallState );
 
     // @public {BallState[]|null} - reference to the passed-in BallState.
     this.ballStates = ballStates;

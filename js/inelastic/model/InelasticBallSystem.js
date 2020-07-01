@@ -8,7 +8,6 @@
  * InelasticBallSystem will do the following:
  *   - Pause the sim.
  *   - Set the elapsed time to 0.
- *   - Save the states of all Balls for the next restart call.
  *   - Set every Ball's position, mass, and velocity to the preset's BallStates, if the preset is not set to CUSTOM.
  *     Setting the preset to CUSTOM doesn't change any of the Balls.
  *   - If the user manipulates any of the two Balls, the preset is set to CUSTOM.
@@ -83,16 +82,13 @@ class InelasticBallSystem extends BallSystem {
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
     // removed since InelasticBallSystems are never disposed.
-    this.inelasticBallSystemPresetProperty.link( inelasticPreset => {
+    this.inelasticPresetProperty.link( inelasticPreset => {
 
       // Pause the sim.
       isPlayingProperty.value = false;
 
       // Set the elapsed time to 0.
       elapsedTimeProperty.reset();
-
-      // Save the states of the Balls for the next restart call.
-      this.saveBallStates();
 
       // Set every Ball's position, mass, and velocity to the preset's BallStates.
       inelasticPreset.setBalls( this.balls );
@@ -114,6 +110,21 @@ class InelasticBallSystem extends BallSystem {
    * @param {InelasticPresets} inelasticPreset
    */
   set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
+
+  /**
+   * Restarts the InelasticBallSystem.
+   *
+   * @override
+   * @public
+   *
+   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
+   */
+  restart() {
+    super.restart();
+
+    // Set every Ball's position, mass, and velocity to the preset's BallStates.
+    this.inelasticPreset.setBalls( this.balls );
+  }
 }
 
 collisionLab.register( 'InelasticBallSystem', InelasticBallSystem );
