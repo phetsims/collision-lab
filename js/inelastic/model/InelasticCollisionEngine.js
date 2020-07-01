@@ -34,6 +34,7 @@
  * @author Brandon Li
  */
 
+import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -86,13 +87,11 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when any of the Balls in the system are being user-controlled and reset the InelasticCollisionEngine.
-    // Link persists for the lifetime of the sim since InelasticCollisionEngines are never disposed.
-    ballSystem.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
-
+    // Observe when any of the Balls in the system are being user-controlled or when the InelasticPreset is changed and
+    // reset the InelasticCollisionEngine. Multilink persists for the lifetime of the sim since
+    // InelasticCollisionEngines are never disposed.
+    Property.multilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.inelasticPresetProperty ], () => {
       this.reset();
-      this.ballSystem.balls.forEach( ball => { ball.rotationProperty.reset(); } );
-
     } );
   }
 

@@ -78,6 +78,7 @@ class InelasticBallSystem extends BallSystem {
     // removed since InelasticBallSystems are never disposed.
     this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
       ballSystemUserControlled && ( this.inelasticPreset = InelasticPresets.CUSTOM );
+      this.balls.forEach( ball => ball.rotationProperty.reset() );
     } );
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
