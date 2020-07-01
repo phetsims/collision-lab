@@ -59,7 +59,7 @@ class Ball {
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the Ball, in meters.
+    // @public {DerivedProperty.<Vector2>} - Property of the position of the Ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
@@ -69,12 +69,12 @@ class Ball {
     this.xVelocityProperty = new NumberProperty( initialBallState.velocity.x );
     this.yVelocityProperty = new NumberProperty( initialBallState.velocity.y );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the Ball, in m/s.
+    // @public {DerivedProperty.<Vector2>} - Property of the velocity of the Ball, in m/s.
     this.velocityProperty = new DerivedProperty( [ this.xVelocityProperty, this.yVelocityProperty ],
       ( xVelocity, yVelocity ) => new Vector2( xVelocity, yVelocity ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
+    // @public {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ), {
       isValidValue: value => value >= 0,
       valueType: 'number'
@@ -85,17 +85,17 @@ class Ball {
     // @public (read-only) {NumberProperty} - Property of the mass of the Ball, in kg. Manipulated in the view.
     this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
+    // @public {DerivedProperty.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
-    // @public (read-only) {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
+    // @public {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
     //                                                  display individually.
     this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
     this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
 
-    // @public (read-only) {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
+    // @public {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
     this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ), {
       isValidValue: value => value >= 0,
       valueType: 'number'
@@ -103,12 +103,12 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
+    // @public {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
       ( mass, isConstantSize ) => BallUtils.calculateBallRadius( mass, isConstantSize ),
       { valueType: 'number', isValidValue: value => value > 0 } );
 
-    // @public (read-only) {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
+    // @public {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
       ( mass, speed ) => BallUtils.calculateBallKineticEnergy( this ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
@@ -117,7 +117,7 @@ class Ball {
     //                              the 'Inelastic' screen.
     this.rotationProperty = new NumberProperty( 0 );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
+    // @public {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
     //                                                   PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
@@ -139,7 +139,7 @@ class Ball {
     this.xVelocityUserControlledProperty = new BooleanProperty( false );
     this.yVelocityUserControlledProperty = new BooleanProperty( false );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user
+    // @public {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user
     //                                                   in any way, either by dragging or through the Keypad.
     this.userControlledProperty = new DerivedProperty( [ this.massUserControlledProperty,
       this.xPositionUserControlledProperty,

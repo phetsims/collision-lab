@@ -61,7 +61,7 @@ class CenterOfMass {
     const ballPositionProperties = prepopulatedBalls.map( ball => ball.positionProperty );
     const ballVelocityProperties = prepopulatedBalls.map( ball => ball.velocityProperty );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
+    // @public {DerivedProperty.<Vector2>} - Property of the position of the COM, in meter coordinates.
     //
     // For the dependencies, we use:
     //  - position Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
@@ -75,7 +75,7 @@ class CenterOfMass {
         valueType: Vector2
       } );
 
-    // @public (read-only) {DerivedProperty.<Vector2>} - Property of the velocity of the COM, in meters per second.
+    // @public {DerivedProperty.<Vector2>} - Property of the velocity of the COM, in meters per second.
     //
     // For the dependencies, we use:
     //  - velocity Properties of the prepopulatedBalls. Only the balls in the BallSystem are used in the calculation.
@@ -89,7 +89,7 @@ class CenterOfMass {
         valueType: Vector2
       } );
 
-    // @public (read-only) {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
+    // @public {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ) );
 
     //----------------------------------------------------------------------------------------

@@ -126,7 +126,7 @@ class BallSystem {
       playArea.bounds
     );
 
-    // @public (read-only) {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
+    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
     //
     // For the dependencies, we use:
     //  - The KE Properties of the prepopulatedBalls. However, only the balls in the system are used in the calculation.
@@ -140,7 +140,7 @@ class BallSystem {
         isValidValue: value => value >= 0
       } );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled.
+    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled.
     //                                                   Uses the userControlledProperty of all possible Balls as
     //                                                   dependencies but only the Balls in the system are considered.
     this.ballSystemUserControlledProperty = new DerivedProperty(
@@ -149,7 +149,7 @@ class BallSystem {
         valueType: 'boolean'
       } );
 
-    // @public (read-only) {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of
+    // @public {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of
     //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
     //                                                   Balls but only the Balls in the system are considered.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
