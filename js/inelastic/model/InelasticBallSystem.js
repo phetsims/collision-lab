@@ -113,9 +113,7 @@ class InelasticBallSystem extends BallSystem {
    *
    * @param {InelasticPresets} inelasticPreset
    */
-  set inelasticPreset( inelasticPreset ) {
-    this.inelasticPresetProperty = inelasticPreset;
-  }
+  set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
 }
 
 collisionLab.register( 'InelasticBallSystem', InelasticBallSystem );

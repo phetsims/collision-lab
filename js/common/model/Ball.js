@@ -187,7 +187,6 @@ class Ball {
    */
   restart() {
     this.setState( this.restartState );
-    this.path.clear();
   }
 
   /**
@@ -222,6 +221,10 @@ class Ball {
     this.position = ballState.position;
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
+
+    // Setting the State resets the path and the rotation of the Ball.
+    this.path.clear();
+    this.rotationProperty.reset();
   }
 
   /**
