@@ -42,7 +42,7 @@ class InelasticBallSystem extends BallSystem {
     options = merge( {
 
       numberOfBallsRange: new RangeWithValue( NUMBER_OF_BALLS, NUMBER_OF_BALLS, NUMBER_OF_BALLS ),
-      pathVisibleInitially: false
+      pathsVisibleInitially: false
 
     }, options );
 

@@ -185,7 +185,10 @@ class Ball {
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
-  restart() { this.setState( this.restartState ); }
+  restart() {
+    this.setState( this.restartState );
+    this.path.clear();
+  }
 
   /**
    * Moves the ball by one time step, assuming that the Ball isn't accelerating and is in uniform motion in a straight

@@ -1,8 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallSystem is the sub-model for a isolated system of different Ball objects. It is the complete collection
- * of Balls, both inside and outside the PlayArea.
+ * BallSystem is the sub-model for a isolated system of different Ball objects. It is the complete collection of Balls,
+ * both inside and outside the PlayArea.
  *
  * BallSystem is mainly responsible for:
  *   - Keeping track of the system of Balls and the number of Balls in the system.
@@ -54,8 +54,8 @@ class BallSystem {
       // {RangeWithValue} - the range of the number of Balls in the system.
       numberOfBallsRange: new RangeWithValue( 1, 4, 2 ),
 
-      // {boolean} - indicates if the Paths are visible initially.
-      pathVisibleInitially: false
+      // {boolean} - indicates if the trailing 'Paths' are visible initially.
+      pathsVisibleInitially: false
 
     }, options );
 
@@ -73,7 +73,7 @@ class BallSystem {
     // @public {BooleanProperty} - indicates if the Ball and center of mass trailing 'paths' are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
-    this.pathsVisibleProperty = new BooleanProperty( options.pathVisibleInitially );
+    this.pathsVisibleProperty = new BooleanProperty( options.pathsVisibleInitially );
 
     // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model since the
     //                             CenterOfMass's trailing 'Path' is empty if this is false and PathDataPoints for
@@ -166,12 +166,12 @@ class BallSystem {
       ball.path.clear();
     } );
 
-    // Observe when the user is controlling any of the Balls to clear the trailing Path of the CenterOfMass. See
-    // https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for the life-time of
-    // the sim as PlayAreas are never disposed.
+    // Observe when the user is controlling any of the Balls to clear the trailing Paths of all Balls and the Path of
+    // the CenterOfMass. See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts for
+    // the life-time of the sim as BallSystems are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
       if ( ballSystemUserControlled ) {
-        this.balls.filter( ball => ball.userControlledProperty.value ).forEach( ball => { ball.path.clear(); } );
+        this.balls.forEach( ball => { ball.path.clear(); } );
         this.centerOfMass.path.clear();
       }
     } );

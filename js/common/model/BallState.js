@@ -1,17 +1,16 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A multipurpose 'state' of a Ball that contains information about the mass, position, and velocity of a Ball. Doesn't
+ * A multipurpose state of a Ball that contains information about the mass, position, and velocity of a Ball. Doesn't
  * hold onto any listeners or Properties, so no dispose method is needed.
  *
  * ## Usages of BallState
  *
  *   - BallStates are generally used to hold information about the starting values of a Ball. They are used in the
- *     'Inelastic' screen to save several pre-defined states of Balls in different modes.
+ *     'Inelastic' screen to save several pre-defined states of Balls in different presets.
  *
  *   - Used internally in Ball to save and update a Ball's state when the restart button is pressed.
  *     Restarting is different from resetting:
- *
  *       Reset All:
  *         - Like a traditional sim, this resets all model Properties back to the values that they were initialized to.
  *
