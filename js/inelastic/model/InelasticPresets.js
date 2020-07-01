@@ -65,7 +65,7 @@ class InelasticPreset {
    *
    * @param {ObservableArray.<Ball>} balls
    */
-  setBallSystem( balls ) {
+  setBalls( balls ) {
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && assert( !this.ballStates || this.ballStates.length === balls.length );
 
