@@ -1,11 +1,11 @@
 {
-  "comment": "# collision-lab 1.0.0-dev.24 Thu Jun 25 2020 10:22:46 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.0-dev.25 Wed Jul 01 2020 14:25:04 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "73ed687cbea36db888079159cf9b43d41b8b8854",
     "branch": "master"
   },
   "axon": {
-    "sha": "9b918a1225cf817d2c43e2140f5906729486edbc",
+    "sha": "27d14cfb0b616774ea0045bff6d8c7b9e1c6a40f",
     "branch": "master"
   },
   "brand": {
@@ -13,11 +13,11 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "4d932f82c3c800b5dbb092767ba3d2d302e3f3a4",
+    "sha": "349fead30b3c6005b837efb29e43f2458e924472",
     "branch": "master"
   },
   "collision-lab": {
-    "sha": "e6c9bb71ffead6f0baca11277e7eb4c3827e830e",
+    "sha": "519a71ed6f5a430766c73d0b47418d3cc7f18729",
     "branch": "master"
   },
   "dot": {
@@ -37,11 +37,11 @@
     "branch": "master"
   },
   "phet-io": {
-    "sha": "ee7ffcefc4ec88451cedaa0d49500dbc949853ed",
+    "sha": "833d7be1161b58848ba3f4bb6822ffd39a8c84df",
     "branch": "master"
   },
   "phet-io-wrappers": {
-    "sha": "580712e4233e5c1ec5fac7bff044eaf8871c9726",
+    "sha": "a867bb2f338e4e2981a1251d2a97da940da2a9c0",
     "branch": "master"
   },
   "phetcommon": {
@@ -57,11 +57,11 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "88cf88096f3a0cf5b73994fbde81055d8ec11bcf",
+    "sha": "f7725dd13a1526c7bbed2a2b539ec3b54e411990",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "f33d9516bed883e47f81e67f094ece635da68a43",
+    "sha": "8f4182db5d542a801d8b66357508fe35353e69b1",
     "branch": "master"
   },
   "sherpa": {
@@ -69,19 +69,19 @@
     "branch": "master"
   },
   "studio": {
-    "sha": "2b6d48e5e87c0c9a5dd9050dbf4377255b653c6d",
+    "sha": "970582d55a838616fc47724c5955405c75ecebfb",
     "branch": "master"
   },
   "sun": {
-    "sha": "1541c75a7cc7eaf4c903830111cfd5b6d36d4f68",
+    "sha": "627e45257d72d202bd64e142e2c336ab30c2d834",
     "branch": "master"
   },
   "tambo": {
-    "sha": "dba93ba415b9e5e5dc739ac059a0124db756ef5f",
+    "sha": "a0f556ab11dd045392996c90c6f6a8e962adb8bf",
     "branch": "master"
   },
   "tandem": {
-    "sha": "f7ba25a60956c7821e90e35fedc04d8d55c0a035",
+    "sha": "f62b37793fd1adb0ebb0bb9c71e490b8c7a45045",
     "branch": "master"
   },
   "utterance-queue": {
