@@ -41,15 +41,15 @@ const CollisionLabColors = {
 
   // Balls
   BALL_COLORS: [
-    new Color( 225, 70, 124 ).setImmutable(),
-    new Color( 73, 157, 247 ).setImmutable(),
-    new Color( 10, 184, 25 ).setImmutable(),
-    new Color( 255, 0, 215 ).setImmutable()
+    new Color( 225, 70, 124 ),
+    new Color( 73, 157, 247 ),
+    new Color( 10, 184, 25 ),
+    new Color( 255, 0, 215 )
   ],
 
   // Center of mass
   CENTER_OF_MASS_COLORS: {
-    fill: 'rgb( 255, 128, 48 )',
+    fill: new Color( 255, 128, 48 ),
     stroke: 'rgb( 69, 54, 42 )'
   },
 

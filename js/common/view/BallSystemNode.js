@@ -104,7 +104,12 @@ class BallSystemNode extends Node {
     );
 
     // Create the PathsNode for the trailing 'Path' behind the Balls and the center of mass.
-    const pathsNode = new PathsNode( ballSystem, playArea.bounds, modelViewTransform );
+    const pathsNode = new PathsNode(
+      ballSystem.prepopulatedBalls,
+      ballSystem.centerOfMass.path,
+      playArea.bounds,
+      modelViewTransform
+    );
 
     //----------------------------------------------------------------------------------------
 

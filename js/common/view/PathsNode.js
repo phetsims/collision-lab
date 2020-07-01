@@ -1,45 +1,51 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A view that renders the trailing 'Paths' behind all moving objects, including Balls and the Center of Mass, using
- * its PathDataPoints array.
+ * A view that renders the trailing 'Paths' behind all Balls and the Center of Mass, using their PathDataPoints array.
  *
- * It is a sub-type of CanvasNode to linearly reduce the stroke-alpha to give a "fade over-time" illusion. Opacity is
+ * PathsNode subtypes CanvasNode to linearly reduce the stroke-alpha to give a "fade over-time" illusion. Opacity is
  * determined by how long ago the PathDataPoint was recorded. See https://github.com/phetsims/collision-lab/issues/61
- * for context on the decision to use CanvasNode. There is no need to adjust the visibility of PathsNodes since
- * Paths are empty in the model when they are not visible.
+ * for context on the decision to use CanvasNode.
  *
- * For performance reasons, PathsCanvasNodes draws all 'Paths' in one canvas instead of having one PathNode for each
- * Ball. PathsNodes are also never disposed and internal links are left as-is. This doesn't negatively impact
- * performance since Balls that aren't in the system aren't stepped and their positions don't change.
+ * For performance reasons, PathsNode draws all 'Paths' in one canvas instead of having one PathNode for each
+ * Ball and CenterOfMass, including for Balls that aren't in the system. There is no performance loss since Balls that
+ * aren't in the BallSystem have empty Paths and all moving objects have empty paths if 'Paths' are not visible.
  *
  * NOTE: Do not translate this node. It's origin must be at the origin of the view coordinate frame.
  *
  * @author Brandon Li
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
+import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import CollisionLabColors from '../CollisionLabColors.js';
-import BallSystem from '../model/BallSystem.js';
+import Ball from '../model/Ball.js';
+import CollisionLabPath from '../model/CollisionLabPath.js';
 
 // constants
-const LINE_WIDTH = 2.3; // lineWidth of the Path
+const LINE_WIDTH = 2.3; // lineWidth of Paths
 
 class PathsNode extends CanvasNode {
 
   /**
-   * @param {BallSystem} ballSystem
+   * @param {Ball[]} prepopulatedBalls - an array of All possible balls in the system.
+   * @param {CollisionLabPath} centerOfMassPath - path of the CenterOfMass of the system.
+   * @param {Bounds2} playAreaBounds
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ballSystem, playAreaBounds, modelViewTransform, options ) {
-    assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
+  constructor( prepopulatedBalls, centerOfMassPath, playAreaBounds, modelViewTransform, options ) {
+    assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
+    assert && assert( centerOfMassPath instanceof CollisionLabPath, `invalid centerOfMassPath: ${centerOfMassPath}` );
+    assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     options = merge( {
@@ -51,48 +57,43 @@ class PathsNode extends CanvasNode {
 
     super( options );
 
-    //----------------------------------------------------------------------------------------
+    // @private {Ball[]} - reference the passed-in prepopulatedBalls.
+    this.prepopulatedBalls = prepopulatedBalls;
 
-    // @private {BallSystem} - reference the passed-in BallSystem model.
-    this.ballSystem = ballSystem;
+    // @private {CollisionLabPath[]} - reference the passed-in centerOfMassPath.
+    this.centerOfMassPath = centerOfMassPath;
 
     // @private {ModelViewTransform2} - reference the passed-in modelViewTransform.
     this.modelViewTransform = modelViewTransform;
 
+    // @private {Color} - mutated in critical code to reduce the number of redundant Color instances.
     this.scratchColor = new Color( 0, 0, 0 );
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the Path trail of the MovingObject should be redrawn. This is never removed since
-    // PathsNodes are never disposed and persist for the lifetime of the simulation.
-    [ ...ballSystem.prepopulatedBalls.map( ball => ball.path.pathChangedEmitter ),
-      ballSystem.centerOfMass.path.pathChangedEmitter ].forEach( pathChangedEmitter => {
+    // Observe when any of the trailing 'Paths' have changed and should be redrawn to call invalidatePaint(). Listeners
+    // are never removed since CollisionLabPaths are never disposed and persist for the lifetime of the simulation.
+    [ centerOfMassPath, ...prepopulatedBalls.map( ball => ball.path ) ].forEach( path => {
 
-        pathChangedEmitter.addListener( this.invalidatePaint.bind( this ) );
-      } );
+      // When a path has changed, it results in a call to paintCanvas.
+      path.pathChangedEmitter.addListener( this.invalidatePaint.bind( this ) );
+    } );
   }
 
   /**
    * Draws the path along the data points of the Path.
-   * @public
-   * @override
+   * @private
    *
+   * @param {CollisionLabPath} path - the model for the Path
+   * @param {PaintDef} baseColor - the base color of the Path. Alpha will be linearly reduced.
    * @param {CanvasRenderingContext2D} context
    */
-  paintCanvas( context ) {
-    this.ballSystem.prepopulatedBalls.forEach( ball => {
-      this.drawPath( context, ball.path, CollisionLabColors.BALL_COLORS[ ball.index - 1 ] );
+  drawPath( path, baseColor, context ) {
+    assert && assert( PaintDef.isPaintDef( baseColor ), `invalid baseColor: ${baseColor}` );
+    assert && assert( path instanceof CollisionLabPath, `invalid path: ${path}` );
+    assert && assert( context instanceof CanvasRenderingContext2D, `invalid context: ${context}` );
 
-    } );
-    this.drawPath( context, this.ballSystem.centerOfMass.path, CollisionLabColors.CENTER_OF_MASS_COLORS.fill );
-  }
-
-  /**
-   * @private
-   */
-  drawPath( context, path, color ) {
-
-    // If there are not enough PathDataPoints, do not repaint.
+    // If there aren't enough PathDataPoints, do not repaint.
     if ( path.dataPoints.length <= 1 ) { return; /* Do nothing */ }
 
     // Reference the time of the first and last PathDataPoints.
@@ -115,11 +116,30 @@ class PathsNode extends CanvasNode {
 
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
       const alpha = Utils.linear( firstPathDataPointTime, lastPathDataPointTime, 0, 1, dataPoint.time );
-      context.strokeStyle = this.scratchColor.set( color ).setAlpha( alpha ).toCSS();
+      context.strokeStyle = this.scratchColor.set( baseColor ).setAlpha( alpha ).toCSS();
       context.lineWidth = LINE_WIDTH;
       context.stroke();
       context.closePath();
     } );
+  }
+
+  /**
+   * Draws the 'Paths' behind all Balls and the Center of Mass.
+   * @public
+   * @override
+   *
+   * @param {CanvasRenderingContext2D} context
+   */
+  paintCanvas( context ) {
+    assert && assert( context instanceof CanvasRenderingContext2D, `invalid context: ${context}` );
+
+    // First draw the trailing 'Paths' behind every Ball.
+    this.prepopulatedBalls.forEach( ball => {
+      this.drawPath( ball.path, CollisionLabColors.BALL_COLORS[ ball.index - 1 ], context );
+    } );
+
+    // Draw the trailing 'Path' behind the CenterOfMass.
+    this.drawPath( this.centerOfMassPath, CollisionLabColors.CENTER_OF_MASS_COLORS.fill, context );
   }
 }
 
