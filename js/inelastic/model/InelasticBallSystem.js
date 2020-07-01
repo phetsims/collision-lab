@@ -64,10 +64,10 @@ class InelasticBallSystem extends BallSystem {
 
 
     this.inelasticBallSystemPresetProperty.link( inelasticBallSystemPreset => {
-      isPlayingProperty.value = false;
-      this.saveBallStates();
+      // isPlayingProperty.value = false;
+      // this.saveBallStates();
 
-      inelasticBallSystemPreset.setBallSystem( this );
+      // inelasticBallSystemPreset.setBallSystem( this );
     } );
   }
 }

@@ -59,7 +59,7 @@ class Ball {
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
-    // @public {DerivedProperty.<Vector2>} - Property of the position of the Ball, in meters.
+    // @public {DerivedProperty.<Vector2>} - Property of the center-position of the Ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
@@ -90,8 +90,7 @@ class Ball {
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
-    // @public {DerivedProperty.<number>} - the Ball's momentum, in kg*(m/s). Separated into components to
-    //                                                  display individually.
+    // @public {DerivedProperty.<number>} - the momentum, in kg*m/s. Separated into components to display individually.
     this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
     this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
 
@@ -105,20 +104,19 @@ class Ball {
 
     // @public {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
-      ( mass, isConstantSize ) => BallUtils.calculateBallRadius( mass, isConstantSize ),
+      BallUtils.calculateBallRadius,
       { valueType: 'number', isValidValue: value => value > 0 } );
 
     // @public {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
     this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
-      ( mass, speed ) => BallUtils.calculateBallKineticEnergy( this ),
+      () => BallUtils.calculateBallKineticEnergy( this ),
       { valueType: 'number', isValidValue: value => value >= 0 } );
 
-    // @public = {NumberProperty} - Property of the rotation of the Ball around its center, in radians. This is used for
-    //                              the 'Inelastic' screen.
+    // @public {NumberProperty} - Property of the rotation of the Ball relative to its own center, in radians. This is
+    //                            used for 'sticky' collisions in the 'Inelastic' screen.
     this.rotationProperty = new NumberProperty( 0 );
 
-    // @public {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is currently inside the
-    //                                                   PlayArea's bounds.
+    // @public {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is inside the PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
@@ -139,8 +137,8 @@ class Ball {
     this.xVelocityUserControlledProperty = new BooleanProperty( false );
     this.yVelocityUserControlledProperty = new BooleanProperty( false );
 
-    // @public {DerivedProperty.<boolean>} - indicates if the Ball is currently being controlled by the user
-    //                                                   in any way, either by dragging or through the Keypad.
+    // @public {DerivedProperty.<boolean>} - indicates if the Ball is being controlled by the user in any way, either by
+    //                                       dragging or through the Keypad.
     this.userControlledProperty = new DerivedProperty( [ this.massUserControlledProperty,
       this.xPositionUserControlledProperty,
       this.yPositionUserControlledProperty,
@@ -155,7 +153,7 @@ class Ball {
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
-    // @private {BallState} - the saved state of the Ball for resetting. See BallState.js for context.
+    // @private {BallState} - the state to set this Ball when the restart button is pressed. See BallState for context.
     this.restartState = initialBallState;
 
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
