@@ -47,6 +47,16 @@ class InelasticPlayArea extends PlayArea {
    */
   get inelasticCollisionType() { return this.inelasticCollisionTypeProperty.value; }
 
+  /**
+   * Resets the InelasticPlayArea.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
+   */
+  reset() {
+    super.reset();
+    this.inelasticCollisionTypeProperty.reset();
+  }
 }
 
 collisionLab.register( 'InelasticPlayArea', InelasticPlayArea );
