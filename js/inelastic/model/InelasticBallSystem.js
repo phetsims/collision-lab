@@ -111,22 +111,6 @@ class InelasticBallSystem extends BallSystem {
    * @param {InelasticPresets} inelasticPreset
    */
   set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
-
-  /**
-   * Restarts the InelasticBallSystem. Restarting the InelasticBallSystem will first restart normally, then set the
-   * Ball's values to the preset's BallStates.
-   *
-   * @override
-   * @public
-   *
-   * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
-   */
-  restart() {
-    super.restart();
-
-    // Set every Ball's position, mass, and velocity to the preset's BallStates.
-    this.inelasticPreset.setBalls( this.balls );
-  }
 }
 
 collisionLab.register( 'InelasticBallSystem', InelasticBallSystem );
