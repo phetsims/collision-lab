@@ -25,7 +25,7 @@ class InelasticPlayArea extends PlayArea {
 
     }, options );
 
-    super( PlayArea.Dimensions.TWO, options );
+    super( PlayArea.Dimension.TWO, options );
 
     //----------------------------------------------------------------------------------------
 

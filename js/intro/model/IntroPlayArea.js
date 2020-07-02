@@ -5,7 +5,7 @@
  *
  * Although it adds no additional functionality to the super-class, it is added for symmetry within the screen-specific
  * sub-types of  PlayArea. It is responsible for providing a correct configuration of the super-class for the 'Intro'
- * screen, which includes specifying the dimensions, initial Property values, and disabling Properties.
+ * screen, which includes specifying the dimension, initial Property values, and disabling Properties.
  *
  * @author Brandon Li
  */
@@ -30,7 +30,7 @@ class IntroPlayArea extends PlayArea {
 
     }, options );
 
-    super( PlayArea.Dimensions.ONE, options );
+    super( PlayArea.Dimension.ONE, options );
 
     //----------------------------------------------------------------------------------------
 

@@ -14,7 +14,7 @@
  *   - Masses of the Balls (kg).
  *   - Sliders to change the masses.
  *
- * The Panel is built into columns using BallValuesPanelColumnNode. If the dimensions of the PlayArea is 1D, the
+ * The Panel is built into columns using BallValuesPanelColumnNode. If the dimension of the PlayArea is 1D, the
  * y-component of the vectored BallValues described above are not included. Otherwise, each column of components are
  * grouped together and a title-label is placed above the group (like "Position (m)").
  *
@@ -55,14 +55,14 @@ class BallValuesPanel extends Panel {
   /**
    * @param {BallSystem} ballSystem - the system of Balls.
    * @param {Property.<boolean>} moreDataVisibleProperty - indicates if the "More Data" checkbox is checked.
-   * @param {number} dimensions - the dimensions of the PlayArea.
+   * @param {number} dimension - the dimension of the PlayArea.
    * @param {KeypadDialog} keypadDialog - KeypadDialog instance for the screen.
    * @param {Object} [options]
    */
-  constructor( ballSystem, moreDataVisibleProperty, dimensions, keypadDialog, options ) {
+  constructor( ballSystem, moreDataVisibleProperty, dimension, keypadDialog, options ) {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && AssertUtils.assertPropertyOf( moreDataVisibleProperty, 'boolean' );
-    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
+    assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
@@ -96,7 +96,7 @@ class BallValuesPanel extends Panel {
     const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
 
     // For 2D screens, add the y-component columns to their correlating group.
-    if ( dimensions === PlayArea.Dimensions.ONE ) {
+    if ( dimension === PlayArea.Dimension.ONE ) {
       const yPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_POSITION, keypadDialog );
       const yVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_VELOCITY, keypadDialog );
       const yMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_MOMENTUM, keypadDialog );

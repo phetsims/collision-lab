@@ -6,7 +6,7 @@
  *
  * PlayArea is mainly responsible for:
  *   - Handling the different Bounds of PlayAreas in each screen.
- *   - Handling and referencing the different dimensions of each screen.
+ *   - Handling and referencing the different dimension of each screen.
  *   - PlayArea-related Properties, such as Grid visibility and Reflecting Border.
  *   - Keeping track of the elasticity of collisions.
  *   - Convenience methods related to the PlayArea.
@@ -31,11 +31,11 @@ const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 class PlayArea {
 
   /**
-   * @param {PlayArea.Dimensions} dimensions - the dimensions of the PlayArea (1D vs 2D).
+   * @param {PlayArea.Dimension} dimension - the dimension of the PlayArea (1D vs 2D).
    * @param {Object} [options]
    */
-  constructor( dimensions, options ) {
-    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
+  constructor( dimension, options ) {
+    assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
     options = merge( {
 
@@ -58,8 +58,8 @@ class PlayArea {
     // @public (read-only) {Bounds2} - the bounds of the PlayArea, in meters.
     this.bounds = options.bounds;
 
-    // @public (read-only) {PlayArea.Dimensions} - the dimensions of the PlayArea (1D vs 2D).
-    this.dimensions = dimensions;
+    // @public (read-only) {PlayArea.Dimension} - the dimension of the PlayArea (1D vs 2D).
+    this.dimension = dimension;
 
     // @public {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
     //                             is manipulated in the view.
@@ -201,8 +201,8 @@ class PlayArea {
 // @public (read-only) {Bounds2} - the default bounds of the PlayArea.
 PlayArea.DEFAULT_BOUNDS = new Bounds2( -2, -1, 2, 1 );
 
-// @public (read-only) {Enumeration} - Enumeration of the possible 'dimensions' of a PlayArea.
-PlayArea.Dimensions = Enumeration.byKeys( [ 'ONE', 'TWO' ] );
+// @public (read-only) {Enumeration} - Enumeration of the possible 'dimension' of a PlayArea.
+PlayArea.Dimension = Enumeration.byKeys( [ 'ONE', 'TWO' ] );
 
 collisionLab.register( 'PlayArea', PlayArea );
 export default PlayArea;

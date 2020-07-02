@@ -22,7 +22,7 @@ class Explore2DPlayArea extends PlayArea {
    */
   constructor( options ) {
 
-    super( PlayArea.Dimensions.TWO, options );
+    super( PlayArea.Dimension.TWO, options );
 
     //----------------------------------------------------------------------------------------
 

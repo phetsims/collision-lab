@@ -15,7 +15,7 @@
  *   - Update the tail positions and components of the MomentaDiagramVectors when necessary. MomentaDiagrams are
  *     designed and implemented to be minimally invasive to optimize the performance of the simulation. The position
  *     and components of the MomentaDiagramVectors are only updated if the Momenta Diagram accordion box is expanded.
- *     The positioning also differs depending on the dimensions of the PlayArea.
+ *     The positioning also differs depending on the dimension of the PlayArea.
  *
  * MomentaDiagrams are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
@@ -37,12 +37,12 @@ class MomentaDiagram {
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
    * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
-   * @param {number} dimensions - the dimensions of the PlayArea, used for positioning differences. Either 1 or 2.
+   * @param {number} dimension - the dimension of the PlayArea, used for positioning differences. Either 1 or 2.
    */
-  constructor( prepopulatedBalls, balls, dimensions ) {
+  constructor( prepopulatedBalls, balls, dimension ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
+    assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
     //                             and components of the Momenta Vectors are only updated if this is true.
@@ -62,8 +62,8 @@ class MomentaDiagram {
     // @private {ObservableArray.<Balls>} - reference to the Balls in the BallSystem.
     this.balls = balls;
 
-    // @private {number} - reference to the passed-in dimensions of the PlayArea.
-    this.dimensions = dimensions;
+    // @private {number} - reference to the passed-in dimension of the PlayArea.
+    this.dimension = dimension;
 
     //----------------------------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ class MomentaDiagram {
     const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( 0 ) );
 
     // Position the first Momenta Vector and the total Momenta Vector in the correct position.
-    if ( this.dimensions === PlayArea.Dimensions.TWO ) {
+    if ( this.dimension === PlayArea.Dimension.TWO ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
       firstMomentaVector.tail = Vector2.ZERO;
@@ -156,7 +156,7 @@ class MomentaDiagram {
       const momentaVector = this.ballToMomentaVectorMap.get( ball );
       const previousMomentaVector = this.ballToMomentaVectorMap.get( previousBall );
 
-      if ( this.dimensions === PlayArea.Dimensions.TWO ) {
+      if ( this.dimension === PlayArea.Dimension.TWO ) {
 
         // tip-to-tail
         momentaVector.tail = previousMomentaVector.tip;

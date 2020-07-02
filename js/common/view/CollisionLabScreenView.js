@@ -102,10 +102,10 @@ class CollisionLabScreenView extends ScreenView {
 
     // Scale Bar
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
-      scaleBarOrientation: model.playArea.dimensions === PlayArea.Dimensions.ONE ? Orientation.HORIZONTAL : Orientation.VERTICAL
+      scaleBarOrientation: model.playArea.dimension === PlayArea.Dimension.ONE ? Orientation.HORIZONTAL : Orientation.VERTICAL
     } );
-    model.playArea.dimensions === PlayArea.Dimensions.ONE && scaleBar.setLeftBottom( playAreaViewBounds.leftTop.minusXY( 0, 5 ) );
-    model.playArea.dimensions === PlayArea.Dimensions.TWO && scaleBar.setRightTop( playAreaViewBounds.leftTop.minusXY( 5, 0 ) );
+    model.playArea.dimension === PlayArea.Dimension.ONE && scaleBar.setLeftBottom( playAreaViewBounds.leftTop.minusXY( 0, 5 ) );
+    model.playArea.dimension === PlayArea.Dimension.TWO && scaleBar.setRightTop( playAreaViewBounds.leftTop.minusXY( 5, 0 ) );
 
     // Kinetic Energy NumberDisplay
     const kineticEnergyNumberDisplay = new KineticEnergyNumberDisplay(
@@ -174,7 +174,7 @@ class CollisionLabScreenView extends ScreenView {
     const ballValuesPanel = new BallValuesPanel(
       model.ballSystem,
       viewProperties.moreDataVisibleProperty,
-      model.playArea.dimensions,
+      model.playArea.dimension,
       keypadDialog, {
         top: BALL_VALUES_PANEL_TOP,
         left: playAreaViewBounds.left
@@ -194,7 +194,7 @@ class CollisionLabScreenView extends ScreenView {
 
     // Momenta Diagram
     const momentaDiagram = new MomentaDiagramAccordionBox( model.momentaDiagram, model.ballSystem.balls, {
-      dimensions: model.playArea.dimensions,
+      dimension: model.playArea.dimension,
       centerX: controlPanel.centerX,
       top: controlPanel.bottom + 8
     } );

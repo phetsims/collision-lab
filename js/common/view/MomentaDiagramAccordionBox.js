@@ -63,7 +63,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
       gridLineSpacing: 1,   // {number} - the spacing of the grid lines, in model units (kg * m/s)
       zoomControlMargin: 5, // {number} - the margins between the edge of the Grid and the zoom controls
-      dimensions: PlayArea.Dimensions.TWO,        // {number} - the dimensions of the screen that the MomentaDiagram appears in.
+      dimension: PlayArea.Dimension.TWO,        // {number} - the dimension of the screen that the MomentaDiagram appears in.
 
       // {number} - the width of the content (grid) of the MomentaDiagramAccordionBox.
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
@@ -149,7 +149,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
       // Create the momenta Vector Node for the momentaVector.
       const momentaVectorNode = new MomentaDiagramVectorNode( momentaVector, ball.index, modelViewTransformProperty, {
-        dimensions: options.dimensions,
+        dimension: options.dimension,
         isTotalMomentaVector: false
       } );
 
@@ -168,7 +168,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     const sumMomentaVectorNode = new MomentaDiagramVectorNode( momentaDiagram.totalMomentumVector,
       collisionLabStrings.total,
       modelViewTransformProperty, {
-        dimensions: options.dimensions,
+        dimension: options.dimension,
         isTotalMomentaVector: true,
         arrowOptions: {
           fill: CollisionLabColors.TOTAL_MOMENTUM_VECTOR_FILL

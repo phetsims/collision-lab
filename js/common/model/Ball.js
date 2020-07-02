@@ -261,7 +261,7 @@ class Ball {
     }
 
     // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.
-    ( this.playArea.dimensions === PlayArea.Dimensions.ONE ) && correctedPosition.setY( 0 );
+    ( this.playArea.dimension === PlayArea.Dimension.ONE ) && correctedPosition.setY( 0 );
 
     // Finally, set the position of the Ball to the corrected position.
     this.position = correctedPosition;

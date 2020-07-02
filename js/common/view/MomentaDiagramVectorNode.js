@@ -45,8 +45,8 @@ class MomentaDiagramVectorNode extends Node {
 
     options = merge( {
 
-      // {number} - the dimensions of the Screen that contains the MomentaDiagram
-      dimensions: PlayArea.Dimensions.TWO,
+      // {number} - the dimension of the Screen that contains the MomentaDiagram
+      dimension: PlayArea.Dimension.TWO,
 
       // {boolean} - indicates if this vector Node represents the total Momenta Vector.
       isTotalMomentaVector: false,
@@ -106,8 +106,8 @@ class MomentaDiagramVectorNode extends Node {
         // of the label.
         const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
 
-        // Position the Label, which depends on the dimensions and whether or not this the total momenta Vector.
-        if ( options.dimensions === PlayArea.Dimensions.TWO ) {
+        // Position the Label, which depends on the dimension and whether or not this the total momenta Vector.
+        if ( options.dimension === PlayArea.Dimension.TWO ) {
 
           // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
           const yFlip = ( momentaDiagramVector.components.y < 0 ) ? Math.PI : 0;

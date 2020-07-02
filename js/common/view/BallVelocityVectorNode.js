@@ -47,15 +47,15 @@ class BallVelocityVectorNode extends BallVectorNode {
 
   /**
    * @param {Ball} ball - the ball model.
-   * @param {number} dimensions - the dimensions of the PlayArea.
+   * @param {number} dimension - the dimension of the PlayArea.
    * @param {Property.<boolean>} velocityVectorVisibleProperty
    * @param {Property.<boolean>} isPlayingProperty - indicates if the sim is playing.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
-  constructor( ball, dimensions, velocityVectorVisibleProperty, isPlayingProperty, modelViewTransform, options ) {
+  constructor( ball, dimension, velocityVectorVisibleProperty, isPlayingProperty, modelViewTransform, options ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
+    assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
     assert && AssertUtils.assertPropertyOf( velocityVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
@@ -104,17 +104,17 @@ class BallVelocityVectorNode extends BallVectorNode {
         ball.xVelocity = velocity.x;
 
         // If the dimensional PlayArea is 2D, then update the yVelocity of the Ball as well.
-        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocity = velocity.y );
+        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocity = velocity.y );
       },
 
       // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
       start: ( event, listener ) => {
         ball.xVelocityUserControlledProperty.value = true;
-        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocityUserControlledProperty.value = true );
+        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = true );
       },
       end: () => {
         ball.xVelocityUserControlledProperty.value = false;
-        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
+        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
       }
     } ) );
 

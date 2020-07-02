@@ -59,7 +59,7 @@ class CollisionLabModel {
     this.momentaDiagram = new MomentaDiagram(
       this.ballSystem.prepopulatedBalls,
       this.ballSystem.balls,
-      this.playArea.dimensions
+      this.playArea.dimension
     );
 
     //----------------------------------------------------------------------------------------
