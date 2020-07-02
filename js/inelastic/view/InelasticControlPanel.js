@@ -23,7 +23,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
-import InelasticCollisionTypes from '../model/InelasticCollisionTypes.js';
+import InelasticCollisionType from '../model/InelasticCollisionType.js';
 
 class InelasticControlPanel extends CollisionLabControlPanel {
 
@@ -84,8 +84,8 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
     const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
-      InelasticCollisionTypes.STICK, stickLabel,
-      InelasticCollisionTypes.SLIP, slipLabel, {
+      InelasticCollisionType.STICK, stickLabel,
+      InelasticCollisionType.SLIP, slipLabel, {
         toggleSwitchOptions: { size: new Dimension2( 28, 12 ) }
       } );
     this.elasticityControls.addChild( stickSlipSwitch );

@@ -23,7 +23,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
-import InelasticPresets from './InelasticPresets.js';
+import InelasticPreset from './InelasticPreset.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
 
 // constants
@@ -69,15 +69,15 @@ class InelasticBallSystem extends BallSystem {
       assert( INELASTIC_INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
     }
 
-    // @public {EnumerationProperty.<InelasticPresets>} - the current InelasticPreset.
-    this.inelasticPresetProperty = new EnumerationProperty( InelasticPresets, InelasticPresets.CUSTOM );
+    // @public {EnumerationProperty.<InelasticPreset>} - the current InelasticPreset.
+    this.inelasticPresetProperty = new EnumerationProperty( InelasticPreset, InelasticPreset.CUSTOM );
 
     //----------------------------------------------------------------------------------------
 
     // Observe when the user manipulates any of the two Balls and set the InelasticPreset to CUSTOM. Link is never
     // removed since InelasticBallSystems are never disposed.
     this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
-      ballSystemUserControlled && ( this.inelasticPreset = InelasticPresets.CUSTOM );
+      ballSystemUserControlled && ( this.inelasticPreset = InelasticPreset.CUSTOM );
     } );
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
@@ -99,7 +99,7 @@ class InelasticBallSystem extends BallSystem {
    * Gets the value of the inelasticPresetProperty.
    * @public
    *
-   * @returns {InelasticPresets}
+   * @returns {InelasticPreset}
    */
   get inelasticPreset() { return this.inelasticPresetProperty.value; }
 
@@ -107,7 +107,7 @@ class InelasticBallSystem extends BallSystem {
    * Sets the value of the inelasticPresetProperty.
    * @public
    *
-   * @param {InelasticPresets} inelasticPreset
+   * @param {InelasticPreset} inelasticPreset
    */
   set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
 

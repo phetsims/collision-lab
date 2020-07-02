@@ -43,7 +43,7 @@ import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import Ball from '../../common/model/Ball.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
+import InelasticCollisionType from './InelasticCollisionType.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
 
 // constants
@@ -164,7 +164,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     // Handle collisions that 'stick'.
-    if ( this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {
+    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
       // Set the isRotatingBalls flag to true.
       this.isRotatingBalls = true;
@@ -284,7 +284,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     // Handle collisions that 'stick'.
-    if ( this.playArea.inelasticCollisionType === InelasticCollisionTypes.STICK ) {
+    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
       // Get the balls that are colliding with the border.
       const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );

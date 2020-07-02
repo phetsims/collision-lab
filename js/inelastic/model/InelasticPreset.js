@@ -20,7 +20,7 @@ import Ball from '../../common/model/Ball.js';
 import BallState from '../../common/model/BallState.js';
 
 // @private
-class InelasticPreset {
+class InelasticPresetValue {
 
   /**
    * @param {BallState[]|null} ballStates - the pre-defined BallStates that correspond to the preset, in corresponding
@@ -59,28 +59,28 @@ class InelasticPreset {
   }
 }
 
-const InelasticPresets = Enumeration.byMap( {
+const InelasticPreset = Enumeration.byMap( {
 
   // The custom preset, which indicates that the user can set up a 'custom' collision scenario. When the preset
   // is set to CUSTOM, none of the balls are changed, so there are no BallStates that are associated with this Preset.
-  CUSTOM: new InelasticPreset(),
+  CUSTOM: new InelasticPresetValue(),
 
   /*----------------------------------------------------------------------------*
    * The rest of the Presets are specific collision scenarios that relate to the
    * learning goals of perfectly inelastic collisions.
    *----------------------------------------------------------------------------*/
 
-  NAME_1: new InelasticPreset( [
+  NAME_1: new InelasticPresetValue( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 1.00, 0.5 ), 0.50 ),
     new BallState( new Vector2( 0.50, 0.00 ), new Vector2( -1.0, 0.5 ), 0.50 )
   ] ),
 
-  NAME_2: new InelasticPreset( [
+  NAME_2: new InelasticPresetValue( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0.50, 0 ), 0.5 ),
     new BallState( new Vector2( 0.50, 0.00 ), new Vector2( -0.5, 0 ), 0.5 )
   ] )
 
 } );
 
-collisionLab.register( 'InelasticPresets', InelasticPresets );
-export default InelasticPresets;
+collisionLab.register( 'InelasticPreset', InelasticPreset );
+export default InelasticPreset;

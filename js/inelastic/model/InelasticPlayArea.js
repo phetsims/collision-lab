@@ -10,7 +10,7 @@ import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import PlayArea from '../../common/model/PlayArea.js';
-import InelasticCollisionTypes from './InelasticCollisionTypes.js';
+import InelasticCollisionType from './InelasticCollisionType.js';
 
 class InelasticPlayArea extends PlayArea {
 
@@ -29,10 +29,10 @@ class InelasticPlayArea extends PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {EnumerationProperty.<InelasticCollisionTypes>} - the type of perfectly inelastic collision. Ignored
+    // @public {EnumerationProperty.<InelasticCollisionType>} - the type of perfectly inelastic collision. Ignored
     //                                                           if the elasticity isn't 0.
-    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionTypes,
-      InelasticCollisionTypes.SLIP );
+    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionType,
+      InelasticCollisionType.SLIP );
 
 
     // Verify that Paths are never visible for the 'Explore 1D' screen.
@@ -43,7 +43,7 @@ class InelasticPlayArea extends PlayArea {
    * Convenience method to get the inelastic collision type.
    * @public
    *
-   * @returns {InelasticCollisionTypes}
+   * @returns {InelasticCollisionType}
    */
   get inelasticCollisionType() { return this.inelasticCollisionTypeProperty.value; }
 

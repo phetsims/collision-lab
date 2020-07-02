@@ -11,7 +11,7 @@
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import collisionLab from '../../collisionLab.js';
 
-const InelasticCollisionTypes = Enumeration.byKeys( [
+const InelasticCollisionType = Enumeration.byKeys( [
 
   // Perfectly inelastic collisions that 'slip' follow the standard collision-response algorithm, where the component of
   // velocity along the 'Plane of Contact' is exactly equal before and after the collision. This is described more in
@@ -32,5 +32,5 @@ const InelasticCollisionTypes = Enumeration.byKeys( [
 
 ] );
 
-collisionLab.register( 'InelasticCollisionTypes', InelasticCollisionTypes );
-export default InelasticCollisionTypes;
+collisionLab.register( 'InelasticCollisionType', InelasticCollisionType );
+export default InelasticCollisionType;
