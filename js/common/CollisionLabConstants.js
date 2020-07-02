@@ -14,6 +14,7 @@ import merge from '../../../phet-core/js/merge.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
+import CollisionLabQueryParameters from './CollisionLabQueryParameters.js';
 
 // For panel-like containers.
 const PANEL_X_MARGIN = 14;
@@ -31,7 +32,7 @@ const CollisionLabConstants = {
   ELASTICITY_PERCENT_INTERVAL: 5,
 
   // Time
-  TIME_STEP_DURATION: 0.03, // Seconds of real time per each press of the Step button.
+  TIME_STEP_DURATION: CollisionLabQueryParameters.timeStepDuration, // Seconds of real time per each press of the Step button.
   NORMAL_SPEED_FACTOR: 1,
   SLOW_SPEED_FACTOR: 0.33,
 

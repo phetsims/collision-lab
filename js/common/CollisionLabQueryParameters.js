@@ -2,7 +2,6 @@
 
 /**
  * Query parameters supported by this simulation.
- * Running with ?log will print these query parameters and their values to the console at startup.
  *
  * @author Brandon Li
  */
@@ -47,11 +46,20 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
     type: 'number',
     isValidValue: value => ( value >= 0 ),
     defaultValue: 0.5
+  },
+
+  /**
+   * The seconds of real time per each press of the Step button. Used for simulating low frame rate devices in
+   * https://github.com/phetsims/collision-lab/issues/117.
+   *
+   * For internal use only.
+   */
+  timeStepDuration: {
+    type: 'number',
+    defaultValue: 0.03,
+    isValidValue: value => ( value > 0 )
   }
 } );
-
-// Log the values of all sim-specific query parameters
-phet.log && phet.log( 'query parameters: ' + JSON.stringify( CollisionLabQueryParameters, null, 2 ) );
 
 collisionLab.register( 'CollisionLabQueryParameters', CollisionLabQueryParameters );
 export default CollisionLabQueryParameters;
