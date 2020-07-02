@@ -35,6 +35,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallSystem from '../model/BallSystem.js';
+import PlayArea from '../model/PlayArea.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
@@ -61,7 +62,7 @@ class BallValuesPanel extends Panel {
   constructor( ballSystem, moreDataVisibleProperty, dimensions, keypadDialog, options ) {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && AssertUtils.assertPropertyOf( moreDataVisibleProperty, 'boolean' );
-    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${ dimensions }` );
+    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
 
     options = merge( {}, CollisionLabConstants.PANEL_OPTIONS, {
@@ -95,7 +96,7 @@ class BallValuesPanel extends Panel {
     const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
 
     // For 2D screens, add the y-component columns to their correlating group.
-    if ( dimensions === 2 ) {
+    if ( dimensions === PlayArea.Dimensions.ONE ) {
       const yPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_POSITION, keypadDialog );
       const yVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_VELOCITY, keypadDialog );
       const yMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_MOMENTUM, keypadDialog );

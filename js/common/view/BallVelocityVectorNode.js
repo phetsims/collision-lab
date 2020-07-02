@@ -32,6 +32,7 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import PlayArea from '../model/PlayArea.js';
 import BallVectorNode from './BallVectorNode.js';
 
 // constants
@@ -54,7 +55,7 @@ class BallVelocityVectorNode extends BallVectorNode {
    */
   constructor( ball, dimensions, velocityVectorVisibleProperty, isPlayingProperty, modelViewTransform, options ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
+    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
     assert && AssertUtils.assertPropertyOf( velocityVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
@@ -103,17 +104,17 @@ class BallVelocityVectorNode extends BallVectorNode {
         ball.xVelocity = velocity.x;
 
         // If the dimensional PlayArea is 2D, then update the yVelocity of the Ball as well.
-        ( dimensions === 2 ) && ( ball.yVelocity = velocity.y );
+        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocity = velocity.y );
       },
 
       // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
       start: ( event, listener ) => {
         ball.xVelocityUserControlledProperty.value = true;
-        ( dimensions === 2 ) && ( ball.yVelocityUserControlledProperty.value = true );
+        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocityUserControlledProperty.value = true );
       },
       end: () => {
         ball.xVelocityUserControlledProperty.value = false;
-        ( dimensions === 2 ) && ( ball.yVelocityUserControlledProperty.value = false );
+        ( dimensions === PlayArea.Dimensions.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
       }
     } ) );
 

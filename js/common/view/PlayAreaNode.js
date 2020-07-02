@@ -92,7 +92,7 @@ class PlayAreaNode extends Node {
 
     //----------------------------------------------------------------------------------------
 
-    if ( playArea.dimensions === 2 ) {
+    if ( playArea.dimensions === PlayArea.Dimensions.TWO ) {
 
       // Create the GridNode for 2D screens.
       const gridNode = new GridNode( playAreaViewBounds.width, playAreaViewBounds.height, {

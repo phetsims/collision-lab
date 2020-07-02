@@ -24,13 +24,12 @@ class Explore1DPlayArea extends PlayArea {
 
     options = merge( {
 
-      dimensions: 1,
       isGridVisibleInitially: true,
       bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
 
     }, options );
 
-    super( options );
+    super( PlayArea.Dimensions.ONE, options );
 
     //----------------------------------------------------------------------------------------
 

@@ -30,6 +30,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
+import PlayArea from './PlayArea.js';
 
 class MomentaDiagram {
 
@@ -41,7 +42,7 @@ class MomentaDiagram {
   constructor( prepopulatedBalls, balls, dimensions ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-    assert && assert( dimensions === 1 || dimensions === 2, `invalid dimensions: ${dimensions}` );
+    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
 
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
     //                             and components of the Momenta Vectors are only updated if this is true.
@@ -132,7 +133,7 @@ class MomentaDiagram {
     const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( 0 ) );
 
     // Position the first Momenta Vector and the total Momenta Vector in the correct position.
-    if ( this.dimensions === 2 ) {
+    if ( this.dimensions === PlayArea.Dimensions.TWO ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
       firstMomentaVector.tail = Vector2.ZERO;
@@ -155,7 +156,7 @@ class MomentaDiagram {
       const momentaVector = this.ballToMomentaVectorMap.get( ball );
       const previousMomentaVector = this.ballToMomentaVectorMap.get( previousBall );
 
-      if ( this.dimensions === 2 ) {
+      if ( this.dimensions === PlayArea.Dimensions.TWO ) {
 
         // tip-to-tail
         momentaVector.tail = previousMomentaVector.tip;

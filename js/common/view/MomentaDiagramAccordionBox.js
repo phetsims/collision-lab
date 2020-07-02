@@ -35,6 +35,7 @@ import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
 import MomentaDiagram from '../model/MomentaDiagram.js';
+import PlayArea from '../model/PlayArea.js';
 import MomentaDiagramVectorNode from './MomentaDiagramVectorNode.js';
 import ZoomControlSet from './ZoomControlSet.js';
 
@@ -62,7 +63,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
       gridLineSpacing: 1,   // {number} - the spacing of the grid lines, in model units (kg * m/s)
       zoomControlMargin: 5, // {number} - the margins between the edge of the Grid and the zoom controls
-      dimensions: 2,        // {number} - the dimensions of the screen that the MomentaDiagram appears in.
+      dimensions: PlayArea.Dimensions.TWO,        // {number} - the dimensions of the screen that the MomentaDiagram appears in.
 
       // {number} - the width of the content (grid) of the MomentaDiagramAccordionBox.
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,

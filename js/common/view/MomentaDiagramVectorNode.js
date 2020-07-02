@@ -28,6 +28,7 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import MomentaDiagramVector from '../model/MomentaDiagramVector.js';
+import PlayArea from '../model/PlayArea.js';
 
 class MomentaDiagramVectorNode extends Node {
 
@@ -45,7 +46,7 @@ class MomentaDiagramVectorNode extends Node {
     options = merge( {
 
       // {number} - the dimensions of the Screen that contains the MomentaDiagram
-      dimensions: 2,
+      dimensions: PlayArea.Dimensions.TWO,
 
       // {boolean} - indicates if this vector Node represents the total Momenta Vector.
       isTotalMomentaVector: false,
@@ -106,7 +107,7 @@ class MomentaDiagramVectorNode extends Node {
         const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
 
         // Position the Label, which depends on the dimensions and whether or not this the total momenta Vector.
-        if ( options.dimensions === 2 ) {
+        if ( options.dimensions === PlayArea.Dimensions.TWO ) {
 
           // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
           const yFlip = ( momentaDiagramVector.components.y < 0 ) ? Math.PI : 0;
