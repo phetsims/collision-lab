@@ -45,21 +45,17 @@ class InelasticPreset {
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
     assert && assert( !this.ballStates || this.ballStates.length === balls.length );
 
-    if ( this.ballStates ) {
+    this.ballStates && balls.forEach( ( ball, index ) => {
 
-      balls.forEach( ( ball, index ) => {
-        ball.setState( this.ballStates[ index ] );
-      } );
+      // Set the state of the Ball with the corresponding BallState index.
+      ball.setState( this.ballStates[ index ] );
+
+      // Verify that the Ball is in-Bounds.
+      assert && assert( ball.insidePlayAreaProperty.value );
 
       // Save the states of the Balls for the next restart call().
-      balls.forEach( ball => {
-
-        // Verify that the Ball is in-Bounds.
-        assert && assert( ball.insidePlayAreaProperty.value );
-
-        ball.saveState();
-      } );
-    }
+      ball.saveState();
+    } );
   }
 }
 
