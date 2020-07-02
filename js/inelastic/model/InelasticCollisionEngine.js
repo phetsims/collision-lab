@@ -292,8 +292,28 @@ class InelasticCollisionEngine extends CollisionEngine {
       // If a Ball that is rotating hits the border, then all Balls in the cluster have 0 velocity.
       if ( this.isRotatingBalls && collidingBalls.length ) {
 
-        // Set the velocity of the Balls to 0.
-        this.ballSystem.balls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+        // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
+        // position when the ball first collided. However, the overlappedTime passed-in is NOT correct for balls that
+        // are rotating, since it assumes that Balls are undergoing uniform-motion.
+        //
+        // We discussed overriding the getBallToBorderCollisionOverlapTime for this class and computing a new overlapped
+        // time for rotating Balls. However, we could formulate a solution, and decided to translate the Ball cluster
+        // inwards as an approximation. See https://github.com/phetsims/collision-lab/issues/117.
+        //
+        // To translate the Balls inwards, we use the same visuals described for finding the overlapping time between
+        // the Ball and the border. See
+        // https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
+        const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
+        const deltaS = this.mutableVectors.deltaS.set( ball.position ).subtract( closestPoint );
+
+        this.ballSystem.balls.forEach( ball => {
+
+          // Translate the Ball inwards so that the cluster is inside the PlayArea.
+          ball.position = ball.position.minus( deltaS );
+
+          // Set the velocity of the Balls to 0.
+          ball.velocity = Vector2.ZERO;
+        } );
         this.reset();
       }
       else {
