@@ -55,7 +55,7 @@ class InelasticBallSystem extends BallSystem {
 
     super( INELASTIC_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
 
-    // Verify that the configuration of Balls conforms to the invariants for the Inelastic screens, but bury behind
+    // Verify that the configuration of Balls conforms to the invariants for the Inelastic screen, but bury behind
     // assert so it doesn't impact production performance.
     if ( assert ) {
 
@@ -69,7 +69,7 @@ class InelasticBallSystem extends BallSystem {
       assert( INELASTIC_INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
     }
 
-    // @public {EnumerationProperty.<InelasticPresets>} - the type of perfectly inelastic collision.
+    // @public {EnumerationProperty.<InelasticPresets>} - the current InelasticPreset.
     this.inelasticPresetProperty = new EnumerationProperty( InelasticPresets, InelasticPresets.CUSTOM );
 
     //----------------------------------------------------------------------------------------
@@ -78,7 +78,6 @@ class InelasticBallSystem extends BallSystem {
     // removed since InelasticBallSystems are never disposed.
     this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
       ballSystemUserControlled && ( this.inelasticPreset = InelasticPresets.CUSTOM );
-      this.balls.forEach( ball => ball.rotationProperty.reset() );
     } );
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
@@ -91,13 +90,13 @@ class InelasticBallSystem extends BallSystem {
       // Set the elapsed time to 0.
       elapsedTimeProperty.reset();
 
-      // Set every Ball's position, mass, and velocity to the preset's BallStates.
+      // Set every Ball's position, mass, and velocity to the InelasticPreset's BallStates.
       inelasticPreset.setBalls( this.balls );
     } );
   }
 
   /**
-   * Get the value of the inelasticPresetProperty.
+   * Gets the value of the inelasticPresetProperty.
    * @public
    *
    * @returns {InelasticPresets}
