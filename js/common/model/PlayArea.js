@@ -19,6 +19,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -30,39 +31,35 @@ const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 class PlayArea {
 
   /**
+   * @param {PlayArea.Dimensions} dimensions - the dimensions of the PlayArea (1D vs 2D).
    * @param {Object} [options]
    */
-  constructor( options ) {
+  constructor( dimensions, options ) {
+    assert && assert( PlayArea.Dimensions.includes( dimensions ), `invalid dimensions: ${dimensions}` );
 
     options = merge( {
-
-      // {number} - the dimensions of the PlayArea. Must be either 1 or 2.
-      dimensions: 2,
 
       // {Bounds2} - the model bounds of the PlayArea, in meters.
       bounds: PlayArea.DEFAULT_BOUNDS,
 
-      // {boolean} - indicates if the Grid is visible initially.
+      // {boolean} - indicates if the Grid is visible initially (and after resetting).
       isGridVisibleInitially: false,
 
-      // {boolean} - indicates if the PlayArea's borders reflect initially.
+      // {boolean} - indicates if the PlayArea's borders reflect initially (and after resetting).
       reflectsBorderInitially: true,
 
-      // {number} - the initial elasticity of the PlayArea, as a percentage.
+      // {number} - the initial elasticity of the PlayArea (and after resetting), as a percentage.
       initialElasticityPercent: ELASTICITY_PERCENT_RANGE.max
 
     }, options );
 
-    assert && assert( options.dimensions === 1 || options.dimensions === 2 , `invalid dimensions: ${options.dimensions}` );
-    assert && assert( options.bounds instanceof Bounds2, `invalid bounds: ${options.bounds}` );
-
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {Bounds2} - the model bounds of the PlayArea, in meters.
+    // @public (read-only) {Bounds2} - the bounds of the PlayArea, in meters.
     this.bounds = options.bounds;
 
-    // @public (read-only) {number} - the dimensions of the PlayArea.
-    this.dimensions = options.dimensions;
+    // @public (read-only) {PlayArea.Dimensions} - the dimensions of the PlayArea (1D vs 2D).
+    this.dimensions = dimensions;
 
     // @public {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
     //                             is manipulated in the view.
@@ -94,12 +91,14 @@ class PlayArea {
   //----------------------------------------------------------------------------------------
 
   /**
-   * Gets a boolean that indicates if its border reflects Balls or not.
+   * Gets a boolean that indicates if the PlayArea's border reflects Balls or not.
    * @public
    *
    * @returns {boolean}
    */
-  get reflectsBorder() { return this.reflectingBorderProperty.value; }
+  get reflectsBorder() {
+    return this.reflectingBorderProperty.value;
+  }
 
   /**
    * Convenience method to get the elasticity of all collisions, as a DECIMAL.
@@ -107,7 +106,9 @@ class PlayArea {
    *
    * @returns {number}
    */
-  get elasticity() { return this.elasticityPercentProperty.value / 100; }
+  get elasticity() {
+    return this.elasticityPercentProperty.value / 100;
+  }
 
   /**
    * Gets the width of the PlayArea, in meters.
@@ -115,7 +116,9 @@ class PlayArea {
    *
    * @returns {number} - in meters.
    */
-  get width() { return this.bounds.width; }
+  get width() {
+    return this.bounds.width;
+  }
 
   /**
    * Gets the height of the PlayArea, in meters.
@@ -123,7 +126,9 @@ class PlayArea {
    *
    * @returns {number} - in meters.
    */
-  get height() { return this.bounds.height; }
+  get height() {
+    return this.bounds.height;
+  }
 
   /**
    * ES5 Getters for the location of the edges of the PlayArea, in meters.
@@ -180,7 +185,7 @@ class PlayArea {
   }
 
   /**
-   * Determines whether the PlayArea contains any part of the Ball within its Bounds.
+   * Determines whether the PlayArea contains ANY part of the Ball within its Bounds.
    * @public
    *
    * @param {Ball} ball
@@ -195,6 +200,9 @@ class PlayArea {
 
 // @public (read-only) {Bounds2} - the default bounds of the PlayArea.
 PlayArea.DEFAULT_BOUNDS = new Bounds2( -2, -1, 2, 1 );
+
+// @public (read-only) {Enumeration} - Enumeration of the possible 'dimensions' of a PlayArea.
+PlayArea.Dimensions = Enumeration.byKeys( [ 'ONE', 'TWO' ] );
 
 collisionLab.register( 'PlayArea', PlayArea );
 export default PlayArea;
