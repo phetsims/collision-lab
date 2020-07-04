@@ -31,7 +31,7 @@ const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
 class PlayArea {
 
   /**
-   * @param {PlayArea.Dimension} dimension - the dimension of the PlayArea (1D vs 2D).
+   * @param {PlayArea.Dimension} dimension - the dimensions of the PlayArea (1D vs 2D).
    * @param {Object} [options]
    */
   constructor( dimension, options ) {
@@ -58,7 +58,7 @@ class PlayArea {
     // @public (read-only) {Bounds2} - the bounds of the PlayArea, in meters.
     this.bounds = options.bounds;
 
-    // @public (read-only) {PlayArea.Dimension} - the dimension of the PlayArea (1D vs 2D).
+    // @public (read-only) {PlayArea.Dimension} - the dimensions of the PlayArea (1D vs 2D).
     this.dimension = dimension;
 
     // @public {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
