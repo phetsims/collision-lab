@@ -24,11 +24,11 @@
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
-import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
@@ -90,7 +90,8 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       // https://github.com/phetsims/collision-lab/issues/95. Link is never disposed since BallValuesPanelNumberDisplays
       // are never disposed.
       userControlledProperty.link( userControlled => {
-        this.backgroundFill = userControlled ? PhetColorScheme.BUTTON_YELLOW : options.backgroundFill;
+        this.backgroundFill = userControlled ? CollisionLabColors.HIGHLIGHTED_NUMBER_DISPLAY_FILL :
+                                               options.backgroundFill;
       } );
 
       // Get the unit displayed when the user is editing the BallProperty.

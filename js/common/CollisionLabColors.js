@@ -59,8 +59,12 @@ const CollisionLabColors = {
   KEYPAD_DEFAULT_TEXT: Color.BLACK,
   KEYPAD_ERROR_TEXT: Color.RED,
 
+  // Scale Bar
+  SCALE_BAR_COLOR: Color.BLACK,
+
   // Miscellaneous
   CHANGE_IN_MOMENTUM_DASHED_LINE: 'rgb( 182, 181, 182 )',
+  HIGHLIGHTED_NUMBER_DISPLAY_FILL: PhetColorScheme.BUTTON_YELLOW,
   TOTAL_MOMENTUM_VECTOR_FILL: Color.BLACK
 };
 

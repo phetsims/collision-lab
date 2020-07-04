@@ -19,14 +19,15 @@ import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import Dialog from '../../../../sun/js/Dialog.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -95,8 +96,8 @@ class KeypadDialog extends Dialog {
     // Create the Background to the valueText Node.
     const valueBackgroundNode = new Rectangle( 0, 0, options.valueBoxWidth, this.height + 2 * options.valueYMargin, {
       cornerRadius: 3,
-      fill: 'white',
-      stroke: 'black'
+      fill: Color.WHITE,
+      stroke: Color.BLACK
     } );
 
     const valueDisplayBox = new Node( { children: [ valueBackgroundNode, this.valueText ] } );
@@ -107,7 +108,6 @@ class KeypadDialog extends Dialog {
       baseColor: CollisionLabColors.KEYPAD_ENTER_BUTTON,
       content: new Text( collisionLabStrings.enter, {
         font: options.font,
-        fill: 'black',
         maxWidth: this.keypad.width // constrain width for i18n
       } )
     } );

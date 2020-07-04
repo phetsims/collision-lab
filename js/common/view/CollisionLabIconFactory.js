@@ -18,6 +18,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -52,15 +53,15 @@ const CollisionLabIconFactory = {
     // Circle representation of the Ball.
     const ballCircle = new Circle( 10.5, {
       fill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
-      stroke: 'black'
+      stroke: Color.BLACK
     } );
 
     // Labels the index of the Ball
     const labelNode = new Text( ball.index, {
       font: new PhetFont( { size: 18, weight: 600 } ),
       center: ballCircle.center,
-      stroke: 'black',
-      fill: 'white'
+      stroke: Color.BLACK,
+      fill: Color.WHITE
     } );
 
     return new Node( { children: [ ballCircle, labelNode ] } );

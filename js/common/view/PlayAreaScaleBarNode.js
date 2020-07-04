@@ -15,8 +15,8 @@
  * @author Brandon Li
  */
 
-import merge from '../../../../phet-core/js/merge.js';
 import Orientation from '../../../../phet-core/js/Orientation.js';
+import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
@@ -24,9 +24,9 @@ import HBox from '../../../../scenery/js/nodes/HBox.js';
 import LayoutBox from '../../../../scenery/js/nodes/LayoutBox.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class PlayAreaScaleBarNode extends LayoutBox {
@@ -41,9 +41,6 @@ class PlayAreaScaleBarNode extends LayoutBox {
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     options = merge( {
-
-      // {PaintDeft} - the color of the strokes and fills of all Paintables
-      color: Color.BLACK,
 
       // {Orientation} - the orientation of the scale-bar. Either HORIZONTAL or VERTICAL.
       scaleBarOrientation: Orientation.HORIZONTAL,
@@ -63,6 +60,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
       // Label
       labelMargin: 0, // {number} - margin between the label and the arrow.
       labelFont: CollisionLabConstants.DISPLAY_FONT
+
     }, options );
 
     //----------------------------------------------------------------------------------------
@@ -99,21 +97,21 @@ class PlayAreaScaleBarNode extends LayoutBox {
     // Create the left side-bar.
     const leftSideBar = new Line( 0, 0, 0, options.sideBarLength, {
       lineWidth: options.sideBarLineWidth,
-      stroke: options.color
+      stroke: CollisionLabColors.SCALE_BAR_COLOR
     } );
 
     // Create the ArrowNode.
     const arrowNode = new ArrowNode( 0, 0,
       modelViewTransform.modelToViewDeltaX( length ) - 2 * options.sideBarLineWidth, 0, merge( {
-        stroke: options.color,
-        fill: options.color,
+        stroke: CollisionLabColors.SCALE_BAR_COLOR,
+        fill: CollisionLabColors.SCALE_BAR_COLOR,
         doubleHead: true
       }, options.arrowOptions ) );
 
     // Create the right side-bar.
     const rightSideBar = new Line( 0, 0, 0, options.sideBarLength, {
       lineWidth: options.sideBarLineWidth,
-      stroke: options.color
+      stroke: CollisionLabColors.SCALE_BAR_COLOR
     } );
 
     // Wrap the arrow and side-bars in a HBox.
@@ -132,7 +130,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
 
     // Set the spacing and orientation of the LayoutBox.
     options.spacing = options.labelMargin;
-    options.orientation = options.scaleBarOrientation === Orientation.HORIZONTAL ? 'vertical' : 'horizontal';
+    options.orientation = options.scaleBarOrientation.opposite.layoutBoxOrientation;
 
     super( options );
   }
