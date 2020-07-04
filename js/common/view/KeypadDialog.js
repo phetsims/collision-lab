@@ -20,7 +20,6 @@ import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
-import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
@@ -105,7 +104,7 @@ class KeypadDialog extends Dialog {
     // Create the enterButton, which allows the user to submit an Edit.
     const enterButton = new RectangularPushButton( {
       listener: this.submitEdit.bind( this ),
-      baseColor: PhetColorScheme.BUTTON_YELLOW,
+      baseColor: CollisionLabColors.KEYPAD_ENTER_BUTTON,
       content: new Text( collisionLabStrings.enter, {
         font: options.font,
         fill: 'black',

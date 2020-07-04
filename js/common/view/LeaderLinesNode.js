@@ -17,8 +17,8 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
-import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 
 class LeaderLinesNode extends Path {
 
@@ -32,7 +32,7 @@ class LeaderLinesNode extends Path {
     options = merge( {
 
       lineDash: [ 10, 2 ],
-      stroke: Color.BLACK
+      stroke: CollisionLabColors.BALL_LEADER_LINES_COLOR
 
     }, options );
 

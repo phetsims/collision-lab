@@ -13,11 +13,11 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class ReturnBallsButton extends RectangularPushButton {
@@ -36,7 +36,7 @@ class ReturnBallsButton extends RectangularPushButton {
       labelFont: CollisionLabConstants.CONTROL_FONT,
 
       // super-class options
-      baseColor: PhetColorScheme.BUTTON_YELLOW
+      baseColor: CollisionLabColors.RETURN_BALLS_BUTTON
 
     }, options );
 
