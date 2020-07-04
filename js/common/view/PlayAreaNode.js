@@ -71,7 +71,7 @@ class PlayAreaNode extends Node {
     const playAreaViewBounds = modelViewTransform.modelToViewBounds( playArea.bounds );
 
     // Create the background Rectangle, which appears behind the grid/ticks.
-    const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND_COLOR } );
+    const background = new Rectangle( playAreaViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND } );
 
     // Create the border Rectangle, which appears in front of the grid/ticks.
     const border = new Rectangle( playAreaViewBounds );
@@ -86,8 +86,8 @@ class PlayAreaNode extends Node {
 
       // Update the stroke color of the Border.
       border.stroke = reflectingBorder ?
-        CollisionLabColors.REFLECTING_GRID_BORDER_COLOR :
-        CollisionLabColors.NON_REFLECTING_GRID_BORDER_COLOR;
+        CollisionLabColors.REFLECTING_PLAY_AREA_BORDER :
+        CollisionLabColors.NON_REFLECTING_PLAY_AREA_BORDER;
     } );
 
     //----------------------------------------------------------------------------------------

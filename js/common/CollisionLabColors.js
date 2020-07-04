@@ -7,39 +7,37 @@
  * @author Martin Veillette
  */
 
+import PhetColorScheme from '../../../scenery-phet/js/PhetColorScheme.js';
 import Color from '../../../scenery/js/util/Color.js';
+import ColorConstants from '../../../sun/js/ColorConstants.js';
 import collisionLab from '../collisionLab.js';
-
-const LIGHT_GRAY = 'rgb( 225, 225, 225 )';
 
 const CollisionLabColors = {
 
   // General
   SCREEN_BACKGROUND: 'rgb( 244, 250, 255 )',
 
-
-
-  // PlayArea background
-  PLAY_AREA_BACKGROUND_COLOR: 'rgb( 255, 204, 153 )',
-
-  // Grid
-  GRID_BACKGROUND_COLOR: 'rgb( 255, 254, 255 )',
+  // Grids
+  GRID_BACKGROUND: 'rgb( 255, 254, 255 )',
   MAJOR_GRIDLINE_COLOR: 'rgb( 212, 212, 212 )',
-  MINOR_GRIDLINE_COLOR: LIGHT_GRAY,
-  REFLECTING_GRID_BORDER_COLOR: 'rgb( 41, 41, 128 )',
-  NON_REFLECTING_GRID_BORDER_COLOR: Color.BLACK,
-  TICK_LINE_COLOR: LIGHT_GRAY,
+  MINOR_GRIDLINE_COLOR: 'rgb( 225, 225, 225 )',
 
+  // PlayArea
+  TICK_LINE_COLOR: 'rgb( 220, 219, 220 )',
+  REFLECTING_PLAY_AREA_BORDER: 'rgb( 41, 41, 128 )',
+  NON_REFLECTING_PLAY_AREA_BORDER: Color.BLACK,
 
-  CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR: 'rgb( 182, 181, 182 )',
+  // Buttons
+  KEYPAD_ENTER_BUTTON: PhetColorScheme.BUTTON_YELLOW,
+  RETURN_BALLS_BUTTON: PhetColorScheme.BUTTON_YELLOW,
+  RESTART_BUTTON: ColorConstants.LIGHT_BLUE,
 
-  // Panel-like containers
-  PANEL_COLORS: {
-    stroke: 'rgb( 190, 190, 190 )',
-    fill: 'rgb( 240, 240, 240 )'
-  },
+  // Panel-like Containers
+  PANEL_STROKE: 'rgb( 190, 190, 190 )',
+  PANEL_FILL: 'rgb( 240, 240, 240 )',
 
   // Balls
+  BALL_LEADER_LINES_COLOR: Color.BLACK,
   BALL_COLORS: [
     new Color( 225, 70, 124 ),
     new Color( 73, 157, 247 ),
@@ -47,34 +45,23 @@ const CollisionLabColors = {
     new Color( 255, 0, 215 )
   ],
 
+  // Vector Colors
+  VELOCITY_VECTOR_FILL: Color.GREEN,
+  VELOCITY_VECTOR_STROKE: Color.BLACK,
+  MOMENTUM_VECTOR_FILL: Color.YELLOW,
+  MOMENTUM_VECTOR_STROKE: Color.BLACK,
+
   // Center of mass
-  CENTER_OF_MASS_COLORS: {
-    fill: new Color( 255, 128, 48 ),
-    stroke: 'rgb( 69, 54, 42 )'
-  },
-
-  // Leader lines, for when Balls are dragged
-  BALL_LEADER_LINES_COLOR: Color.BLACK,
-
+  CENTER_OF_MASS_FILL: new Color( 255, 128, 48 ),
+  CENTER_OF_MASS_STROKE: 'rgb( 69, 54, 42 )',
 
   // Keypad
-  KEYPAD_TEXT_COLORS: {
-    error: Color.RED,
-    default: Color.BLACK
-  },
+  KEYPAD_DEFAULT_TEXT: Color.BLACK,
+  KEYPAD_ERROR_TEXT: Color.RED,
 
-
-  TOTAL_MOMENTUM_VECTOR_FILL: Color.BLACK,
-
-  // Vector Colors
-  VELOCITY_VECTOR_COLORS: {
-    fill: 'rgb( 0, 255, 0 )',
-    stroke: Color.BLACK
-  },
-  MOMENTUM_VECTOR_COLORS: {
-    fill: 'rgb( 255, 255, 0 )',
-    stroke: Color.BLACK
-  }
+  // Miscellaneous
+  CHANGE_IN_MOMENTUM_DASHED_LINE: 'rgb( 182, 181, 182 )',
+  TOTAL_MOMENTUM_VECTOR_FILL: Color.BLACK
 };
 
 collisionLab.register( 'CollisionLabColors', CollisionLabColors );
