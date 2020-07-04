@@ -139,7 +139,7 @@ class PathsNode extends CanvasNode {
     } );
 
     // Draw the trailing 'Path' behind the CenterOfMass.
-    this.drawPath( this.centerOfMassPath, CollisionLabColors.CENTER_OF_MASS_COLORS.fill, context );
+    this.drawPath( this.centerOfMassPath, CollisionLabColors.CENTER_OF_MASS_FILL, context );
   }
 }
 

@@ -23,13 +23,16 @@ class XNode extends PlusNode {
    */
   constructor( options ) {
 
-    options = merge( {}, CollisionLabColors.CENTER_OF_MASS_COLORS, {
+    options = merge( {
 
       legThickness: 6, // {number} - thickness of the legs of the 'x'
       length: 22,      // {number} - the length of the diagonal of the 'x'
 
       // super-class options
-      lineWidth: 1.5
+      lineWidth: 1.5,
+      fill: CollisionLabColors.CENTER_OF_MASS_FILL,
+      stroke: CollisionLabColors.CENTER_OF_MASS_STROKE
+
     }, options );
 
     //----------------------------------------------------------------------------------------

@@ -66,7 +66,10 @@ class BallVelocityVectorNode extends BallVectorNode {
       tipCircleRadius: 13,
 
       // super-class options
-      arrowOptions: CollisionLabColors.VELOCITY_VECTOR_COLORS
+      arrowOptions: {
+        fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
+        stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE
+      }
 
     }, options );
 

@@ -38,7 +38,10 @@ class BallMomentumVectorNode extends BallVectorNode {
     options = merge( {
 
       // super-class options
-      arrowOptions: CollisionLabColors.MOMENTUM_VECTOR_COLORS
+      arrowOptions: {
+        fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
+        stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+      }
 
     }, options );
 

@@ -65,7 +65,7 @@ class CenterOfMassNode extends Node {
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, valuesVisibleProperty, {
       valuePattern: collisionLabStrings.speedPattern,
-      backgroundBaseFill: CollisionLabColors.CENTER_OF_MASS_COLORS.fill
+      backgroundBaseFill: CollisionLabColors.CENTER_OF_MASS_FILL
     } );
 
     // Set the children in the correct rendering order.

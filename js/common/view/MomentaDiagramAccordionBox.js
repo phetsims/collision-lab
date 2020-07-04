@@ -59,7 +59,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     //----------------------------------------------------------------------------------------
 
-    options = merge( {}, CollisionLabColors.PANEL_COLORS, {
+    options = merge( {
 
       gridLineSpacing: 1,   // {number} - the spacing of the grid lines, in model units (kg * m/s)
       zoomControlMargin: 5, // {number} - the margins between the edge of the Grid and the zoom controls
@@ -85,7 +85,10 @@ class MomentaDiagramAccordionBox extends AccordionBox {
         sideLength: 22,
         touchAreaXDilation: 6,
         touchAreaYDilation: 6
-      }
+      },
+      fill: CollisionLabColors.PANEL_FILL,
+      stroke: CollisionLabColors.PANEL_STROKE
+
     }, options );
 
     // Assign a max width to the title node for i18n.

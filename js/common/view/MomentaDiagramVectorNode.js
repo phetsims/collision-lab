@@ -55,7 +55,10 @@ class MomentaDiagramVectorNode extends Node {
       labelArrowMargin: 2,
 
       // {Object} - passed to the ArrowNode instance.
-      arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS, CollisionLabColors.MOMENTUM_VECTOR_COLORS ),
+      arrowOptions: merge( {
+        fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
+        stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+      }, CollisionLabConstants.ARROW_OPTIONS ),
 
       // {Object} - passed to the Text instance for the label.
       textOptions: {

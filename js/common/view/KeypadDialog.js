@@ -41,7 +41,7 @@ class KeypadDialog extends Dialog {
   constructor( options ) {
 
 
-    options = merge( {}, CollisionLabColors.PANEL_COLORS, {
+    options = merge( {
 
       // {Font} - font used for all Text instances within the Dialog.
       font: new PhetFont( 15 ),
@@ -55,7 +55,10 @@ class KeypadDialog extends Dialog {
       contentSpacing: 10, // {number} - vertical spacing between the content of the KeypadDialog.
 
       // super-class options
-      xSpacing: 2
+      xSpacing: 2,
+      fill: CollisionLabColors.PANEL_FILL,
+      stroke: CollisionLabColors.PANEL_STROKE
+
     }, options );
 
     //----------------------------------------------------------------------------------------
@@ -129,8 +132,8 @@ class KeypadDialog extends Dialog {
 
     // Observe when a key is pressed and reset text colors. Link is never disposed.
     this.keypad.accumulatedKeysProperty.link( () => {
-      this.valueText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.default;
-      this.rangeText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.default;
+      this.valueText.fill = CollisionLabColors.KEYPAD_DEFAULT_TEXT;
+      this.rangeText.fill = CollisionLabColors.KEYPAD_DEFAULT_TEXT;
     } );
   }
 
@@ -198,8 +201,8 @@ class KeypadDialog extends Dialog {
    * @private
    */
   warnOutOfRange() {
-    this.valueText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.error;
-    this.rangeText.fill = CollisionLabColors.KEYPAD_TEXT_COLORS.error;
+    this.valueText.fill = CollisionLabColors.KEYPAD_ERROR_TEXT;
+    this.rangeText.fill = CollisionLabColors.KEYPAD_ERROR_TEXT;
     this.keypad.setClearOnNextKeyPress( true );
   }
 

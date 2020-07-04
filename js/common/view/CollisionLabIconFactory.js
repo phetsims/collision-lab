@@ -83,6 +83,22 @@ const CollisionLabIconFactory = {
 
     return new ArrowNode( 0, 0, options.length, 0, options );
   },
+  createVelocityVectorIcon( options ) {
+    options = merge( {
+      fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
+      stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE
+    }, options );
+
+    return CollisionLabIconFactory.createVectorIcon( options );
+  },
+  createMomentumVectorIcon( options ) {
+    options = merge( {
+      fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
+      stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+    }, options );
+
+    return CollisionLabIconFactory.createVectorIcon( options );
+  },
 
   /**
    * Creates the center-of-mass icon, which is placed next to a checkbox to toggle the visibility of the center-of-mass.

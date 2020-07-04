@@ -10,7 +10,6 @@
 import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import RangeWithValue from '../../../dot/js/RangeWithValue.js';
-import merge from '../../../phet-core/js/merge.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
@@ -88,11 +87,13 @@ const CollisionLabConstants = {
   PANEL_Y_MARGIN: PANEL_Y_MARGIN,
   PANEL_CORNER_RADIUS: PANEL_CORNER_RADIUS,
   CONTROL_PANEL_CONTENT_WIDTH: 218,
-  PANEL_OPTIONS: merge( {
+  PANEL_OPTIONS: {
     xMargin: PANEL_X_MARGIN,
     yMargin: PANEL_Y_MARGIN,
-    cornerRadius: PANEL_CORNER_RADIUS
-  }, CollisionLabColors.PANEL_COLORS ),
+    cornerRadius: PANEL_CORNER_RADIUS,
+    fill: CollisionLabColors.PANEL_FILL,
+    stroke: CollisionLabColors.PANEL_STROKE
+  },
 
   // Fonts
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),

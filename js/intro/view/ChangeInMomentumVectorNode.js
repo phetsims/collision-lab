@@ -53,7 +53,10 @@ class ChangeInMomentumVectorNode extends Node {
     options = merge( {
 
       // {Object} - passed to the ArrowNode instance.
-      arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS, CollisionLabColors.MOMENTUM_VECTOR_COLORS ),
+      arrowOptions: merge( {
+        fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
+        stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+      }, CollisionLabConstants.ARROW_OPTIONS ),
 
       // {number[]} - line-dash pattern for the line that connects the Vector to the center of the Ball.
       connectingLineDash: [ 5, 4 ]
@@ -70,7 +73,7 @@ class ChangeInMomentumVectorNode extends Node {
     // Create the dashed Line that connects the tail of the Vector to the center of the Ball.
     const connectingLine = new Line( {
       lineDash: options.connectingLineDash,
-      stroke: CollisionLabColors.CHANGE_IN_MOMENTUM_DASHED_LINE_COLOR
+      stroke: CollisionLabColors.CHANGE_IN_MOMENTUM_DASHED_LINE
     } );
 
     // Get the Bounds of the PlayArea in view coordinates.
