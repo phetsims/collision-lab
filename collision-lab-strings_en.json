@@ -29,6 +29,13 @@
   "pattern.symbolSubSymbol": {
     "value": "{{symbol1}}<sub>{{symbol2}}</sub>"
   },
+  "pattern.labelEqualsValueUnits": {
+    "value": "{{label}} = {{value}} {{units}}"
+  },
+  "pattern.vectorSymbolEqualsValueUnits": {
+    "value": "|{{symbol}}| = {{value}} {{units}}"
+  },
+
 
   "units.kilogram": {
     "value": "kg"
@@ -48,6 +55,11 @@
   "units.percent": {
     "value": "\u0025"
   },
+  "units.joules": {
+    "value": "J"
+  },
+
+
 
   "symbol.x": {
     "value": "x"
@@ -62,6 +74,15 @@
     "value": "v"
   },
 
+  "kineticEnergyJ": {
+    "value": "Kinetic Energy = {{value}} J"
+  },
+  "speedPattern": {
+    "value": "|v| = {{value}} m/s"
+  },
+  "momentumPattern": {
+    "value": "|p| = {{value}} kg m/s"
+  },
 
   "preset.title": {
     "value": "Preset:"
@@ -135,10 +156,6 @@
   },
   "moreData": {
     "value": "More Data"
-  },
-
-  "kineticEnergyJ": {
-    "value": "Kinetic Energy = {{value}} J"
   },
   "speedPattern": {
     "value": "|v| = {{value}} m/s"
