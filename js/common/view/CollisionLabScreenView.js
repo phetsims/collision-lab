@@ -20,15 +20,17 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
+import HomeScreenView from '../../../../joist/js/HomeScreenView.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
-import merge from '../../../../phet-core/js/merge.js';
 import Orientation from '../../../../phet-core/js/Orientation.js';
+import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
+import PlayArea from '../model/PlayArea.js';
 import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
@@ -42,7 +44,6 @@ import PlayAreaNode from './PlayAreaNode.js';
 import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
 import RestartButton from './RestartButton.js';
 import ReturnBallsButton from './ReturnBallsButton.js';
-import PlayArea from '../model/PlayArea.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 152; // Meter to view coordinates scale factor.
@@ -167,7 +168,10 @@ class CollisionLabScreenView extends ScreenView {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
         keypadDialog.leftBottom = this.localToGlobalPoint( ballValuesPanel.rightBottom.plusXY( 10, 0 ) )
                                       .times( 1 / scale );
-      }
+      },
+
+      // TODO workaround for https://github.com/phetsims/joist/issues/586
+      scale: HomeScreenView.LAYOUT_BOUNDS.width / ScreenView.DEFAULT_LAYOUT_BOUNDS.width
     } );
 
     // BallValuesPanel
