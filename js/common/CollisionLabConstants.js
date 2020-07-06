@@ -26,7 +26,7 @@ const CollisionLabConstants = {
 
   // Ranges
   MASS_RANGE: new Range( 0.1, 3.0 ),
-  VELOCITY_RANGE: new Range( -4, 4 ),
+  VELOCITY_RANGE: new Range( -3, 3 ),
   ELASTICITY_PERCENT_RANGE: new Range( 0, 100 ),
   ELASTICITY_PERCENT_INTERVAL: 5,
 
