@@ -45,7 +45,7 @@ import ReturnBallsButton from './ReturnBallsButton.js';
 import PlayArea from '../model/PlayArea.js';
 
 // constants
-const MODEL_TO_VIEW_SCALE = 153; // Meter to view coordinates scale factor.
+const MODEL_TO_VIEW_SCALE = 152; // Meter to view coordinates scale factor.
 const PLAY_AREA_LEFT = 55;
 const BALL_VALUES_PANEL_TOP = 420;
 
@@ -226,8 +226,8 @@ class CollisionLabScreenView extends ScreenView {
         model.ballSystem.numberOfBallsProperty,
         model.ballSystem.numberOfBallsRange,
         model.playArea.gridVisibleProperty, merge( {
-          left: playAreaViewBounds.right + 5,
-          top: playAreaViewBounds.top + 5
+          left: playAreaViewBounds.right + 8,
+          top: playAreaViewBounds.top + 2
         }, options.playAreaControlSetOptions ) );
 
       this.addChild( playAreaControlSet );
