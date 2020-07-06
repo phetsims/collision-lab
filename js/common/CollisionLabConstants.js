@@ -31,7 +31,7 @@ const CollisionLabConstants = {
   ELASTICITY_PERCENT_INTERVAL: 5,
 
   // Time
-  TIME_STEP_DURATION: CollisionLabQueryParameters.timeStepDuration, // Seconds of real time per each press of the Step button.
+  TIME_STEP_DURATION: CollisionLabQueryParameters.timeStepDuration,
   NORMAL_SPEED_FACTOR: 1,
   SLOW_SPEED_FACTOR: 0.33,
 
@@ -98,7 +98,7 @@ const CollisionLabConstants = {
   // Fonts
   PANEL_TITLE_FONT: new PhetFont( { size: 15, weight: 600 } ),
   DISPLAY_FONT: new PhetFont( 15.5 ),
-  CONTROL_FONT: new PhetFont( 16 ) // default font for controls (buttons, checkboxes, ...)
+  CONTROL_FONT: new PhetFont( 16 ) // Default font for controls (buttons, checkboxes, ...).
 };
 
 collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );

@@ -63,13 +63,16 @@
   },
 
 
-  "inelasticPresets.title": {
-    "value": "Presets"
+  "preset.title": {
+    "value": "Preset:"
   },
-  "inelasticPresets.name1": {
+  "preset.custom": {
+    "value": "Custom"
+  },
+  "preset.name1": {
     "value": "Name 1"
   },
-  "inelasticPresets.name2": {
+  "preset.name2": {
     "value": "Name 2"
   },
 
