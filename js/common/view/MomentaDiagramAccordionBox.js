@@ -20,6 +20,8 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import GridNode from '../../../../griddle/js/GridNode.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -43,8 +45,8 @@ import ZoomControlSet from './ZoomControlSet.js';
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
 const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_Y_MARGIN;
 const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
-const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
-const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
+const MOMENTA_DIAGRAM_ASPECT_RATIO = new Dimension2( 10, 8 );
+const MOMENTA_DIAGRAM_ZOOM_RANGE = new RangeWithValue( 0.25, 4, 2 );
 
 class MomentaDiagramAccordionBox extends AccordionBox {
 

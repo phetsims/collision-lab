@@ -10,6 +10,7 @@
  * @author Brandon Li
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
@@ -25,7 +26,12 @@ class Explore1DPlayArea extends PlayArea {
     options = merge( {
 
       isGridVisibleInitially: true,
-      bounds: PlayArea.DEFAULT_BOUNDS.erodedY( CollisionLabConstants.PLAY_AREA_1D_ERODED_Y )
+      bounds: new Bounds2(
+        PlayArea.DEFAULT_BOUNDS.left,
+        -CollisionLabConstants.PLAY_AREA_1D_HEIGHT / 2,
+        PlayArea.DEFAULT_BOUNDS.right,
+        CollisionLabConstants.PLAY_AREA_1D_HEIGHT / 2
+      )
 
     }, options );
 
