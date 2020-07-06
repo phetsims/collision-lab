@@ -1,12 +1,12 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * InelasticControlPanel is a CollisionLabControlPanel sub-type for the 'Explore 2D' screen, which appears on the
+ * InelasticControlPanel is a CollisionLabControlPanel sub-type for the 'Inelastic' screen, which appears on the
  * upper-right corner of the screen.
  *
- * It adds a 'Path' Checkbox to allow the user to toggle the visibility of Ball and Center of Mass paths. The 'Path'
- * checkbox is inserted right below the 'Values' checkbox of the super-class. All other configurations and options
- * are the same.
+ * It adds a 'Stick' vs 'Slip' ABSwitch to allow the user to toggle the InelasticCollisionType. The ABSwitch is inserted
+ * right below the 'elasticity' NumberControl of the super-class. It also disables the 'elasticity' NumberControl. All
+ * other configurations and options are the same.
  *
  * @author Brandon Li
  */
@@ -52,13 +52,26 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     options = merge( {
 
-      elasticityNumberControlOptions: {
+      // {Object} - passed to the labels of the ABSwitch
+      stickSlipTextOptions: {
+        font: new PhetFont( 13 ),
+        maxWidth: 70 // constrain width for i18n, determined empirically
+      },
+
+      // {Object} - passed to the ABSwitch instance.
+      stickSlipABSwitchOptions: {
+        toggleSwitchOptions: {
+          size: new Dimension2( 28, 12 )
+        }
       }
 
     }, options );
 
-    assert && assert( !options.elasticityNumberControlOptions.enabledRangeProperty, 'InelasticControlPanel sets enabledRangeProperty' );
-    options.elasticityNumberControlOptions.enabledProperty = new Property( false );
+    //----------------------------------------------------------------------------------------
+
+    // Disable the 'elasticity' NumberControl.
+    assert && assert( !options.elasticityNumberControlOptions, 'InelasticControlPanel sets elasticityNumberControlOptions' );
+    options.elasticityNumberControlOptions = { enabledProperty: new Property( false ) };
 
     super( viewProperties,
            centerOfMassVisibleProperty,
@@ -70,24 +83,20 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     //----------------------------------------------------------------------------------------
 
+    // Create an AlignGroup for the Text Nodes to match their widths.
+    const labelAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
-    const stickSlipTextOptions = {
-      font: new PhetFont( 13 ),
-      maxWidth: 70 // constrain width for i18n, determined empirically
-    };
-
-    // Create AlignGroups for the Text Nodes to match their widths.
-    const stickSlipAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
-
-    const stickLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.stick, stickSlipTextOptions ) );
-    const slipLabel = stickSlipAlignGroup.createBox( new Text( collisionLabStrings.slip, stickSlipTextOptions ) );
+    // Create the Labels of the ABSwitch.
+    const stickLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.stick, options.stickSlipTextOptions ) );
+    const slipLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.slip, options.stickSlipTextOptions ) );
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
     const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
       InelasticCollisionType.STICK, stickLabel,
-      InelasticCollisionType.SLIP, slipLabel, {
-        toggleSwitchOptions: { size: new Dimension2( 28, 12 ) }
-      } );
+      InelasticCollisionType.SLIP, slipLabel,
+      options.stickSlipABSwitchOptions );
+
+    // Add the ABSwitch right below the 'elasticity' NumberControl.
     this.elasticityControls.addChild( stickSlipSwitch );
   }
 }

@@ -6,7 +6,7 @@
  *
  * It adds a 'Change in Momentum' Checkbox to allow the user to toggle the visibility of the change in momentum vectors. The
  * checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
- * 'Reflecting Border' Checkbox and the stick vs slip ABSwitch.
+ * 'Reflecting Border' Checkbox and the 'Path' Checkbox.
  *
  * @author Brandon Li
  */
