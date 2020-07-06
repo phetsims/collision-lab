@@ -150,7 +150,6 @@ class CollisionLabControlPanel extends Panel {
     // Add the path Checkbox if it is included.
     if ( options.includePathCheckbox ) {
 
-
       // Create the 'Path' visibility Checkbox.
       const pathCheckbox = new CollisionLabCheckbox( pathsVisibleProperty, collisionLabStrings.path );
 
