@@ -92,8 +92,8 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
     const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
-      InelasticCollisionType.STICK, stickLabel,
       InelasticCollisionType.SLIP, slipLabel,
+      InelasticCollisionType.STICK, stickLabel,
       options.stickSlipABSwitchOptions );
 
     // Add the ABSwitch right below the 'elasticity' NumberControl.
