@@ -96,7 +96,7 @@ class BallValuesPanel extends Panel {
     const momentumColumnGroup = new HBox( { children: [ xMomentumColumnNode ], spacing: options.componentColumnsSpacing } );
 
     // For 2D screens, add the y-component columns to their correlating group.
-    if ( dimension === PlayArea.Dimension.ONE ) {
+    if ( dimension === PlayArea.Dimension.TWO ) {
       const yPositionColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_POSITION, keypadDialog );
       const yVelocityColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_VELOCITY, keypadDialog );
       const yMomentumColumnNode = new BallValuesPanelColumnNode( ballSystem, BallValuesPanelColumnTypes.Y_MOMENTUM, keypadDialog );
