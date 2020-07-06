@@ -177,6 +177,7 @@ class Ball {
     this.yPositionUserControlledProperty.reset();
     this.xVelocityUserControlledProperty.reset();
     this.yVelocityUserControlledProperty.reset();
+    this.saveState();
   }
 
   /**
