@@ -62,7 +62,8 @@ class MomentaDiagramVectorNode extends Node {
 
       // {Object} - passed to the Text instance for the label.
       textOptions: {
-        font: new PhetFont( { size: 14, weight: 500 } )
+        font: new PhetFont( { size: 14, weight: 500 } ),
+        maxWidth: 30 // constrain width for i18n, determined empirically.
       }
 
     }, options );
