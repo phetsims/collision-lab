@@ -3,7 +3,7 @@
 /**
  * Enumeration of the possible 'types' of perfectly inelastic collisions. A perfectly inelastic happens when the
  * elasticity (and the coefficient of restitution) is 0. The documentation in this file is not exhaustive. Please also
- * see CollisionEngine.js and InelasticRotationEngine.js for complete background.
+ * see CollisionEngine.js and InelasticCollisionEngine.js for complete background.
  *
  * @author Brandon Li
  */
@@ -17,8 +17,8 @@ const InelasticCollisionType = Enumeration.byKeys( [
   // velocity along the 'Plane of Contact' is exactly equal before and after the collision. This is described more in
   // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
   //
-  // This is the only type of perfectly inelastic collisions in the flash simulation. All screens use this as the
-  // default. The collision-response algorithms for these collisions are handled in CollisionEngine.js.
+  // This is the only type of perfectly inelastic collisions in the flash simulation. The collision-response algorithms
+  // for these collisions are handled in CollisionEngine.js.
   'SLIP',
 
   // Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation, where
@@ -27,7 +27,7 @@ const InelasticCollisionType = Enumeration.byKeys( [
   //
   // The issue of rotations were first discussed in https://github.com/phetsims/collision-lab/issues/3 and
   // later in https://github.com/phetsims/collision-lab/issues/87. The collision-response algorithms for this type of
-  // collision is handled in InelasticRotationEngine.js.
+  // collision is handled in InelasticCollisionEngine.js.
   'STICK'
 
 ] );
