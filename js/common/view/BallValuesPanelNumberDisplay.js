@@ -176,7 +176,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
   static getEditingUnit( columnType ) {
     assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
 
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return collisionLabStrings.units.kilogram; }
+    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return collisionLabStrings.units.kilograms; }
     else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return collisionLabStrings.units.meters; }
     else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return collisionLabStrings.units.meters; }
     else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return collisionLabStrings.units.metersPerSecond; }

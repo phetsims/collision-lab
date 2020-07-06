@@ -28,6 +28,7 @@ import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Shape from '../../../../kite/js/Shape.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DragListener from '../../../../scenery/js/listeners/DragListener.js';
@@ -121,12 +122,18 @@ class BallNode extends Node {
 
     // Create the number display for the speed of the Ball, which appears above the ball. To be positioned later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( ball.speedProperty, valuesVisibleProperty, {
-      valuePattern: collisionLabStrings.speedPattern
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueUnits, {
+        symbol: collisionLabStrings.symbol.velocity,
+        units: collisionLabStrings.units.metersPerSecond
+      } )
     } );
 
     // Create the number display for the momentum of the Ball, which appears below the ball. To be positioned later.
     const momentumNumberDisplay = new PlayAreaNumberDisplay( ball.momentumMagnitudeProperty, valuesVisibleProperty, {
-      valuePattern: collisionLabStrings.momentumPattern
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueUnits, {
+        symbol: collisionLabStrings.symbol.momentum,
+        units: collisionLabStrings.units.kilogramMetersPerSecond
+      } )
     } );
 
     // Reference the bounds of the PlayArea in view coordinates.

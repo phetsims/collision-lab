@@ -123,7 +123,7 @@ class BallValuesPanel extends Panel {
     };
 
     // Create the Title Labels for each section of the BallValuesPanel.
-    const massTitleNode = createTitleLabel( collisionLabStrings.mass, collisionLabStrings.units.kilogram, options.massTitleMaxWidth );
+    const massTitleNode = createTitleLabel( collisionLabStrings.mass, collisionLabStrings.units.kilograms, options.massTitleMaxWidth );
     const momentumTitleNode = createTitleLabel( collisionLabStrings.momentum, collisionLabStrings.units.kilogramMetersPerSecond );
     const positionTitleNode = createTitleLabel( collisionLabStrings.position, collisionLabStrings.units.meters );
     const velocityTitleNode = createTitleLabel( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );

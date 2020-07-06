@@ -22,6 +22,7 @@ import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
@@ -64,7 +65,10 @@ class CenterOfMassNode extends Node {
 
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, valuesVisibleProperty, {
-      valuePattern: collisionLabStrings.speedPattern,
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueUnits, {
+        symbol: collisionLabStrings.symbol.velocity,
+        units: collisionLabStrings.units.metersPerSecond
+      } ),
       backgroundBaseFill: CollisionLabColors.CENTER_OF_MASS_FILL
     } );
 

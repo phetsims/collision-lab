@@ -2,7 +2,6 @@
   "collision-lab.title": {
     "value": "Collision Lab"
   },
-
   "screen.intro": {
     "value": "Intro"
   },
@@ -15,8 +14,6 @@
   "screen.inelastic": {
     "value": "Inelastic"
   },
-
-
   "pattern.range": {
     "value": "{{min}} to {{max}} {{units}}"
   },
@@ -35,9 +32,7 @@
   "pattern.vectorSymbolEqualsValueUnits": {
     "value": "|{{symbol}}| = {{value}} {{units}}"
   },
-
-
-  "units.kilogram": {
+  "units.kilograms": {
     "value": "kg"
   },
   "units.meters": {
@@ -58,9 +53,6 @@
   "units.joules": {
     "value": "J"
   },
-
-
-
   "symbol.x": {
     "value": "x"
   },
@@ -73,17 +65,6 @@
   "symbol.velocity": {
     "value": "v"
   },
-
-  "kineticEnergyJ": {
-    "value": "Kinetic Energy = {{value}} J"
-  },
-  "speedPattern": {
-    "value": "|v| = {{value}} m/s"
-  },
-  "momentumPattern": {
-    "value": "|p| = {{value}} kg m/s"
-  },
-
   "preset.title": {
     "value": "Preset:"
   },
@@ -96,7 +77,6 @@
   "preset.name2": {
     "value": "Name 2"
   },
-
   "mass": {
     "value": "Mass"
   },
@@ -106,12 +86,6 @@
   "velocity": {
     "value": "Velocity"
   },
-  "momentum": {
-    "value": "Momentum"
-  },
-
-
-
   "momentum": {
     "value": "Momentum"
   },
@@ -156,15 +130,6 @@
   },
   "moreData": {
     "value": "More Data"
-  },
-  "speedPattern": {
-    "value": "|v| = {{value}} m/s"
-  },
-  "momentumPattern": {
-    "value": "|p| = {{value}} kg m/s"
-  },
-  "changeInMomentum": {
-    "value": "Change in Momentum"
   },
   "balls": {
     "value": "Balls"
