@@ -48,17 +48,19 @@ testing. Sim-specific query parameters are documented in
 
 This section describes the **main** classes that are common to multiple screens. You'll find these classes in `js/common/`.
 
-[CollisionLabModel](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionLabModel.js) is the model base class for all screens. It is responsible for instantiating objects common to all screens, including a PlayArea, BallSystem, CollisionEngine, and MomentaDiagram.
+#### Model
+
+[CollisionLabModel](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionLabModel.js) is the model base class for all screens. It is responsible for instantiating sub-models common to all screens.
 
 [PlayArea](https://github.com/phetsims/collision-lab/blob/master/js/common/model/PlayArea.js) is main viewing box of the Balls.
 
 [Ball](https://github.com/phetsims/collision-lab/blob/master/js/common/model/Ball.js) is the model for the Balls that appear in the sim.
 
-[CollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionEngine.js) implements collision detection and responses of Balls for all screens. Reference the [Collision Detection and Response](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision) 
+[CollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionEngine.js) implements collision detection and responses of Balls for all screens. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation) 
 
 [BallSystem](https://github.com/phetsims/collision-lab/blob/master/js/common/model/BallSystem.js) is the class that instantiates pre-populated Balls and tracks the number of Balls and which Balls that are in the "system."
 
-### View
+#### View
 
 [CollisionLabViewProperties](https://github.com/phetsims/collision-lab/blob/master/js/common/view/CollisionLabViewProperties.js) a collection of boolean AXON Properties, mostly for visibility, that applies to all screens.
 
@@ -70,8 +72,13 @@ This section describes the **main** classes that are common to multiple screens.
 
 [BallSystemNode](https://github.com/phetsims/collision-lab/blob/master/js/common/view/BallSystemNode.js) is the view associated with each BallSystem. In particular, it is responsible for creating each BallNode and layering them.
 
+### Screen-specific classes
 
-## Engine
+All screens have screen-specific to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences).
+
+The top-level classes ([CollisionLabModel](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](https://github.com/phetsims/collision-lab/blob/master/js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
+
+## Collision Implementation
 
 The motion of the balls is based on a ballistic motion. At every time step,
 the balls are first propagated forward ballistically assuming no collision of any kind.
