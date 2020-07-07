@@ -30,17 +30,17 @@ This section describes how this simulation addresses implementation consideratio
 
 **Coordinate Transforms**: The model coordinate frame is in meters (m), with +x right, +y up. The standard (scenery) view coordinate frame has +x right, +y down. Thus, Collision Lab uses a [ModelViewTransform2](https://github.com/phetsims/phetcommon/blob/master/js/view/ModelViewTransform2.js) scaling transformation that inverts the y axis.
 
+**Query Parameters**: Query parameters are used to enable sim-specific features, mainly for debugging and
+testing. Sim-specific query parameters are documented in
+[CollisionLabQueryParameters](https://github.com/phetsims/collision-lab/blob/master/js/common/CollisionLabQueryParameters.js).
+
+**Assertions**: The implementation makes heavy use of `assert` to verify pre/post assumptions and perform type checking. This sim performs type-checking for almost all function arguments via `assert`. If you are making modifications to this sim, do so with assertions enabled via the `?ea` query parameter.
+
 **Memory Management**: There are no dynamically allocated objects for the collision lab simulation. The same Ball objects (both model and view) are used with the same number of Balls, meaning Balls are created at the start of the sim and persist for the lifetime of the sim. See [BallSystem](https://github.com/phetsims/collision-lab/blob/master/js/common/model/BallSystem.js) for details.
 
 For the view, the simulation takes advantage of this and creates scenery Nodes that represents each Ball (for the Ball Values Panel, Paths, BallNodes, etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
 
 Thus, all observer/observable relationships exist for the lifetime of the sim, so there is no need to call the various memory-management functions associated with these objects (unlink, dispose, removeListener, etc.).
-
-**Query Parameters**: Query parameters are used to enable sim-specific features, mainly for debugging and
-testing. Sim-specific query parameters are documented in
-[CollisionLabQueryParameters](https://github.com/phetsims/collision-lab/blob/master/js/common/CollisionLabQueryParameters.js).
-
-**Assertions**: The implementation makes heavy use of `assert` to verify pre/post assumptions and perform type checking. This sim performs type-checking for almost all function arguments via `assert`. If you are making modifications to this sim, do so with assertions enabled via the `ea` query parameter.
 
 ## Class Overview
 
@@ -77,6 +77,16 @@ This section describes the **main** classes that are common to multiple screens.
 All screens have screen-specific to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences).
 
 The top-level classes ([CollisionLabModel](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](https://github.com/phetsims/collision-lab/blob/master/js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
+
+### Inelastic Screen
+
+The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences) section.
+
+[InelasticCollisionType](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionType.js) is a Enumeration of the different types of collisions ("Stick" vs "Slip").
+
+[InelasticCollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation) 
+
+[InelasticPreset](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetComboBox](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/PresetComboBox.js).
 
 ## Collision Implementation
 
