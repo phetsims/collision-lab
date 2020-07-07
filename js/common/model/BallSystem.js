@@ -140,18 +140,18 @@ class BallSystem {
         isValidValue: value => value >= 0
       } );
 
-    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled.
-    //                                                   Uses the userControlledProperty of all possible Balls as
-    //                                                   dependencies but only the Balls in the system are considered.
+    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled. Uses the
+    //                                       userControlledProperty of all possible Balls as dependencies but only the
+    //                                       Balls in the system are considered in the derivation function.
     this.ballSystemUserControlledProperty = new DerivedProperty(
       this.prepopulatedBalls.map( ball => ball.userControlledProperty ),
       () => this.balls.some( ball => ball.userControlledProperty.value ), {
         valueType: 'boolean'
       } );
 
-    // @public {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of
-    //                                                   the PlayArea. Uses the insidePlayAreaProperty of all possible
-    //                                                   Balls but only the Balls in the system are considered.
+    // @public {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of the PlayArea.
+    //                                       Uses the insidePlayAreaProperty of all possible Balls but only the Balls in
+    //                                       the system are considered in the derivation function.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(
       [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.insidePlayAreaProperty ) ],
       length => this.balls.every( ball => !ball.insidePlayAreaProperty.value ), {
