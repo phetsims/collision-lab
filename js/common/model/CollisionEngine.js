@@ -16,9 +16,9 @@
  * ## Collision response:
  *
  *   - Collision response determines what affect a collision has on a Ball's motion. When a collision has been detected,
- *     it is processed by first analytically determining the how long the Balls have been overlapping. Using this time,
- *     the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and
- *     the position of Balls after the collision are updated to a more realistic position.
+ *     it is processed by first analytically determining how long the Balls have been overlapping. Using this time, the
+ *     collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and the
+ *     position of Balls after the collision are updated to a more realistic position.
  *     The algorithms for finding the overlapping time of collisions can be found below:
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
