@@ -20,6 +20,7 @@ Much of the terminology for this sim is identified by labels that are visible in
 * _play area_ - the main viewing box of the Balls
 * _ball system_ - the complete collection of balls, inside and outside the play area
 * _collision engine_ refers to main physics engine of the simulation
+* _ball values panel_ refers to the panel at the bottom of each screen, which displays and allows to user to manipulate the Properties of the Balls that are in the system.
 * _inelastic collision type_ refers to which type of perfectly inelastic collision, see [InelasticCollisionType](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionType.js)
 * _inelastic preset_ refers to a preset for the 'Inelastic screen', see [InelasticPreset](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticPreset.js)
 
