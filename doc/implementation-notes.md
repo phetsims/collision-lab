@@ -102,3 +102,5 @@ The algorithms for finding the overlapping time of collisions can be found below
 * [ball-to-border-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf)
 
 The velocity of the Balls are also updated, taking into account the elasticity and input momentums. The algorithm for determining output velocities follow the follow the standard rigid-body collision model as described in [Impact Particles](http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf).
+
+The _Inelastic_ screen introduces rotations of Balls around the center of mass. This is implemented by taking advantage of the fact that there are only 2 Balls in the _Inelastic_ screen. Once the Balls are rotating, the 'InelasticCollisionEngine' hijacks the uniform-motion model and rotates the Balls, with constant angular velocity, around the moving center of mass. All 'slipping' collisions are forwarded to the `CollisionEngine`.
