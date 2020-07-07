@@ -367,7 +367,6 @@ class CollisionEngine {
      * border is exactly equal to its radius when it collides with the border. It
      * uses a dot-product projection to exploit this and solve the overlap time.
      *
-     *
      * Documenting the derivation was beyond the scope of code comments. Please reference
      * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
      *----------------------------------------------------------------------------*/
