@@ -97,7 +97,8 @@ Next, the Balls are inspected to determine if a ball-to-ball or a ball-to-border
 If and when a collision is detected, the collision is processed by first analytically determining the how long the Balls have been overlapping. Using this time, the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and the position of Balls after the collision are updated to a more realistic position.
 
 The algorithms for finding the overlapping time of collisions can be found below:
-    * [ball-to-ball-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf)
-    * [ball-to-border-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf)
+
+* [ball-to-ball-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf)
+* [ball-to-border-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf)
 
 The velocity of the Balls are also updated, taking into account the elasticity and input momentums. The algorithm for determining output velocities follow the follow the standard rigid-body collision model as described in [Impact Particles](http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf).
