@@ -94,7 +94,7 @@ class BallValuesPanelColumnNode extends VBox {
       // Observe when Balls are added or removed from the BallSystem, meaning the contentNode's visibility could change
       // if the ball is added or removed from the system. It should only be visible if the ball is in the BallSystem.
       ballSystem.balls.lengthProperty.link( () => {
-        contentNode.visible = ballSystem.balls.contains( ball );
+        contentNode.visible = ballSystem.balls.includes( ball );
       } );
     } );
 

@@ -185,7 +185,7 @@ const BallUtils = {
   getClosestOverlappingBall( ball, balls ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && AssertUtils.assertObservableArrayOf( balls, Ball );
-    assert && assert( balls.contains( ball ) );
+    assert && assert( balls.includes( ball ) );
 
     // Filter the Balls array to get the Balls that are overlapping with the passed-in Ball.
     const overlappingBalls = balls.filter( otherBall => {

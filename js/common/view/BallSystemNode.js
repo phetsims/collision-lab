@@ -84,7 +84,7 @@ class BallSystemNode extends Node {
       // Observe when Balls are added or removed from the BallSystem, meaning its visibility could change if it is
       // added or removed from the system. It should only be visible if the ball is in the BallSystem.
       ballSystem.balls.lengthProperty.link( () => {
-        ballNode.visible = ballSystem.balls.contains( ball );
+        ballNode.visible = ballSystem.balls.includes( ball );
       } );
 
       // Observe when the user controls the Ball and move the BallNode to the front of its layer. Link is never

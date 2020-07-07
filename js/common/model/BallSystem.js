@@ -230,7 +230,7 @@ class BallSystem {
    * @param {Ball} ball - the Ball that was just user-controlled and should be 'bumped' away.
    */
   bumpBallAwayFromOtherBalls( ball ) {
-    assert && assert( ball instanceof Ball && this.balls.contains( ball ), `invalid ball: ${ball}` );
+    assert && assert( ball instanceof Ball && this.balls.includes( ball ), `invalid ball: ${ball}` );
 
     // Flag that points to the closest Ball that overlaps with the passed-in Ball. Will be undefined if no other balls
     // are overlapping with the passed-in Ball.

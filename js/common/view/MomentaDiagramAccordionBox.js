@@ -164,7 +164,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       // Observe when Balls are added or removed from the PlayArea system and adjust the visibility of the momenta
       // Vector, which is only visible if the ball is in the PlayArea system.
       balls.lengthProperty.link( () => {
-        momentaVectorNode.visible = balls.contains( ball );
+        momentaVectorNode.visible = balls.includes( ball );
       } );
 
     } );
