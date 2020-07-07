@@ -84,18 +84,20 @@ The _Inelastic_ screen introduces many components and behaviors that are unique 
 
 [InelasticCollisionType](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionType.js) is a Enumeration of the different types of collisions ("Stick" vs "Slip").
 
-[InelasticCollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation) 
+[InelasticCollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation).
 
 [InelasticPreset](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetComboBox](https://github.com/phetsims/collision-lab/blob/master/js/inelastic/model/PresetComboBox.js).
 
 ## Collision Implementation
 
-The motion of the balls is based on a ballistic motion. At every time step,
-the balls are first propagated forward ballistically assuming no collision of any kind.
-Each pair of balls is then inspected to see if they physically overlap.
-In the case that they do, a ball collision is processed by first determining 
-analytically the exact time of collision. The resulting position of the pair of balls
-is then corrected taking into account the elasticity and current time.
-Additionally, each ball is check to see if it overlaps with the border of the playArea.
-In a similar process, the time of the contact between the border is determined
-and then the velocity and positions are corrected.
+The motion of Balls is based on the fact that they are under-going uniform-motion. At every time step, the balls are first propagated forward uniformly assuming no collision of any kind.
+
+Next, the Balls are inspected to determine if a ball-to-ball or a ball-to-border collision has occurred. Collisions are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps with the border of the PlayArea. The collision-lab implementation of collision detection does not use a [QuadTree](https://en.wikipedia.org/wiki/Quadtree) data structure since there aren't too many Balls in the model at a time.
+
+If and when a collision is detected, the collision is processed by first analytically determining the how long the Balls have been overlapping. Using this time, the collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and the position of Balls after the collision are updated to a more realistic position.
+
+The algorithms for finding the overlapping time of collisions can be found below:
+    * [ball-to-ball-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf)
+    * [ball-to-border-time-of-impact-derivation](https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf)
+
+The velocity of the Balls are also updated, taking into account the elasticity and input momentums. The algorithm for determining output velocities follow the follow the standard rigid-body collision model as described in [Impact Particles](http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf).
