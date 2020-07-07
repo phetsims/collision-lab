@@ -15,9 +15,9 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
@@ -147,7 +147,7 @@ class KeypadDialog extends Dialog {
    * @param {function} editFinishedCallback - callback when edit is entered or canceled.
    */
   beginEdit( valueProperty, valueRange, unitsString, editFinishedCallback ) {
-    assert && assert( valueProperty instanceof Property && typeof valueProperty.value === 'number', `invalid valueProperty: ${ valueProperty }` );
+    assert && AssertUtils.assertPropertyOf( valueProperty, 'number' );
     assert && assert( valueRange instanceof Range, `invalid valueRange: ${valueRange}` );
     assert && assert( typeof unitsString === 'string', `invalid unitsString: ${unitsString}` );
     assert && assert( typeof editFinishedCallback === 'function', `invalid editFinishedCallback: ${editFinishedCallback}` );

@@ -10,8 +10,8 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
@@ -19,11 +19,11 @@ import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 class MoreDataCheckbox extends CollisionLabCheckbox {
 
   /**
-   * @param {BooleanProperty} moreDataVisibleProperty
+   * @param {Property.<boolean>} moreDataVisibleProperty
    * @param {Object} [options]
    */
   constructor( moreDataVisibleProperty, options ) {
-    assert && assert( moreDataVisibleProperty instanceof Property && typeof moreDataVisibleProperty.value === 'boolean', `invalid moreDataVisibleProperty: ${moreDataVisibleProperty}` );
+    assert && AssertUtils.assertPropertyOf( moreDataVisibleProperty, 'boolean' );
 
     options = merge( {
 

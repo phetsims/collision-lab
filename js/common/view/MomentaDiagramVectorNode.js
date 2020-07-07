@@ -19,6 +19,7 @@ import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -41,7 +42,7 @@ class MomentaDiagramVectorNode extends Node {
   constructor( momentaDiagramVector, label, modelViewTransformProperty, options ) {
     assert && assert( momentaDiagramVector instanceof MomentaDiagramVector, `invalid momentaDiagramVector: ${momentaDiagramVector}` );
     assert && assert( typeof label === 'number' || typeof label === 'string', `invalid label: ${label}` );
-    assert && assert( modelViewTransformProperty instanceof Property && modelViewTransformProperty.value instanceof ModelViewTransform2, `invalid modelViewTransformProperty: ${modelViewTransformProperty}` );
+    assert && AssertUtils.assertPropertyOf( modelViewTransformProperty, ModelViewTransform2 );
 
     options = merge( {
 

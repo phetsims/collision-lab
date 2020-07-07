@@ -11,9 +11,9 @@
  * @author Martin Veillette
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import Color from '../../../../scenery/js/util/Color.js';
@@ -28,7 +28,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
    * @param {Object} [options]
    */
   constructor( elapsedTimeProperty, options ) {
-    assert && assert( elapsedTimeProperty instanceof Property && typeof elapsedTimeProperty.value === 'number', `invalid elapsedTimeProperty: ${elapsedTimeProperty}` );
+    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
     options = merge( {
 

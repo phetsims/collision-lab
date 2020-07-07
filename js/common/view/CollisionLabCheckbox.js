@@ -9,8 +9,8 @@
  * @author Alex Schor
  */
 
-import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import HStrut from '../../../../scenery/js/nodes/HStrut.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
@@ -26,9 +26,8 @@ class CollisionLabCheckbox extends Checkbox {
    * @param {Object} [options]
    */
   constructor( checkboxProperty, label, options ) {
-    assert && assert( checkboxProperty instanceof Property && typeof checkboxProperty.value === 'boolean', `invalid checkboxProperty: ${checkboxProperty}` );
+    assert && AssertUtils.assertPropertyOf( checkboxProperty, 'boolean' );
     assert && assert( typeof label === 'string', `invalid label: ${label}` );
-    assert && assert( !options || Object.getPrototypeOf( options ) === Object.prototype, `Extra prototype on options: ${options}` );
 
     options = merge( {}, CollisionLabConstants.CHECKBOX_OPTIONS, {
 
