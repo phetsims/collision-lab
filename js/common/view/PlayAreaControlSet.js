@@ -64,6 +64,8 @@ class PlayAreaControlSet extends VBox {
       // {Object} - options passed to the NumberSpinner instance.
       numberSpinnerOptions: {
         numberDisplayOptions: {
+          align: 'center',
+          xMargin: 5,
           yMargin: 4,
           minBackgroundWidth: 37,
           backgroundLineWidth: 0.5,
