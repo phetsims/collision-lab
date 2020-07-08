@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.0.0-dev.28 Wed Jul 08 2020 14:11:03 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.0-dev.29 Wed Jul 08 2020 16:00:56 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "1a41cef653bbed1025af5768bea958d7e3e0f8ae",
     "branch": "master"
@@ -17,7 +17,7 @@
     "branch": "master"
   },
   "collision-lab": {
-    "sha": "2eb2d2b8c421f6d999e18391c3523b93b12bb0bf",
+    "sha": "0a2b5c634ad56acc58549fdab14caa8604504435",
     "branch": "master"
   },
   "dot": {
@@ -77,11 +77,11 @@
     "branch": "master"
   },
   "sun": {
-    "sha": "6a4382bdf91b8f5541b1c4b5de38db6089b1f214",
+    "sha": "3087ba4444ebfba0b0021580b632021ae361fe5f",
     "branch": "master"
   },
   "tambo": {
-    "sha": "c8e586892244d13608b03ccee0883202a19b7ce0",
+    "sha": "3aeccee5a0e4c28598de7201f7310de36d69d0e5",
     "branch": "master"
   },
   "tandem": {
