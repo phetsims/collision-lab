@@ -63,11 +63,15 @@ class PlayAreaControlSet extends VBox {
 
       // {Object} - options passed to the NumberSpinner instance.
       numberSpinnerOptions: {
-        font: new PhetFont( 26 ),
-        backgroundMinWidth: 37,
-        backgroundLineWidth: 0.5,
-        arrowButtonLineWidth: 0.5,
-        yMargin: 4
+        numberDisplayOptions: {
+          yMargin: 4,
+          minBackgroundWidth: 37,
+          backgroundLineWidth: 0.5,
+          textOptions: {
+            font: new PhetFont( 26 )
+          }
+        },
+        arrowButtonLineWidth: 0.5
       },
 
       // super-class options
