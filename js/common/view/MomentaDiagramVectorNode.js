@@ -16,7 +16,6 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -132,7 +131,7 @@ class MomentaDiagramVectorNode extends Node {
         else {
 
           // Position the label which depends on the sign of the x-component of the Momenta Vector.
-          labelNode.center = tipViewPosition.plusXY( Utils.sign( momentaDiagramVector.components.x ) * adjustedOffset, 0 );
+          labelNode.center = tipViewPosition.plusXY( Math.sign( momentaDiagramVector.components.x ) * adjustedOffset, 0 );
         }
     } );
   }
