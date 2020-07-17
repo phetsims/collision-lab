@@ -212,7 +212,6 @@ class CollisionEngine {
   collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    // assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
     assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
     assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
     assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
@@ -222,7 +221,7 @@ class CollisionEngine {
     const m2 = ball2.mass;
     const v1 = ball1.velocity;
     const v2 = ball2.velocity;
-    const e = this.playArea.elasticity;
+    const elasticity = this.playArea.elasticity;
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
     const v1n = v1.dot( this.mutableVectors.normal );
@@ -231,8 +230,8 @@ class CollisionEngine {
     const v2t = v2.dot( this.mutableVectors.tangent );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
-    const v1nP = ( ( m1 - m2 * e ) * v1n + m2 * ( 1 + e ) * v2n ) / ( m1 + m2 );
-    const v2nP = ( ( m2 - m1 * e ) * v2n + m1 * ( 1 + e ) * v1n ) / ( m1 + m2 );
+    const v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
+    const v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
 
     // Change coordinate frames back into the standard x-y coordinate frame.
     const v1xP = this.mutableVectors.tangent.dotXY( v1t, v1nP );
@@ -243,8 +242,8 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
-    ball1.position = ball1.velocity.times( overlappedTime ).add( collisionPosition1 );
-    ball2.position = ball2.velocity.times( overlappedTime ).add( collisionPosition2 );
+    ball1.position = collisionPosition1.add( ball1.velocity.times( overlappedTime ) );
+    ball2.position = collisionPosition2.add( ball2.velocity.times( overlappedTime ) );
   }
 
   /**
