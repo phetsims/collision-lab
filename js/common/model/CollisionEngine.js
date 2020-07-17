@@ -40,6 +40,7 @@ import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import PlayArea from './PlayArea.js';
+import Collision from './Collision.js';
 
 class CollisionEngine {
 
@@ -71,7 +72,7 @@ class CollisionEngine {
       tangent: new Vector2( 0, 0 )
     };
 
-    this.collidingBalls = [];
+    this.collisions = [];
   }
 
   /**
@@ -86,13 +87,21 @@ class CollisionEngine {
     // collisions (for now).
 
     // Handle all collisions now that the Balls have been moved.
-    this.collidingBalls = [];
-    this.handleBallToBallCollisions( dt );
+    this.collisions = [];
+    this.detectBallToBallCollisions( dt );
+    let passedTime = 0;
+    while ( passedTime <= dt && this.collisions.length ) {
+
+      const collision = _.minBy( this.collisions, _.property( 'collisionTime' ) );
+      this.collideBalls( collision.ball, collision.collidingObject, collision.collisionTime );
+      passedTime += collision.collisionTime;
+
+    }
 
 
-    this.ballSystem.balls.filter( ball => !this.collidingBalls.includes( ball ) ).forEach( ball => { ball.stepUniformMotion( dt ); } );
+    this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
 
-    this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+    // this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
   }
 
   /**
@@ -142,7 +151,7 @@ class CollisionEngine {
    * @private
    * @param {number} dt - time in seconds
    */
-  handleBallToBallCollisions( dt ) {
+  detectBallToBallCollisions( dt ) {
     // assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
     // assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing.' );
 
@@ -164,31 +173,32 @@ class CollisionEngine {
 
       // console.log( possibleRoots, deltaCollisionTime + this.elapsedTimeProperty.value )
       // If two balls are on top of each other, process the collision.
-      if ( Number.isFinite( deltaCollisionTime ) && deltaCollisionTime < dt ) {
-        this.collidingBalls.push( ball1 );
-        this.collidingBalls.push( ball2 );
-        // When a collision is detected, Balls have already overlapped, so the current positions are not the exact
-        // positions when the balls first collided. Use the overlapped time to find the exact collision positions.
-        const overlappedTime = dt - deltaCollisionTime;
+      if ( ( deltaCollisionTime <= dt && dt >= 0 ) || ( deltaCollisionTime > dt && dt < 0 ) ) {
+        this.collisions.push( new Collision( ball1, ball2, deltaCollisionTime ) );
 
-        // Get exact positions when the Balls collided by rewinding by the overlapped time.
-        const r1 = BallUtils.computeUniformMotionBallPosition( ball1, deltaCollisionTime );
-        const r2 = BallUtils.computeUniformMotionBallPosition( ball2, deltaCollisionTime );
+        // this.collidingBalls.push( ball2 );
+        // // When a collision is detected, Balls have already overlapped, so the current positions are not the exact
+        // // positions when the balls first collided. Use the overlapped time to find the exact collision positions.
+        // const overlappedTime = dt - deltaCollisionTime;
 
-        // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
-        // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-        !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
-                           this.mutableVectors.normal.set( Vector2.X_UNIT );
+        // // Get exact positions when the Balls collided by rewinding by the overlapped time.
+        // const r1 = BallUtils.computeUniformMotionBallPosition( ball1, deltaCollisionTime );
+        // const r2 = BallUtils.computeUniformMotionBallPosition( ball2, deltaCollisionTime );
 
-        // Set the Tangential vector, called the 'plane of contact'.
-        this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
+        // // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
+        // // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
+        // !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
+        //                    this.mutableVectors.normal.set( Vector2.X_UNIT );
 
-        // // Record the collision in both of the Ball's trailing 'paths'.
-        // this.recordCollisionPosition( ball1, r1, overlappedTime );
-        // this.recordCollisionPosition( ball2, r2, overlappedTime );
+        // // Set the Tangential vector, called the 'plane of contact'.
+        // this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
-        // Forward the rest of the collision response to the collide-balls method.
-        this.collideBalls( ball1, ball2, r1, r2, overlappedTime );
+        // // // Record the collision in both of the Ball's trailing 'paths'.
+        // // this.recordCollisionPosition( ball1, r1, overlappedTime );
+        // // this.recordCollisionPosition( ball2, r2, overlappedTime );
+
+        // // Forward the rest of the collision response to the collide-balls method.
+        // this.collideBalls( ball1, ball2, r1, r2, overlappedTime );
       }
     } );
   }
@@ -209,12 +219,25 @@ class CollisionEngine {
    * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
-    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
-    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+  collideBalls( ball1, ball2, collisionTime ) {
+    // assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    // assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+    // assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
+    // assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
+    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+
+    const r1 = BallUtils.computeUniformMotionBallPosition( ball1, collisionTime );
+    const r2 = BallUtils.computeUniformMotionBallPosition( ball2, collisionTime );
+    ball1.position = r1;
+    ball2.position = r2;
+
+    // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
+    // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
+    !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
+                       this.mutableVectors.normal.set( Vector2.X_UNIT );
+
+    // Set the Tangential vector, called the 'plane of contact'.
+    this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
     // Convenience references to the other known Ball values.
     const m1 = ball1.mass;
@@ -242,8 +265,7 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
-    ball1.position = collisionPosition1.add( ball1.velocity.times( overlappedTime ) );
-    ball2.position = collisionPosition2.add( ball2.velocity.times( overlappedTime ) );
+    // // Get exact positions when the Balls collided by rewinding by the overlapped time.
   }
 
   /**
