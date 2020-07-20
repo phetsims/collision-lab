@@ -6,12 +6,20 @@
  *
  * ## Collision detection:
  *
- *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Collisions
- *     are detected after the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
+ *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Both of these
+ *     collisions are detected before the collision occurs to avoid tunneling (where Balls would )
+ *
+ *
+ *   Collisions
+ *     are detected before the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
  *     with the border of the PlayArea.
  *
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
+ *
+ *
+ *Collision detection is a posteriori (detected after a
+collision occurs)https://en.wikipedia.org/wiki/Collision_detection#A_posteriori_(discrete)_versus_a_priori_(continuous)
  *
  * ## Collision response:
  *
@@ -83,7 +91,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time in seconds
    */
-  async step( dt ) {
+  step( dt ) {
 
     // First step the position of the balls, assuming they are undergoing uniform motion and that there are no
     // collisions (for now).
@@ -110,7 +118,7 @@ class CollisionEngine {
         this.collisions = [];
         this.detectBallToBallCollisions( dt - passedTime );
         this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
-        await sleep(1500)
+        // await sleep(1500)
       }
     }
     // else {
@@ -194,7 +202,7 @@ class CollisionEngine {
 
 
       // If two balls are on top of each other, process the collision.
-      if ( possibleRoots.length && possibleRoots[ 0 ] <= dt && possibleRoots[ 0 ] >= 0 ) {
+      if ( possibleRoots && possibleRoots.length && possibleRoots[ 0 ] <= dt && possibleRoots[ 0 ] >= 0 ) {
         this.collisions.push( new Collision( ball1, ball2, possibleRoots[ 0 ] ) );
 
         // this.collidingBalls.push( ball2 );
