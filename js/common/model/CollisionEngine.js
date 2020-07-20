@@ -1,8 +1,8 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * CollisionEngine handles all collision detection and responses. It is the physics engine that is used for all screens
- * of the 'Collision Lab' simulation.
+ * CollisionEngine handles all collision detection and responses of Ball collisions. It is the physics engine that is
+ * used for all screens of the 'Collision Lab' simulation.
  *
  * ## Collision detection:
  *
