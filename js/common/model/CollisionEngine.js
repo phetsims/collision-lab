@@ -13,15 +13,15 @@
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-ball-collision-detection.md
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-border-collision-detection.md
  *
- *   - On each time-step, _all_ potential collisions are detected at once and encapsulated in a Collision instance. To
- *     fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the first
- *     collision is handled and all potential collisions afterwards are re-computed. This process is repeated until
- *     there are no collisions detected within the time-step.
- *
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
  *
  * ## Collision response:
+ *
+ *   - On each time-step, _all_ potential collisions are detected at once and encapsulated in a Collision instance. To
+ *     fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the first
+ *     collision is handled and progressed and all potential collisions afterwards are re-detected. This process is
+ *     repeated until there are no collisions detected within the time-step.
  *
  *   - Collision response determines what affect a collision has on a Ball's motion. The algorithms for Ball collisions
  *     were adapted but significantly improved from the flash implementation of
