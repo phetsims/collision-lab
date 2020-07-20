@@ -181,7 +181,8 @@ class CollisionEngine {
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
       // Solve for the roots of the quadratic outlined in the document above.
-      let possibleRoots = Utils.solveQuadraticRootsReal(
+      // https://math.stackexchange.com/questions/311921/get-location-of-vector-circle-intersection
+      const possibleRoots = Utils.solveQuadraticRootsReal(
                               deltaV.magnitudeSquared,
                               2 * deltaV.dot( deltaR ),
                               deltaR.magnitudeSquared - sumOfRadiiSquared );
