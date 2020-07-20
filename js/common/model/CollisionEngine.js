@@ -32,6 +32,7 @@
  * @author Martin Veillette
  */
 
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -55,25 +56,23 @@ class CollisionEngine {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    // @private {PlayArea} - reference to the passed-in PlayArea.
-    this.playArea = playArea;
+    // @public {Collision[]} - collection of the potential Ball collisions on each time step.
+    this.potentialCollisions = [];
 
-    // @private {BallSystem} - reference to the passed-in BallSystem.
-    this.ballSystem = ballSystem;
-
-    // @private {Property.<number>} - reference to the passed-in elapsedTimeProperty.
-    this.elapsedTimeProperty = elapsedTimeProperty;
-
-    // @protected {Object} - mutable vectors, reused in critical code for a slight performance optimization.
-    this.mutableVectors = {
+    // @protected {Object} - mutable Vector2/Bounds instances, reused in critical code to reduce memory allocations.
+    this.mutables = {
+      tangent: new Vector2( 0, 0 ),
+      normal: new Vector2( 0, 0 ),
       deltaR: new Vector2( 0, 0 ),
       deltaV: new Vector2( 0, 0 ),
       deltaS: new Vector2( 0, 0 ),
-      normal: new Vector2( 0, 0 ),
-      tangent: new Vector2( 0, 0 )
+      constrainedBounds: new Bounds2( 0, 0, 0, 0 )
     };
 
-    this.collisions = [];
+    // @private {PlayArea|BallSystem|Property.<number>} - reference to the passed-in parameters.
+    this.playArea = playArea;
+    this.ballSystem = ballSystem;
+    this.elapsedTimeProperty = elapsedTimeProperty;
   }
 
   /**
@@ -88,13 +87,13 @@ class CollisionEngine {
     // collisions (for now).
 
     // Handle all collisions now that the Balls have been moved.
-    this.collisions = [];
+    this.potentialCollisions = [];
     let passedTime = 0;
     this.detectBallToBallCollisions( dt - passedTime );
     this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt );
-    if ( this.collisions.length ) {
-      while ( this.collisions.length && passedTime <= dt ) {
-        const collision = _.minBy( this.collisions, _.property( 'collisionTime' ) );
+    if ( this.potentialCollisions.length ) {
+      while ( this.potentialCollisions.length && passedTime <= dt ) {
+        const collision = _.minBy( this.potentialCollisions, _.property( 'collisionTime' ) );
         this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
 
         if ( collision.collidingObject instanceof Ball ) {
@@ -106,7 +105,7 @@ class CollisionEngine {
 
         passedTime += collision.collisionTime;
 
-        this.collisions = [];
+        this.potentialCollisions = [];
         this.detectBallToBallCollisions( dt - passedTime );
         this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
         // await sleep(1500)
@@ -175,8 +174,8 @@ class CollisionEngine {
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
-      const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
-      const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
+      const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
+      const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
       // Solve for the roots of the quadratic outlined in the document above.
@@ -194,7 +193,7 @@ class CollisionEngine {
 
       // If two balls are on top of each other, process the collision.
       if ( possibleRoots && possibleRoots.length && possibleRoots[ 0 ] <= dt && possibleRoots[ 0 ] >= 0 ) {
-        this.collisions.push( new Collision( ball1, ball2, possibleRoots[ 0 ] ) );
+        this.potentialCollisions.push( new Collision( ball1, ball2, possibleRoots[ 0 ] ) );
 
         // this.collidingBalls.push( ball2 );
         // // When a collision is detected, Balls have already overlapped, so the current positions are not the exact
@@ -207,11 +206,11 @@ class CollisionEngine {
 
         // // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
         // // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-        // !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
-        //                    this.mutableVectors.normal.set( Vector2.X_UNIT );
+        // !r2.equals( r1 ) ? this.mutables.normal.set( r2 ).subtract( r1 ).normalize() :
+        //                    this.mutables.normal.set( Vector2.X_UNIT );
 
         // // Set the Tangential vector, called the 'plane of contact'.
-        // this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
+        // this.mutables.tangent.setXY( -this.mutables.normal.y, this.mutables.normal.x );
 
         // // // Record the collision in both of the Ball's trailing 'paths'.
         // // this.recordCollisionPosition( ball1, r1, overlappedTime );
@@ -251,11 +250,11 @@ class CollisionEngine {
 
     // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() :
-                       this.mutableVectors.normal.set( Vector2.X_UNIT );
+    !r2.equals( r1 ) ? this.mutables.normal.set( r2 ).subtract( r1 ).normalize() :
+                       this.mutables.normal.set( Vector2.X_UNIT );
 
     // Set the Tangential vector, called the 'plane of contact'.
-    this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
+    this.mutables.tangent.setXY( -this.mutables.normal.y, this.mutables.normal.x );
 
     // Convenience references to the other known Ball values.
     const m1 = ball1.mass;
@@ -265,20 +264,20 @@ class CollisionEngine {
     const elasticity = this.playArea.elasticity;
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = v1.dot( this.mutableVectors.normal );
-    const v2n = v2.dot( this.mutableVectors.normal );
-    const v1t = v1.dot( this.mutableVectors.tangent );
-    const v2t = v2.dot( this.mutableVectors.tangent );
+    const v1n = v1.dot( this.mutables.normal );
+    const v2n = v2.dot( this.mutables.normal );
+    const v1t = v1.dot( this.mutables.tangent );
+    const v2t = v2.dot( this.mutables.tangent );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
     const v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
 
     // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = this.mutableVectors.tangent.dotXY( v1t, v1nP );
-    const v2xP = this.mutableVectors.tangent.dotXY( v2t, v2nP );
-    const v1yP = this.mutableVectors.normal.dotXY( v1t, v1nP );
-    const v2yP = this.mutableVectors.normal.dotXY( v2t, v2nP );
+    const v1xP = this.mutables.tangent.dotXY( v1t, v1nP );
+    const v2xP = this.mutables.tangent.dotXY( v2t, v2nP );
+    const v1yP = this.mutables.normal.dotXY( v1t, v1nP );
+    const v2yP = this.mutables.normal.dotXY( v2t, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
@@ -313,8 +312,8 @@ class CollisionEngine {
      * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
      *----------------------------------------------------------------------------*/
 
-    const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
-    const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
+    const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
+    const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
     const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
     // Solve for the roots of the quadratic outlined in the document above.
@@ -359,14 +358,14 @@ class CollisionEngine {
         // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
         // geometric representation.
         const closestPoint = positionBounds.closestPointTo( ballPosition );
-        const deltaS = this.mutableVectors.deltaS.set( ballPosition ).subtract( closestPoint );
+        const deltaS = this.mutables.deltaS.set( ballPosition ).subtract( closestPoint );
 
         // Use the formula derived in the document above.
         const overlappedTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
 
         // const contactPoint = BallUtils.computeUniformMotionBallPosition( ball, dt - overlappedTime );
 
-        this.collisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
+        this.potentialCollisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
 
       }
 
@@ -455,7 +454,7 @@ class CollisionEngine {
     // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
     // geometric representation.
     const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
-    const deltaS = this.mutableVectors.deltaS.set( ball.position ).subtract( closestPoint );
+    const deltaS = this.mutables.deltaS.set( ball.position ).subtract( closestPoint );
 
     // Use the formula derived in the document above.
     const contactTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
