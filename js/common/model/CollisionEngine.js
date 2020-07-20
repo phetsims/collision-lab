@@ -89,17 +89,22 @@ class CollisionEngine {
     // Handle all collisions now that the Balls have been moved.
     this.collisions = [];
     this.detectBallToBallCollisions( dt );
-    let passedTime = 0;
-    while ( passedTime <= dt && this.collisions.length ) {
+    // let passedTime = 0;
+    if ( this.collisions.length ) {
+    // while ( passedTime <= dt && this.collisions.length ) {
 
-      const collision = _.minBy( this.collisions, _.property( 'collisionTime' ) );
+      const collision = this.collisions[ 0 ];
       this.collideBalls( collision.ball, collision.collidingObject, collision.collisionTime );
-      passedTime += collision.collisionTime;
+      // passedTime += collision.collisionTime;
+      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
 
+    }
+    else {
+      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt ); } );
     }
 
 
-    this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
+    // this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
 
     // this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
   }
@@ -164,12 +169,15 @@ class CollisionEngine {
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
       // Solve for the roots of the quadratic outlined in the document above.
-      const possibleRoots = Utils.solveQuadraticRootsReal(
+      let possibleRoots = Utils.solveQuadraticRootsReal(
                               deltaV.magnitudeSquared,
                               2 * deltaR.dot( deltaV ),
                               deltaR.magnitudeSquared - sumOfRadiiSquared );
+      possibleRoots = possibleRoots.map( root => dt < 0 ? -root : root ).filter( root => root >= 0 )
 
-      const deltaCollisionTime = dt > 0 ? Math.min( ...possibleRoots ) : Math.max( ...possibleRoots );
+      const deltaCollisionTime = Math.min( ...possibleRoots ) * ( dt < 0 ? -1 : 1 );
+
+      console.log( deltaCollisionTime )
 
       // console.log( possibleRoots, deltaCollisionTime + this.elapsedTimeProperty.value )
       // If two balls are on top of each other, process the collision.
