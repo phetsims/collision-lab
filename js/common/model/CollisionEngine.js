@@ -81,7 +81,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time in seconds
    */
-  step( dt ) {
+  async step( dt ) {
 
     // First step the position of the balls, assuming they are undergoing uniform motion and that there are no
     // collisions (for now).
@@ -108,14 +108,12 @@ class CollisionEngine {
         this.collisions = [];
         this.detectBallToBallCollisions( dt - passedTime );
         this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
-
-        break;
-
+        // await sleep(500)
       }
     }
-    else {
+    // else {
       this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
-    }
+    // }
 
     // this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
 
@@ -185,9 +183,10 @@ class CollisionEngine {
                               deltaV.magnitudeSquared,
                               2 * deltaR.dot( deltaV ),
                               deltaR.magnitudeSquared - sumOfRadiiSquared );
-      possibleRoots = possibleRoots.map( root => dt < 0 ? -root : root ).filter( root => root > 0 && Number.isFinite( root ) );
+      // console.log( possibleRoots )
+      possibleRoots = possibleRoots.filter( root => root > 0 && Number.isFinite( root ) );
 
-      const deltaCollisionTime = Math.min( ...possibleRoots ) * ( dt < 0 ? -1 : 1 );
+      const deltaCollisionTime = Math.min( ...possibleRoots );
 
 
       // If two balls are on top of each other, process the collision.
@@ -405,12 +404,12 @@ class CollisionEngine {
     const elasticity = this.playArea.elasticity;
 
     // Update the velocity after the collision.
-    if ( ball.left == this.playArea.left || ball.right === this.playArea.right ) {
+    if ( this.playArea.isBallOnHorizontalBorder( ball ) ) {
 
       // Left and Right Border wall collisions incur a flip in horizontal velocity.
       ball.xVelocity *= -elasticity;
     }
-    if ( ball.top == this.playArea.top || ball.bottom === this.playArea.bottom ) {
+    if ( this.playArea.isBallOnVerticalBorder( ball ) ) {
 
       // Top and Bottom Border wall collisions incur a flip in vertical velocity.
       ball.yVelocity *= -elasticity;
