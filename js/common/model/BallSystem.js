@@ -210,6 +210,20 @@ class BallSystem {
   }
 
   /**
+   * Moves every Ball currently in the system by one time-step, assuming that the Ball is in uniform-motion.
+   * @public
+   *
+   * @param {number} dt - time in seconds
+   */
+  stepUniformMotion( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+
+    this.ballSystem.balls.forEach( ball => {
+      ball.stepUniformMotion( dt );
+    } );
+  }
+
+  /**
    * Bumps a ball way from the other Balls in the system that it is currently overlapping with. The 'bumped' ball
    * will be placed to a position adjacent to the other Balls. This method does nothing if the Ball isn't overlapping
    * with any other Balls. See https://github.com/phetsims/collision-lab/issues/100.
