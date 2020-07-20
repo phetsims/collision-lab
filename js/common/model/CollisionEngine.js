@@ -39,8 +39,8 @@ import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
-import PlayArea from './PlayArea.js';
 import Collision from './Collision.js';
+import PlayArea from './PlayArea.js';
 
 class CollisionEngine {
 
@@ -88,21 +88,26 @@ class CollisionEngine {
 
     // Handle all collisions now that the Balls have been moved.
     this.collisions = [];
-    this.detectBallToBallCollisions( dt );
-    // let passedTime = 0;
+    let passedTime = 0;
+    this.detectBallToBallCollisions( dt - passedTime );
     if ( this.collisions.length ) {
-    // while ( passedTime <= dt && this.collisions.length ) {
+      while ( this.collisions.length && passedTime <= dt ) {
+        const collision = _.minBy( this.collisions, _.property( 'collisionTime' ) );
+        this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
+        this.collideBalls( collision.ball, collision.collidingObject );
 
-      const collision = this.collisions[ 0 ];
-      this.collideBalls( collision.ball, collision.collidingObject, collision.collisionTime );
-      // passedTime += collision.collisionTime;
-      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
+        passedTime += collision.collisionTime;
 
+        this.collisions = [];
+        this.detectBallToBallCollisions( dt - passedTime );
+
+        break;
+
+      }
     }
     else {
-      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt ); } );
+      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
     }
-
 
     // this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
 
@@ -173,13 +178,11 @@ class CollisionEngine {
                               deltaV.magnitudeSquared,
                               2 * deltaR.dot( deltaV ),
                               deltaR.magnitudeSquared - sumOfRadiiSquared );
-      possibleRoots = possibleRoots.map( root => dt < 0 ? -root : root ).filter( root => root >= 0 )
+      possibleRoots = possibleRoots.map( root => dt < 0 ? -root : root ).filter( root => root > 0 && Number.isFinite( root ) );
 
       const deltaCollisionTime = Math.min( ...possibleRoots ) * ( dt < 0 ? -1 : 1 );
 
-      console.log( deltaCollisionTime )
 
-      // console.log( possibleRoots, deltaCollisionTime + this.elapsedTimeProperty.value )
       // If two balls are on top of each other, process the collision.
       if ( ( deltaCollisionTime <= dt && dt >= 0 ) || ( deltaCollisionTime > dt && dt < 0 ) ) {
         this.collisions.push( new Collision( ball1, ball2, deltaCollisionTime ) );
@@ -227,17 +230,15 @@ class CollisionEngine {
    * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  collideBalls( ball1, ball2, collisionTime ) {
+  collideBalls( ball1, ball2 ) {
     // assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     // assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     // assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
     // assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
     // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-    const r1 = BallUtils.computeUniformMotionBallPosition( ball1, collisionTime );
-    const r2 = BallUtils.computeUniformMotionBallPosition( ball2, collisionTime );
-    ball1.position = r1;
-    ball2.position = r2;
+    const r1 = ball1.position;
+    const r2 = ball2.position;
 
     // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
