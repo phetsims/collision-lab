@@ -42,9 +42,7 @@ import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+
 class CollisionEngine {
 
   /**
