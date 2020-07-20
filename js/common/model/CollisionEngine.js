@@ -6,20 +6,20 @@
  *
  * ## Collision detection:
  *
- *   - The CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Both of these
- *     collisions are detected before the collision occurs to avoid tunneling (where Balls would )
+ *   - CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Both of these
+ *     collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
+ *     each other with high velocities and/or slow frame rates.
+ *     The algorithms for detecting ball-to-ball and ball-to-border collisions can be found below:
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-ball-collision-detection.md
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-border-collision-detection.md
  *
- *
- *   Collisions
- *     are detected before the collision occurs by checking if any two Balls physically overlap or if any Ball overlaps
- *     with the border of the PlayArea.
+ *   - On each time-step, all potential collisions are detected at once and encapsulated in a Collision instance. To
+ *     fully ensure that collisions are modeled correctly — even with extremely high time-steps — only the first
+ *     collision is handled and all potential collisions afterwards are re-computed. This process is repeated until
+ *     there are no collisions detected within the time-step.
  *
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
- *
- *
- *Collision detection is a posteriori (detected after a
-collision occurs)https://en.wikipedia.org/wiki/Collision_detection#A_posteriori_(discrete)_versus_a_priori_(continuous)
  *
  * ## Collision response:
  *
