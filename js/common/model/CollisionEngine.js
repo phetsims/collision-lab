@@ -41,7 +41,9 @@ import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
-
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
 class CollisionEngine {
 
   /**
@@ -108,7 +110,7 @@ class CollisionEngine {
         this.collisions = [];
         this.detectBallToBallCollisions( dt - passedTime );
         this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
-        // await sleep(500)
+        await sleep(1500)
       }
     }
     // else {
@@ -181,17 +183,18 @@ class CollisionEngine {
       // Solve for the roots of the quadratic outlined in the document above.
       let possibleRoots = Utils.solveQuadraticRootsReal(
                               deltaV.magnitudeSquared,
-                              2 * deltaR.dot( deltaV ),
+                              2 * deltaV.dot( deltaR ),
                               deltaR.magnitudeSquared - sumOfRadiiSquared );
-      // console.log( possibleRoots )
-      possibleRoots = possibleRoots.filter( root => root > 0 && Number.isFinite( root ) );
 
-      const deltaCollisionTime = Math.min( ...possibleRoots );
+
+      // possibleRoots = possibleRoots.filter( root => root > 1E-13 && Number.isFinite( root ) );
+      // if ( possibleRoots.length === 0 ) return;
+      // const deltaCollisionTime = possibleRoots[ 0 ];
 
 
       // If two balls are on top of each other, process the collision.
-      if ( ( deltaCollisionTime <= dt && dt >= 0 ) || ( deltaCollisionTime > dt && dt < 0 ) ) {
-        this.collisions.push( new Collision( ball1, ball2, deltaCollisionTime ) );
+      if ( possibleRoots.length && possibleRoots[ 0 ] <= dt && possibleRoots[ 0 ] >= 0 ) {
+        this.collisions.push( new Collision( ball1, ball2, possibleRoots[ 0 ] ) );
 
         // this.collidingBalls.push( ball2 );
         // // When a collision is detected, Balls have already overlapped, so the current positions are not the exact
