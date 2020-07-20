@@ -13,8 +13,8 @@
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-ball-collision-detection.md
  *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-border-collision-detection.md
  *
- *   - On each time-step, all potential collisions are detected at once and encapsulated in a Collision instance. To
- *     fully ensure that collisions are modeled correctly — even with extremely high time-steps — only the first
+ *   - On each time-step, _all_ potential collisions are detected at once and encapsulated in a Collision instance. To
+ *     fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the first
  *     collision is handled and all potential collisions afterwards are re-computed. This process is repeated until
  *     there are no collisions detected within the time-step.
  *
@@ -23,15 +23,8 @@
  *
  * ## Collision response:
  *
- *   - Collision response determines what affect a collision has on a Ball's motion. When a collision has been detected,
- *     it is processed by first analytically determining how long the Balls have been overlapping. Using this time, the
- *     collision is reconstructed to the exact moment of contact to more accurately simulate colliding balls, and the
- *     position of Balls after the collision are updated to a more realistic position.
- *     The algorithms for finding the overlapping time of collisions can be found below:
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
- *
- *   - The algorithms for Ball collisions were adapted but significantly improved from the flash implementation of
+ *   - Collision response determines what affect a collision has on a Ball's motion. The algorithms for Ball collisions
+ *     were adapted but significantly improved from the flash implementation of
  *     Collision Lab. They follow the standard rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
  *
