@@ -69,7 +69,7 @@ class CollisionEngine {
       constrainedBounds: new Bounds2( 0, 0, 0, 0 )
     };
 
-    // @private {PlayArea|BallSystem|Property.<number>} - reference to the passed-in parameters.
+    // @protected {PlayArea|BallSystem|Property.<number>} - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
     this.elapsedTimeProperty = elapsedTimeProperty;
