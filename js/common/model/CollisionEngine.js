@@ -90,16 +90,24 @@ class CollisionEngine {
     this.collisions = [];
     let passedTime = 0;
     this.detectBallToBallCollisions( dt - passedTime );
+    this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt );
     if ( this.collisions.length ) {
       while ( this.collisions.length && passedTime <= dt ) {
         const collision = _.minBy( this.collisions, _.property( 'collisionTime' ) );
         this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
-        this.collideBalls( collision.ball, collision.collidingObject );
+
+        if ( collision.collidingObject instanceof Ball ) {
+          this.collideBalls( collision.ball, collision.collidingObject );
+        }
+        else {
+          this.collideBallWithBorder( collision.ball );
+        }
 
         passedTime += collision.collisionTime;
 
         this.collisions = [];
         this.detectBallToBallCollisions( dt - passedTime );
+        this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
 
         break;
 
@@ -111,7 +119,6 @@ class CollisionEngine {
 
     // this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
 
-    // this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
   }
 
   /**
@@ -336,25 +343,46 @@ class CollisionEngine {
    * @private
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
-  handleBallToBorderCollisions( isReversing ) {
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+  detectBallToBorderCollisions( dt ) {
+    // assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
 
     // Loop through each Balls and check to see if it is colliding with the border.
     this.ballSystem.balls.forEach( ball => {
+      const ballPosition = BallUtils.computeUniformMotionBallPosition( ball, dt );
+      const positionBounds = this.playArea.bounds.eroded( ball.radius );
 
-      // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
-      if ( !this.playArea.fullyContainsBall( ball ) ) {
+      if ( !positionBounds.containsPoint( ballPosition ) ) {
 
-        // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
-        // position when the ball first collided. Use the overlapped time to find the exact collision position.
-        const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
+        // The position of a ball with the same radius as the Ball involved in the collision that is closest to the current
+        // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
+        // geometric representation.
+        const closestPoint = positionBounds.closestPointTo( ballPosition );
+        const deltaS = this.mutableVectors.deltaS.set( ballPosition ).subtract( closestPoint );
 
-        // Get exact position when the Ball collided by rewinding by the overlapped time.
-        const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
+        // Use the formula derived in the document above.
+        const overlappedTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
 
-        // Forward the rest of the collision response to the collide-ball-with-border method.
-        this.collideBallWithBorder( ball, contactPosition, overlappedTime );
+        // const contactPoint = BallUtils.computeUniformMotionBallPosition( ball, dt - overlappedTime );
+
+        this.collisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
+
       }
+
+
+
+      // // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
+      // if ( !this.playArea.fullyContainsBall( ball ) ) {
+
+      //   // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
+      //   // position when the ball first collided. Use the overlapped time to find the exact collision position.
+      //   const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
+
+      //   // Get exact position when the Ball collided by rewinding by the overlapped time.
+      //   const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
+
+      //   // Forward the rest of the collision response to the collide-ball-with-border method.
+      //   this.collideBallWithBorder( ball, contactPosition, overlappedTime );
+      // }
     } );
   }
 
@@ -368,31 +396,31 @@ class CollisionEngine {
    * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
    * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
    */
-  collideBallWithBorder( ball, collisionPosition, overlappedTime ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+  collideBallWithBorder( ball  ) {
+    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
+    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
     // Convenience reference to the elasticity.
     const elasticity = this.playArea.elasticity;
 
     // Update the velocity after the collision.
-    if ( !this.playArea.fullyContainsBallHorizontally( ball ) ) {
+    if ( ball.left == this.playArea.left || ball.right === this.playArea.right ) {
 
       // Left and Right Border wall collisions incur a flip in horizontal velocity.
       ball.xVelocity *= -elasticity;
     }
-    if ( !this.playArea.fullyContainsBallVertically( ball ) ) {
+    if ( ball.top == this.playArea.top || ball.bottom === this.playArea.bottom ) {
 
       // Top and Bottom Border wall collisions incur a flip in vertical velocity.
       ball.yVelocity *= -elasticity;
     }
 
     // Record the exact contact position of the collision for sub-classes.
-    this.recordCollisionPosition( ball, collisionPosition, overlappedTime );
+    // this.recordCollisionPosition( ball, collisionPosition, overlappedTime );
 
-    // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
-    ball.position = ball.velocity.times( overlappedTime ).add( collisionPosition );
+    // // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
+    // ball.position = ball.velocity.times( overlappedTime ).add( collisionPosition );
   }
 
   /**

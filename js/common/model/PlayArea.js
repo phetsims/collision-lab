@@ -19,6 +19,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
@@ -195,6 +196,16 @@ class PlayArea {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     return this.bounds.dilated( ball.radius ).containsPoint( ball.position );
+  }
+
+  // @public
+  isBallOnHorizontalBorder( ball, epsilon = CollisionLabConstants.ZERO_THRESHOLD ) {
+    return Utils.equalsEpsilon( ball.left, this.left, epsilon )
+     || Utils.equalsEpsilon( ball.right, this.right, epsilon );
+  }
+  isBallOnVerticalBorder( ball, epsilon = CollisionLabConstants.ZERO_THRESHOLD ) {
+    return Utils.equalsEpsilon( ball.top, this.top, epsilon )
+     || Utils.equalsEpsilon( ball.bottom, this.bottom, epsilon );
   }
 }
 
