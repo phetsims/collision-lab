@@ -59,7 +59,7 @@ class CollisionEngine {
     // @public {Collision[]} - collection of the potential Ball collisions on each time step.
     this.potentialCollisions = [];
 
-    // @protected {Object} - mutable Vector2/Bounds instances, reused in critical code to reduce memory allocations.
+    // @protected {Object} - mutable Vector2/Bounds2 instances, reused in critical code to reduce memory allocations.
     this.mutables = {
       tangent: new Vector2( 0, 0 ),
       normal: new Vector2( 0, 0 ),
@@ -69,7 +69,7 @@ class CollisionEngine {
       constrainedBounds: new Bounds2( 0, 0, 0, 0 )
     };
 
-    // @protected {PlayArea|BallSystem|Property.<number>} - reference to the passed-in parameters.
+    // @protected - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
     this.elapsedTimeProperty = elapsedTimeProperty;
