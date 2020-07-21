@@ -215,12 +215,13 @@ class BallSystem {
    *
    * @param {number} dt - time in seconds
    */
-  stepUniformMotion( dt ) {
+  stepUniformMotion( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     this.balls.forEach( ball => {
       ball.stepUniformMotion( dt );
     } );
+    this.updatePaths( elapsedTime )
   }
 
   /**
@@ -323,6 +324,19 @@ class BallSystem {
 
     // Verify that Balls are in ascending order by their indices, if assertions are enabled.
     assert && assert( CollisionLabUtils.isSortedBy( this.balls, _.property( 'index' ) ) );
+  }
+
+  /**
+   * Updates the trailing 'Paths' of all Balls in the system and the CenterOfMass.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
+   */
+  updatePaths( elapsedTime ) {
+    if ( this.pathsVisibleProperty.value ) {
+      this.balls.forEach( ball => ball.updatePath( elapsedTime ) );
+      this.centerOfMass.updatePath( elapsedTime );
+    }
   }
 }
 

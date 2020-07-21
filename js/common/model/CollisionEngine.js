@@ -100,14 +100,14 @@ class CollisionEngine {
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
       // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( nextCollision.collisionTime );
+      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, this.elapsedTimeProperty.value - nextCollision.collisionTime  );
 
       // Now that this collision has been progressed, some time of the step has already been handled.
       dt -= nextCollision.collisionTime;
 
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
-        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, this.elapsedTimeProperty.value - dt ) :
+        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject ) :
         this.collideBallWithBorder( nextCollision.ball );
 
       // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
@@ -117,7 +117,7 @@ class CollisionEngine {
     }
 
     // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
-    this.ballSystem.stepUniformMotion( dt );
+    this.ballSystem.stepUniformMotion( dt, this.elapsedTimeProperty.value );
   }
 
   /**
@@ -210,12 +210,10 @@ class CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {number} time - the elapsed time when the collision occurred.
    */
-  handleBallToBallCollision( ball1, ball2, time ) {
+  handleBallToBallCollision( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    // assert && assert( typeof time === 'number' && time >= 0, `invalid time: ${time}` );
     assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );
 
     // Convenience references to known ball values.
@@ -258,8 +256,8 @@ class CollisionEngine {
     // the position of a Ball at each frame. Since Ball positions are rarely set to the position where the collision
     // actually occurred, this separation becomes obvious to the user, particularly at high velocities.
     // See https://github.com/phetsims/collision-lab/issues/75.
-    ball1.path.updatePath( time );
-    ball2.path.updatePath( time );
+    // ball1.path.updatePath( time );
+    // ball2.path.updatePath( time );
   }
 
   /**

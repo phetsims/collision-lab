@@ -100,6 +100,7 @@ class CenterOfMass {
       ( centerOfMassVisible, pathVisible ) => centerOfMassVisible && pathVisible, {
         valueType: 'boolean'
       } );
+    this.centerOfMassVisibleProperty = centerOfMassVisibleProperty;
 
     // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the CenterOfMass.
     this.path = new CollisionLabPath(
@@ -196,6 +197,18 @@ class CenterOfMass {
 
     // The velocity of the center of mass is the total momentum divided by the total mass.
     return totalMomentum.dividedScalar( this.computeTotalBallSystemMass() );
+  }
+
+  /**
+   * Updates the path of the center of mass. If the path is not visible, nothing happens.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  updatePath( elapsedTime ) {
+    if ( this.centerOfMassVisibleProperty.value ) {
+      this.path.updatePath( elapsedTime );
+    }
   }
 }
 

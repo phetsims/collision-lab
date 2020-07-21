@@ -212,6 +212,16 @@ class Ball {
   saveState() { this.restartState = new BallState( this.position, this.velocity, this.mass ); }
 
   /**
+   * Updates the path of the Ball. Mainly here to have parallel structure with CenterOfMass.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  updatePath( elapsedTime ) {
+    this.path.updatePath( elapsedTime );
+  }
+
+  /**
    * Sets the Properties of this Ball to match the passed-in BallState.
    * @public
    *
