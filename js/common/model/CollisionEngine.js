@@ -76,7 +76,7 @@ class CollisionEngine {
   }
 
   /**
-   * Steps the CollisionEngine.
+   * Steps the CollisionEngine, which initializes both collision detection and responses on every time-step.
    * @public
    *
    * @param {number} dt - time-delta in seconds
