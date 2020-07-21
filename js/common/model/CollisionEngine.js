@@ -18,7 +18,7 @@
  *
  * ## Collision response:
  *
- *   - On each time-step, _all_ potential collisions are detected at once and encapsulated in a Collision instance. To
+ *   - On each time-step, *all* potential collisions are detected at once and encapsulated in a Collision instance. To
  *     fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the first
  *     collision is handled and progressed and all potential collisions afterwards are re-detected. This process is
  *     repeated until there are no collisions detected within the time-step.
@@ -76,47 +76,45 @@ class CollisionEngine {
   }
 
   /**
-   * Steps the CollisionEngine, which will handle all collisions involving Balls.
+   * Steps the CollisionEngine.
    * @public
    *
-   * @param {number} dt - time in seconds
+   * @param {number} dt - time-delta in seconds
    */
   step( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+
+    // First detect all potential collisions at once.
+    this.potentialCollisions = []; // Reset potential collisions.
+    this.detectBallToBallCollisions( dt );
+    this.detectBallToBorderCollisions( dt );
+
+
+    while ( this.potentialCollisions.length && dt > 0 ) {
+
+
+      const collision = _.minBy( this.potentialCollisions, _.property( 'collisionTime' ) );
+      this.ballSystem.stepUniformMotion( collision.collisionTime );
+
+      if ( collision.collidingObject instanceof Ball ) {
+        this.collideBalls( collision.ball, collision.collidingObject );
+      }
+      else {
+        this.collideBallWithBorder( collision.ball );
+      }
+
+      dt -= collision.collisionTime;
+
+      this.potentialCollisions = [];
+      this.detectBallToBallCollisions( dt );
+      this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt );
+    }
+
+
 
     // First step the position of the balls, assuming they are undergoing uniform motion and that there are no
     // collisions (for now).
-
-    // Handle all collisions now that the Balls have been moved.
-    this.potentialCollisions = [];
-    let passedTime = 0;
-    this.detectBallToBallCollisions( dt - passedTime );
-    this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt );
-    if ( this.potentialCollisions.length ) {
-      while ( this.potentialCollisions.length && passedTime <= dt ) {
-        const collision = _.minBy( this.potentialCollisions, _.property( 'collisionTime' ) );
-        this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( collision.collisionTime ); } );
-
-        if ( collision.collidingObject instanceof Ball ) {
-          this.collideBalls( collision.ball, collision.collidingObject );
-        }
-        else {
-          this.collideBallWithBorder( collision.ball );
-        }
-
-        passedTime += collision.collisionTime;
-
-        this.potentialCollisions = [];
-        this.detectBallToBallCollisions( dt - passedTime );
-        this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt - passedTime );
-        // await sleep(1500)
-      }
-    }
-    // else {
-      this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
-    // }
-
-    // this.ballSystem.balls.forEach( ball => { ball.stepUniformMotion( dt - passedTime ); } );
-
+    this.ballSystem.stepUniformMotion( dt );
   }
 
   /**

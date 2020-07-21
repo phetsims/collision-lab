@@ -218,7 +218,7 @@ class BallSystem {
   stepUniformMotion( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    this.ballSystem.balls.forEach( ball => {
+    this.balls.forEach( ball => {
       ball.stepUniformMotion( dt );
     } );
   }
