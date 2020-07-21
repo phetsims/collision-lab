@@ -179,23 +179,21 @@ class CollisionEngine {
        *----------------------------------------------------------------------------*/
 
       const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
-      const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
+      const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
       // Solve for the minimum root of the quadratic outlined in the document above.
-      const collisionTime = CollisionLabUtils.getMinimumQuadraticRoot(
-                              deltaV.magnitudeSquared,
-                              2 * deltaV.dot( deltaR ),
-                              deltaR.magnitudeSquared - sumOfRadiiSquared );
+      const collisionTime = Math.min( ...Utils.solveQuadraticRootsReal(
+                                           deltaV.magnitudeSquared,
+                                           2 * deltaV.dot( deltaR ),
+                                           deltaR.magnitudeSquared - sumOfRadiiSquared ) );
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
-      if ( Number.isFinite( collisionTime )
-           && Math.abs( collisionTime ) >= 0
-           && Math.abs( collisionTime ) <= Math.abs( dt ) ) {
+      if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime ) );
+        this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
     } );
   }
