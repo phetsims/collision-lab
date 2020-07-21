@@ -24,7 +24,7 @@ class IntroCollisionEngine extends CollisionEngine {
 
   /**
    * Adds the functionality of computing the exact point the Balls collided and passing this information to the
-   * IntroBallSystem, if the 'Change in Momentum' vectors are visible. Will call super.collideBalls().
+   * IntroBallSystem, if the 'Change in Momentum' vectors are visible. Will call super.handleBallToBallCollision().
    *
    * @override
    * @protected
@@ -35,7 +35,7 @@ class IntroCollisionEngine extends CollisionEngine {
    * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+  handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
@@ -62,7 +62,7 @@ class IntroCollisionEngine extends CollisionEngine {
     }
 
     // Forward the rest of the collision response to the super class.
-    super.collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
+    super.handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
   }
 }
 

@@ -102,13 +102,13 @@ class CollisionEngine {
       // Progress forwards to the exact point of contact of the nextCollision.
       this.ballSystem.stepUniformMotion( nextCollision.collisionTime );
 
-      // Handle the response for the Ball Collision depending on the type of collision.
-      nextCollision.collidingObject instanceof Ball ?
-        this.collideBalls( nextCollision.ball, nextCollision.collidingObject ) :
-        this.collideBallWithBorder( nextCollision.ball );
-
       // Now that this collision has been progressed, some time of the step has already been handled.
       dt -= nextCollision.collisionTime;
+
+      // Handle the response for the Ball Collision depending on the type of collision.
+      nextCollision.collidingObject instanceof Ball ?
+        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, this.elapsedTimeProperty.value - dt ) :
+        this.collideBallWithBorder( nextCollision.ball );
 
       // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
       this.potentialCollisions = [];
@@ -199,8 +199,8 @@ class CollisionEngine {
   }
 
   /**
-   * Processes and responds to a collision between two balls. Will update the velocity and position of both Balls. The
-   * collision algorithm follows the standard rigid-body collision model as described in
+   * Responds to and handles a single ball-to-ball collision by updating the velocity of both Balls depending on their
+   * orientation and elasticity. The collision algorithm follows the standard rigid-body collision model as described in
    * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
    *
    * Our version deals with normalized dot product projections to switch coordinate frames. Please reference
@@ -210,34 +210,30 @@ class CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the center-position of the first Ball when it exactly collided with ball2.
-   * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
+   * @param {number} time - the elapsed time when the collision occurred.
    */
-  collideBalls( ball1, ball2 ) {
-    // assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
-    // assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    // assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
-    // assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
-    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+  handleBallToBallCollision( ball1, ball2, time ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+    // assert && assert( typeof time === 'number' && time >= 0, `invalid time: ${time}` );
+    assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );
 
+    // Convenience references to known ball values.
     const r1 = ball1.position;
     const r2 = ball2.position;
+    const m1 = ball1.mass;
+    const m2 = ball2.mass;
+    const v1 = ball1.velocity; // before the collision.
+    const v2 = ball2.velocity; // before the collision.
+    const elasticity = this.playArea.elasticity;
 
     // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    !r2.equals( r1 ) ? this.mutables.normal.set( r2 ).subtract( r1 ).normalize() :
+    !r2.equals( r1 ) ? this.mutables.normal.set( r2 ).subtract( r1 ).normalize() : // TODO: is this case still possible?
                        this.mutables.normal.set( Vector2.X_UNIT );
 
     // Set the Tangential vector, called the 'plane of contact'.
     this.mutables.tangent.setXY( -this.mutables.normal.y, this.mutables.normal.x );
-
-    // Convenience references to the other known Ball values.
-    const m1 = ball1.mass;
-    const m2 = ball2.mass;
-    const v1 = ball1.velocity;
-    const v2 = ball2.velocity;
-    const elasticity = this.playArea.elasticity;
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
     const v1n = v1.dot( this.mutables.normal );
@@ -257,8 +253,13 @@ class CollisionEngine {
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
 
-    // Adjust the positions of the Ball to take into account their overlapping time and their new velocities.
-    // // Get exact positions when the Balls collided by rewinding by the overlapped time.
+    // Record the collision in both of the Ball's trailing 'paths'. When a collision involving a Ball occurs, it often occurs in between time-steps and Balls are set to a different
+    // position at the end of the step. However, this brings up issues for Ball Paths, which work by recording
+    // the position of a Ball at each frame. Since Ball positions are rarely set to the position where the collision
+    // actually occurred, this separation becomes obvious to the user, particularly at high velocities.
+    // See https://github.com/phetsims/collision-lab/issues/75.
+    ball1.path.updatePath( time );
+    ball2.path.updatePath( time );
   }
 
   /**
@@ -321,6 +322,7 @@ class CollisionEngine {
    * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
    */
   detectBallToBorderCollisions( dt ) {
+    return;
     // assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
 
     // Loop through each Balls and check to see if it is colliding with the border.

@@ -74,7 +74,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
 
     // @private {number|null} - the angular velocity of the rotation of the two Balls (if they are being rotated) around
-    //                          the center of mass, in radians per second. This value is set on each collideBalls() call.
+    //                          the center of mass, in radians per second. This value is set on each handleBallToBallCollision() call.
     this.angularVelocity;
 
     // @private {number|null} - the magnitude of the total angular momentum of the two Balls **relative to the center of
@@ -154,7 +154,7 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
    * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+  handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
     assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
@@ -197,7 +197,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     else {
 
       // Forward the collision-response to the super-class.
-      super.collideBalls( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
+      super.handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
     }
   }
 

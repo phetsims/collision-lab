@@ -174,6 +174,27 @@ const BallUtils = {
   },
 
   /**
+   * Returns a boolean that indicates if the passed-in Balls are tangentially touching, but not overlapping.
+   * @public
+   *
+   * @param {Ball} ball1
+   * @param {Ball} ball2
+   * @returns {boolean}
+   */
+  areBallsTouching( ball1, ball2 ) {
+    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
+    assert && assert( ball1 !== ball2 );
+
+    // Use a distance approach to detect if the Balls are exactly touching.
+    const distanceBetweenBalls = ball1.position.distance( ball2.position );
+    const distanceThreshold = ball1.radius + ball2.radius;
+
+    // If the distance between the Balls is roughly equal to the sum of their radius, they are tangentially touching.
+    return Utils.equalsEpsilon( distanceBetweenBalls, distanceThreshold, CollisionLabConstants.ZERO_THRESHOLD );
+  },
+
+  /**
    * Gets the closest Ball in the system that is overlapping with the passed-in Ball. If the passed-in Ball isn't
    * overlapping with any of the other Balls in the system, undefined is returned.
    * @public
