@@ -92,10 +92,10 @@ class CollisionEngine {
     // To fully ensure that collisions are simulated correctly, handle and progress the next collision and all potential
     // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
     // time-step.
-    while ( this.potentialCollisions.length && Math.abs( dt ) > 0 ) {
+    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 ) {
 
       // Find and reference the next Collision that will occur of the detected collisions.
-      const nextCollision = dt > 0 ?
+      const nextCollision = dt >= 0 ?
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
@@ -108,7 +108,7 @@ class CollisionEngine {
         this.collideBallWithBorder( nextCollision.ball );
 
       // Now that this collision has been progressed, some time of the step has already been handled.
-      dt -= Math.sign( dt ) * nextCollision.collisionTime;
+      dt -= nextCollision.collisionTime;
 
       // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
       this.potentialCollisions = [];
