@@ -84,36 +84,39 @@ class CollisionEngine {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    // First detect all potential collisions at once.
+    // First detect all potential collisions that occur in this time-step at once.
     this.potentialCollisions = []; // Reset potential collisions.
     this.detectBallToBallCollisions( dt );
     this.detectBallToBorderCollisions( dt );
 
+    // To fully ensure that collisions are simulated correctly, handle and progress to the next collision and all
+    // potential collisions afterwards are re-detected. This process is repeated until there are no collisions detected
+    // within the time-step.
+    while ( this.potentialCollisions.length && Math.abs( dt ) > 0 ) {
 
-    while ( this.potentialCollisions.length && dt > 0 ) {
+      // Find and reference the next collision that will occur of the detected collisions.
+      const nextCollision = dt > 0 ?
+        _.minBy( this.potentialCollisions, 'collisionTime' ) :
+        _.maxBy( this.potentialCollisions, 'collisionTime' );
 
+      // Progress forwards to the exact point of contact of the nextCollision.
+      this.ballSystem.stepUniformMotion( nextCollision.collisionTime );
 
-      const collision = _.minBy( this.potentialCollisions, _.property( 'collisionTime' ) );
-      this.ballSystem.stepUniformMotion( collision.collisionTime );
+      // Handle the response for the Ball Collision depending on the type of collision.
+      nextCollision.collidingObject instanceof Ball ?
+        this.collideBalls( nextCollision.ball, nextCollision.collidingObject ) :
+        this.collideBallWithBorder( nextCollision.ball );
 
-      if ( collision.collidingObject instanceof Ball ) {
-        this.collideBalls( collision.ball, collision.collidingObject );
-      }
-      else {
-        this.collideBallWithBorder( collision.ball );
-      }
+      // Now that this collision has been progressed, some time of the step has already been handled.
+      dt -= Math.sign( dt ) * nextCollision.collisionTime;
 
-      dt -= collision.collisionTime;
-
+      // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
       this.potentialCollisions = [];
       this.detectBallToBallCollisions( dt );
-      this.playArea.reflectsBorder && this.detectBallToBorderCollisions( dt );
+      this.detectBallToBorderCollisions( dt );
     }
 
-
-
-    // First step the position of the balls, assuming they are undergoing uniform motion and that there are no
-    // collisions (for now).
+    // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
     this.ballSystem.stepUniformMotion( dt );
   }
 
