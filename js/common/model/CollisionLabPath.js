@@ -47,8 +47,6 @@ class CollisionLabPath {
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
 
-    //----------------------------------------------------------------------------------------
-
     // @public (read-only) {PathDataPoint[]} - the recorded points of the trailing points of the 'Path' within a given
     //                                         time period, which is PATH_DATA_POINT_LIFETIME seconds.
     this.dataPoints = [];
@@ -60,13 +58,20 @@ class CollisionLabPath {
     //                                 slight performance boost.
     this.pathChangedEmitter = new Emitter();
 
+    // @public (read-only) {Bounds2} - reference to the playAreaBounds. PathDataPoints are only recorded if the
+    //                                 position is inside this bounds.
+    this.playAreaBounds = playAreaBounds;
+
+    // @private {Property.<Vector2>} - reference to the passed-in positionProperty.
+    this.positionProperty = positionProperty;
+
     //----------------------------------------------------------------------------------------
 
     // Observe when the elapsed time of the simulation changes and record a new PathDataPoint at the current elapsedTime
     // and position, if paths are visible. This link persists for the lifetime of the simulation since CollisionLabPaths
     // are never disposed.
     elapsedTimeProperty.link( elapsedTime => {
-      pathsVisibleProperty.value && this.updatePath( positionProperty.value, elapsedTime );
+      pathsVisibleProperty.value && this.updatePath( elapsedTime );
     } );
 
     // Observe when the pathsVisibleProperty is manipulated and clear the 'Path' when set to false. Link lasts for the
@@ -74,10 +79,6 @@ class CollisionLabPath {
     pathsVisibleProperty.lazyLink( pathVisible => {
       !pathVisible && this.clear();
     } );
-
-    // @public (read-only) {Bounds2} - reference to the playAreaBounds. PathDataPoints are only recorded if the
-    //                                 position is inside this bounds.
-    this.playAreaBounds = playAreaBounds;
   }
 
   /**
@@ -110,11 +111,9 @@ class CollisionLabPath {
    *
    * NOTE: if this is invoked, the path must be visible.
    *
-   * @param {Vector2} position - the position of the moving object, in meter coordinates.
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  updatePath( position, elapsedTime ) {
-    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+  updatePath( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Remove any expired PathDataPoints that are not within the MAX_DATA_POINT_LIFETIME.
@@ -137,8 +136,8 @@ class CollisionLabPath {
     //----------------------------------------------------------------------------------------
 
     // Add a new PathDataPoint for the current position of the moving object.
-    if ( this.playAreaBounds.containsPoint( position ) ) {
-      this.dataPoints.push( new PathDataPoint( elapsedTime, position ) );
+    if ( this.playAreaBounds.containsPoint( this.positionProperty.value ) ) {
+      this.dataPoints.push( new PathDataPoint( elapsedTime, this.positionProperty.value ) );
     }
 
     // Verify that the dataPoints are strictly sorted by time.
