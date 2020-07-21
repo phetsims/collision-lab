@@ -68,7 +68,7 @@ class IntroBallSystem extends BallSystem {
 
     }, options );
 
-    super( INTRO_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
+    super( INTRO_INITIAL_BALL_STATES, playArea, options );
 
     // Verify that there is a fixed number of Balls in the 'Intro' screen.
     assert && this.numberOfBallsProperty.link( numberOfBalls => assert( numberOfBalls === NUMBER_OF_BALLS ) );

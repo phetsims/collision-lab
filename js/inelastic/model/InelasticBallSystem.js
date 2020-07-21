@@ -53,7 +53,7 @@ class InelasticBallSystem extends BallSystem {
 
     }, options );
 
-    super( INELASTIC_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
+    super( INELASTIC_INITIAL_BALL_STATES, playArea, options );
 
     // Verify that the configuration of Balls conforms to the invariants for the Inelastic screen, but bury behind
     // assert so it doesn't impact production performance.

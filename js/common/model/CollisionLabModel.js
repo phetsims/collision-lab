@@ -16,7 +16,6 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
@@ -50,10 +49,10 @@ class CollisionLabModel {
     this.playArea = this.createPlayArea();
 
     // @public (read-only) {BallSystem} - create the BallSystem of the screen.
-    this.ballSystem = this.createBallSystem( this.playArea, this.elapsedTimeProperty );
+    this.ballSystem = this.createBallSystem( this.playArea );
 
     // @private {CollisionEngine} - create the CollisionEngine of the screen.
-    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem, this.elapsedTimeProperty );
+    this.collisionEngine = this.createCollisionEngine( this.playArea, this.ballSystem );
 
     // @public (read-only) {MomentaDiagram} - create the MomentaDiagram of the screen.
     this.momentaDiagram = new MomentaDiagram(
@@ -111,10 +110,9 @@ class CollisionLabModel {
    * @protected
    *
    * @param {PlayArea} playArea
-   * @param {Property.<number>} elapsedTimeProperty
    * @returns {BallSystem}
    */
-  createBallSystem( playArea, elapsedTimeProperty ) { assert && assert( false, 'abstract method must be overridden' ); }
+  createBallSystem( playArea ) { assert && assert( false, 'abstract method must be overridden' ); }
 
   /**
    * Creates the CollisionEngine for the screen using the Factory Method Pattern, which allows sub-types to create
@@ -123,15 +121,13 @@ class CollisionLabModel {
    *
    * @param {PlayArea} playArea
    * @param {BallSystem} ballSystem
-   * @param {Property.<number>} elapsedTimeProperty
    * @returns {CollisionEngine}
    */
-  createCollisionEngine( playArea, ballSystem, elapsedTimeProperty ) {
+  createCollisionEngine( playArea, ballSystem ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new CollisionEngine( playArea, ballSystem, elapsedTimeProperty );
+    return new CollisionEngine( playArea, ballSystem );
   }
 
   //----------------------------------------------------------------------------------------
@@ -196,7 +192,7 @@ class CollisionLabModel {
 
     // Step the Physics Engine and update the elapsedTimeProperty value.
     this.elapsedTimeProperty.value += dt;
-    this.collisionEngine.step( dt );
+    this.collisionEngine.step( dt, this.elapsedTimeProperty.value );
   }
 
   /**

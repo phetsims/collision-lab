@@ -37,7 +37,6 @@
 import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import Ball from '../../common/model/Ball.js';
@@ -54,14 +53,12 @@ class InelasticCollisionEngine extends CollisionEngine {
   /**
    * @param {InelasticPlayArea} playArea
    * @param {InelasticBallSystem} ballSystem
-   * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( playArea, ballSystem, elapsedTimeProperty ) {
+  constructor( playArea, ballSystem ) {
     assert && assert( playArea instanceof InelasticPlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof InelasticBallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    super( playArea, ballSystem, elapsedTimeProperty );
+    super( playArea, ballSystem );
 
     //----------------------------------------------------------------------------------------
 

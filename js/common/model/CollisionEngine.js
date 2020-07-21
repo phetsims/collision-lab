@@ -49,14 +49,12 @@ class CollisionEngine {
   /**
    * @param {PlayArea} playArea
    * @param {BallSystem} ballSystem
-   * @param {Property.<number>} elapsedTimeProperty
    */
-  constructor( playArea, ballSystem, elapsedTimeProperty ) {
+  constructor( playArea, ballSystem ) {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    // @public {Collision[]} - collection of the potential Ball collisions on each time step.
+    // @private {Collision[]} - collection of the potential Ball collisions on each time step.
     this.potentialCollisions = [];
 
     // @protected {Object} - mutable Vector2/Bounds2 instances, reused in critical code to reduce memory allocations.
@@ -72,7 +70,6 @@ class CollisionEngine {
     // @protected - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
-    this.elapsedTimeProperty = elapsedTimeProperty;
   }
 
   /**
@@ -80,9 +77,11 @@ class CollisionEngine {
    * @public
    *
    * @param {number} dt - time-delta in seconds
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  step( dt ) {
+  step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // First detect all potential collisions that occur in this time-step at once.
     this.potentialCollisions = []; // Reset potential collisions.
@@ -100,7 +99,7 @@ class CollisionEngine {
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
       // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, this.elapsedTimeProperty.value - nextCollision.collisionTime  );
+      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
 
       // Now that this collision has been progressed, some time of the step has already been handled.
       dt -= nextCollision.collisionTime;
@@ -117,34 +116,7 @@ class CollisionEngine {
     }
 
     // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
-    this.ballSystem.stepUniformMotion( dt, this.elapsedTimeProperty.value );
-  }
-
-  /**
-   * Records the exact position of a collision involving a Ball in its trailing 'path'.
-   *
-   * When a collision involving a Ball occurs, it often occurs in between time-steps and Balls are set to a different
-   * position at the end of the step. However, this brings up issues for Ball Paths, which work by recording
-   * the position of a Ball at each frame. Since Ball positions are rarely set to the position where the collision
-   * actually occurred, this separation becomes obvious to the user, particularly at high velocities.
-   * See https://github.com/phetsims/collision-lab/issues/75.
-   *
-   * @private
-   * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with another object.
-   */
-  recordCollisionPosition( ball, collisionPosition, overlappedTime ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
-
-    // Only record Path's of the Balls if Paths are visible and the overlapped time is non-zero.
-    if ( this.ballSystem.pathsVisibleProperty.value
-         && this.elapsedTimeProperty.value - overlappedTime >= 0
-         && overlappedTime !== 0 ) {
-
-      ball.path.updatePath( collisionPosition, this.elapsedTimeProperty.value - overlappedTime );
-    }
+    this.ballSystem.stepUniformMotion( dt, elapsedTime );
   }
 
   /*----------------------------------------------------------------------------*

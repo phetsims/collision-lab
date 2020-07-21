@@ -56,9 +56,11 @@ class CollisionLabPath {
     //                                 slight performance boost.
     this.pathChangedEmitter = new Emitter();
 
-
     // @private {Property.<Vector2>} - reference to the passed-in positionProperty.
     this.positionProperty = positionProperty;
+
+    // @private {Property.<boolean>} - reference to the passed-in pathsVisibleProperty.
+    this.pathsVisibleProperty = pathsVisibleProperty;
 
     //----------------------------------------------------------------------------------------
 
@@ -97,12 +99,13 @@ class CollisionLabPath {
    *     step-backward button is pressed.
    * @public
    *
-   * NOTE: if this is invoked, the path must be visible.
+   * NOTE: No-op for when the path is not visible.
    *
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
   updatePath( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+    if ( !this.pathsVisibleProperty.value ) { return; /** do nothing **/ }
 
     // Remove any expired PathDataPoints that are not within the MAX_DATA_POINT_LIFETIME.
     const expiredPathDataPoints = this.dataPoints.filter( dataPoint => {

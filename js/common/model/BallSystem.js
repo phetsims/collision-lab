@@ -41,13 +41,11 @@ class BallSystem {
   /**
    * @param {BallState[]} initialBallStates - the initial BallStates of ALL possible Balls in the system.
    * @param {PlayArea} playArea
-   * @param {Property.<number>} elapsedTimeProperty
    * @param {Object} [options]
    */
-  constructor( initialBallStates, playArea, elapsedTimeProperty, options ) {
+  constructor( initialBallStates, playArea, options ) {
     assert && AssertUtils.assertArrayOf( initialBallStates, BallState );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
     options = merge( {
 
@@ -91,7 +89,6 @@ class BallSystem {
       playArea,
       this.ballsConstantSizeProperty,
       this.pathsVisibleProperty,
-      elapsedTimeProperty,
       index + 1
     ) );
 
@@ -122,7 +119,6 @@ class BallSystem {
       this.balls,
       this.centerOfMassVisibleProperty,
       this.pathsVisibleProperty,
-      elapsedTimeProperty,
       playArea.bounds
     );
 
@@ -214,14 +210,19 @@ class BallSystem {
    * @public
    *
    * @param {number} dt - time in seconds
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
   stepUniformMotion( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     this.balls.forEach( ball => {
       ball.stepUniformMotion( dt );
     } );
-    this.updatePaths( elapsedTime )
+
+    // Update the trailing 'Paths' of all Balls in the system and the CenterOfMass.
+    this.balls.forEach( ball => ball.path.updatePath( elapsedTime ) );
+    this.centerOfMass.path.updatePath( elapsedTime );
   }
 
   /**
@@ -324,19 +325,6 @@ class BallSystem {
 
     // Verify that Balls are in ascending order by their indices, if assertions are enabled.
     assert && assert( CollisionLabUtils.isSortedBy( this.balls, _.property( 'index' ) ) );
-  }
-
-  /**
-   * Updates the trailing 'Paths' of all Balls in the system and the CenterOfMass.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed time of the simulation, in seconds.
-   */
-  updatePaths( elapsedTime ) {
-    if ( this.pathsVisibleProperty.value ) {
-      this.balls.forEach( ball => ball.updatePath( elapsedTime ) );
-      this.centerOfMass.updatePath( elapsedTime );
-    }
   }
 }
 

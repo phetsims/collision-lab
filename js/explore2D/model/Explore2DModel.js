@@ -33,14 +33,12 @@ class Explore2DModel extends CollisionLabModel {
    * @protected
    *
    * @param {Explore2DPlayArea} playArea
-   * @param {Property.<number>} elapsedTimeProperty
    * @returns {Explore2DBallSystem}
    */
-  createBallSystem( playArea, elapsedTimeProperty ) {
+  createBallSystem( playArea ) {
     assert && assert( playArea instanceof Explore2DPlayArea, `invalid playArea: ${playArea}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new Explore2DBallSystem( playArea, elapsedTimeProperty );
+    return new Explore2DBallSystem( playArea );
   }
 }
 

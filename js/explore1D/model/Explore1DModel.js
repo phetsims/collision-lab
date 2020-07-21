@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import Explore1DBallSystem from './Explore1DBallSystem.js';
@@ -33,14 +32,12 @@ class Explore1DModel extends CollisionLabModel {
    * @protected
    *
    * @param {Explore1DPlayArea} playArea
-   * @param {Property.<number>} elapsedTimeProperty
    * @returns {Explore1DBallSystem}
    */
-  createBallSystem( playArea, elapsedTimeProperty ) {
+  createBallSystem( playArea ) {
     assert && assert( playArea instanceof Explore1DPlayArea, `invalid playArea: ${playArea}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    return new Explore1DBallSystem( playArea, elapsedTimeProperty );
+    return new Explore1DBallSystem( playArea );
   }
 }
 

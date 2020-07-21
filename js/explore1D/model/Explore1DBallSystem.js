@@ -11,7 +11,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
@@ -29,14 +28,12 @@ class Explore1DBallSystem extends BallSystem {
 
   /**
    * @param {Explore1DPlayArea} playArea
-   * @param {Property.<number>} elapsedTimeProperty
    * @param {Object} [options]
    */
-  constructor( playArea, elapsedTimeProperty, options ) {
+  constructor( playArea, options ) {
     assert && assert( playArea instanceof Explore1DPlayArea, `invalid playArea: ${playArea}` );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
 
-    super( EXPLORE_1D_INITIAL_BALL_STATES, playArea, elapsedTimeProperty, options );
+    super( EXPLORE_1D_INITIAL_BALL_STATES, playArea, options );
 
     //----------------------------------------------------------------------------------------
 

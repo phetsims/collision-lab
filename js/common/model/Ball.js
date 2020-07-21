@@ -41,17 +41,15 @@ class Ball {
    * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
    * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
-   * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
    */
-  constructor( initialBallState, playArea, isConstantSizeProperty, pathsVisibleProperty, elapsedTimeProperty, index ) {
+  constructor( initialBallState, playArea, isConstantSizeProperty, pathsVisibleProperty, index ) {
     assert && assert( initialBallState instanceof BallState, `invalid initialBallState: ${initialBallState}` );
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && AssertUtils.assertPropertyOf( isConstantSizeProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
-    assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && AssertUtils.assertPositiveInteger( index );
 
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
@@ -122,7 +120,7 @@ class Ball {
       { valueType: 'boolean' } );
 
     // @public (read-only) {CollisionLabPath} - the trailing 'Path' behind the Ball.
-    this.path = new CollisionLabPath( this.positionProperty, pathsVisibleProperty, elapsedTimeProperty, playArea.bounds );
+    this.path = new CollisionLabPath( this.positionProperty, pathsVisibleProperty );
 
     //----------------------------------------------------------------------------------------
 
@@ -210,16 +208,6 @@ class Ball {
    * This is called when the user presses the play button. See https://github.com/phetsims/collision-lab/issues/76.
    */
   saveState() { this.restartState = new BallState( this.position, this.velocity, this.mass ); }
-
-  /**
-   * Updates the path of the Ball. Mainly here to have parallel structure with CenterOfMass.
-   * @public
-   *
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
-   */
-  updatePath( elapsedTime ) {
-    this.path.updatePath( elapsedTime );
-  }
 
   /**
    * Sets the Properties of this Ball to match the passed-in BallState.
