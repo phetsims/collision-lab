@@ -9,10 +9,10 @@ The question, answered in this document, is how the physics engine computes if a
 
 <h3> Known Quantities:</h3>
 
-- ![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>1</sub> - the position of the first Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>2</sub> - the position of the second Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\vec{v})<sub>1</sub> - the velocity of the first Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\vec{v})<sub>2</sub> - the velocity of the second Ball involved in the collision at the *start* of the collision.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\vec{r_1}) - the position of the first Ball involved in the collision at the *start* of the collision.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\vec{r_2}) - the position of the second Ball involved in the collision at the *start* of the collision.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\vec{v_1}) - the velocity of the first Ball involved in the collision at the *start* of the collision.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\vec{v_2}) - the velocity of the second Ball involved in the collision at the *start* of the collision.<br>
 - *radius<sub>1</sub>* - the radius of the first Ball involved in the collision.<br>
 - *radius<sub>2</sub>* - the radius of the second Ball involved in the collision.
 
@@ -22,7 +22,13 @@ The question, answered in this document, is how the physics engine computes if a
 - ![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>contact 2</sub> - the position of the second Ball when the Balls first collided (in between frames).
 - *time* - the elapsed time from when the Balls first collided to their current colliding positions.
 
-<h5> Derivation:</h5>
+<h3> Derivation:</h3>
+
+Since Balls are undergoing uniform-motion, they are traveling in a straight line and aren't accelerating. Thus:
+
+![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>contact 1</sub> <span>=</span> ![formula](https://render.githubusercontent.com/render/math?math=\vec{r_1}) <span>+</span> *time* <span>·</span> ![formula](https://render.githubusercontent.com/render/math?math=\vec{v_1})
+
+![formula](https://render.githubusercontent.com/render/math?math=\vec{r_1 + time \cdot}) *time*&#00B7;<img style="float: right;" src="https://render.githubusercontent.com/render/math?math=\vec{v}"><sub>1</sub>
 
 <img src="https://github.com/phetsims/collision-lab/blob/priori/doc/algorithms/images/ball-contact-diagram.png" width="420">
 
