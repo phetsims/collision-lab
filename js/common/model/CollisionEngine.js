@@ -10,8 +10,8 @@
  *     collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
  *     each other with high velocities and/or slow frame rates.
  *     The algorithms for detecting ball-to-ball and ball-to-border collisions can be found below:
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-ball-collision-detection.md
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-border-collision-detection.md
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
+ *       + https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-border-collision-detection.md
  *
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
  *     Balls to check, so a spatial partitioning collision detection optimization is not used.
@@ -35,7 +35,6 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
@@ -91,7 +90,8 @@ class CollisionEngine {
     // To fully ensure that collisions are simulated correctly, handle and progress the next collision and all potential
     // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
     // time-step.
-    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 ) {
+    let i = 0;
+    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 && i < 25 ) {
 
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollision = dt >= 0 ?
@@ -113,6 +113,7 @@ class CollisionEngine {
       this.potentialCollisions = [];
       this.detectBallToBallCollisions( dt );
       this.detectBallToBorderCollisions( dt );
+      i ++
     }
 
     // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
@@ -147,7 +148,7 @@ class CollisionEngine {
        * exactly equal to the sum of their radii.
        *
        * Documenting the derivation was beyond the scope of code comments. Please reference
-       * https://github.com/phetsims/collision-lab/blob/master/doc/ball-to-ball-collision-detection.md
+       * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
        *----------------------------------------------------------------------------*/
 
       const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
@@ -222,60 +223,6 @@ class CollisionEngine {
     const v2yP = this.mutables.normal.dotXY( v2t, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
-
-    // Record the collision in both of the Ball's trailing 'paths'. When a collision involving a Ball occurs, it often occurs in between time-steps and Balls are set to a different
-    // position at the end of the step. However, this brings up issues for Ball Paths, which work by recording
-    // the position of a Ball at each frame. Since Ball positions are rarely set to the position where the collision
-    // actually occurred, this separation becomes obvious to the user, particularly at high velocities.
-    // See https://github.com/phetsims/collision-lab/issues/75.
-    // ball1.path.updatePath( time );
-    // ball2.path.updatePath( time );
-  }
-
-  /**
-   * Reconstructs uniform motion of two colliding Balls that are currently overlapping to compute the elapsed time
-   * from the time when the Balls first exactly collided to their overlapped positions. The contact time is positive if
-   * the collision occurred in the past and negative if the contact time is in the future (which happens if the
-   * simulation is ran in reverse).
-   * @private
-   *
-   * @param {Ball} ball1 - the first Ball involved in the collision
-   * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
-   * @returns {number} - in seconds
-   */
-  getBallToBallCollisionOverlapTime( ball1, ball2, isReversing ) {
-    assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
-    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
-    assert && assert( BallUtils.areBallsOverlapping( ball1, ball2 ), 'balls must be intersecting' );
-
-    /*----------------------------------------------------------------------------*
-     * This calculation comes from the known fact that when the Balls are exactly colliding,
-     * their distance is exactly equal to the sum of their radii.
-     *
-     * Documenting the derivation was beyond the scope of code comments. Please reference
-     * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-ball-time-of-impact-derivation.pdf
-     *----------------------------------------------------------------------------*/
-
-    const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
-    const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity );
-    const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
-
-    // Solve for the roots of the quadratic outlined in the document above.
-    const possibleRoots = Utils.solveQuadraticRootsReal(
-                            deltaV.magnitudeSquared,
-                            -2 * deltaR.dot( deltaV ),
-                            deltaR.magnitudeSquared - sumOfRadiiSquared );
-
-    assert && assert( possibleRoots && possibleRoots.length <= 2 && possibleRoots.length >= 0 );
-
-    // Pick the positive root for forward stepping and the negative root if isReversing is true.
-    const contactTime = _.find( possibleRoots, root => isReversing ? root < 0 : root >= 0 ) || 0;
-
-    assert && assert( Number.isFinite( contactTime ) && ( isReversing ? contactTime <= 0 : contactTime >= 0 ), contactTime );
-    return contactTime;
   }
 
   /*----------------------------------------------------------------------------*
@@ -283,20 +230,39 @@ class CollisionEngine {
    *----------------------------------------------------------------------------*/
 
   /**
-   * A time-discretization approach to detecting and processing ball-border collisions. This checks to see if any balls
-   * are overlapping with the border in the last time step, which means the Ball has collided with the border.
+   * Detects all ball-to-border (PlayArea) collisions of the BallSystem that occur within the passed-in time-step.
+   * Although tunneling doesn't occur with ball-to-border collisions, collisions are still detected before it occurs to
+   * mirror the approach for ball-to-ball collisions.
    *
-   * NOTE: this method assumes that the border of the PlayArea reflects. Don't call this method if it doesn't.
+   * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
+   * collision is encapsulated in a Collision instance.
    *
+   * NOTE: no-op when the PlayArea's border doesn't reflect;
    * @private
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
+   *
+   * @param {number} dt - time-delta in seconds
    */
   detectBallToBorderCollisions( dt ) {
-    return;
-    // assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    if ( !this.playArea.reflectsBorder ) { return; /** do nothing **/ }
 
-    // Loop through each Balls and check to see if it is colliding with the border.
+    const closestPointTo = ( bounds, position ) => {
+
+      const xConstrained = Math.max( Math.min( position.x, bounds.maxX ), bounds.minX );
+      const yConstrained = Math.max( Math.min( position.y, bounds.maxY ), bounds.minY );
+      if ( Math.abs( xConstrained - position.x ) >= Math.abs( yConstrained - position.y ) ) {
+        return new Vector2( xConstrained, position.y );
+      }
+      else {
+        return new Vector2( position.x, yConstrained );
+      }
+    };
+
+
+
+    // Loop through each Balls and check to see if it will collide with the border.
     this.ballSystem.balls.forEach( ball => {
+
       const ballPosition = BallUtils.computeUniformMotionBallPosition( ball, dt );
       const positionBounds = this.playArea.bounds.eroded( ball.radius );
 
@@ -305,17 +271,41 @@ class CollisionEngine {
         // The position of a ball with the same radius as the Ball involved in the collision that is closest to the current
         // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
         // geometric representation.
-        const closestPoint = positionBounds.closestPointTo( ballPosition );
+        const closestPoint = closestPointTo( positionBounds, ballPosition );
         const deltaS = this.mutables.deltaS.set( ballPosition ).subtract( closestPoint );
 
-        // Use the formula derived in the document above.
-        const overlappedTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
+        if ( deltaS.magnitudeSquared !== 0 ) {
 
-        // const contactPoint = BallUtils.computeUniformMotionBallPosition( ball, dt - overlappedTime );
+          // Use the formula derived in the document above.
+          const overlappedTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
 
-        this.potentialCollisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
+          // const contactPoint = BallUtils.computeUniformMotionBallPosition( ball, dt - overlappedTime );
 
+          this.potentialCollisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
+        }
       }
+
+      // let min;
+
+      // if ( Math.sign( dt ) * ball.velocity.x > 0 ) {
+      //   const time = ( this.playArea.right - ball.right ) / ball.velocity.x * Math.sign( dt );
+      //   min = min ? Math.min( min, time ) : time;
+      // }
+      // if ( Math.sign( dt ) * ball.velocity.y > 0 ) {
+      //   const time = ( this.playArea.top - ball.top ) / ball.velocity.y * Math.sign( dt );
+      //   min = min ? Math.min( min, time ) : time;
+      // }
+      // if ( Math.sign( dt ) * ball.velocity.x < 0 ) {
+      //   const time = ( this.playArea.left - ball.left ) / ball.velocity.x * Math.sign( dt );
+      //   min = min ? Math.min( min, time ) : time;
+      // }
+      // if ( Math.sign( dt ) * ball.velocity.y < 0 ) {
+      //   const time = ( this.playArea.bottom - ball.bottom ) / ball.velocity.y * Math.sign( dt );
+      //   min = min ? Math.min( min, time ) : time;
+      // }
+      // if ( min && Math.abs( min ) <= Math.abs( dt ) ) {
+      //   this.potentialCollisions.push( new Collision( ball, this.playArea, min * Math.sign( dt ) ) );
+      // }
 
 
 
