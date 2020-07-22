@@ -42,9 +42,7 @@ import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 class CollisionEngine {
 
   /**
@@ -93,14 +91,10 @@ class CollisionEngine {
     // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
     // time-step.
     while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 ) {
-
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollision = dt >= 0 ?
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
         _.maxBy( this.potentialCollisions, 'collisionTime' );
-      if ( elapsedTime - dt < 0 ) {
-        console.log( 'dt: ' + dt + ' elapsedTime: ' + elapsedTime + ' nextCollision: ' + nextCollision.collidingObject.constructor.name )
-      }
 
       // Progress forwards to the exact point of contact of the nextCollision.
       this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
@@ -111,7 +105,7 @@ class CollisionEngine {
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
         this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject ) :
-        this.collideBallWithBorder( nextCollision.ball );
+        this.collideBallWithBorder( nextCollision.ball, dt );
 
       // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
       this.potentialCollisions = [];
@@ -291,20 +285,20 @@ class CollisionEngine {
    * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
    * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
    */
-  collideBallWithBorder( ball  ) {
+  collideBallWithBorder( ball, dt ) {
     // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
     // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
     // Update the velocity after the collision.
-    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity < 0 )
-      || ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * Math.sign( dt ) < 0 )
+      || ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity * Math.sign( dt ) > 0 ) ) {
 
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
       ball.xVelocity *= -this.playArea.elasticity;
     }
-    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity < 0 )
-      || ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity * Math.sign( dt ) < 0 )
+      || ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity * Math.sign( dt ) > 0 ) ) {
 
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
       ball.yVelocity *= -this.playArea.elasticity;
