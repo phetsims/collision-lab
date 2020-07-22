@@ -19,7 +19,7 @@ The question, answered in this document, is how the physics engine computes if a
 <h3> Unknown Quantities:</h3>
 
 - ![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>contact 1</sub> - the position of the first Ball when the Balls first collided (in between frames).
-- ![formula](https://render.githubusercontent.com/render/math?math=\vec{r})<sub>contact 2</sub> - the position of the second Ball when the Balls first collided (in between frames).
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_{contact%20\2}) - the position of the second Ball when the Balls first collided (in between frames).
 - *time* - the elapsed time from when the Balls first collided to their current colliding positions.
 
 <h3> Derivation:</h3>
