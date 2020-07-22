@@ -42,7 +42,9 @@ import BallSystem from './BallSystem.js';
 import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
-
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 class CollisionEngine {
 
   /**
@@ -96,6 +98,9 @@ class CollisionEngine {
       const nextCollision = dt >= 0 ?
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
         _.maxBy( this.potentialCollisions, 'collisionTime' );
+      if ( elapsedTime - dt < 0 ) {
+        console.log( 'dt: ' + dt + ' elapsedTime: ' + elapsedTime + ' nextCollision: ' + nextCollision.collidingObject.constructor.name )
+      }
 
       // Progress forwards to the exact point of contact of the nextCollision.
       this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
@@ -153,11 +158,14 @@ class CollisionEngine {
       const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
-      // Solve for the minimum root of the quadratic outlined in the document above.
-      const collisionTime = Math.min( ...Utils.solveQuadraticRootsReal(
-                                           deltaV.magnitudeSquared,
-                                           2 * deltaV.dot( deltaR ),
-                                           deltaR.magnitudeSquared - sumOfRadiiSquared ) );
+      // Solve for the possible roots of the quadratic outlined in the document above.
+      const possibleRoots = Utils.solveQuadraticRootsReal(
+                              deltaV.magnitudeSquared,
+                              2 * deltaV.dot( deltaR ),
+                              deltaR.magnitudeSquared - sumOfRadiiSquared );
+
+      // The minimum root of the quadratic is when the Balls will first collide.
+      const collisionTime = possibleRoots ? Math.min( ...possibleRoots ) : null;
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
@@ -251,17 +259,17 @@ class CollisionEngine {
       // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
       const velocityMultipier = Math.sign( dt );
 
-      // Calculate the time the Ball would collide with each respective wall, ignoring all other walls for now.
+      // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
       const leftCollisionTime = ( this.playArea.left - ball.left ) / ball.xVelocity * velocityMultipier;
       const rightCollisionTime = ( this.playArea.right - ball.right ) / ball.xVelocity * velocityMultipier;
       const bottomCollisionTime = ( this.playArea.bottom - ball.bottom ) / ball.yVelocity * velocityMultipier;
       const topCollisionTime = ( this.playArea.top - ball.top ) / ball.yVelocity * velocityMultipier;
 
-      // Calculate the time the Ball would collide with a horizontal/vertical wall.
+      // Calculate the time the Ball would collide with a horizontal/vertical border.
       const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
       const verticalCollisionTime = Math.max( bottomCollisionTime, topCollisionTime );
 
-      // Solve for the collisionTime, which is the first wall (minimum in time) the Ball would collide with.
+      // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
       const collisionTime = Math.min( horizontalCollisionTime, verticalCollisionTime );
 
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
@@ -288,19 +296,18 @@ class CollisionEngine {
     // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
     // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
 
-    // Convenience reference to the elasticity.
-    const elasticity = this.playArea.elasticity;
-
     // Update the velocity after the collision.
-    if ( this.playArea.isBallOnHorizontalBorder( ball ) ) {
+    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity < 0 )
+      || ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity > 0 ) ) {
 
-      // Left and Right Border wall collisions incur a flip in horizontal velocity.
-      ball.xVelocity *= -elasticity;
+      // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
+      ball.xVelocity *= -this.playArea.elasticity;
     }
-    if ( this.playArea.isBallOnVerticalBorder( ball ) ) {
+    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity < 0 )
+      || ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity > 0 ) ) {
 
-      // Top and Bottom Border wall collisions incur a flip in vertical velocity.
-      ball.yVelocity *= -elasticity;
+      // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
+      ball.yVelocity *= -this.playArea.elasticity;
     }
   }
 }

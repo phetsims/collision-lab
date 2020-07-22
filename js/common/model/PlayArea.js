@@ -199,13 +199,17 @@ class PlayArea {
   }
 
   // @public
-  isBallOnHorizontalBorder( ball, epsilon = CollisionLabConstants.ZERO_THRESHOLD ) {
-    return Utils.equalsEpsilon( ball.left, this.left, epsilon )
-     || Utils.equalsEpsilon( ball.right, this.right, epsilon );
+  isBallTouchingTop( ball ) {
+    return Utils.equalsEpsilon( ball.top, this.top, CollisionLabConstants.ZERO_THRESHOLD )
   }
-  isBallOnVerticalBorder( ball, epsilon = CollisionLabConstants.ZERO_THRESHOLD ) {
-    return Utils.equalsEpsilon( ball.top, this.top, epsilon )
-     || Utils.equalsEpsilon( ball.bottom, this.bottom, epsilon );
+  isBallTouchingBottom( ball ) {
+    return Utils.equalsEpsilon( ball.bottom, this.bottom, CollisionLabConstants.ZERO_THRESHOLD )
+  }
+  isBallTouchingLeft( ball ) {
+    return Utils.equalsEpsilon( ball.left, this.left, CollisionLabConstants.ZERO_THRESHOLD )
+  }
+  isBallTouchingRight( ball ) {
+    return Utils.equalsEpsilon( ball.right, this.right, CollisionLabConstants.ZERO_THRESHOLD )
   }
 }
 
