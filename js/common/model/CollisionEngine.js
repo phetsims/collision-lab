@@ -90,8 +90,7 @@ class CollisionEngine {
     // To fully ensure that collisions are simulated correctly, handle and progress the next collision and all potential
     // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
     // time-step.
-    let i = 0;
-    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 && i < 25 ) {
+    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 ) {
 
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollision = dt >= 0 ?
@@ -113,7 +112,6 @@ class CollisionEngine {
       this.potentialCollisions = [];
       this.detectBallToBallCollisions( dt );
       this.detectBallToBorderCollisions( dt );
-      i ++
     }
 
     // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
@@ -231,8 +229,8 @@ class CollisionEngine {
 
   /**
    * Detects all ball-to-border (PlayArea) collisions of the BallSystem that occur within the passed-in time-step.
-   * Although tunneling doesn't occur with ball-to-border collisions, collisions are still detected before it occurs to
-   * mirror the approach for ball-to-ball collisions.
+   * Although tunneling doesn't occur with ball-to-border collisions, collisions are still detected before they occur
+   * to mirror the approach for ball-to-ball collisions.
    *
    * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
    * collision is encapsulated in a Collision instance.
@@ -244,84 +242,34 @@ class CollisionEngine {
    */
   detectBallToBorderCollisions( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    if ( !this.playArea.reflectsBorder ) { return; /** do nothing **/ }
-
-    const closestPointTo = ( bounds, position ) => {
-
-      const xConstrained = Math.max( Math.min( position.x, bounds.maxX ), bounds.minX );
-      const yConstrained = Math.max( Math.min( position.y, bounds.maxY ), bounds.minY );
-      if ( Math.abs( xConstrained - position.x ) >= Math.abs( yConstrained - position.y ) ) {
-        return new Vector2( xConstrained, position.y );
-      }
-      else {
-        return new Vector2( position.x, yConstrained );
-      }
-    };
-
-
 
     // Loop through each Balls and check to see if it will collide with the border.
-    this.ballSystem.balls.forEach( ball => {
+    this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
 
-      const ballPosition = BallUtils.computeUniformMotionBallPosition( ball, dt );
-      const positionBounds = this.playArea.bounds.eroded( ball.radius );
+      // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
+      // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
+      // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
+      const velocityMultipier = Math.sign( dt );
 
-      if ( !positionBounds.containsPoint( ballPosition ) ) {
+      // Calculate the time the Ball would collide with each respective wall, ignoring all other walls for now.
+      const leftCollisionTime = ( this.playArea.left - ball.left ) / ball.xVelocity * velocityMultipier;
+      const rightCollisionTime = ( this.playArea.right - ball.right ) / ball.xVelocity * velocityMultipier;
+      const bottomCollisionTime = ( this.playArea.bottom - ball.bottom ) / ball.yVelocity * velocityMultipier;
+      const topCollisionTime = ( this.playArea.top - ball.top ) / ball.yVelocity * velocityMultipier;
 
-        // The position of a ball with the same radius as the Ball involved in the collision that is closest to the current
-        // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
-        // geometric representation.
-        const closestPoint = closestPointTo( positionBounds, ballPosition );
-        const deltaS = this.mutables.deltaS.set( ballPosition ).subtract( closestPoint );
+      // Calculate the time the Ball would collide with a horizontal/vertical wall.
+      const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
+      const verticalCollisionTime = Math.max( bottomCollisionTime, topCollisionTime );
 
-        if ( deltaS.magnitudeSquared !== 0 ) {
+      // Solve for the collisionTime, which is the first wall (minimum in time) the Ball would collide with.
+      const collisionTime = Math.min( horizontalCollisionTime, verticalCollisionTime );
 
-          // Use the formula derived in the document above.
-          const overlappedTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
+      // If the collisionTime is finite and is within the current time-step period, the collision is registered.
+      if ( Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) ) {
 
-          // const contactPoint = BallUtils.computeUniformMotionBallPosition( ball, dt - overlappedTime );
-
-          this.potentialCollisions.push( new Collision( ball, this.playArea, dt - overlappedTime ) );
-        }
+        // Register the collision and encapsulate information in a Collision instance.
+        this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
       }
-
-      // let min;
-
-      // if ( Math.sign( dt ) * ball.velocity.x > 0 ) {
-      //   const time = ( this.playArea.right - ball.right ) / ball.velocity.x * Math.sign( dt );
-      //   min = min ? Math.min( min, time ) : time;
-      // }
-      // if ( Math.sign( dt ) * ball.velocity.y > 0 ) {
-      //   const time = ( this.playArea.top - ball.top ) / ball.velocity.y * Math.sign( dt );
-      //   min = min ? Math.min( min, time ) : time;
-      // }
-      // if ( Math.sign( dt ) * ball.velocity.x < 0 ) {
-      //   const time = ( this.playArea.left - ball.left ) / ball.velocity.x * Math.sign( dt );
-      //   min = min ? Math.min( min, time ) : time;
-      // }
-      // if ( Math.sign( dt ) * ball.velocity.y < 0 ) {
-      //   const time = ( this.playArea.bottom - ball.bottom ) / ball.velocity.y * Math.sign( dt );
-      //   min = min ? Math.min( min, time ) : time;
-      // }
-      // if ( min && Math.abs( min ) <= Math.abs( dt ) ) {
-      //   this.potentialCollisions.push( new Collision( ball, this.playArea, min * Math.sign( dt ) ) );
-      // }
-
-
-
-      // // If the Ball is outside the bounds of the PlayArea, it is now colliding with the wall.
-      // if ( !this.playArea.fullyContainsBall( ball ) ) {
-
-      //   // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
-      //   // position when the ball first collided. Use the overlapped time to find the exact collision position.
-      //   const overlappedTime = this.getBallToBorderCollisionOverlapTime( ball, isReversing );
-
-      //   // Get exact position when the Ball collided by rewinding by the overlapped time.
-      //   const contactPosition = BallUtils.computeUniformMotionBallPosition( ball, -overlappedTime );
-
-      //   // Forward the rest of the collision response to the collide-ball-with-border method.
-      //   this.collideBallWithBorder( ball, contactPosition, overlappedTime );
-      // }
     } );
   }
 
@@ -354,51 +302,6 @@ class CollisionEngine {
       // Top and Bottom Border wall collisions incur a flip in vertical velocity.
       ball.yVelocity *= -elasticity;
     }
-
-    // Record the exact contact position of the collision for sub-classes.
-    // this.recordCollisionPosition( ball, collisionPosition, overlappedTime );
-
-    // // Adjust the position of the Ball to take into account its overlapping time and its new velocity.
-    // ball.position = ball.velocity.times( overlappedTime ).add( collisionPosition );
-  }
-
-  /**
-   * Reconstructs uniform motion of a Ball that is currently overlapping with a border to compute the elapsed time
-   * from the time when the Ball first exactly collided to its overlapped position. The contact time is positive if the
-   * contact time occurred in the past and negative if the contact time is in the future (which happens if the
-   * simulation is ran in reverse).
-   * @private
-   *
-   * @param {Ball} ball - the ball involved in the collision
-   * @param {boolean} isReversing - indicates if the simulation is being ran in reverse.
-   * @returns {number} - in seconds
-   */
-  getBallToBorderCollisionOverlapTime( ball, isReversing ) {
-    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( typeof isReversing === 'boolean', `invalid isReversing: ${isReversing}` );
-    assert && assert( !isReversing || this.playArea.elasticity === 1, 'must be perfectly elastic for reversing' );
-    assert && assert( !this.playArea.fullyContainsBall( ball ), 'ball must be intersecting' );
-
-    /*----------------------------------------------------------------------------*
-     * This calculation comes from the known fact that when the Ball's distance to the
-     * border is exactly equal to its radius when it collides with the border. It
-     * uses a dot-product projection to exploit this and solve the overlap time.
-     *
-     * Documenting the derivation was beyond the scope of code comments. Please reference
-     * https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
-     *----------------------------------------------------------------------------*/
-
-    // The position of a ball with the same radius as the Ball involved in the collision that is closest to the current
-    // position of the ball and fully inside of the border. Again, visit the document above for a visual on the
-    // geometric representation.
-    const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
-    const deltaS = this.mutables.deltaS.set( ball.position ).subtract( closestPoint );
-
-    // Use the formula derived in the document above.
-    const contactTime = ball.velocity.dot( deltaS ) !== 0 ? deltaS.magnitudeSquared / ball.velocity.dot( deltaS ) : 0;
-
-    assert && assert( Number.isFinite( contactTime ), `invalid contactTime: ${ contactTime }` );
-    return contactTime;
   }
 }
 
