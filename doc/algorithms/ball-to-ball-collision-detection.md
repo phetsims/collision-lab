@@ -30,6 +30,7 @@ The question, answered in this document, is how the physics engine computes if a
 Since Balls are undergoing uniform-motion, they are traveling in a straight line and aren't accelerating. Thus:
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://render.githubusercontent.com/render/math?math=\large \vec{r}_{\contact\1} = \vec{r}_1 %2B \textrm{time} \cdot\vec{v}_1">
+
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://render.githubusercontent.com/render/math?math=\large \vec{r}_{\contact\2} = \vec{r}_2 %2B \textrm{time} \cdot\vec{v}_2">
 
 <img src="https://github.com/phetsims/collision-lab/blob/priori/doc/algorithms/images/ball-contact-diagram.png" width="380">
