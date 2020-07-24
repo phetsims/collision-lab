@@ -15,7 +15,6 @@
  * @author Brandon Li
  */
 
-import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from '../../common/model/Ball.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
@@ -31,16 +30,13 @@ class IntroCollisionEngine extends CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the center-position of the first Ball when it exactly collided with ball2.
-   * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+  handleBallToBallCollision( ball1, ball2, time ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
-    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
-    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+
+    // Forward the rest of the collision response to the super class.
+    super.handleBallToBallCollision( ball1, ball2 );
 
     // Only register the 'Change in Momentum' contact point if the 'Change in Momentum' checkbox is checked.
     if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
@@ -48,21 +44,18 @@ class IntroCollisionEngine extends CollisionEngine {
       // Reference the normal 'line of impact' vector. See
       // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
       // for an image. This is a unit vector.
-      const normal = this.mutableVectors.normal;
+      const normal = this.mutables.normal;
 
       // The normal vector points in the direction of ball2. So we scale the normal vector (unit vector) by the radius
       // of ball1 and add it to the center colliding position of ball1 to get the collision-point.
-      const contactPoint = normal.times( ball1.radius ).add( collisionPosition1 );
+      const contactPoint = normal.times( ball1.radius ).add( ball1.position );
 
       // The time the collision occurred is the current time of this frame minus how long the Balls have overlapped.
-      const collisionTime = Math.max( this.elapsedTimeProperty.value - overlappedTime, 0 );
+      // const collisionTime = Math.max( this.elapsedTimeProperty.value - dt, 0 );
 
       // Pass the calculated information to the IntroBallSystem.
-      this.ballSystem.registerChangeInMomentumCollision( contactPoint, collisionTime );
+      this.ballSystem.registerChangeInMomentumCollision( contactPoint, time );
     }
-
-    // Forward the rest of the collision response to the super class.
-    super.handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
   }
 }
 

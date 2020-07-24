@@ -103,7 +103,7 @@ class CollisionEngine {
 
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
-        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject ) :
+        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, elapsedTime - dt ) :
         this.collideBallWithBorder( nextCollision.ball, dt );
 
       // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
