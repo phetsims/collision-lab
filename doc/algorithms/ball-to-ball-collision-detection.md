@@ -55,4 +55,4 @@ Thus,
 
 <img src="https://render.githubusercontent.com/render/math?math=\large \qquad\quad \hphantom{(\textrm{radius}_1 %2B \textrm{radius}_2)^2} = \lVert \Delta \vec{r} \rVert ^2 %2B 2 \cdot \textrm{time} (\Delta \vec{v} \cdot \Delta \vec{r}) %2B \textrm{time} ^2 \cdot \lVert \Delta \vec{v} \rVert ^2">
 
-which is quadratic in-form for time with all known values.
+which is quadratic in-form for *time*.
