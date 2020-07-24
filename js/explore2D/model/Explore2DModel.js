@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
