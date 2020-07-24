@@ -96,11 +96,11 @@ class CollisionEngine {
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
-      // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
-
       // Now that this collision has been progressed, some time of the step has already been handled.
       dt -= nextCollision.collisionTime;
+
+      // Progress forwards to the exact point of contact of the nextCollision.
+      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
 
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
@@ -266,8 +266,9 @@ class CollisionEngine {
       // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
       const collisionTime = Math.min( horizontalCollisionTime, verticalCollisionTime );
 
+
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
-      if ( Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) ) {
+      if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );

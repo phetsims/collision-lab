@@ -149,7 +149,7 @@ class BallNode extends Node {
     // BallCircle and Label. Note that this clip-area doesn't apply to any of the NumberDisplays or VectorNodes.
     const ballCircleAndLabelContainer = new Node( {
       children: [ ballCircle, labelNode ],
-      clipArea: Shape.bounds( playAreaViewBounds )
+      // clipArea: Shape.bounds( playAreaViewBounds )
     } );
 
     // Wrap the components that are only visible when the Ball is inside of the PlayArea.
