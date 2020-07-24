@@ -7,14 +7,13 @@
  * ## Collision detection:
  *
  *   - CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Both of these
- *     collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
+ *     collisions are detected *before* the collision occurs to avoid tunneling scenarios where Balls would pass through
  *     each other with high velocities and/or slow frame rates.
- *     The algorithms for detecting ball-to-ball and ball-to-border collisions can be found below:
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
- *       + https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-border-collision-detection.md
  *
  *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
- *     Balls to check, so a spatial partitioning collision detection optimization is not used.
+ *     Balls to check, so a spatial partitioning collision detection optimization is not used. The algorithm for
+ *     detecting ball-to-ball collisions is described in
+ *     https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
  *
  * ## Collision response:
  *
@@ -24,9 +23,9 @@
  *     repeated until there are no collisions detected within the time-step.
  *
  *   - Collision response determines what affect a collision has on a Ball's motion. The algorithms for Ball collisions
- *     were adapted but significantly improved from the flash implementation of
- *     Collision Lab. They follow the standard rigid-body collision model as described in
- *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+ *     were adapted but significantly improved from the flash implementation of Collision Lab. They follow the standard
+ *     rigid-body collision model as described in
+ *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
  *
  * @author Brandon Li
  * @author Martin Veillette
