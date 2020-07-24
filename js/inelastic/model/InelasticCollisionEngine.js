@@ -117,8 +117,11 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @public
    *
    * @param {number} dt - time in seconds
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  step( dt ) {
+  step( dt, elapsedTime ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // If we are currently handling the 2 Balls in the system, rotate the Balls around the center of mass. This
     // overrides the collision response of the super-class.
@@ -126,16 +129,31 @@ class InelasticCollisionEngine extends CollisionEngine {
       this.rotateBalls( dt );
 
       // Handle scenario where Balls are rotated into the border.
-      this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+      // this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
     }
     else {
 
       // Forward the collision-response to the super-class.
-      super.step( dt );
+      super.step( dt, elapsedTime );
     }
   }
 
   //----------------------------------------------------------------------------------------
+
+  /**
+   * Detects all ball-to-ball collisions of the BallSystem that occur within the passed-in time-step. Ball-to-ball
+   * collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
+   * each other with high velocities and/or slow frame rates.
+   *
+   * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
+   * collision is encapsulated in a Collision instance.
+   * @private
+   *
+   * @param {number} dt - time-delta in seconds
+   */
+  detectBallToBallCollisions( dt ) {
+    !this.isRotatingBalls && super.detectBallToBallCollisions( dt );
+  }
 
   /**
    * Processes and responds to a collision between two balls. Overridden to respond to perfectly inelastic 'stick'
@@ -147,16 +165,10 @@ class InelasticCollisionEngine extends CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
-   * @param {Vector2} collisionPosition1 - the center-position of the first Ball when it exactly collided with ball2.
-   * @param {Vector2} collisionPosition1 - the center-position of the second Ball when it exactly collided with ball1.
-   * @param {number} overlappedTime - the time the two Balls have been overlapping each other.
    */
-  handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime ) {
+  handleBallToBallCollision( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
-    assert && assert( collisionPosition1 instanceof Vector2, `invalid collisionPosition1: ${collisionPosition1}` );
-    assert && assert( collisionPosition2 instanceof Vector2, `invalid collisionPosition2: ${collisionPosition2}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
     assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
@@ -165,10 +177,6 @@ class InelasticCollisionEngine extends CollisionEngine {
 
       // Set the isRotatingBalls flag to true.
       this.isRotatingBalls = true;
-
-      // Set the position of the Balls to the collision positions.
-      ball1.position = collisionPosition1;
-      ball2.position = collisionPosition2;
 
       // Update the position of the center of mass of the 2 Balls. This is used as a convenience vector for computations
       // in the step() method.
@@ -187,14 +195,11 @@ class InelasticCollisionEngine extends CollisionEngine {
       // Update the angular velocity reference. Formula comes from
       // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
       this.angularVelocity = this.totalAngularMomentum / ( I1 + I2 );
-
-      // Consider the time the Balls have been overlapping and start the rotation.
-      this.rotateBalls( overlappedTime );
     }
     else {
 
       // Forward the collision-response to the super-class.
-      super.handleBallToBallCollision( ball1, ball2, collisionPosition1, collisionPosition2, overlappedTime );
+      super.handleBallToBallCollision( ball1, ball2 );
     }
   }
 

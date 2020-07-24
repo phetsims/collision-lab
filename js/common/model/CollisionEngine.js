@@ -89,7 +89,8 @@ class CollisionEngine {
     // To fully ensure that collisions are simulated correctly, handle and progress the next collision and all potential
     // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
     // time-step.
-    while ( this.potentialCollisions.length && Math.abs( dt ) >= 0 ) {
+    if ( this.potentialCollisions.length ) {
+
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollision = dt >= 0 ?
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
@@ -104,16 +105,15 @@ class CollisionEngine {
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
         this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, elapsedTime - dt ) :
-        this.collideBallWithBorder( nextCollision.ball, dt );
+        this.handleBallToBorderCollision( nextCollision.ball, dt );
 
-      // Now re-detect all potential collisions from this point forwards for the rest of this time-step.
-      this.potentialCollisions = [];
-      this.detectBallToBallCollisions( dt );
-      this.detectBallToBorderCollisions( dt );
+      this.step( dt, elapsedTime );
     }
+    else {
 
-    // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
-    this.ballSystem.stepUniformMotion( dt, elapsedTime );
+      // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
+      this.ballSystem.stepUniformMotion( dt, elapsedTime );
+    }
   }
 
   /*----------------------------------------------------------------------------*
@@ -127,7 +127,7 @@ class CollisionEngine {
    *
    * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
    * collision is encapsulated in a Collision instance.
-   * @private
+   * @protected - can be overridden in subclasses
    *
    * @param {number} dt - time-delta in seconds
    */
@@ -285,7 +285,7 @@ class CollisionEngine {
    * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
    * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
    */
-  collideBallWithBorder( ball, dt ) {
+  handleBallToBorderCollision( ball, dt ) {
     // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
     // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
