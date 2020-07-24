@@ -128,8 +128,17 @@ class InelasticCollisionEngine extends CollisionEngine {
     if ( this.isRotatingBalls ) {
       this.rotateBalls( dt );
 
+      // // Get the balls that are colliding with the border.
+      // const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
+
       // Handle scenario where Balls are rotated into the border.
-      // this.playArea.reflectsBorder && this.handleBallToBorderCollisions( dt < 0 );
+      if ( this.playArea.reflectsBorder ) {
+        this.ballSystem.balls.forEach( ball => {
+          if ( !this.playArea.fullyContainsBall( ball ) ) {
+            this.collideBallWithBorder( ball );
+          }
+        } );
+      }
     }
     else {
 
@@ -278,12 +287,12 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
    * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
    */
-  collideBallWithBorder( ball, collisionPosition, overlappedTime ) {
+  collideBallWithBorder( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
-    assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
-    assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
+    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
+    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+    // assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
+    // assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
@@ -306,7 +315,7 @@ class InelasticCollisionEngine extends CollisionEngine {
         // the Ball and the border. See
         // https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
         const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
-        const deltaS = this.mutableVectors.deltaS.set( ball.position ).subtract( closestPoint );
+        const deltaS = new Vector2( 0, 0 ).set( ball.position ).subtract( closestPoint );
 
         this.ballSystem.balls.forEach( ball => {
 
@@ -318,23 +327,48 @@ class InelasticCollisionEngine extends CollisionEngine {
         } );
         this.reset();
       }
-      else {
+      // else {
 
-        // Otherwise, if a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball
-        // has 0 velocity
-        collidingBalls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
+        // // Otherwise, if a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball
+        // // has 0 velocity
+        // collidingBalls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
 
-        // Adjust the position of the Ball to take into account its overlapping time.
-        ball.position = collisionPosition;
-      }
+        // // Adjust the position of the Ball to take into account its overlapping time.
+        // ball.position = collisionPosition;
+      // }
     }
     else {
 
       // Forward the collision-response to the super-class.
-      super.collideBallWithBorder( ball, collisionPosition, overlappedTime );
+      // super.collideBallWithBorder( ball, collisionPosition, overlappedTime );
     }
   }
 
+  /**
+   * Processes a ball-to-border collision and updates the velocity and the position of the Ball. The collision algorithm
+   * follows the standard rigid-body collision model as described in
+   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
+   * @protected
+   *
+   * @param {Ball} ball - the Ball involved in the collision.
+   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
+   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
+   */
+  handleBallToBorderCollision( ball, dt ) {
+    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
+    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+    // Handle collisions that 'stick'.
+    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
+
+
+      // Set the velocity of the Balls to 0.
+      ball.velocity = Vector2.ZERO;
+    }
+    else {
+      super.handleBallToBorderCollision( ball, dt );
+    }
+  }
   /**
    * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
    * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
