@@ -6,6 +6,7 @@
  *
  * All screens have a control-panel in the same location with similar components. However, some components vary for
  * specific screens. This includes (which appear in some screens, not in other screens):
+ *    - Elasticity Number Control
  *    - stick vs slip ABSwitch
  *    - change in momentum Checkbox
  *    - path Checkbox
@@ -69,7 +70,10 @@ class CollisionLabControlPanel extends Panel {
       // {boolean} - indicates if the 'Path' checkbox is included.
       includePathCheckbox: true,
 
-      // {Object} - passed to the ElasticityNumberControl
+      // {boolean} - indicates if the 'Elasticity' NumberControl is included.
+      includeElasticityNumberControl: true,
+
+      // {Object} - passed to the ElasticityNumberControl, if it is included.
       elasticityNumberControlOptions: null
 
     }, options );
@@ -113,17 +117,11 @@ class CollisionLabControlPanel extends Panel {
     // 'Values' visibility Checkbox. This is referenced for ordering in sub-classes.
     const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
 
-    // 'Elasticity' control
-    const elasticityNumberControl = new ElasticityNumberControl( elasticityPercentProperty, options.elasticityNumberControlOptions );
-
-    // 'Constant Size' Checkbox
-    const constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
+    // @protected {Checkbox} - 'Constant Size' Checkbox. Exposed to sub-classes for layouting.
+    this.constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
 
     // HSeparator
     const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
-
-    // @protected
-    this.elasticityControls = new VBox( { children: [ elasticityNumberControl ], spacing: 3.5 } );
 
     //----------------------------------------------------------------------------------------
 
@@ -158,8 +156,18 @@ class CollisionLabControlPanel extends Panel {
     }
 
     contentNode.addChild( hSeparator );
-    contentNode.addChild( this.elasticityControls );
-    contentNode.addChild( constantSizeCheckbox );
+
+    // Add the 'Elasticity' NumberControl if it is included.
+    if ( options.includeElasticityNumberControl ) {
+
+      // 'Elasticity' Number Control
+      const elasticityNumberControl = new ElasticityNumberControl( elasticityPercentProperty, options.elasticityNumberControlOptions );
+
+      // Add the 'Elasticity' NumberControl after the horizontal line separator.
+      contentNode.addChild( elasticityNumberControl );
+    }
+
+    contentNode.addChild( this.constantSizeCheckbox );
 
     // Apply additional Bounds mutators.
     this.mutate( options );

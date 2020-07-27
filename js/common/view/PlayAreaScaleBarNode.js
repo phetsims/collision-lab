@@ -76,7 +76,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
     //----------------------------------------------------------------------------------------
 
     // Concatenate the label string. Looks like '0.5 m'
-    const labelString = StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
+    const labelString = StringUtils.fillIn( collisionLabStrings.pattern.valueSpaceUnits, {
       value: length,
       units: collisionLabStrings.units.meters
     } );

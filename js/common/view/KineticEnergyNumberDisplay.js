@@ -31,7 +31,7 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
     options = merge( {
 
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueUnits, {
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueSpaceUnits, {
         label: collisionLabStrings.kineticEnergy,
         units: collisionLabStrings.units.joules
       } ),

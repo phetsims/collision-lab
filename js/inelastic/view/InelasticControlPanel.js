@@ -11,16 +11,20 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
+import HStrut from '../../../../scenery/js/nodes/HStrut.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import VBox from '../../../../scenery/js/nodes/VBox.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 import InelasticCollisionType from '../model/InelasticCollisionType.js';
@@ -54,7 +58,7 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
       // {Object} - passed to the labels of the ABSwitch
       stickSlipTextOptions: {
-        font: new PhetFont( 13 ),
+        font: CollisionLabConstants.CONTROL_FONT,
         maxWidth: 70 // constrain width for i18n, determined empirically
       },
 
@@ -63,15 +67,11 @@ class InelasticControlPanel extends CollisionLabControlPanel {
         toggleSwitchOptions: {
           size: new Dimension2( 28, 12 )
         }
-      }
+      },
+
+      includeElasticityNumberControl: false
 
     }, options );
-
-    //----------------------------------------------------------------------------------------
-
-    // Disable the 'elasticity' NumberControl.
-    assert && assert( !options.elasticityNumberControlOptions, 'InelasticControlPanel sets elasticityNumberControlOptions' );
-    options.elasticityNumberControlOptions = { enabledProperty: new Property( false ) };
 
     super( viewProperties,
            centerOfMassVisibleProperty,
@@ -83,6 +83,28 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     //----------------------------------------------------------------------------------------
 
+
+    const inelasticCollisionTitle = new Text( collisionLabStrings.inelasticCollision, {
+      font: CollisionLabConstants.PANEL_TITLE_FONT,
+      maxWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH // constrain width for i18n
+    } );
+
+    const title = new Node( {
+      children: [
+        inelasticCollisionTitle,
+        new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false, leftCenter: inelasticCollisionTitle.leftCenter } )
+      ]
+    } );
+
+    const elasticityReadout = new Text( StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueUnits, {
+      label: collisionLabStrings.elasticity,
+      units: collisionLabStrings.units.percent,
+      value: elasticityPercentProperty.value
+    } ), {
+      font: new PhetFont( 12 )
+    } );
+
+
     // Create an AlignGroup for the Text Nodes to match their widths.
     const labelAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
@@ -92,12 +114,18 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
     const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
-      InelasticCollisionType.SLIP, slipLabel,
       InelasticCollisionType.STICK, stickLabel,
+      InelasticCollisionType.SLIP, slipLabel,
       options.stickSlipABSwitchOptions );
 
-    // Add the ABSwitch right below the 'elasticity' NumberControl.
-    this.elasticityControls.addChild( stickSlipSwitch );
+    const elasticityControls = new VBox( { spacing: 8, children: [
+      elasticityReadout,
+      stickSlipSwitch
+    ] } );
+
+
+    this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), title );
+    this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), elasticityControls );
   }
 }
 

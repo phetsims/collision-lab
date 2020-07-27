@@ -21,15 +21,21 @@
      "value": "{{label}} ({{units}})"
   },
   "pattern.valueUnits": {
+    "value": "{{value}}{{units}}"
+  },
+  "pattern.valueSpaceUnits": {
     "value": "{{value}} {{units}}"
   },
   "pattern.symbolSubSymbol": {
     "value": "{{symbol1}}<sub>{{symbol2}}</sub>"
   },
   "pattern.labelEqualsValueUnits": {
+    "value": "{{label}} = {{value}}{{units}}"
+  },
+  "pattern.labelEqualsValueSpaceUnits": {
     "value": "{{label}} = {{value}} {{units}}"
   },
-  "pattern.vectorSymbolEqualsValueUnits": {
+  "pattern.vectorSymbolEqualsValueSpaceUnits": {
     "value": "|{{symbol}}| = {{value}} {{units}}"
   },
   "units.kilograms": {
@@ -133,5 +139,8 @@
   },
   "custom": {
     "value": "Custom"
+  },
+  "inelasticCollision": {
+    "value": "Inelastic Collision"
   }
 }

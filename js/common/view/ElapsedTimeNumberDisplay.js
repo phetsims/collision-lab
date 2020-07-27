@@ -39,7 +39,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       yMargin: 6,
       xMargin: 6,
       backgroundStroke: Color.BLACK,
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
+      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueSpaceUnits, {
         units: collisionLabStrings.units.seconds
       } ),
       textOptions: {
