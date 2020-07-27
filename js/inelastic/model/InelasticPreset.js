@@ -78,6 +78,11 @@ const InelasticPreset = Enumeration.byMap( {
   NAME_2: new InelasticPresetValue( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0.50, 0 ), 0.5 ),
     new BallState( new Vector2( 0.50, 0.00 ), new Vector2( -0.5, 0 ), 0.5 )
+  ] ),
+
+  NAME_3: new InelasticPresetValue( [
+    new BallState( new Vector2( -0.65, 0.00 ), new Vector2( 0, 0 ), 1.8 ),
+    new BallState( new Vector2( 0.6, 0.12 ), new Vector2( -1, 0 ), 0.3 )
   ] )
 
 } );
