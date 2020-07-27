@@ -261,10 +261,10 @@ class CollisionEngine {
       // Calculate the time the Ball would collide with a horizontal/vertical border.
       const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
       const verticalCollisionTime = Math.max( bottomCollisionTime, topCollisionTime );
+      const possibleCollisionTimes = [ horizontalCollisionTime, verticalCollisionTime ].filter( Number.isFinite );
 
       // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
-      const collisionTime = Math.min( horizontalCollisionTime, verticalCollisionTime );
-
+      const collisionTime = Math.min( ...possibleCollisionTimes );
 
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
       if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
