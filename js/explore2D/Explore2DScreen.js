@@ -12,6 +12,7 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
+import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import Explore2DModel from './model/Explore2DModel.js';
 import Explore2DScreenView from './view/Explore2DScreenView.js';
 
@@ -29,6 +30,7 @@ class Explore2DScreen extends Screen {
     super( createModel, createView, {
       name: collisionLabStrings.screen.explore2D,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
+      homeScreenIcon: CollisionLabIconFactory.createExplore2DScreenIcon(),
       tandem: tandem
     } );
   }

@@ -12,6 +12,7 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
+import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import IntroModel from './model/IntroModel.js';
 import IntroScreenView from './view/IntroScreenView.js';
 
@@ -29,6 +30,7 @@ class IntroScreen extends Screen {
     super( createModel, createView, {
       name: collisionLabStrings.screen.intro,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
+      homeScreenIcon: CollisionLabIconFactory.createIntroScreenIcon(),
       tandem: tandem
     } );
   }

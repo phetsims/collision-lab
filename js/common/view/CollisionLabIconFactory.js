@@ -1,13 +1,14 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * Factory for creating the various icons that appear in the sim.
+ * Factory for creating the various icons that appear in the 'Collision Lab' simulation. All methods are static.
  *
- * ## Creates the following icons):
- *  - Ball Icons (BallValuesPanel)
- *  - Checkbox Icons
+ * CollisionLabIconFactory currently creates the following icons:
+ *   - Screen Icons
+ *   -
  *
- * NOTE: All floating numbers in this file were determined empirically and are tentative.
+ *
+ * NOTE: All 'magic' numbers in this file were tentatively determined empirically to match the design document.
  *
  * @author Brandon Li
  */
@@ -27,6 +28,58 @@ import Ball from '../model/Ball.js';
 import XNode from './XNode.js';
 
 const CollisionLabIconFactory = {
+
+  /*--------------------------- Screen Icons ---------------------------------*/
+
+  /**
+   * Creates the icon for the 'Intro' Screen.
+   * @public
+   *
+   * @returns {ScreenIcon}
+   */
+  createIntroScreenIcon() {
+
+    // TODO: #105
+    // return new ScreenIcon( new Node() );
+  },
+
+  /**
+   * Creates the icon for the 'Explore 1D' Screen.
+   * @public
+   *
+   * @returns {ScreenIcon}
+   */
+  createExplore1DScreenIcon() {
+
+    // TODO: #105
+    // return new ScreenIcon( new Node() );
+  },
+
+  /**
+   * Creates the icon for the 'Explore 2D' Screen.
+   * @public
+   *
+   * @returns {ScreenIcon}
+   */
+  createExplore2DScreenIcon() {
+
+    // TODO: #105
+    // return new ScreenIcon( new Node() );
+  },
+
+  /**
+   * Creates the icon for the 'Inelastic' Screen.
+   * @public
+   *
+   * @returns {ScreenIcon}
+   */
+  createInelasticScreenIcon() {
+
+    // TODO: #105
+    // return new ScreenIcon( new Node() );
+  },
+
+  /*--------------------------- Checkbox Icons ---------------------------------*/
 
   /**
    * Creates the icon used on the Restart button just outside the bottom-right corner of the PlayArea.

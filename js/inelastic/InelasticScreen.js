@@ -12,6 +12,7 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
+import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import InelasticModel from './model/InelasticModel.js';
 import InelasticScreenView from './view/InelasticScreenView.js';
 
@@ -21,20 +22,17 @@ class InelasticScreen extends Screen {
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const options = {
+    const createModel = () => new InelasticModel( tandem.createTandem( 'inelasticModel' ) );
+    const createView = model => new InelasticScreenView( model, tandem.createTandem( 'inslasticScreenView' ) );
+
+    super( createModel, createView, {
       name: collisionLabStrings.screen.inelastic,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
+      homeScreenIcon: CollisionLabIconFactory.createInelasticScreenIcon(),
       tandem: tandem
-    };
-
-    super(
-      () => new InelasticModel( tandem.createTandem( 'inelasticModel' ) ),
-      model => new InelasticScreenView( model, tandem.createTandem( 'inslasticScreenView' ) ),
-      options
-    );
+    } );
   }
 }
 

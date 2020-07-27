@@ -12,6 +12,7 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
 import collisionLabStrings from '../collisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
+import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import Explore1DModel from './model/Explore1DModel.js';
 import Explore1DScreenView from './view/Explore1DScreenView.js';
 
@@ -21,20 +22,17 @@ class Explore1DScreen extends Screen {
    * @param {Tandem} tandem
    */
   constructor( tandem ) {
-
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const options = {
+    const createModel = () => new Explore1DModel( tandem.createTandem( 'explore1DModel' ) );
+    const createView = model => new Explore1DScreenView( model, tandem.createTandem( 'explore1DScreenView' ) );
+
+    super( createModel, createView, {
       name: collisionLabStrings.screen.explore1D,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
+      homeScreenIcon: CollisionLabIconFactory.createExplore1DScreenIcon(),
       tandem: tandem
-    };
-
-    super(
-      () => new Explore1DModel( tandem.createTandem( 'explore1DModel' ) ),
-      model => new Explore1DScreenView( model, tandem.createTandem( 'explore1DScreenView' ) ),
-      options
-    );
+    } );
   }
 }
 
