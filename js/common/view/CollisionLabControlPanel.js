@@ -88,7 +88,7 @@ class CollisionLabControlPanel extends Panel {
     //----------------------------------------------------------------------------------------
 
     // Create the content Node of the Control Panel.
-    const contentNode = new VBox( { spacing: options.contentSpacing } );
+    const contentNode = new VBox( { spacing: options.contentSpacing, align: 'left' } );
     super( contentNode, options );
 
     // @protected {Node} - the content Node. This is referenced for layouting purposes in sub-classes.

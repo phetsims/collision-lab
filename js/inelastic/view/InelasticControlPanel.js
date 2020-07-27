@@ -18,7 +18,6 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import HStrut from '../../../../scenery/js/nodes/HStrut.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
@@ -89,13 +88,6 @@ class InelasticControlPanel extends CollisionLabControlPanel {
       maxWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH // constrain width for i18n
     } );
 
-    const title = new Node( {
-      children: [
-        inelasticCollisionTitle,
-        new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false, leftCenter: inelasticCollisionTitle.leftCenter } )
-      ]
-    } );
-
     const elasticityReadout = new Text( StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueUnits, {
       label: collisionLabStrings.elasticity,
       units: collisionLabStrings.units.percent,
@@ -118,13 +110,14 @@ class InelasticControlPanel extends CollisionLabControlPanel {
       InelasticCollisionType.SLIP, slipLabel,
       options.stickSlipABSwitchOptions );
 
-    const elasticityControls = new VBox( { spacing: 8, children: [
+    const elasticityControls = new VBox( { spacing: 4, children: [
       elasticityReadout,
+      new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false } ),
       stickSlipSwitch
     ] } );
 
 
-    this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), title );
+    this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), inelasticCollisionTitle );
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), elasticityControls );
   }
 }
