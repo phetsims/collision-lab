@@ -5,6 +5,7 @@
  *
  * CollisionLabIconFactory currently creates the following icons:
  *   - Screen Icons
+ *   - Checkbox Icons
  *   -
  *
  *
@@ -22,14 +23,17 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
+import InelasticPreset from '../../inelastic/model/InelasticPreset.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallUtils from '../model/BallUtils.js';
 import XNode from './XNode.js';
 
 const CollisionLabIconFactory = {
 
-  /*--------------------------- Screen Icons ---------------------------------*/
+  /*———————————————————————————————— Screen Icons ————————————————————————————————————————*/
 
   /**
    * Creates the icon for the 'Intro' Screen.
@@ -79,7 +83,7 @@ const CollisionLabIconFactory = {
     // return new ScreenIcon( new Node() );
   },
 
-  /*--------------------------- Checkbox Icons ---------------------------------*/
+  /*——————————————————————————————— Checkbox Icons ———————————————————————————————————————*/
 
   /**
    * Creates a vector icon that points to the right, used with various checkboxes.
@@ -135,6 +139,59 @@ const CollisionLabIconFactory = {
       length: 15,
       legThickness: 3.3
     } );
+  },
+
+  /*————————————————————————————— Inelastic Preset Icons —————————————————————————————————*/
+
+  /**
+   * Creates an icon that appears on the InelasticPresets radio button icons on the 'Inelastic' screen.
+   * @public
+   *
+   * @param {InelasticPreset} inelasticPreset
+   * @returns {Node}
+   */
+  createInelasticPresetIcon( inelasticPreset ) {
+    assert && assert( InelasticPreset.includes( inelasticPreset ), `invalid inelasticPreset: ${inelasticPreset}` );
+
+    // For the 'Custom' preset, the icon is just a Text instance that displays 'Custom'.
+    if ( inelasticPreset === InelasticPreset.CUSTOM ) {
+      return new Text( collisionLabStrings.custom, {
+        font: CollisionLabConstants.CONTROL_FONT,
+        maxWidth: 120 // constrain width for i18n, determined empirically
+      } );
+    }
+
+    // Create a blank icon for now. To be filled below.
+    const icon = new Node();
+    icon.scale( 50, -50 );
+
+    inelasticPreset.ballStates.forEach( ( ballState, index ) => {
+
+      const circle = new Circle( BallUtils.calculateBallRadius( ballState.mass, false ), {
+        center: ballState.position,
+        fill: CollisionLabColors.BALL_COLORS[ index ],
+        stroke: CollisionLabColors.BALL_STROKE_COLOR,
+        lineWidth: 1 / 50
+      } );
+
+      const velocityVector = new ArrowNode(
+        circle.center.x,
+        circle.center.y,
+        circle.center.x + ballState.velocity.x,
+        circle.center.y + ballState.velocity.y, {
+          fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
+          stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE,
+          headWidth: CollisionLabConstants.ARROW_OPTIONS.headWidth / 100,
+          headHeight: CollisionLabConstants.ARROW_OPTIONS.headHeight / 100,
+          tailWidth: CollisionLabConstants.ARROW_OPTIONS.tailWidth / 100,
+          lineWidth: CollisionLabConstants.ARROW_OPTIONS.lineWidth / 100
+        } );
+
+      icon.addChild( circle );
+      icon.addChild( velocityVector );
+    } );
+
+    return icon;
   },
 
 

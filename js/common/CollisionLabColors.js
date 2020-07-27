@@ -38,6 +38,7 @@ const CollisionLabColors = {
 
   // Balls
   BALL_LEADER_LINES_COLOR: Color.BLACK,
+  BALL_STROKE_COLOR: Color.BLACK,
   BALL_COLORS: [
     new Color( 225, 70, 124 ),
     new Color( 73, 157, 247 ),

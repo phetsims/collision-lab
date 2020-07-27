@@ -65,18 +65,6 @@
   "symbol.velocity": {
     "value": "v"
   },
-  "preset.title": {
-    "value": "Preset:"
-  },
-  "preset.custom": {
-    "value": "Custom"
-  },
-  "preset.name1": {
-    "value": "Name 1"
-  },
-  "preset.name2": {
-    "value": "Name 2"
-  },
   "mass": {
     "value": "Mass"
   },
@@ -142,5 +130,8 @@
   },
   "changeInMomentum": {
     "value": "Change in Momentum"
+  },
+  "custom": {
+    "value": "Custom"
   }
 }

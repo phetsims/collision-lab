@@ -96,7 +96,7 @@ class BallNode extends Node {
     // Create the Circle Node that represents the visual aspect of a Ball. Radius and position to be updated later.
     const ballCircle = new Circle( {
       fill: fillProperty,
-      stroke: Color.BLACK,
+      stroke: CollisionLabColors.BALL_STROKE_COLOR,
       cursor: 'pointer'
     } );
 
