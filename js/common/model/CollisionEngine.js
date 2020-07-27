@@ -267,7 +267,7 @@ class CollisionEngine {
       const collisionTime = Math.min( ...possibleCollisionTimes );
 
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
-      if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
+      if ( possibleCollisionTimes.length && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
