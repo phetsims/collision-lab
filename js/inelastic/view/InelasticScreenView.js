@@ -76,7 +76,7 @@ class InelasticScreenView extends CollisionLabScreenView {
         baseColor: Color.WHITE,
         selectedStroke: 'rgb( 65, 154, 201 )', // blue
         deselectedStroke: 'rgb( 50, 50, 50 )',
-        leftBottom: this.layoutBounds.leftBottom
+        leftTop: this.ballValuesPanel.leftBottom.addXY( 0, 10 )
 
       } );
 

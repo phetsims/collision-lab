@@ -166,7 +166,7 @@ class CollisionLabScreenView extends ScreenView {
     // KeypadDialog
     const keypadDialog = new KeypadDialog( {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
-        keypadDialog.leftBottom = this.localToGlobalPoint( ballValuesPanel.rightBottom.plusXY( 10, 0 ) )
+        keypadDialog.leftBottom = this.localToGlobalPoint( this.ballValuesPanel.rightBottom.plusXY( 10, 0 ) )
                                       .times( 1 / scale );
       },
 
@@ -174,8 +174,8 @@ class CollisionLabScreenView extends ScreenView {
       scale: HomeScreenView.LAYOUT_BOUNDS.width / ScreenView.DEFAULT_LAYOUT_BOUNDS.width
     } );
 
-    // BallValuesPanel
-    const ballValuesPanel = new BallValuesPanel(
+    // @protected - BallValuesPanel, exposed to sub-classes for layout.
+    this.ballValuesPanel = new BallValuesPanel(
       model.ballSystem,
       viewProperties.moreDataVisibleProperty,
       model.playArea.dimension,
@@ -186,7 +186,7 @@ class CollisionLabScreenView extends ScreenView {
 
     // More Data Checkbox
     const moreDataCheckbox = new MoreDataCheckbox( viewProperties.moreDataVisibleProperty, {
-      bottom: ballValuesPanel.top - 4,
+      bottom: this.ballValuesPanel.top - 4,
       left: playAreaViewBounds.left
     } );
 
@@ -207,14 +207,14 @@ class CollisionLabScreenView extends ScreenView {
 
     // Set the children in the correct rendering order.
     this.children = [
+      this.ballValuesPanel,
+      moreDataCheckbox,
       playAreaNode,
       scaleBar,
       elapsedTimeNumberDisplay,
       timeControlNode,
       restartButton,
       resetAllButton,
-      ballValuesPanel,
-      moreDataCheckbox,
       controlPanel,
       momentaDiagram,
       kineticEnergyNumberDisplay,
@@ -237,9 +237,6 @@ class CollisionLabScreenView extends ScreenView {
       this.addChild( playAreaControlSet );
       playAreaControlSet.moveToBack();
     }
-
-    // @protected
-    this.playAreaViewBounds = playAreaViewBounds;
   }
 
   /**
