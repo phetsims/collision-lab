@@ -82,6 +82,67 @@ const CollisionLabIconFactory = {
   /*--------------------------- Checkbox Icons ---------------------------------*/
 
   /**
+   * Creates a vector icon that points to the right, used with various checkboxes.
+   * @public
+   *
+   * @param {Object} [options]
+   * @returns {ArrowNode}
+   */
+  createVectorIcon( options ) {
+    options = merge( {}, CollisionLabConstants.ARROW_OPTIONS, {
+      lineWidth: 1,
+      length: 27
+    }, options );
+
+    return new ArrowNode( 0, 0, options.length, 0, options );
+  },
+
+  /**
+   * Creates the velocity vector icon that points to the right, used with the 'Velocity' checkbox.
+   * @public
+   *
+   * @returns {ArrowNode}
+   */
+  createVelocityVectorIcon() {
+    return CollisionLabIconFactory.createVectorIcon( {
+      fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
+      stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE
+    } );
+  },
+
+  /**
+   * Creates the momentum vector icon that points to the right, used with the 'Momentum' checkbox.
+   * @public
+   *
+   * @returns {ArrowNode}
+   */
+  createMomentumVectorIcon() {
+    return CollisionLabIconFactory.createVectorIcon( {
+      fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
+      stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+    } );
+  },
+
+  /**
+   * Creates the center of mass icon, which is placed next to the 'Center of Mass' checkbox.
+   * @public
+   *
+   * @returns {Node}
+   */
+  createCenterOfMassIcon() {
+    return new XNode( {
+      lineWidth: 1,
+      length: 15,
+      legThickness: 3.3
+    } );
+  },
+
+
+
+
+
+
+  /**
    * Creates the icon used on the Restart button just outside the bottom-right corner of the PlayArea.
    * @public
    *
@@ -118,57 +179,6 @@ const CollisionLabIconFactory = {
     } );
 
     return new Node( { children: [ ballCircle, labelNode ] } );
-  },
-
-  //----------------------------------------------------------------------------------------
-
-  /**
-   * Creates a vector icon that points to the right, used with various checkboxes.
-   * @public
-   * @param {Object} [options]
-   * @returns {Node}
-   */
-  createVectorIcon( options ) {
-
-    options = merge( {}, CollisionLabConstants.ARROW_OPTIONS, {
-      lineWidth: 1,
-      length: 27
-    }, options );
-
-    return new ArrowNode( 0, 0, options.length, 0, options );
-  },
-  createVelocityVectorIcon( options ) {
-    options = merge( {
-      fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
-      stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE
-    }, options );
-
-    return CollisionLabIconFactory.createVectorIcon( options );
-  },
-  createMomentumVectorIcon( options ) {
-    options = merge( {
-      fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
-      stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
-    }, options );
-
-    return CollisionLabIconFactory.createVectorIcon( options );
-  },
-
-  /**
-   * Creates the center-of-mass icon, which is placed next to a checkbox to toggle the visibility of the center-of-mass.
-   * @public
-   * @param {Object} [options]
-   * @returns {Node}
-   */
-  createCenterOfMassIcon( options ) {
-
-    options = merge( {
-      lineWidth: 1,
-      length: 15,
-      legThickness: 3.3
-    }, options );
-
-    return new XNode( options );
   }
 };
 
