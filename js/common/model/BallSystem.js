@@ -221,6 +221,18 @@ class BallSystem {
     } );
 
     // Update the trailing 'Paths' of all Balls in the system and the CenterOfMass.
+    this.updatePaths( elapsedTime );
+  }
+
+  /**
+   * Updates the trailing 'Paths' of all Balls in the system and the trailing 'Path' of the CenterOfMass.
+   * @public
+   *
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  updatePaths( elapsedTime ) {
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+
     this.balls.forEach( ball => ball.path.updatePath( elapsedTime ) );
     this.centerOfMass.path.updatePath( elapsedTime );
   }

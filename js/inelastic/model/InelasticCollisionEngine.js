@@ -128,6 +128,9 @@ class InelasticCollisionEngine extends CollisionEngine {
     if ( this.isRotatingBalls ) {
       this.rotateBalls( dt );
 
+      // Update the trailing 'Paths' of all Balls in the system and the CenterOfMass.
+      this.ballSystem.updatePaths( elapsedTime );
+
       // // Get the balls that are colliding with the border.
       // const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
 
