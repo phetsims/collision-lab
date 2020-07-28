@@ -131,7 +131,7 @@ class BallSystem {
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty(
       [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
-      () =>  _.sum( this.balls.map( ball => ball.kineticEnergyProperty.value ) ), {
+      () => _.sum( this.balls.map( ball => ball.kineticEnergyProperty.value ) ), {
         valueType: 'number',
         isValidValue: value => value >= 0
       } );
