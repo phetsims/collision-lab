@@ -20,7 +20,6 @@
  */
 
 import Emitter from '../../../../axon/js/Emitter.js';
-// import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -28,6 +27,8 @@ import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
 import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import PathDataPoint from './PathDataPoint.js';
+
+// import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 // constants
 const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;

@@ -20,6 +20,7 @@ import CollisionLabViewProperties from '../../common/view/CollisionLabViewProper
 import InelasticModel from '../model/InelasticModel.js';
 import InelasticPreset from '../model/InelasticPreset.js';
 import InelasticControlPanel from './InelasticControlPanel.js';
+
 // import PresetComboBox from './PresetComboBox.js';
 
 class InelasticScreenView extends CollisionLabScreenView {

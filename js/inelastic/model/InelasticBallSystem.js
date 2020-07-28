@@ -23,8 +23,8 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
-import InelasticPreset from './InelasticPreset.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
+import InelasticPreset from './InelasticPreset.js';
 
 // constants
 const NUMBER_OF_BALLS = 2;
