@@ -147,33 +147,7 @@ class PlayArea {
   //----------------------------------------------------------------------------------------
 
   /**
-   * Determines whether the Ball is fully contained horizontally within the PlayArea Bounds.
-   * @public
-   *
-   * @param {Ball} ball
-   * @returns {boolean}
-   */
-  fullyContainsBallHorizontally( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-
-    return ball.left >= this.left && ball.right <= this.right;
-  }
-
-  /**
-   * Determines whether the Ball is fully contained vertically within the PlayArea Bounds.
-   * @public
-   *
-   * @param {Ball} ball
-   * @returns {boolean}
-   */
-  fullyContainsBallVertically( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-
-    return ball.bottom >= this.bottom && ball.top <= this.top;
-  }
-
-  /**
-   * Determines whether the PlayArea fully contains a Ball within its Bounds.
+   * Determines whether the PlayArea FULLY contains all parts of a Ball within its Bounds.
    * @public
    *
    * @param {Ball} ball
@@ -182,7 +156,10 @@ class PlayArea {
   fullyContainsBall( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    return this.fullyContainsBallHorizontally( ball ) && this.fullyContainsBallVertically( ball );
+    return ball.left >= this.left &&
+           ball.right <= this.right &&
+           ball.bottom >= this.bottom &&
+           ball.top <= this.top;
   }
 
   /**
@@ -195,7 +172,10 @@ class PlayArea {
   containsAnyPartOfBall( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    return this.bounds.dilated( ball.radius ).containsPoint( ball.position );
+    return ball.left > this.left - 2 * ball.radius &&
+           ball.right < this.right + 2 * ball.radius &&
+           ball.bottom > this.bottom - 2 * ball.radius &&
+           ball.top < this.top + 2 * ball.radius;
   }
 
   // @public
