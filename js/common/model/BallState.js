@@ -19,7 +19,8 @@
  *         - Sets the elapsed time to 0.
  *         - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
  *           is saved when the user finishes controlling one of the Balls.
- *         - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their states saved.
+ *         - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem that are fully inside
+ *           the PlayArea's bounds have their states saved.
  *
  * @author Brandon Li
  */

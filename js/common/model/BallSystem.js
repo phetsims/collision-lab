@@ -1,10 +1,10 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * BallSystem is the sub-model for a isolated system of different Ball objects. It is the complete collection of Balls,
+ * BallSystem is the model for an isolated system of different Ball objects. It is the complete collection of Balls,
  * both inside and outside the PlayArea.
  *
- * BallSystem is mainly responsible for:
+ * BallSystem is responsible for:
  *   - Keeping track of the system of Balls and the number of Balls in the system.
  *   - Creating a reference to all possible Balls in prepopulatedBalls. The same Ball instances are used with the same
  *     number of Balls, so Balls are created here at the start of the sim.
@@ -118,8 +118,7 @@ class BallSystem {
       this.prepopulatedBalls,
       this.balls,
       this.centerOfMassVisibleProperty,
-      this.pathsVisibleProperty,
-      playArea.bounds
+      this.pathsVisibleProperty
     );
 
     // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
@@ -162,15 +161,21 @@ class BallSystem {
       ball.path.clear();
     } );
 
-    // Observe when the user is done controlling any of the Balls to clear the trailing Paths of all Balls and the Path
-    // of the CenterOfMass. See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts
-    // for the life-time of the sim as BallSystems are never disposed.
+    // Observe when the user is done controlling any of the Balls to:
+    //   1. Save the states of all Balls that are in the system and fully inside the PlayArea's bounds.
+    //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
+    //   3. Reset the rotation of Balls relative to their centers.
+    //
+    // Link lasts for the life-time of the sim as BallSystems are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
-      this.saveBallStates();
-      this.balls.forEach( ball => { ball.rotationProperty.reset(); } );
-
       if ( !ballSystemUserControlled ) {
-        this.balls.forEach( ball => { ball.path.clear(); } );
+        this.balls.forEach( ball => {
+
+          // Save the state of each Ball in the BallSystem that is fully inside the PlayArea.
+          ball.insidePlayAreaProperty.value && ball.saveState();
+          ball.path.clear();
+          ball.rotationProperty.reset();
+        } );
         this.centerOfMass.path.clear();
       }
     } );
@@ -292,21 +297,6 @@ class BallSystem {
 
     // Sanity check that the Ball is now not overlapping with any other Balls.
     assert && assert( !BallUtils.getClosestOverlappingBall( ball, this.balls ) );
-  }
-
-  /**
-   * Saves the states of all the Balls in the system that are fully inside of the PlayArea for the next restart() call.
-   * This is called when the user presses the play button.
-   * @public
-   *
-   * See https://github.com/phetsims/collision-lab/issues/76.
-   */
-  saveBallStates() {
-
-    // Save the state of each Ball in the BallSystem that is fully inside the PlayArea.
-    this.balls.forEach( ball => {
-      ball.insidePlayAreaProperty.value && ball.saveState();
-    } );
   }
 
   /**
