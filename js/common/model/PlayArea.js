@@ -172,10 +172,10 @@ class PlayArea {
   containsAnyPartOfBall( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
-    return ball.left > this.left - 2 * ball.radius &&
-           ball.right < this.right + 2 * ball.radius &&
-           ball.bottom > this.bottom - 2 * ball.radius &&
-           ball.top < this.top + 2 * ball.radius;
+    return ball.right > this.left &&
+           ball.left < this.right &&
+           ball.top > this.bottom &&
+           ball.bottom < this.top;
   }
 
   // @public
