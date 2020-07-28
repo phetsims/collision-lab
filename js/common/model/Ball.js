@@ -40,7 +40,7 @@ class Ball {
    * @param {BallState} initialBallState - starting state of the Ball.
    * @param {PlayArea} playArea - the PlayArea instance, which may or may not 'contain' this Ball.
    * @param {Property.<boolean>} isConstantSizeProperty - indicates if the Ball's radius is independent of mass.
-   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the trailing 'Path' is visible
+   * @param {Property.<boolean>} pathsVisibleProperty - indicates if the Ball's trailing 'Path' is visible.
    * @param {number} index - the index of the Ball, which indicates which Ball in the system is this Ball. This index
    *                         number is displayed on the Ball, and each Ball within the system has a unique index.
    *                         Indices start from 1 within the system (ie. 1, 2, 3, ...).
