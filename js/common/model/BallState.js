@@ -1,15 +1,15 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A multipurpose state of a Ball that contains information about the mass, position, and velocity of a Ball. Doesn't
- * hold onto any listeners or Properties, so no dispose method is needed.
+ * A multipurpose data-structure that immutably contains information about the mass, position, and velocity of a Ball.
+ * Doesn't hold onto any listeners or Properties, so no dispose method is needed.
  *
- * ## Usages of BallState
+ * ## Usages of BallState:
  *
  *   - BallStates are generally used to hold information about the starting values of a Ball. They are used in the
- *     'Inelastic' screen to save several pre-defined states of Balls in different presets.
+ *     'Inelastic' screen to describe several pre-defined states of Balls in different presets.
  *
- *   - Used internally in Ball to save and update a Ball's state when the restart button is pressed.
+ *   - Used internally in Balls to save and update their 'state' for when the restart button is pressed.
  *     Restarting is different from resetting:
  *       Reset All:
  *         - Like a traditional sim, this resets all model Properties back to the values that they were initialized to.
@@ -18,7 +18,7 @@
  *         - Pauses the sim.
  *         - Sets the elapsed time to 0.
  *         - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
- *           is saved when the sim play button is pressed.
+ *           is saved when the user finishes controlling one of the Balls.
  *         - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem have their states saved.
  *
  * @author Brandon Li
@@ -57,9 +57,9 @@ class BallState {
    * @returns {boolean}
    */
   equals( ballState ) {
-    return this.position.equals( ballState.position )
-        && this.velocity.equals( ballState.velocity )
-        && this.mass === ballState.mass;
+    return this.position.equals( ballState.position ) &&
+           this.velocity.equals( ballState.velocity ) &&
+           this.mass === ballState.mass;
   }
 
   /**
