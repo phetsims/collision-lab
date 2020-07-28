@@ -220,7 +220,7 @@ class Ball {
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
 
-    // Setting the state resets the path and the rotation of the Ball.
+    // Setting the state resets the trailing 'Path' and the rotation of the Ball.
     this.path.clear();
     this.rotationProperty.reset();
   }
@@ -356,7 +356,7 @@ class Ball {
    * Sets the velocity of the Ball, in m/s.
    * @public
    *
-   * @param {Vector2} velocity, in m/s.
+   * @param {Vector2} velocity - in m/s.
    */
   set velocity( velocity ) {
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
@@ -368,7 +368,7 @@ class Ball {
    * Sets the horizontal velocity of the Ball, in m/s.
    * @public
    *
-   * @param {number} xVelocity, in m/s.
+   * @param {number} xVelocity - in m/s.
    */
   set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
 
@@ -376,7 +376,7 @@ class Ball {
    * Sets the vertical velocity of the Ball, in m/s.
    * @public
    *
-   * @param {number} yVelocity, in m/s.
+   * @param {number} yVelocity - in m/s.
    */
   set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
 }
