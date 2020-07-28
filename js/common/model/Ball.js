@@ -184,13 +184,10 @@ class Ball {
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
-  restart() {
-    this.setState( this.restartState );
-  }
+  restart() { this.setState( this.restartState ); }
 
   /**
-   * Moves the ball by one time step, assuming that the Ball isn't accelerating and is in uniform motion in a straight
-   * line. If this isn't the case, its motion is corrected in CollisionEngine.js
+   * Moves the ball by some time step, assuming that the Ball isn't accelerating and is in uniform motion.
    * @public
    *
    * @param {number} dt - time in seconds
@@ -198,7 +195,9 @@ class Ball {
   stepUniformMotion( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    this.position = BallUtils.computeUniformMotionBallPosition( this, dt );
+    // Since velocity is the first derivative of position, and the ball isn't accelerating, we can solely multiply
+    // the velocity by the delta-time to get the displacement.
+    this.position = this.velocity.times( dt ).add( this.position );
   }
 
   /**

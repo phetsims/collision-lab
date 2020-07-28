@@ -68,25 +68,6 @@ const BallUtils = {
   },
 
   /**
-   * Gets the position of a Ball, given a time-delta and the Ball, assuming the ball is undergoing uniform motion in
-   * a straight line and isn't accelerating or colliding with anything. The delta-time can be negative to get the
-   * position of the Ball in the past.
-   * @public
-   *
-   * @param {Ball} ball
-   * @param {number} dt - in seconds
-   * @returns {Vector2} - in meters
-   */
-  computeUniformMotionBallPosition( ball, dt ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
-    // Since velocity is the first derivative of position, and the ball isn't accelerating, we can solely multiply
-    // the velocity by the delta-time to get the displacement.
-    return ball.position.plus( ball.velocity.times( dt ) );
-  },
-
-  /**
    * Gets the editing Range of the Ball's center x-position, in meters. This range is for when the user changes the
    * x-position of the Ball in the KeypadDialog. It uses the grid-safe constrained Bounds of the Ball to give a
    * nicer-looking Range that still guarantees that the Ball is inside the PlayArea. See
