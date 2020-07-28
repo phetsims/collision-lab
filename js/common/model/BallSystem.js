@@ -162,7 +162,7 @@ class BallSystem {
     } );
 
     // Observe when the user is done controlling any of the Balls to:
-    //   1. Save the states of all Balls that are in the system and fully inside the PlayArea's bounds.
+    //   1. Save the states of all Balls that are both in the system and fully inside the PlayArea's bounds.
     //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
     //   3. Reset the rotation of Balls relative to their centers.
     //
