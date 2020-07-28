@@ -166,6 +166,7 @@ class BallSystem {
     // of the CenterOfMass. See https://github.com/phetsims/collision-lab/issues/61#issuecomment-634404105. Link lasts
     // for the life-time of the sim as BallSystems are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
+      this.saveBallStates();
       this.balls.forEach( ball => { ball.rotationProperty.reset(); } );
 
       if ( !ballSystemUserControlled ) {

@@ -63,12 +63,6 @@ class CollisionLabModel {
 
     //----------------------------------------------------------------------------------------
 
-    // Observe when the sim goes from paused to playing to save the states of the Balls in the BallSystem for the next
-    // restart call. Link is never removed and lasts for the lifetime of the simulation.
-    this.isPlayingProperty.lazyLink( isPlaying => {
-      isPlaying && this.ballSystem.saveBallStates();
-    } );
-
     // Flag that indicates whether the sim was playing before it was programmatically paused.
     let wasPlaying = this.isPlayingProperty.value;
 
