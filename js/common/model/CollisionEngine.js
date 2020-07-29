@@ -106,6 +106,7 @@ class CollisionEngine {
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
       // Compute the total elapsed-time of the simulation when next detected collision will occurred.
+      // TODO: potential naming confusions here. CollisionTime is used in IntroBallSystem to reference elapsed time, but CollisionTime is used in Collision to reference delta-time.
       const elapsedTimeOfCollision = elapsedTime - dt + nextCollision.collisionTime;
 
       // Progress forwards to the exact point of contact of the nextCollision.

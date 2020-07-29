@@ -113,7 +113,31 @@ class InelasticCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * Steps the InelasticCollisionEngine.
+   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
+   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+   * The Ball must be one of the two Balls that the InelasticCollisionEngine is handling.
+   * @private
+   *
+   * @param {Ball} ball
+   * @returns {number} - in kg*(m^2/s).
+   */
+  computeAngularMomentum( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( this.isRotatingBalls );
+
+    // Get the position vector (r) and momentum (p) relative to the center-of-mass
+    const r = ball.position.minus( this.centerOfMassPosition );
+    const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
+
+    // L = r x p (relative to the center-of-mass)
+    return r.crossScalar( p );
+  }
+
+  /**
+   * Steps the InelasticCollisionEngine, which initializes both collision detection and responses for a given time-step.
+   * Overridden to rotate Balls for collisions that 'stick'.
+   *
+   * @override
    * @public
    *
    * @param {number} dt - time in seconds
@@ -131,16 +155,26 @@ class InelasticCollisionEngine extends CollisionEngine {
       // Update the trailing 'Paths' of all Balls in the system and the CenterOfMass.
       this.ballSystem.updatePaths( elapsedTime );
 
-      // // Get the balls that are colliding with the border.
-      // const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
-
       // Handle scenario where Balls are rotated into the border.
       if ( this.playArea.reflectsBorder ) {
-        this.ballSystem.balls.forEach( ball => {
-          if ( !this.playArea.fullyContainsBall( ball ) ) {
-            this.collideBallWithBorder( ball );
-          }
-        } );
+
+        // Get the Balls that are overlapping with the border.
+        let collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
+        const ballClustertoBorderCollisionOccured = !!collidingBalls.length;
+
+        while ( collidingBalls.length ) {
+
+          collidingBalls.forEach( ball => {
+
+            // If the Ball is colliding with the border, handle it.
+            this.handleBallToBorderCollision( ball, 0 );
+          } );
+
+          collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
+        }
+        if ( ballClustertoBorderCollisionOccured ) {
+          this.reset();
+        }
       }
     }
     else {
@@ -153,17 +187,18 @@ class InelasticCollisionEngine extends CollisionEngine {
   //----------------------------------------------------------------------------------------
 
   /**
-   * Detects all ball-to-ball collisions of the BallSystem that occur within the passed-in time-step. Ball-to-ball
-   * collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
-   * each other with high velocities and/or slow frame rates.
+   * Detects all ball-to-ball collisions of the BallSystem that occur within the passed-in time-step. Overridden to do
+   * nothing if the Balls in the 'Inelastic' screen are currently being rotated. Otherwise, the collision-detection
+   * algorithms are forwarded to the super-type.
    *
-   * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
-   * collision is encapsulated in a Collision instance.
-   * @private
+   * @override
+   * @protected
    *
    * @param {number} dt - time-delta in seconds
    */
   detectBallToBallCollisions( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+
     !this.isRotatingBalls && super.detectBallToBallCollisions( dt );
   }
 
@@ -278,119 +313,51 @@ class InelasticCollisionEngine extends CollisionEngine {
   }
 
   /**
-   * Processes ball-to-border collisions. Overridden to respond to ball-border collisions that 'stick'. If a Ball that
-   * is rotating hits the border, then all Balls in the cluster have 0 velocity. When a Ball that is not rotating that
-   * hits the border, and the collision is 'sticky', then the Ball has 0 velocity. Otherwise, the collision response is
-   * forwarded to the super-class.
+   * Processes a ball-to-border collision and updates the velocity and the position of the Ball. Overridden to respond
+   * to perfectly inelastic 'stick' collisions. If the collision isn't a 'sticking' collision, the response is forwarded
+   * to the super-class.
    *
    * @override
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
-   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
+   * @param {number} dt - time-delta in seconds
    */
-  collideBallWithBorder( ball ) {
+  handleBallToBorderCollision( ball, dt ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
-    // assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
-    // assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
-      // Get the balls that are colliding with the border.
-      const collidingBalls = this.ballSystem.balls.filter( ball => !this.playArea.fullyContainsBall( ball ) );
+      // Set the velocity of the Ball to 0.
+      ball.velocity = Vector2.ZERO;
 
-      // If a Ball that is rotating hits the border, then all Balls in the cluster have 0 velocity.
-      if ( this.isRotatingBalls && collidingBalls.length ) {
+      // If the Ball is in a rotating cluster, then all Balls in the cluster have 0 velocity.
+      if ( this.isRotatingBalls ) {
 
         // When a collision is detected, the Ball has already overlapped, so the current position isn't the exact
         // position when the ball first collided. However, the overlappedTime passed-in is NOT correct for balls that
         // are rotating, since it assumes that Balls are undergoing uniform-motion.
         //
-        // We discussed overriding the getBallToBorderCollisionOverlapTime for this class and computing a new overlapped
+        // We discussed overriding the detectBallToBorderCollisions for this class and computing a new overlapped
         // time for rotating Balls. However, we could formulate a solution, and decided to translate the Ball cluster
         // inwards as an approximation. See https://github.com/phetsims/collision-lab/issues/117.
-        //
-        // To translate the Balls inwards, we use the same visuals described for finding the overlapping time between
-        // the Ball and the border. See
-        // https://github.com/phetsims/collision-lab/blob/master/doc/images/ball-to-border-time-of-impact-derivation.pdf
         const closestPoint = this.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.position );
-        const deltaS = new Vector2( 0, 0 ).set( ball.position ).subtract( closestPoint );
+        const translation = ball.position.minus( closestPoint );
 
         this.ballSystem.balls.forEach( ball => {
 
           // Translate the Ball inwards so that the cluster is inside the PlayArea.
-          ball.position = ball.position.minus( deltaS );
+          ball.position = ball.position.minus( translation );
 
           // Set the velocity of the Balls to 0.
           ball.velocity = Vector2.ZERO;
         } );
-        this.reset();
       }
-      // else {
-
-        // // Otherwise, if a Ball that is not rotating that hits the border, and the collision is 'sticky', then the Ball
-        // // has 0 velocity
-        // collidingBalls.forEach( ball => { ball.velocity = Vector2.ZERO; } );
-
-        // // Adjust the position of the Ball to take into account its overlapping time.
-        // ball.position = collisionPosition;
-      // }
-    }
-    else {
-
-      // Forward the collision-response to the super-class.
-      // super.collideBallWithBorder( ball, collisionPosition, overlappedTime );
-    }
-  }
-
-  /**
-   * Processes a ball-to-border collision and updates the velocity and the position of the Ball. The collision algorithm
-   * follows the standard rigid-body collision model as described in
-   * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
-   * @protected
-   *
-   * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
-   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
-   */
-  handleBallToBorderCollision( ball, dt ) {
-    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
-    // Handle collisions that 'stick'.
-    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
-
-
-      // Set the velocity of the Balls to 0.
-      ball.velocity = Vector2.ZERO;
     }
     else {
       super.handleBallToBorderCollision( ball, dt );
     }
-  }
-  /**
-   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
-   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-   * The Ball must be one of the two Balls that the InelasticCollisionEngine is handling.
-   * @private
-   *
-   * @param {Ball} ball
-   * @returns {number} - in kg*(m^2/s).
-   */
-  computeAngularMomentum( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( this.isRotatingBalls );
-
-    // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    const r = ball.position.minus( this.centerOfMassPosition );
-    const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
-
-    // L = r x p (relative to the center-of-mass)
-    return r.crossScalar( p );
   }
 }
 
