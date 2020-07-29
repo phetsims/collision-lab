@@ -38,6 +38,16 @@ class Collision {
     // @public {number} - reference to the passed-in collisionTime.
     this.collisionTime = collisionTime;
   }
+
+  /**
+   * Debugging string for the Collision.
+   * @public
+   *
+   * @returns {string}
+   */
+  toString() {
+    return `Collision[ ball: ${this.ball} colliding with: ${this.collidingObject}, in ${this.collisionTime} s ]`;
+  }
 }
 
 collisionLab.register( 'Collision', Collision );
