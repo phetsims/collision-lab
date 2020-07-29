@@ -36,7 +36,7 @@ class IntroCollisionEngine extends CollisionEngine {
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
 
     // Forward the rest of the collision response to the super class.
-    super.handleBallToBallCollision( ball1, ball2 );
+    super.handleBallToBallCollision( ball1, ball2, time );
 
     // Only register the 'Change in Momentum' contact point if the 'Change in Momentum' checkbox is checked.
     if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
