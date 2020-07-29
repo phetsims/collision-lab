@@ -166,8 +166,7 @@ class CollisionLabScreenView extends ScreenView {
     // KeypadDialog
     const keypadDialog = new KeypadDialog( {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
-        keypadDialog.leftBottom = this.localToGlobalPoint( this.ballValuesPanel.rightBottom.plusXY( 10, 0 ) )
-                                      .times( 1 / scale );
+        keypadDialog.leftBottom = this.ballValuesPanel.rightBottom.plusXY( 10, 0 );
       },
 
       // TODO workaround for https://github.com/phetsims/joist/issues/586
