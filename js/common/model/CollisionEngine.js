@@ -187,10 +187,12 @@ class CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} elapsedTimeOfCollision - used in sub-classes.
    */
-  handleBallToBallCollision( ball1, ball2 ) {
+  handleBallToBallCollision( ball1, ball2, elapsedTimeOfCollision ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+    assert && assert( typeof elapsedTimeOfCollision === 'number', `invalid elapsedTimeOfCollision: ${elapsedTimeOfCollision}` );
     assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );
 
     // Convenience references to known ball values.
@@ -281,29 +283,35 @@ class CollisionEngine {
   }
 
   /**
-   * Processes a ball-to-border collision and updates the velocity and the position of the Ball. The collision algorithm
-   * follows the standard rigid-body collision model as described in
+   * Responds to and handles a single ball-to-border collision by updating the velocity of the Balls depending on its
+   * orientation relative to the border. The collision algorithm follows the standard rigid-body collision model
+   * described in
    * http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf.
-   * @protected
+   *
+   * @protected - can be overridden in subclasses.
    *
    * @param {Ball} ball - the Ball involved in the collision.
-   * @param {Vector2} collisionPosition - the center-position of the Ball when it exactly collided with the border.
-   * @param {number} overlappedTime - the time the Balls has been overlapping each the border.
+   * @param {number} dt - time-delta in seconds
    */
   handleBallToBorderCollision( ball, dt ) {
-    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    // assert && assert( collisionPosition instanceof Vector2, `invalid collisionPosition: ${collisionPosition}` );
-    // assert && assert( typeof overlappedTime === 'number', `invalid overlappedTime: ${overlappedTime}` );
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+
+    // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
+    // essentially moving in the opposite direction of its velocity vector. This is used to determine the direction
+    // that the Ball is moving towards; even if a Ball is touching a side(s) of the border, it's velocity doesn't change
+    // unless it is moving towards that respective side.
+    const velocityMultipier = Math.sign( dt );
 
     // Update the velocity after the collision.
-    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * Math.sign( dt ) < 0 )
-      || ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity * Math.sign( dt ) > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * velocityMultipier < 0 ) ||
+         ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity * velocityMultipier > 0 ) ) {
 
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
       ball.xVelocity *= -this.playArea.elasticity;
     }
-    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity * Math.sign( dt ) < 0 )
-      || ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity * Math.sign( dt ) > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity * velocityMultipier < 0 ) ||
+         ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity * velocityMultipier > 0 ) ) {
 
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
       ball.yVelocity *= -this.playArea.elasticity;
