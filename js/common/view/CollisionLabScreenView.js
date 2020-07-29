@@ -20,10 +20,9 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import HomeScreenView from '../../../../joist/js/HomeScreenView.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
-import merge from '../../../../phet-core/js/merge.js';
 import Orientation from '../../../../phet-core/js/Orientation.js';
+import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
@@ -167,10 +166,7 @@ class CollisionLabScreenView extends ScreenView {
     const keypadDialog = new KeypadDialog( {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
         keypadDialog.leftBottom = this.ballValuesPanel.rightBottom.plusXY( 10, 0 );
-      },
-
-      // TODO workaround for https://github.com/phetsims/joist/issues/586
-      scale: HomeScreenView.LAYOUT_BOUNDS.width / ScreenView.DEFAULT_LAYOUT_BOUNDS.width
+      }
     } );
 
     // @protected - BallValuesPanel, exposed to sub-classes for layout.
