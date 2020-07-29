@@ -18,7 +18,7 @@ import IntroScreen from './intro/IntroScreen.js';
 const simOptions = {
   credits: {
     leadDesign: '',
-    softwareDevelopment: '',
+    softwareDevelopment: 'Brandon Li, Martin Veillette',
     team: '',
     qualityAssurance: '',
     graphicArts: '',
