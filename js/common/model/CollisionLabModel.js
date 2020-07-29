@@ -190,24 +190,24 @@ class CollisionLabModel {
   }
 
   /**
-   * Steps the simulation backward by one time-step.
+   * Steps the simulation backwards by one time-step.
    * @public
    *
    * Called when the user presses the step-backward button.
    */
-  stepBackward() {
+  stepBackwards() {
 
     // Step backwards by the minimum of one step and the current elapsed time to ensure that elapsed time is positive.
     this.stepManual( -1 * Math.min( CollisionLabConstants.TIME_STEP_DURATION, this.elapsedTimeProperty.value ) );
   }
 
   /**
-   * Steps the simulation forward by one time-step.
+   * Steps the simulation forwards by one time-step.
    * @public
    *
    * Called when the user presses the step-forward button.
    */
-  stepForward() { this.stepManual( CollisionLabConstants.TIME_STEP_DURATION ); }
+  stepForwards() { this.stepManual( CollisionLabConstants.TIME_STEP_DURATION ); }
 }
 
 collisionLab.register( 'CollisionLabModel', CollisionLabModel );

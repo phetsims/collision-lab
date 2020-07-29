@@ -54,8 +54,8 @@ class CollisionLabTimeControlNode extends TimeControlNode {
       playPauseStepButtonOptions: {
         playPauseStepXSpacing: 9,
         playPauseButtonOptions: { radius: 30 },
-        stepBackwardButtonOptions: { radius: 20 },
-        stepForwardButtonOptions: { radius: 20 }
+        stepBackwardsButtonOptions: { radius: 20 },
+        stepForwardsButtonOptions: { radius: 20 }
       },
       speedRadioButtonGroupOptions: {
         labelOptions: {
@@ -72,7 +72,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     assert && assert( !options.timeSpeedProperty, 'CollisionLabTimeControlNode sets options.timeSpeedProperty' );
     assert && assert( !options.enabledProperty, 'CollisionLabTimeControlNode sets options.enabledProperty' );
     assert && assert( !options.playPauseStepButtonOptions.includeStepBackwardButton, 'CollisionLabTimeControlNode sets includeStepBackwardButton' );
-    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.isPlayingProperty' );
+    assert && assert( !options.playPauseStepButtonOptions.stepBackwardsButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardsButtonOptions.isPlayingProperty' );
 
     // Set options that cannot be overridden.
     options.timeSpeedProperty = timeSpeedProperty;
@@ -83,7 +83,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // a workaround. See https://github.com/phetsims/scenery-phet/issues/606 and
     // https://github.com/phetsims/collision-lab/issues/66. DerivedProperty never disposed since
     // CollisionLabTimeControlNode persists for the lifetime of simulation.
-    options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
+    options.playPauseStepButtonOptions.stepBackwardsButtonOptions.isPlayingProperty = new DerivedProperty(
       [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
         return isPlaying || elapsedTime === 0 || elasticity < CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
       }, {

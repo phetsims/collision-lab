@@ -138,8 +138,8 @@ class CollisionLabScreenView extends ScreenView {
       model.ballSystem.ballSystemUserControlledProperty,
       model.playArea.elasticityPercentProperty, {
         playPauseStepButtonOptions: {
-          stepBackwardButtonOptions: { listener: model.stepBackward.bind( model ) },
-          stepForwardButtonOptions: { listener: model.stepForward.bind( model ) }
+          stepBackwardsButtonOptions: { listener: model.stepBackwards.bind( model ) },
+          stepForwardsButtonOptions: { listener: model.stepForwards.bind( model ) }
         }
       } );
     timeControlNode.setPlayPauseButtonCenter( playAreaNode.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
