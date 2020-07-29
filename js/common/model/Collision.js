@@ -1,13 +1,13 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * An immutable data-structure that contains information about the Ball involved in the collision, the object the Ball
- * is colliding with, and at what time the collision will occur. Doesn't hold onto any listeners or Properties, so no
- * dispose method is needed.
+ * An immutable data-structure that contains information about a potential collision, including the Ball involved in the
+ * collision, the object the Ball is colliding with, and at what time the collision will occur. Doesn't hold onto any
+ * listeners or Properties, so no dispose method is needed.
  *
  * The Collision data-structure is used to encapsulate the necessary information of a potential collision that may
- * happen in the future. CollisionEngine will then detect all potential ball-to-ball and ball-to-border collisions
- * upfront and construct Collision instances, if needed. Then, it uses the data that each Collision holds onto to
+ * happen in the future. CollisionEngine will detect all potential ball-to-ball and ball-to-border collisions upfront
+ * and construct Collision instances, if needed. Then, it uses the data that each Collision holds onto to
  * respond to the next collision and repeats the process until there are no collisions detected within the time-step.
  *
  * @author Brandon Li
