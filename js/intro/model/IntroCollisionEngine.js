@@ -44,7 +44,7 @@ class IntroCollisionEngine extends CollisionEngine {
       // Reference the normal 'line of impact' vector. See
       // http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
       // for an image. This is a unit vector.
-      const normal = this.mutables.normal;
+      const normal = this.mutableVectors.normal;
 
       // The normal vector points in the direction of ball2. So we scale the normal vector (unit vector) by the radius
       // of ball1 and add it to the center colliding position of ball1 to get the collision-point.

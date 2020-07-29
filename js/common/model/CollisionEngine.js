@@ -31,7 +31,6 @@
  * @author Martin Veillette
  */
 
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
@@ -55,14 +54,13 @@ class CollisionEngine {
     // @private {Collision[]} - collection of the potential Ball collisions on each time step.
     this.potentialCollisions = [];
 
-    // @protected {Object} - mutable Vector2/Bounds2 instances, reused in critical code to reduce memory allocations.
-    this.mutables = {
+    // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
+    this.mutableVectors = {
       tangent: new Vector2( 0, 0 ),
       normal: new Vector2( 0, 0 ),
       deltaR: new Vector2( 0, 0 ),
       deltaV: new Vector2( 0, 0 ),
-      deltaS: new Vector2( 0, 0 ),
-      constrainedBounds: new Bounds2( 0, 0, 0, 0 )
+      deltaS: new Vector2( 0, 0 )
     };
 
     // @protected - reference to the passed-in parameters.
@@ -71,9 +69,13 @@ class CollisionEngine {
   }
 
   /**
-   * Steps the CollisionEngine, which initializes both collision detection and responses for every time-step.
-   * @public
+   * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step.
    *
+   * To fully ensure that collisions are simulated correctly, this method will only handle and progress the first
+   * detected collision. It will then recursively call itself with a smaller step-size to re-detect all potential
+   * collisions. This recursive process is repeated until there are no collisions detected within a given time-step.
+   *
+   * @public
    * @param {number} dt - time-delta in seconds
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
@@ -81,38 +83,41 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    // First detect all potential collisions that occur in this time-step at once.
-    this.potentialCollisions = []; // Reset potential collisions.
+    // Reset potential collisions that were detected in the previous step call.
+    this.potentialCollisions = [];
+
+    // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt );
     this.detectBallToBorderCollisions( dt );
 
-    // To fully ensure that collisions are simulated correctly, handle and progress the next collision and all potential
-    // collisions afterwards are re-detected. This process is repeated until there are no collisions detected within the
-    // time-step.
-    if ( this.potentialCollisions.length ) {
+    if ( !this.potentialCollisions.length ) {
 
+      // If there are no collisions detected within the given time-step, the Balls are in uniform motion for the rest of
+      // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
+      // time-step.
+      return this.ballSystem.stepUniformMotion( dt, elapsedTime ); // return for TCO supported browsers.
+    }
+    else {
+
+      // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollision = dt >= 0 ?
         _.minBy( this.potentialCollisions, 'collisionTime' ) :
         _.maxBy( this.potentialCollisions, 'collisionTime' );
 
-      // Now that this collision has been progressed, some time of the step has already been handled.
-      dt -= nextCollision.collisionTime;
+      // Compute the total elapsed-time of the simulation when next detected collision will occurred.
+      const elapsedTimeOfCollision = elapsedTime - dt + nextCollision.collisionTime;
 
       // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTime - dt );
+      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTimeOfCollision );
 
       // Handle the response for the Ball Collision depending on the type of collision.
       nextCollision.collidingObject instanceof Ball ?
-        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, elapsedTime - dt ) :
+        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, elapsedTimeOfCollision ) :
         this.handleBallToBorderCollision( nextCollision.ball, dt );
 
-      this.step( dt, elapsedTime );
-    }
-    else {
-
-      // Now that there are no more potential collisions detected, progress the Balls forwards for the rest of the step.
-      this.ballSystem.stepUniformMotion( dt, elapsedTime );
+      // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
+      return this.step( dt - nextCollision.collisionTime, elapsedTime ); // return for TCO supported browsers.
     }
   }
 
@@ -147,8 +152,8 @@ class CollisionEngine {
        * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
        *----------------------------------------------------------------------------*/
 
-      const deltaR = this.mutables.deltaR.set( ball2.position ).subtract( ball1.position );
-      const deltaV = this.mutables.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
+      const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
+      const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
 
       // Solve for the possible roots of the quadratic outlined in the document above.
@@ -199,27 +204,27 @@ class CollisionEngine {
 
     // Set the Normal vector, called the 'line of impact'. Account for a rare scenario when Balls are placed exactly
     // concentrically on-top of each other and both balls have 0 velocity, resulting in r2 equal to r1.
-    !r2.equals( r1 ) ? this.mutables.normal.set( r2 ).subtract( r1 ).normalize() : // TODO: is this case still possible?
-                       this.mutables.normal.set( Vector2.X_UNIT );
+    !r2.equals( r1 ) ? this.mutableVectors.normal.set( r2 ).subtract( r1 ).normalize() : // TODO: is this case still possible?
+                       this.mutableVectors.normal.set( Vector2.X_UNIT );
 
     // Set the Tangential vector, called the 'plane of contact'.
-    this.mutables.tangent.setXY( -this.mutables.normal.y, this.mutables.normal.x );
+    this.mutableVectors.tangent.setXY( -this.mutableVectors.normal.y, this.mutableVectors.normal.x );
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = v1.dot( this.mutables.normal );
-    const v2n = v2.dot( this.mutables.normal );
-    const v1t = v1.dot( this.mutables.tangent );
-    const v2t = v2.dot( this.mutables.tangent );
+    const v1n = v1.dot( this.mutableVectors.normal );
+    const v2n = v2.dot( this.mutableVectors.normal );
+    const v1t = v1.dot( this.mutableVectors.tangent );
+    const v2t = v2.dot( this.mutableVectors.tangent );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
     const v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
     const v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
 
     // Change coordinate frames back into the standard x-y coordinate frame.
-    const v1xP = this.mutables.tangent.dotXY( v1t, v1nP );
-    const v2xP = this.mutables.tangent.dotXY( v2t, v2nP );
-    const v1yP = this.mutables.normal.dotXY( v1t, v1nP );
-    const v2yP = this.mutables.normal.dotXY( v2t, v2nP );
+    const v1xP = this.mutableVectors.tangent.dotXY( v1t, v1nP );
+    const v2xP = this.mutableVectors.tangent.dotXY( v2t, v2nP );
+    const v1yP = this.mutableVectors.normal.dotXY( v1t, v1nP );
+    const v2yP = this.mutableVectors.normal.dotXY( v2t, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
   }
