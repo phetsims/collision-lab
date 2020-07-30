@@ -124,7 +124,8 @@ const CollisionLabUtils = {
 
   /**
    * A javascript version of the sleep function. This is **ONLY to be used for debugging**, and assertions must be
-   * enabled. This was mostly used to debug CollisionEngine with large time steps.
+   * enabled for use. This was mostly used to debug CollisionEngine with large time steps. In this case, it should be
+   * used in-conjunction with the step button to allow the javascript event loop to return before the next step.
    * @public
    *
    * @param {number} time - in seconds.
