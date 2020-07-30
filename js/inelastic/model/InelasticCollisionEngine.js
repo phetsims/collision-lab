@@ -212,8 +212,9 @@ class InelasticCollisionEngine extends CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} elapsedTimeOfCollision - used in sub-classes.
    */
-  handleBallToBallCollision( ball1, ball2 ) {
+  handleBallToBallCollision( ball1, ball2, elapsedTimeOfCollision ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
     assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
@@ -246,7 +247,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     else {
 
       // Forward the collision-response to the super-class.
-      super.handleBallToBallCollision( ball1, ball2 );
+      super.handleBallToBallCollision( ball1, ball2, elapsedTimeOfCollision );
     }
   }
 
