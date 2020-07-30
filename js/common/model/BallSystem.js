@@ -161,8 +161,8 @@ class BallSystem {
       ball.path.clear();
     } );
 
-    // Observe when Balls are added from the system and save the states of all balls in the system. See
-    // https://github.com/phetsims/collision-lab/issues/127. Listener lasts for the life-time of the simulation.
+    // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
+    // life-time of the simulation since BallSystems are never disposed.
     this.balls.addItemAddedListener( ball => {
       this.balls.forEach( ball => ball.saveState() );
     } );
