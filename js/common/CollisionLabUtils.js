@@ -120,6 +120,20 @@ const CollisionLabUtils = {
 
     // Works for both ObservableArrays and native Arrays.
     return CollisionLabUtils.isSorted( collection.map( criterion ) );
+  },
+
+  /**
+   * A javascript version of the sleep function. This is **ONLY to be used for debugging**, and assertions must be
+   * enabled. This was mostly used to debug CollisionEngine with large time steps.
+   * @public
+   *
+   * @param {number} time - in seconds.
+   * @returns {Promise}
+   */
+  sleep( time ) {
+    if ( assert ) {
+      return new Promise( resolve => setTimeout( resolve, time * 1000 ) );
+    }
   }
 };
 
