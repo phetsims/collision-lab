@@ -33,7 +33,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
     options = merge( {
 
       // {Range} - Display range for the NumberDisplay (used to determine width).
-      displayRange: new Range( 0, 100 ),
+      displayRange: new Range( 0, 1000 ),
 
       // super-class options
       yMargin: 6,
@@ -44,7 +44,7 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       } ),
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT,
-        maxWidth: 100 // constrain width for i18n, determined empirically
+        maxWidth: 70 // constrain width for i18n, determined empirically
       },
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
 
