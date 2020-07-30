@@ -93,8 +93,9 @@ class MomentaDiagramVectorNode extends Node {
       modelViewTransformProperty ], ( tailPosition, tipPosition, modelViewTransform ) => {
 
         // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
-        this.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
-        if ( !this.visible ) { /** exit **/ return; }
+        arrowNode.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
+        labelNode.visible = arrowNode.visible;
+        if ( !arrowNode.visible ) { /** exit **/ return; }
 
         // Get the position of the tail, center, and tip in view coordinates.
         const tailViewPosition = modelViewTransform.modelToViewPosition( tailPosition );
