@@ -71,6 +71,8 @@ function createBallSystemSnapshotIcon( ballStates, options ) {
   const icon = new Node();
   icon.scale( options.modelToViewScale, -options.modelToViewScale );
 
+  const velocityVectors = [];
+  const circles = [];
   ballStates.forEach( ( ballState, index ) => {
 
     const circle = new Circle( BallUtils.calculateBallRadius( ballState.mass, false ), {
@@ -93,11 +95,11 @@ function createBallSystemSnapshotIcon( ballStates, options ) {
         lineWidth: CollisionLabConstants.ARROW_OPTIONS.lineWidth / options.arrowOptionsScale
       } );
 
-    icon.addChild( circle );
-    icon.addChild( velocityVector );
+    circles.push( circle );
+    velocityVectors.push( velocityVector );
   } );
 
-  return icon;
+  return icon.setChildren( [ ...circles, ...velocityVectors ] );
 }
 
 
@@ -127,15 +129,15 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createExplore1DScreenIcon() {
-    const firstBallState = new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 0.5, 0 ), 0.1 );
-    const thirdBallStateMass = 0.5;
+    const firstBallState = new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 0.3, 0 ), 0.2 );
+    const thirdBallStateMass = 1.5;
     const thirdBallStatePosition = firstBallState.position
       .plusXY( BallUtils.calculateBallRadius( firstBallState.mass, false ), 0 )
       .addXY( BallUtils.calculateBallRadius( thirdBallStateMass, false ), 0 );
 
     const snapshot = [
       firstBallState,
-      new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
+      new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.7, 0 ), 0.5 ),
       new BallState( thirdBallStatePosition, firstBallState.velocity, thirdBallStateMass )
     ];
 
