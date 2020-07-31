@@ -16,11 +16,13 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenIcon from '../../../../joist/js/ScreenIcon.js';
+import Screen from '../../../../joist/js/Screen.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import Spacer from '../../../../scenery/js/nodes/Spacer.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
@@ -34,6 +36,9 @@ import BallState from '../model/BallState.js';
 import BallUtils from '../model/BallUtils.js';
 import XNode from './XNode.js';
 
+const SCREEN_ICON_WIDTH = 70;
+const SCREEN_ICON_HEIGHT = SCREEN_ICON_WIDTH / Screen.HOME_SCREEN_ICON_ASPECT_RATIO; // w/h = ratio <=> h = w/ratio
+
 
 /*
  * See https://github.com/phetsims/vector-addition/issues/76#issuecomment-515197547 for context.
@@ -46,15 +51,20 @@ import XNode from './XNode.js';
  */
 function createScreenIcon( icon ) {
 
+  const iconNode = new Node().addChild( new Spacer( SCREEN_ICON_WIDTH, SCREEN_ICON_HEIGHT, { pickable: false } ) );
+  icon.center = iconNode.center;
+  icon.maxWidth = SCREEN_ICON_WIDTH;
+  icon.maxHeight = SCREEN_ICON_HEIGHT;
 
-  return new ScreenIcon( new Node().addChild( icon ) );
+  return new ScreenIcon( iconNode.addChild( icon ) );
 }
 
 function createBallSystemSnapshotIcon( ballStates, options ) {
 
   options = merge( {
     modelToViewScale: 50,
-    arrowOptionsScale: 100
+    arrowOptionsScale: 100,
+    velocityMultiplier: 0.6
   }, options );
 
   // Create a blank icon for now. To be filled below.
@@ -73,8 +83,8 @@ function createBallSystemSnapshotIcon( ballStates, options ) {
     const velocityVector = new ArrowNode(
       circle.center.x,
       circle.center.y,
-      circle.center.x + ballState.velocity.x,
-      circle.center.y + ballState.velocity.y, {
+      circle.center.x + ballState.velocity.x * options.velocityMultiplier,
+      circle.center.y + ballState.velocity.y * options.velocityMultiplier, {
         fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
         stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE,
         headWidth: CollisionLabConstants.ARROW_OPTIONS.headWidth / options.arrowOptionsScale,
@@ -117,7 +127,7 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createExplore1DScreenIcon() {
-    const firstBallState = new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0 ), 0.1 );
+    const firstBallState = new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 0.5, 0 ), 0.1 );
     const thirdBallStateMass = 0.5;
     const thirdBallStatePosition = firstBallState.position
       .plusXY( BallUtils.calculateBallRadius( firstBallState.mass, false ), 0 )
@@ -154,7 +164,7 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createInelasticScreenIcon() {
-    const velocity = new Vector2( 0, 0.4 );
+    const velocity = new Vector2( 0, 0.8 );
     const mass = 1.5;
     const radius = BallUtils.calculateBallRadius( mass, false );
 
@@ -245,8 +255,7 @@ const CollisionLabIconFactory = {
     }
     else {
       return createBallSystemSnapshotIcon( inelasticPreset.ballStates, {
-        modelToViewScale: 50,
-        arrowOptionsScale: 100
+        velocityMultiplier: 1
       } );
     }
   },
