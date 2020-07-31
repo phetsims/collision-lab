@@ -87,7 +87,11 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Observe when any of the Balls in the system are being user-controlled or when the InelasticPreset is changed and
     // reset the InelasticCollisionEngine. Multilink persists for the lifetime of the sim since
     // InelasticCollisionEngines are never disposed.
-    Property.multilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.inelasticPresetProperty ], () => {
+    Property.multilink( [
+      ballSystem.ballSystemUserControlledProperty,
+      ballSystem.inelasticPresetProperty,
+      playArea.inelasticCollisionTypeProperty
+    ], () => {
       this.reset();
     } );
   }
