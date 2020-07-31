@@ -117,9 +117,19 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createExplore1DScreenIcon() {
+    const firstBallState = new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0 ), 0.1 );
+    const thirdBallStateMass = 0.5;
+    const thirdBallStatePosition = firstBallState.position
+      .plusXY( BallUtils.calculateBallRadius( firstBallState.mass, false ), 0 )
+      .addXY( BallUtils.calculateBallRadius( thirdBallStateMass, false ), 0 );
 
-    // TODO: #105
-    // return new ScreenIcon( new Node() );
+    const snapshot = [
+      firstBallState,
+      new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.5, 0 ), 1.5 ),
+      new BallState( thirdBallStatePosition, firstBallState.velocity, thirdBallStateMass )
+    ];
+
+    return createScreenIcon( createBallSystemSnapshotIcon( snapshot ) );
   },
 
   /**
@@ -144,9 +154,16 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createInelasticScreenIcon() {
+    const velocity = new Vector2( 0, 0.4 );
+    const mass = 1.5;
+    const radius = BallUtils.calculateBallRadius( mass, false );
 
-    // TODO: #105
-    // return new ScreenIcon( new Node() );
+    const snapshot = [
+      new BallState( new Vector2( -radius, 0 ), velocity, mass ),
+      new BallState( new Vector2( radius, 0 ), velocity, mass )
+    ];
+
+    return createScreenIcon( createBallSystemSnapshotIcon( snapshot ) );
   },
 
   /*——————————————————————————————— Checkbox Icons ———————————————————————————————————————*/
