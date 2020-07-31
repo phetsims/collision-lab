@@ -2,26 +2,26 @@
 Author: [@brandonLi8](https://github.com/brandonLi8)
 
 #### Background:
-The discrete nature of computers forces the physics engine of the Collision Lab simulation to follow a time-discretization approach to detecting and processing ball collisions. When balls collide it is likely that the collision occurred in between time steps. The flash implementation uses a traditional discrete collisions detection algorithm, where collisions are detected when Balls physically overlap. However, with sufficiently high velocity balls and/or large time steps (low frame rates), Ball collisions could go undetected, resulting in Balls "tunneling" through each other.
+The discrete nature of computers forces the physics engine of the Collision Lab simulation to follow a time-discretization approach to detecting and processing ball collisions. When balls collide the collision likely occurred in-between time steps. The flash implementation uses a traditional discrete collisions detection algorithm, where collisions are detected when Balls physically overlap. However, with sufficiently high-velocity balls and/or large time steps (low frame rates), Ball collisions could go undetected, resulting in Balls "tunneling" through each other.
 
-Thus, the HTML5 implementation uses a _priori_ [Collision Detection](https://en.wikipedia.org/wiki/Collision_detection) algorithm, where the CollisionEngine checks and processes collisions **before** they’ve happened. 
+Thus, the HTML5 implementation uses a [_priori_ Collision Detection](https://en.wikipedia.org/wiki/Collision_detection#A_posteriori_(discrete)_versus_a_priori_(continuous)) algorithm, where the [CollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionEngine.js) checks and processes collisions **before** they’ve happened. 
 
-The question, answered in this document, is how the physics engine computes if any Balls will collide within a given time-step, and if so, when the balls exactly first collided. This method is called `detectBallToBallCollisions` in the model.
+The question, answered in this document, is how the physics engine computes _if_ any Balls will collide within a given time-step, and if so, _when_ the balls exactly collided. The solution must work generally for both forwards and reverse collisions. This method is called `detectBallToBallCollisions` in the model.
 
 #### Known Quantities:
 
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_1) - the position of the first Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_2) - the position of the second Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{v}_1) - the velocity of the first Ball involved in the collision at the *start* of the collision.<br>
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{v}_2) - the velocity of the second Ball involved in the collision at the *start* of the collision.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_1) - the position of the first Ball involved in the collision *before* the collision occurred.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_2) - the position of the second Ball involved in the collision *before* the collision occurred.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{v}_1) - the velocity of the first Ball involved in the collision *before* before the collision occurred.<br>
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{v}_2) - the velocity of the second Ball involved in the collision *before* before the collision occurred.<br>
 - *radius<sub>1</sub>* - the radius of the first Ball involved in the collision.<br>
 - *radius<sub>2</sub>* - the radius of the second Ball involved in the collision.
 
 #### Unknown Quantities:
 
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_{\contact\1}) - the position of the first Ball when the Balls first collided (in between frames).
-- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_{\contact\2}) - the position of the second Ball when the Balls first collided (in between frames).
-- *time* - the elapsed time from when the Balls first collided to their current colliding positions.
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_{\contact\1}) - the position of ball<sub>1</sub> when the Balls *exactly* contacted each other (in between the previous and current step).
+- ![formula](https://render.githubusercontent.com/render/math?math=\large\vec{r}_{\contact\2}) - the position of ball<sub>2</sub> when the Balls *exactly* contacted each other (in between the previous and current step).
+- *time* - the time from the previous step to when the Balls collided. 
 
 <h1></h1>
 
