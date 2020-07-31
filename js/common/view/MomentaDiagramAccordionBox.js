@@ -45,7 +45,7 @@ import ZoomControlSet from './ZoomControlSet.js';
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
 const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_Y_MARGIN;
 const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
-const MOMENTA_DIAGRAM_ASPECT_RATIO = new Dimension2( 10, 8 );
+const MOMENTA_DIAGRAM_ASPECT_RATIO = new Dimension2( 14, 12 );
 const MOMENTA_DIAGRAM_ZOOM_RANGE = new RangeWithValue( 0.25, 4, 2 );
 
 class MomentaDiagramAccordionBox extends AccordionBox {
