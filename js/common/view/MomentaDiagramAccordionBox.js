@@ -99,6 +99,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
                                  - options.titleXSpacing
                                  - options.titleXMargin;
 
+
     //----------------------------------------------------------------------------------------
 
     // Compute the view Bounds of the GridNode.
@@ -209,8 +210,20 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       ],
       clipArea: Shape.bounds( gridViewBounds )
     } );
-
     super( contentNode, options );
+
+    // @private {Property.<number>} - for resetting.
+    this.zoomProperty = zoomProperty;
+  }
+
+  /**
+   * Resets the MomentaDiagramAccordionBox.
+   * @public
+   *
+   * Called when the reset-all button is pressed.
+   */
+  reset() {
+    this.zoomProperty.reset();
   }
 }
 

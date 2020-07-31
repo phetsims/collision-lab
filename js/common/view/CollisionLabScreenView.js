@@ -150,16 +150,6 @@ class CollisionLabScreenView extends ScreenView {
       centerY: elapsedTimeNumberDisplay.centerY
     } );
 
-    // Reset All Button
-    const resetAllButton = new ResetAllButton( {
-      listener: () => {
-        model.reset();
-        viewProperties.reset();
-      },
-      right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
-      bottom: this.layoutBounds.maxY - CollisionLabConstants.SCREEN_VIEW_Y_MARGIN
-    } );
-
     //----------------------------------------------------------------------------------------
 
     // KeypadDialog
@@ -196,6 +186,17 @@ class CollisionLabScreenView extends ScreenView {
       dimension: model.playArea.dimension,
       centerX: controlPanel.centerX,
       top: controlPanel.bottom + 8
+    } );
+
+    // Reset All Button
+    const resetAllButton = new ResetAllButton( {
+      listener: () => {
+        model.reset();
+        viewProperties.reset();
+        momentaDiagram.reset();
+      },
+      right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
+      bottom: this.layoutBounds.maxY - CollisionLabConstants.SCREEN_VIEW_Y_MARGIN
     } );
 
     //----------------------------------------------------------------------------------------
