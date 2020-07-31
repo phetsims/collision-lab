@@ -14,6 +14,8 @@
  * @author Brandon Li
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
+import ScreenIcon from '../../../../joist/js/ScreenIcon.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -28,8 +30,66 @@ import InelasticPreset from '../../inelastic/model/InelasticPreset.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
+import BallState from '../model/BallState.js';
 import BallUtils from '../model/BallUtils.js';
 import XNode from './XNode.js';
+
+
+/*
+ * See https://github.com/phetsims/vector-addition/issues/76#issuecomment-515197547 for context.
+ * Helper function that creates a ScreenIcon but adds a Spacer to fill extra space. This ensures all screen icons are
+ * the same width and height which ensures that they are all scaled the same. Thus, this keeps all Arrow Nodes inside
+ * of screen icons the same 'dimensions' (i.e. tailWidth, headWidth, headHeight, etc. ).
+ *
+ * @param {Node[]} children - the children of the icon
+ * @returns {ScreenIcon}
+ */
+function createScreenIcon( icon ) {
+
+
+  return new ScreenIcon( new Node().addChild( icon ) );
+}
+
+function createBallSystemSnapshotIcon( ballStates, options ) {
+
+  options = merge( {
+    modelToViewScale: 50,
+    arrowOptionsScale: 100
+  }, options );
+
+  // Create a blank icon for now. To be filled below.
+  const icon = new Node();
+  icon.scale( options.modelToViewScale, -options.modelToViewScale );
+
+  ballStates.forEach( ( ballState, index ) => {
+
+    const circle = new Circle( BallUtils.calculateBallRadius( ballState.mass, false ), {
+      center: ballState.position,
+      fill: CollisionLabColors.BALL_COLORS[ index ],
+      stroke: CollisionLabColors.BALL_STROKE_COLOR,
+      lineWidth: 1 / options.modelToViewScale
+    } );
+
+    const velocityVector = new ArrowNode(
+      circle.center.x,
+      circle.center.y,
+      circle.center.x + ballState.velocity.x,
+      circle.center.y + ballState.velocity.y, {
+        fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
+        stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE,
+        headWidth: CollisionLabConstants.ARROW_OPTIONS.headWidth / options.arrowOptionsScale,
+        headHeight: CollisionLabConstants.ARROW_OPTIONS.headHeight / options.arrowOptionsScale,
+        tailWidth: CollisionLabConstants.ARROW_OPTIONS.tailWidth / options.arrowOptionsScale,
+        lineWidth: CollisionLabConstants.ARROW_OPTIONS.lineWidth / options.arrowOptionsScale
+      } );
+
+    icon.addChild( circle );
+    icon.addChild( velocityVector );
+  } );
+
+  return icon;
+}
+
 
 const CollisionLabIconFactory = {
 
@@ -42,9 +102,12 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createIntroScreenIcon() {
+    const snapshot = [
+      new BallState( new Vector2( -1.0, 0 ), new Vector2( 1.00, 0 ), 0.5 ),
+      new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.5, 0 ), 1.5 )
+    ];
 
-    // TODO: #105
-    // return new ScreenIcon( new Node() );
+    return createScreenIcon( createBallSystemSnapshotIcon( snapshot ) );
   },
 
   /**
@@ -66,9 +129,12 @@ const CollisionLabIconFactory = {
    * @returns {ScreenIcon}
    */
   createExplore2DScreenIcon() {
+    const snapshot = [
+      new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0.300 ), 0.50 ),
+      new BallState( new Vector2( 0.00, 0.500 ), new Vector2( -0.5, -0.50 ), 1.50 )
+    ];
 
-    // TODO: #105
-    // return new ScreenIcon( new Node() );
+    return createScreenIcon( createBallSystemSnapshotIcon( snapshot ) );
   },
 
   /**
@@ -160,38 +226,12 @@ const CollisionLabIconFactory = {
         maxWidth: 120 // constrain width for i18n, determined empirically
       } );
     }
-
-    // Create a blank icon for now. To be filled below.
-    const icon = new Node();
-    icon.scale( 50, -50 );
-
-    inelasticPreset.ballStates.forEach( ( ballState, index ) => {
-
-      const circle = new Circle( BallUtils.calculateBallRadius( ballState.mass, false ), {
-        center: ballState.position,
-        fill: CollisionLabColors.BALL_COLORS[ index ],
-        stroke: CollisionLabColors.BALL_STROKE_COLOR,
-        lineWidth: 1 / 50
+    else {
+      return createBallSystemSnapshotIcon( inelasticPreset.ballStates, {
+        modelToViewScale: 50,
+        arrowOptionsScale: 100
       } );
-
-      const velocityVector = new ArrowNode(
-        circle.center.x,
-        circle.center.y,
-        circle.center.x + ballState.velocity.x,
-        circle.center.y + ballState.velocity.y, {
-          fill: CollisionLabColors.VELOCITY_VECTOR_FILL,
-          stroke: CollisionLabColors.VELOCITY_VECTOR_STROKE,
-          headWidth: CollisionLabConstants.ARROW_OPTIONS.headWidth / 100,
-          headHeight: CollisionLabConstants.ARROW_OPTIONS.headHeight / 100,
-          tailWidth: CollisionLabConstants.ARROW_OPTIONS.tailWidth / 100,
-          lineWidth: CollisionLabConstants.ARROW_OPTIONS.lineWidth / 100
-        } );
-
-      icon.addChild( circle );
-      icon.addChild( velocityVector );
-    } );
-
-    return icon;
+    }
   },
 
 
