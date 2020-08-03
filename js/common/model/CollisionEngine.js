@@ -101,24 +101,26 @@ class CollisionEngine {
 
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
-      const nextCollision = dt >= 0 ?
-        _.minBy( this.potentialCollisions, 'collisionTime' ) :
-        _.maxBy( this.potentialCollisions, 'collisionTime' );
+      const nextCollisions = dt >= 0 ?
+        CollisionLabUtils.getMinValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) ) :
+        CollisionLabUtils.getMaxValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) );
 
       // Compute the total elapsed-time of the simulation when next detected collision will occurred.
       // TODO: potential naming confusions here. CollisionTime is used in IntroBallSystem to reference elapsed time, but CollisionTime is used in Collision to reference delta-time.
-      const elapsedTimeOfCollision = elapsedTime - dt + nextCollision.collisionTime;
+      const elapsedTimeOfCollision = elapsedTime - dt + nextCollisions[ 0 ].collisionTime;
 
       // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( nextCollision.collisionTime, elapsedTimeOfCollision );
+      this.ballSystem.stepUniformMotion( nextCollisions[ 0 ].collisionTime, elapsedTimeOfCollision );
 
-      // Handle the response for the Ball Collision depending on the type of collision.
-      nextCollision.collidingObject instanceof Ball ?
-        this.handleBallToBallCollision( nextCollision.ball, nextCollision.collidingObject, elapsedTimeOfCollision ) :
-        this.handleBallToBorderCollision( nextCollision.ball, dt );
+      nextCollisions.forEach( collision => {
+        // Handle the response for the Ball Collision depending on the type of collision.
+        collision.collidingObject instanceof Ball ?
+          this.handleBallToBallCollision( collision.ball, collision.collidingObject, elapsedTimeOfCollision ) :
+          this.handleBallToBorderCollision( collision.ball, dt );
+      } );
 
       // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
-      return this.step( dt - nextCollision.collisionTime, elapsedTime ); // return for TCO supported browsers.
+      return this.step( dt - nextCollisions[ 0 ].collisionTime, elapsedTime ); // return for TCO supported browsers.
     }
   }
 
@@ -168,7 +170,7 @@ class CollisionEngine {
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
-      if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
+      if ( Number.isFinite( collisionTime ) && collisionTime > 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
@@ -275,7 +277,7 @@ class CollisionEngine {
       const collisionTime = Math.min( ...possibleCollisionTimes );
 
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
-      if ( possibleCollisionTimes.length && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
+      if ( possibleCollisionTimes.length && collisionTime > 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );

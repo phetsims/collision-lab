@@ -105,6 +105,74 @@ const CollisionLabUtils = {
   },
 
   /**
+   * Gets the extrema of an array of values by some comparator function.
+   * @public
+   *
+   * @param {*[]} array
+   * @param {function(value:*,base:*):number} comparator - Return -1 if base is more 'extreme' than value, 0 if base
+   *                                                       is equally as 'extreme' as value, and 1 otherwise.
+   * @returns {*[]} - an array of the extrema.
+   */
+  getExtremaOf( array, comparator ) {
+    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    assert && assert( typeof comparator === 'function', `invalid comparator: ${comparator}` );
+
+    // Flag of the resulting extrema.
+    let extrema = [];
+
+    array.forEach( item => {
+      if ( !extrema.length ) {
+        extrema.push( item );
+      }
+      else {
+        const comparison = comparator( item, extrema[ 0 ] );
+        if ( comparison === -1 ) {
+          extrema = [ item ];
+        }
+        else if ( comparison === 0 ) {
+          extrema.push( item );
+        }
+      }
+    } );
+
+    return extrema;
+  },
+
+  /**
+   * Gets the minimum value(s) of an array of values that are ranked by some criterion function. For instance,
+   * getMinValuesOf( [ 1, 1, 2, 3, 4, 1 ], _.identity ) returns [ 1, 1, 1 ].
+   * @public
+   *
+   * @param {*[]} array
+   * @param {function(value:*):number} criterion
+   * @returns {*[]} - an array of the maximum value(s).
+   */
+  getMinValuesOf( array, criterion ) {
+    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
+
+    return CollisionLabUtils.getExtremaOf( array,
+      ( base, value ) => Math.sign( criterion( base ) - criterion( value ) ) );
+  },
+
+  /**
+   * Gets the maximum value(s) of an array of values that are ranked by some criterion function. For instance,
+   * getMaxValuesOf( [ 1, 2, 3, 3, 4, 4 ], _.identity ) returns [ 4, 4 ].
+   * @public
+   *
+   * @param {*[]} array
+   * @param {function(value:*):number} criterion
+   * @returns {*[]} - an array of the maximum value(s).
+   */
+  getMaxValuesOf( array, criterion ) {
+    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
+
+    return CollisionLabUtils.getExtremaOf( array,
+      ( base, value ) => Math.sign( criterion( value ) - criterion( base ) ) );
+  },
+
+  /**
    * Determines whether an array, or an ObservableArray, is strictly sorted in ascending order (non-inclusive) by
    * a criterion function that numerically ranks each element of the array. The criterion function is passed each
    * element of the collection.
