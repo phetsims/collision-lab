@@ -56,7 +56,7 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
    */
   timeStepDuration: {
     type: 'number',
-    defaultValue: 0.03,
+    defaultValue: 0.01,
     isValidValue: value => ( value > 0 )
   }
 } );
