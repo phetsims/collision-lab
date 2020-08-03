@@ -44,7 +44,7 @@ class BallVectorNode extends Node {
     options = merge( {
 
       // {Object} - passed to the ArrowNode instance.
-      arrowOptions: CollisionLabConstants.ARROW_OPTIONS
+      arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS )
 
     }, options );
 

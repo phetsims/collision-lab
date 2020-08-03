@@ -18,7 +18,12 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallVectorNode from './BallVectorNode.js';
+
+// constants
+const MOMENTUM_VECTOR_HEAD_DILATION_SCALE = 1.4; // See https://github.com/phetsims/collision-lab/issues/130.
+const MOMENTUM_VECTOR_TAIL_DILATION_SCALE = 1.8; // See https://github.com/phetsims/collision-lab/issues/130.
 
 class BallMomentumVectorNode extends BallVectorNode {
 
@@ -40,7 +45,10 @@ class BallMomentumVectorNode extends BallVectorNode {
       // super-class options
       arrowOptions: {
         fill: CollisionLabColors.MOMENTUM_VECTOR_FILL,
-        stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE
+        stroke: CollisionLabColors.MOMENTUM_VECTOR_STROKE,
+        headWidth: CollisionLabConstants.ARROW_OPTIONS.headWidth * MOMENTUM_VECTOR_HEAD_DILATION_SCALE,
+        headHeight: CollisionLabConstants.ARROW_OPTIONS.headHeight * MOMENTUM_VECTOR_HEAD_DILATION_SCALE,
+        tailWidth: CollisionLabConstants.ARROW_OPTIONS.tailWidth * MOMENTUM_VECTOR_TAIL_DILATION_SCALE
       }
 
     }, options );
