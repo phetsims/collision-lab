@@ -252,6 +252,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
       // Forward the collision-response to the super-class.
       super.handleBallToBallCollision( ball1, ball2, elapsedTimeOfCollision );
+      this.ballSystem.stepUniformMotion( EPSILON, elapsedTimeOfCollision + EPSILON ); // #129 workaround.
     }
   }
 
