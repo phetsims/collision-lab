@@ -116,13 +116,13 @@ class BallVelocityVectorNode extends BallVectorNode {
         ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = true );
       },
       end: () => {
-        ball.xVelocityUserControlledProperty.value = false;
-        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
-
         // Round the velocity vector to match the displayed value on drag-release. See
         // https://github.com/phetsims/collision-lab/issues/136.
         ball.velocity = CollisionLabUtils.roundVectorToNearest( ball.velocity,
           10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
+
+        ball.xVelocityUserControlledProperty.value = false;
+        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
       }
     } ) );
 
