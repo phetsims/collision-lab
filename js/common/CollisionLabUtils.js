@@ -85,6 +85,22 @@ const CollisionLabUtils = {
   },
 
   /**
+   * Rounds the magnitude of a Vector2 instance upwards to the nearest of any multiple. For instance,
+   * roundUpVectorToNearest( new Vector2( 0.98, 0 ), 0.1 ) would return Vector2( 1, 0 ).
+   * @public
+   *
+   * @param {Vector2} vector - will be mutated!
+   * @param {number} multiple - the nearest multiple to round the Bounds in to.
+   * @returns {Vector2}
+   */
+  roundUpVectorToNearest( vector, multiple ) {
+    assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
+    assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
+
+    return vector.setPolar( Math.ceil( vector.magnitude / multiple ) * multiple, vector.angle );
+  },
+
+  /**
    * Rounds the values of a Vector2 instance to the nearest of any multiple. For instance,
    * roundVectorToNearest( new Vector2( 0.28, 0.24 ), 0.1 ) would return Vector2( 0.3, 0.2 ).
    * @public
