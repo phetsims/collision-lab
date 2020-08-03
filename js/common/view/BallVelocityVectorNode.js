@@ -31,6 +31,7 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from '../model/Ball.js';
 import PlayArea from '../model/PlayArea.js';
 import BallVectorNode from './BallVectorNode.js';
@@ -117,6 +118,11 @@ class BallVelocityVectorNode extends BallVectorNode {
       end: () => {
         ball.xVelocityUserControlledProperty.value = false;
         ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocityUserControlledProperty.value = false );
+
+        // Round the velocity vector to match the displayed value on drag-release. See
+        // https://github.com/phetsims/collision-lab/issues/136.
+        ball.velocity = CollisionLabUtils.roundVectorToNearest( ball.velocity,
+          10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
       }
     } ) );
 
