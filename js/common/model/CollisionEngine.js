@@ -170,7 +170,7 @@ class CollisionEngine {
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
-      if ( Number.isFinite( collisionTime ) && collisionTime > 0 && collisionTime <= Math.abs( dt ) ) {
+      if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
