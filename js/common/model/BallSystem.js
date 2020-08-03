@@ -164,7 +164,7 @@ class BallSystem {
     // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
     // life-time of the simulation since BallSystems are never disposed.
     this.balls.addItemAddedListener( ball => {
-      this.balls.forEach( ball => ball.saveState() );
+      this.balls.forEach( ball => ball.insidePlayAreaProperty.value && ball.saveState() );
     } );
 
     // Observe when the user is done controlling any of the Balls to:
