@@ -88,7 +88,7 @@ class CollisionEngine {
 
     // await CollisionLabUtils.sleep( 1 );
     // First detect all potential collisions that occur within this time-step at once.
-    this.detectBallToBallCollisions( dt );
+    this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt );
     // console.log( 'here', this.potentialCollisions)
     if ( !this.potentialCollisions.length ) {
@@ -145,7 +145,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time-delta in seconds
    */
-  detectBallToBallCollisions( dt ) {
+  detectBallToBallCollisions( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Loop through each unique possible pair of Balls and check to see if they will collide.
@@ -173,7 +173,7 @@ class CollisionEngine {
 
       // The minimum root of the quadratic is when the Balls will first collide.
       const collisionTime = possibleRoots ? Math.min( ...possibleRoots ) : null;
-      // console.log( 'trying, ', ball1.index, ball2.index, deltaR.magnitudeSquared - sumOfRadiiSquared, deltaV, possibleRoots, Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) )
+      // console.log( 'trying, ', ball1.index, ball2.index, deltaR.magnitudeSquared - sumOfRadiiSquared, possibleRoots, Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ), collisionTime, elapsedTime - dt + collisionTime )
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
@@ -182,11 +182,19 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
-      else if ( this.playArea.elasticity === 0 && Utils.equalsEpsilon( deltaR.magnitudeSquared - sumOfRadiiSquared, 0, 1E-13 ) && !deltaV.equals( Vector2.ZERO )
-      && ( Utils.equalsEpsilon( deltaR.angle, deltaV.angle, 1E-13 ) || Utils.equalsEpsilon( Math.abs( deltaR.angle - deltaV.angle ), Math.PI, 1E-13 ) ) ) {
-        // console.log( 'manuel detection')
-        this.potentialCollisions.push( new Collision( ball1, ball2, 0 ) );
+      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) ) {
+        const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
+
+        if ( elapsedTimeOfCollision >= 0 ) {
+          // Register the collision and encapsulate information in a Collision instance.
+          this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
+        }
       }
+      // else if ( this.playArea.elasticity === 0 && Utils.equalsEpsilon( deltaR.magnitudeSquared - sumOfRadiiSquared, 0, 1E-13 ) && !deltaV.equals( Vector2.ZERO )
+      // && ( Utils.equalsEpsilon( deltaR.angle, deltaV.angle, 1E-13 ) || Utils.equalsEpsilon( Math.abs( deltaR.angle - deltaV.angle ), Math.PI, 1E-13 ) ) ) {
+      //   // console.log( 'manuel detection')
+      //   this.potentialCollisions.push( new Collision( ball1, ball2, 0 ) );
+      // }
     } );
   }
 
