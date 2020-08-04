@@ -173,7 +173,6 @@ class CollisionEngine {
 
       // The minimum root of the quadratic is when the Balls will first collide.
       const collisionTime = possibleRoots ? Math.min( ...possibleRoots ) : null;
-      // console.log( 'trying, ', ball1.index, ball2.index, deltaR.magnitudeSquared - sumOfRadiiSquared, possibleRoots, Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ), collisionTime, elapsedTime - dt + collisionTime )
 
       // If the quadratic root is finite and the collisionTime is within the current time-step period, the collision
       // is detected and should be registered.
@@ -190,11 +189,6 @@ class CollisionEngine {
           this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
         }
       }
-      // else if ( this.playArea.elasticity === 0 && Utils.equalsEpsilon( deltaR.magnitudeSquared - sumOfRadiiSquared, 0, 1E-13 ) && !deltaV.equals( Vector2.ZERO )
-      // && ( Utils.equalsEpsilon( deltaR.angle, deltaV.angle, 1E-13 ) || Utils.equalsEpsilon( Math.abs( deltaR.angle - deltaV.angle ), Math.PI, 1E-13 ) ) ) {
-      //   // console.log( 'manuel detection')
-      //   this.potentialCollisions.push( new Collision( ball1, ball2, 0 ) );
-      // }
     } );
   }
 
