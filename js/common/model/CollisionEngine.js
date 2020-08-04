@@ -182,7 +182,8 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
-      if ( Utils.equalsEpsilon( deltaR.magnitudeSquared - sumOfRadiiSquared, 0, 1E-13 ) && !deltaV.equals( Vector2.ZERO ) ) {
+      else if ( this.playArea.elasticity === 0 && Utils.equalsEpsilon( deltaR.magnitudeSquared - sumOfRadiiSquared, 0, 1E-13 ) && !deltaV.equals( Vector2.ZERO )
+      && ( Utils.equalsEpsilon( deltaR.angle, deltaV.angle, 1E-13 ) || Utils.equalsEpsilon( Math.abs( deltaR.angle - deltaV.angle ), Math.PI, 1E-13 ) ) ) {
         // console.log( 'manuel detection')
         this.potentialCollisions.push( new Collision( ball1, ball2, 0 ) );
       }
