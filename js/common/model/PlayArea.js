@@ -194,6 +194,11 @@ class PlayArea {
   isBallTouchingRight( ball ) {
     return Utils.equalsEpsilon( ball.right, this.right, CollisionLabConstants.ZERO_THRESHOLD );
   }
+
+  // @public
+  isBallTouching( ball ) {
+    this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) || this.isBallTouchingBottom( ball ) || this.isBallTouchingLeft( ball ) || this.isBallTouchingRight( ball ) );
+  }
 }
 
 // @public (read-only) {Bounds2} - the default bounds of the PlayArea.

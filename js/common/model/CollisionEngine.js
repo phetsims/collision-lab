@@ -89,7 +89,7 @@ class CollisionEngine {
     // await CollisionLabUtils.sleep( 1 );
     // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt, elapsedTime );
-    this.detectBallToBorderCollisions( dt );
+    this.detectBallToBorderCollisions( dt, elapsedTime );
 
     if ( !this.potentialCollisions.length ) {
 
@@ -178,7 +178,7 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
-      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) ) {
+      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && BallUtils.areBallsTouching( ball1, ball2 ) ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
         if ( elapsedTimeOfCollision >= 0 ) {
@@ -262,7 +262,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time-delta in seconds
    */
-  detectBallToBorderCollisions( dt ) {
+  detectBallToBorderCollisions( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Loop through each Balls and check to see if it will collide with the border.
@@ -286,13 +286,22 @@ class CollisionEngine {
 
       // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
       const collisionTime = Math.min( ...possibleCollisionTimes );
-
+      // console.log( collisionTime, leftCollisionTime, rightCollisionTime, bottomCollisionTime, topCollisionTime, this.playArea.right, ball.right )
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
       if ( possibleCollisionTimes.length && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
       }
+      // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouching( ball ) ) {
+      //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
+
+      //   if ( elapsedTimeOfCollision >= 0 ) {
+
+      //     // Register the collision and encapsulate information in a Collision instance.
+      //     this.potentialCollisions.push( new Collision( ball, collisionTime * Math.sign( dt ) ) );
+      //   }
+      // }
     } );
   }
 

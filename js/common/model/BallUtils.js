@@ -54,7 +54,7 @@ const BallUtils = {
    * @param {number} radius - the radius of the Ball, in meters.
    * @returns {Bounds2}
    */
-  getBallGridSafeConstrainedBounds( playAreaBounds, radius ) {
+  getBallGridSafeConstrainedBounds( playAreaBounds, radius, gridLineSpacing = CollisionLabConstants.MINOR_GRIDLINE_SPACING ) {
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( typeof radius === 'number' && radius > 0, `invalid radius: ${radius}` );
 
@@ -64,7 +64,7 @@ const BallUtils = {
 
     // Round the constrainedBounds inwards to the nearest grid-line to ensure that the Ball's center-position is bounded
     // on an exact grid-line AND is fully inside the PlayArea.
-    return CollisionLabUtils.roundBoundsInToNearest( constrainedBounds, CollisionLabConstants.MINOR_GRIDLINE_SPACING );
+    return CollisionLabUtils.roundBoundsInToNearest( constrainedBounds, gridLineSpacing );
   },
 
   /**

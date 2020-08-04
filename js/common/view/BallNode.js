@@ -42,6 +42,7 @@ import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from '../model/Ball.js';
+import BallUtils from '../model/BallUtils.js';
 import BallMomentumVectorNode from './BallMomentumVectorNode.js';
 import BallVelocityVectorNode from './BallVelocityVectorNode.js';
 import LeaderLinesNode from './LeaderLinesNode.js';
@@ -215,9 +216,10 @@ class BallNode extends Node {
 
         // Round the position to match the displayed value on drag-release. See
         // https://github.com/phetsims/collision-lab/issues/136.
-        ball.position = CollisionLabUtils.roundVectorToNearest( ball.position,
-          10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
-
+        ball.position = CollisionLabUtils.roundVectorToNearest(
+          BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radius, 10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES ).closestPointTo( ball.position ),
+          10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+        );
         // When the user is finished dragging the Ball, bump the Ball away from the other Balls that it is overlapping
         // with. See https://github.com/phetsims/collision-lab/issues/100.
         ballSystem.bumpBallAwayFromOtherBalls( ball );
