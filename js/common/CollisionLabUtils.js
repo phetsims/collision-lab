@@ -113,7 +113,7 @@ const CollisionLabUtils = {
     assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
     assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
 
-    return vector.divideScalar( multiple ).roundSymmetric().timesScalar( multiple );
+    return vector.divideScalar( multiple ).roundSymmetric().multiply( multiple );
   },
 
   /**
