@@ -234,7 +234,7 @@ class Ball {
    * If the PlayArea is 1D, the Ball's y-position will be kept at 0.
    *
    * @public
-   * @param {Vector} position - the attempted drag position, in model units, of the center of the Ball.
+   * @param {Vector2} position - the attempted drag position, in model units, of the center of the Ball.
    */
   dragToPosition( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
