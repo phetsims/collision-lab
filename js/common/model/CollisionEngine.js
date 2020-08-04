@@ -286,22 +286,22 @@ class CollisionEngine {
 
       // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
       const collisionTime = Math.min( ...possibleCollisionTimes );
-      // console.log( collisionTime, leftCollisionTime, rightCollisionTime, bottomCollisionTime, topCollisionTime, this.playArea.right, ball.right )
+      // console.log( 'erhehr', collisionTime, this.playArea.isBallTouching( ball ))
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
       if ( possibleCollisionTimes.length && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
       }
-      // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouching( ball ) ) {
-      //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
+      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouching( ball ) ) {
+        const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
-      //   if ( elapsedTimeOfCollision >= 0 ) {
+        if ( elapsedTimeOfCollision >= 0 ) {
 
-      //     // Register the collision and encapsulate information in a Collision instance.
-      //     this.potentialCollisions.push( new Collision( ball, collisionTime * Math.sign( dt ) ) );
-      //   }
-      // }
+          // Register the collision and encapsulate information in a Collision instance.
+          this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * Math.sign( dt ) ) );
+        }
+      }
     } );
   }
 

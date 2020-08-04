@@ -197,7 +197,7 @@ class PlayArea {
 
   // @public
   isBallTouching( ball ) {
-    this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) || this.isBallTouchingBottom( ball ) || this.isBallTouchingLeft( ball ) || this.isBallTouchingRight( ball ) );
+    return this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) || this.isBallTouchingBottom( ball ) || this.isBallTouchingLeft( ball ) || this.isBallTouchingRight( ball ) );
   }
 }
 
