@@ -8,9 +8,11 @@
 
 import ObservableArray from '../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
+import Utils from '../../../dot/js/Utils.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import AssertUtils from '../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../collisionLab.js';
+import CollisionLabConstants from './CollisionLabConstants.js';
 
 const CollisionLabUtils = {
 
@@ -97,7 +99,10 @@ const CollisionLabUtils = {
     assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
     assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
 
-    return vector.setPolar( Math.ceil( vector.magnitude / multiple ) * multiple, vector.angle );
+    vector.setPolar( Math.ceil( vector.magnitude / multiple ) * multiple, vector.angle );
+
+    if ( Utils.equalsEpsilon( vector.y, 0, CollisionLabConstants.ZERO_THRESHOLD ) ) { vector.y = 0; }
+    return vector;
   },
 
   /**
