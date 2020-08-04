@@ -25,6 +25,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
@@ -370,7 +371,10 @@ class Ball {
    *
    * @param {number} xVelocity - in m/s.
    */
-  set xVelocity( xVelocity ) { this.xVelocityProperty.value = xVelocity; }
+  set xVelocity( xVelocity ) {
+    if ( Utils.equalsEpsilon( xVelocity, 0, 1E-6 ) ) { xVelocity = 0; }
+    this.xVelocityProperty.value = xVelocity;
+  }
 
   /**
    * Sets the vertical velocity of the Ball, in m/s.
@@ -378,7 +382,10 @@ class Ball {
    *
    * @param {number} yVelocity - in m/s.
    */
-  set yVelocity( yVelocity ) { this.yVelocityProperty.value = yVelocity; }
+  set yVelocity( yVelocity ) {
+    if ( Utils.equalsEpsilon( yVelocity, 0, 1E-6 ) ) { yVelocity = 0; }
+    this.yVelocityProperty.value = yVelocity;
+  }
 }
 
 collisionLab.register( 'Ball', Ball );
