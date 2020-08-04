@@ -8,6 +8,7 @@
 
 import ObservableArray from '../../../axon/js/ObservableArray.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
+import Vector2 from '../../../dot/js/Vector2.js';
 import AssertUtils from '../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../collisionLab.js';
 
@@ -81,6 +82,38 @@ const CollisionLabUtils = {
       Math.floor( bounds.maxX / multiple ) * multiple,
       Math.floor( bounds.maxY / multiple ) * multiple
     );
+  },
+
+  /**
+   * Rounds the magnitude of a Vector2 instance upwards to the nearest of any multiple. For instance,
+   * roundUpVectorToNearest( new Vector2( 0.98, 0 ), 0.1 ) would return Vector2( 1, 0 ).
+   * @public
+   *
+   * @param {Vector2} vector - will be mutated!
+   * @param {number} multiple - the nearest multiple to round the Bounds in to.
+   * @returns {Vector2}
+   */
+  roundUpVectorToNearest( vector, multiple ) {
+    assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
+    assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
+
+    return vector.setPolar( Math.ceil( vector.magnitude / multiple ) * multiple, vector.angle );
+  },
+
+  /**
+   * Rounds the values of a Vector2 instance to the nearest of any multiple. For instance,
+   * roundVectorToNearest( new Vector2( 0.28, 0.24 ), 0.1 ) would return Vector2( 0.3, 0.2 ).
+   * @public
+   *
+   * @param {Vector2} vector - will be mutated!
+   * @param {number} multiple - the nearest multiple to round the Bounds in to.
+   * @returns {Vector2}
+   */
+  roundVectorToNearest( vector, multiple ) {
+    assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
+    assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
+
+    return vector.divideScalar( multiple ).roundSymmetric().timesScalar( multiple );
   },
 
   /**

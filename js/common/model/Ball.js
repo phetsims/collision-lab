@@ -29,6 +29,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
+import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
 import BallUtils from './BallUtils.js';
 import CollisionLabPath from './CollisionLabPath.js';
@@ -251,11 +252,10 @@ class Ball {
 
       // Ensure that the Ball's position is inside of the grid-safe bounds, which is rounded inwards to the nearest
       // grid-line to ensure that the Ball is both inside the PlayArea and snapped to a grid-line.
-      correctedPosition = BallUtils.getBallGridSafeConstrainedBounds( this.playArea.bounds, this.radius )
-        .closestPointTo( position )
-        .dividedScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING )
-        .roundSymmetric()
-        .timesScalar( CollisionLabConstants.MINOR_GRIDLINE_SPACING );
+      correctedPosition = CollisionLabUtils.roundVectorToNearest(
+        BallUtils.getBallGridSafeConstrainedBounds( this.playArea.bounds, this.radius ).closestPointTo( position ),
+        CollisionLabConstants.MINOR_GRIDLINE_SPACING
+      );
     }
 
     // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.

@@ -29,6 +29,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallState from './BallState.js';
@@ -164,7 +165,7 @@ class BallSystem {
     // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
     // life-time of the simulation since BallSystems are never disposed.
     this.balls.addItemAddedListener( ball => {
-      this.balls.forEach( ball => ball.saveState() );
+      this.balls.forEach( ball => ball.insidePlayAreaProperty.value && ball.saveState() );
     } );
 
     // Observe when the user is done controlling any of the Balls to:
@@ -289,6 +290,10 @@ class BallSystem {
       const directionVector = !ball.position.equals( overlappingBall.position ) ?
                                 ball.position.minus( overlappingBall.position ).normalize() :
                                 Vector2.X_UNIT.copy();
+
+      // Round the direction vector to match the displayed value on drag-release. See
+      // https://github.com/phetsims/collision-lab/issues/136.
+      CollisionLabUtils.roundUpVectorToNearest( directionVector, 10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
 
       // If we have already bumped away from the overlappingBall, reverse the directionVector.
       bumpedAwayFromBalls.includes( overlappingBall ) && directionVector.multiply( -1 );
