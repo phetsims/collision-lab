@@ -90,7 +90,7 @@ class CollisionEngine {
     // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt );
-    // console.log( 'here', this.potentialCollisions)
+
     if ( !this.potentialCollisions.length ) {
 
       // If there are no collisions detected within the given time-step, the Balls are in uniform motion for the rest of
@@ -105,19 +105,16 @@ class CollisionEngine {
       const nextCollisions = dt >= 0 ?
         CollisionLabUtils.getMinValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) ) :
         CollisionLabUtils.getMaxValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) );
-        // console.log( 'next', nextCollisions )
+
       // Compute the total elapsed-time of the simulation when next detected collision will occurred.
       // TODO: potential naming confusions here. CollisionTime is used in IntroBallSystem to reference elapsed time, but CollisionTime is used in Collision to reference delta-time.
       const elapsedTimeOfCollision = elapsedTime - dt + nextCollisions[ 0 ].collisionTime;
 
       // Progress forwards to the exact point of contact of the nextCollision.
       this.ballSystem.stepUniformMotion( nextCollisions[ 0 ].collisionTime, elapsedTimeOfCollision );
-      // await CollisionLabUtils.sleep( 1 );
 
       for ( let i = 0; i < nextCollisions.length; i++ ) {
         const collision = nextCollisions[ i ];
-          // console.log( 'handle', collision)
-              // await CollisionLabUtils.sleep( 1 );
 
         // Handle the response for the Ball Collision depending on the type of collision.
         collision.collidingObject instanceof Ball ?
