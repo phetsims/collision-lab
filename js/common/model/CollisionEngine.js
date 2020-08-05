@@ -80,7 +80,7 @@ class CollisionEngine {
    * @param {number} dt - time-delta in seconds
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  async step( dt, elapsedTime ) {
+  step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
@@ -115,8 +115,8 @@ class CollisionEngine {
       this.ballSystem.stepUniformMotion( nextCollisions[ 0 ].collisionTime, elapsedTimeOfCollision );
       // await CollisionLabUtils.sleep( 1 );
 
-      for ( let i = 0; i < nextCollisions.length; i++ ) {
-        const collision = nextCollisions[ i ];
+      nextCollisions.forEach( collision => {
+        // const collision = nextCollisions[ i ];
         // console.log( 'handle', collision )
         // await CollisionLabUtils.sleep( 1 );
 
@@ -124,7 +124,7 @@ class CollisionEngine {
         collision.collidingObject instanceof Ball ?
           this.handleBallToBallCollision( collision.ball, collision.collidingObject, elapsedTimeOfCollision ) :
           this.handleBallToBorderCollision( collision.ball, dt );
-      }
+      } );
 
       // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
       return this.step( dt - nextCollisions[ 0 ].collisionTime, elapsedTime ); // return for TCO supported browsers.
