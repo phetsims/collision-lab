@@ -24,7 +24,6 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
@@ -147,7 +146,7 @@ class Ball {
     // @public (read-only) {number} - the unique index of this Ball within a system of multiple Balls.
     this.index = index;
 
-    // @private {BallState} - the state to set this Ball when the restart button is pressed. See BallState for context.
+    // @private {BallState} - the state to set this Ball to when the restart button is pressed.
     this.restartState = initialBallState;
 
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
@@ -366,8 +365,7 @@ class Ball {
    * @param {number} xVelocity - in m/s.
    */
   set xVelocity( xVelocity ) {
-    if ( Utils.equalsEpsilon( xVelocity, 0, 1E-4 ) ) { xVelocity = 0; }
-    this.xVelocityProperty.value = xVelocity;
+    this.xVelocityProperty.value = Math.abs( xVelocity ) < CollisionLabConstants.MIN_VELOCITY ? 0 : xVelocity;
   }
 
   /**
@@ -377,8 +375,7 @@ class Ball {
    * @param {number} yVelocity - in m/s.
    */
   set yVelocity( yVelocity ) {
-    if ( Utils.equalsEpsilon( yVelocity, 0, 1E-4 ) ) { yVelocity = 0; }
-    this.yVelocityProperty.value = yVelocity;
+    this.yVelocityProperty.value = Math.abs( yVelocity ) < CollisionLabConstants.MIN_VELOCITY ? 0 : yVelocity;
   }
 }
 

@@ -41,6 +41,9 @@ const CollisionLabConstants = {
   // See https://github.com/phetsims/collision-lab/issues/51.
   ZERO_THRESHOLD: 1E-10,
 
+  // TODO: doc
+  MIN_VELOCITY: 1E-4,
+
   // Balls
   BALL_DEFAULT_DENSITY: 35,   // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
   BALL_CONSTANT_RADIUS: 0.15, // Radius of Balls if constant-radius is on, in meters.
