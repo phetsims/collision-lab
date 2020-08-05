@@ -372,7 +372,7 @@ class Ball {
    * @param {number} xVelocity - in m/s.
    */
   set xVelocity( xVelocity ) {
-    if ( Utils.equalsEpsilon( xVelocity, 0, 1E-6 ) ) { xVelocity = 0; }
+    if ( Utils.equalsEpsilon( xVelocity, 0, 1E-4 ) ) { xVelocity = 0; }
     this.xVelocityProperty.value = xVelocity;
   }
 
@@ -383,7 +383,7 @@ class Ball {
    * @param {number} yVelocity - in m/s.
    */
   set yVelocity( yVelocity ) {
-    if ( Utils.equalsEpsilon( yVelocity, 0, 1E-6 ) ) { yVelocity = 0; }
+    if ( Utils.equalsEpsilon( yVelocity, 0, 1E-4 ) ) { yVelocity = 0; }
     this.yVelocityProperty.value = yVelocity;
   }
 }

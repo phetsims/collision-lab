@@ -34,10 +34,11 @@
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+// import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
-import BallUtils from './BallUtils.js';
+// import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
@@ -79,7 +80,7 @@ class CollisionEngine {
    * @param {number} dt - time-delta in seconds
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  step( dt, elapsedTime ) {
+  async step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
@@ -90,7 +91,7 @@ class CollisionEngine {
     // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
-
+    // console.log( 'collisions', this.potentialCollisions)
     if ( !this.potentialCollisions.length ) {
 
       // If there are no collisions detected within the given time-step, the Balls are in uniform motion for the rest of
@@ -112,9 +113,12 @@ class CollisionEngine {
 
       // Progress forwards to the exact point of contact of the nextCollision.
       this.ballSystem.stepUniformMotion( nextCollisions[ 0 ].collisionTime, elapsedTimeOfCollision );
+      // await CollisionLabUtils.sleep( 1 );
 
       for ( let i = 0; i < nextCollisions.length; i++ ) {
         const collision = nextCollisions[ i ];
+        // console.log( 'handle', collision )
+        // await CollisionLabUtils.sleep( 1 );
 
         // Handle the response for the Ball Collision depending on the type of collision.
         collision.collidingObject instanceof Ball ?
@@ -161,12 +165,38 @@ class CollisionEngine {
       const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
       const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
       const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
+      let c = deltaR.magnitudeSquared - sumOfRadiiSquared;
+      const scratchVector = new Vector2( 0, 0 );
+      const travellingTowardsEachOther = () => {
+        if ( !ball1.velocity.equals( Vector2.ZERO ) && !ball2.velocity.equals( Vector2.ZERO ) ) {
+          if ( scratchVector.set( ball1.velocity ).normalize().multiply( ball1.radius + ball2.radius ).add( ball1.position ).equalsEpsilon( ball2.position, 1E-5 ) ) {
+            return true;
+          }
+          if ( scratchVector.set( ball2.velocity ).normalize().multiply( ball1.radius + ball2.radius ).add( ball2.position ).equalsEpsilon( ball1.position, 1E-5 ) ) {
+            return true;
+          }
+          return false;
+        }
+        else if ( !ball1.velocity.equals( Vector2.ZERO ) ) {
+          return scratchVector.set( ball1.velocity ).normalize().multiply( ball1.radius + ball2.radius ).add( ball1.position ).equalsEpsilon( ball2.position, 1E-5 );
+        }
+        else if ( !ball2.velocity.equals( Vector2.ZERO ) ) {
+          return scratchVector.set( ball2.velocity ).normalize().multiply( ball1.radius + ball2.radius ).add( ball2.position ).equalsEpsilon( ball1.position, 1E-5 );
+        }
+        else {
+          return false;
+        }
+      };
+      const h = travellingTowardsEachOther();
 
+      // console.log( 'trying', ball1.index, ball2.index, c )
+      if ( this.playArea.elasticity !== 1 && Utils.equalsEpsilon( c, 0, 1E-8 ) && c < 0 && h ) { c = -c; }
+      // console.log( 'corrected c', c)
       // Solve for the possible roots of the quadratic outlined in the document above.
       const possibleRoots = Utils.solveQuadraticRootsReal(
                               deltaV.magnitudeSquared,
                               2 * deltaV.dot( deltaR ),
-                              deltaR.magnitudeSquared - sumOfRadiiSquared );
+                              c );
 
       // The minimum root of the quadratic is when the Balls will first collide.
       const collisionTime = possibleRoots ? Math.min( ...possibleRoots ) : null;
@@ -178,7 +208,7 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
-      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && BallUtils.areBallsTouching( ball1, ball2 ) ) {
+      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
         if ( elapsedTimeOfCollision >= 0 ) {
@@ -207,7 +237,7 @@ class CollisionEngine {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( typeof elapsedTimeOfCollision === 'number', `invalid elapsedTimeOfCollision: ${elapsedTimeOfCollision}` );
-    assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );
+    // assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );
 
     // Convenience references to known ball values.
     const r1 = ball1.position;
