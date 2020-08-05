@@ -164,7 +164,7 @@ class CollisionEngine {
 
       const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
       const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
-      const sumOfRadiiSquared = Math.pow( ball1.radius + ball2.radius, 2 );
+      const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
       let c = deltaR.magnitudeSquared - sumOfRadiiSquared;
       const scratchVector = new Vector2( 0, 0 );
       const travellingTowardsEachOther = () => {

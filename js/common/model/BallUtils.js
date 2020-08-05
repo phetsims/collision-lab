@@ -38,7 +38,7 @@ const BallUtils = {
 
     return isConstantSize ?
       CollisionLabConstants.BALL_CONSTANT_RADIUS :
-      Math.pow( ( 3 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY ) / ( 4 * Math.PI ), 1 / 3 );
+      ( 3 / 4 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY / Math.PI ) ** ( 1 / 3 );
   },
 
   /**
