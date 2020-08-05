@@ -79,7 +79,7 @@ class CenterOfMass {
       } );
 
     // @public {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
-    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ) );
+    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude );
 
     //----------------------------------------------------------------------------------------
 

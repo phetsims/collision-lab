@@ -75,7 +75,7 @@ class Ball {
       { valueType: Vector2 } );
 
     // @public {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
-    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], _.property( 'magnitude' ), {
+    this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude, {
       isValidValue: value => value >= 0,
       valueType: 'number'
     } );
@@ -91,11 +91,11 @@ class Ball {
       { valueType: Vector2 } );
 
     // @public {DerivedProperty.<number>} - the momentum, in kg*m/s. Separated into components to display individually.
-    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'x' ), { valueType: 'number' } );
-    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'y' ), { valueType: 'number' } );
+    this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.x );
+    this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.y );
 
     // @public {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
-    this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], _.property( 'magnitude' ), {
+    this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.magnitude, {
       isValidValue: value => value >= 0,
       valueType: 'number'
     } );

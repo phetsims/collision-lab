@@ -104,8 +104,8 @@ class CollisionEngine {
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollisions = dt >= 0 ?
-        CollisionLabUtils.getMinValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) ) :
-        CollisionLabUtils.getMaxValuesOf( this.potentialCollisions, _.property( 'collisionTime' ) );
+        CollisionLabUtils.getMinValuesOf( this.potentialCollisions, collision => collision.collisionTime ) :
+        CollisionLabUtils.getMaxValuesOf( this.potentialCollisions, collision => collision.collisionTime );
 
       // Compute the total elapsed-time of the simulation when next detected collision will occurred.
       // TODO: potential naming confusions here. CollisionTime is used in IntroBallSystem to reference elapsed time, but CollisionTime is used in Collision to reference delta-time.
