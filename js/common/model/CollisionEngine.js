@@ -178,7 +178,7 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
-      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && BallUtils.areBallsTouching( ball1, ball2 ) ) {
+      else if ( this.playArea.elasticity === 0 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && BallUtils.areBallsTouching( ball1, ball2 ) ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
         if ( elapsedTimeOfCollision >= 0 ) {
@@ -293,7 +293,7 @@ class CollisionEngine {
         // Register the collision and encapsulate information in a Collision instance.
         this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
       }
-      else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouching( ball ) ) {
+      else if ( this.playArea.elasticity === 0 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouching( ball ) ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
         if ( elapsedTimeOfCollision >= 0 ) {
