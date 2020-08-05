@@ -144,7 +144,7 @@ class Ball {
       this.yPositionUserControlledProperty,
       this.xVelocityUserControlledProperty,
       this.yVelocityUserControlledProperty
-    ], ( ...userControlledValues ) => _.some( userControlledValues, _.identity ), {
+    ], ( ...userControlledValues ) => userControlledValues.some( _.identity ), {
       valueType: 'boolean'
     } );
 
