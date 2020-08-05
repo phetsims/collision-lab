@@ -129,9 +129,10 @@ class BallSystem {
     //  - balls.lengthProperty, since removing or adding a Ball changes the total kinetic energy of the system.
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
-    this.totalKineticEnergyProperty = new DerivedProperty(
-      [ this.balls.lengthProperty, ...this.prepopulatedBalls.map( ball => ball.kineticEnergyProperty ) ],
-      () => _.sum( this.balls.map( ball => ball.kineticEnergyProperty.value ) ), {
+    this.totalKineticEnergyProperty = new DerivedProperty( [ this.balls.lengthProperty,
+        ...this.prepopulatedBalls.map( ball => ball.massProperty ),
+        ...this.prepopulatedBalls.map( ball => ball.velocityProperty )
+      ], () => BallUtils.getTotalKineticEnergy( this.balls ), {
         valueType: 'number',
         isValidValue: value => value >= 0
       } );

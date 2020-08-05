@@ -114,23 +114,6 @@ const BallUtils = {
   },
 
   /**
-   * Calculates the Kinetic Energy of the Ball, which is defined as the work necessary to get a Ball to its speed.
-   * See https://en.wikipedia.org/wiki/Kinetic_energy for background.
-   * @public
-   *
-   * @param {number} mass - in kg.
-   * @param {number} speed - in m/s.
-   * @returns {number} - in Joules
-   */
-  calculateBallKineticEnergy( mass, speed ) {
-    assert && assert( typeof mass === 'number' && mass > 0, `invalid mass: ${mass}` );
-    assert && assert( typeof speed === 'number' && speed >= 0, `invalid speed: ${speed}` );
-
-    // K = 1/2*m*|v|^2
-    return 0.5 * mass * speed * speed;
-  },
-
-  /**
    * Returns a boolean that indicates if the passed-in Balls are physically overlapping.
    * @public
    *
@@ -228,6 +211,25 @@ const BallUtils = {
 
     // Sanity check to ensure that the Balls are adjacent to each other.
     assert && assert( !BallUtils.areBallsOverlapping( ball1, ball2 ) );
+  },
+
+  /**
+   * Gets the total Kinetic Energy of a collection of Balls. See https://en.wikipedia.org/wiki/Kinetic_energy.
+   * @public
+   *
+   * @param {ObservableArray.<Ball>} balls
+   * @returns {number} - in Joules.
+   */
+  getTotalKineticEnergy( balls ) {
+    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+
+    let totalKineticEnergy = 0;
+    balls.forEach( ball => {
+
+      // See See https://en.wikipedia.org/wiki/Kinetic_energy.
+      totalKineticEnergy += 0.5 * ball.mass * ball.velocity.magnitudeSquared; // K = 1/2*m*|v|^2
+    } );
+    return totalKineticEnergy;
   }
 };
 

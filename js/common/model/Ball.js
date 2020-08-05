@@ -10,7 +10,6 @@
  *   - Mass Property.
  *   - Velocity and Momentum Properties.
  *   - Radius Property.
- *   - Kinetic energy.
  *   - Dragging, user-control, restarting, etc.
  *   - Creating the trailing 'Path' behind the Ball.
  *
@@ -106,11 +105,6 @@ class Ball {
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
       BallUtils.calculateBallRadius,
       { valueType: 'number', isValidValue: value => value > 0 } );
-
-    // @public {DerivedProperty.<number>} - Property of the kinetic energy of the Ball, in J.
-    this.kineticEnergyProperty = new DerivedProperty( [ this.massProperty, this.speedProperty ],
-      BallUtils.calculateBallKineticEnergy,
-      { valueType: 'number', isValidValue: value => value >= 0 } );
 
     // @public {NumberProperty} - Property of the rotation of the Ball relative to its own center, in radians. This is
     //                            used for 'sticky' collisions in the 'Inelastic' screen.
