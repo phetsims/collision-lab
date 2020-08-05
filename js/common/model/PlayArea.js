@@ -2,7 +2,8 @@
 
 /**
  * PlayArea is the model for the main container of colliding Balls in the 'collision lab' simulation. It is a
- * sub-model of the top-level model of each screen. The origin is at the center, and its bounds never changes.
+ * sub-model of the top-level model of each screen and has a ideal friction-less surface with rigid borders. The origin
+ * is at the center, and its bounds never changes.
  *
  * PlayArea is mainly responsible for:
  *   - Handling the different Bounds of PlayAreas in each screen.
