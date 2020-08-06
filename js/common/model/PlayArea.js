@@ -193,8 +193,7 @@ class PlayArea {
   isBallTouchingBottom( ball ) { return Utils.equalsEpsilon( ball.bottom, this.bottom, EPSILON ); } // @public
 
   /**
-   * Determines whether any side of a Ball is tangentially touching any side of the PlayArea AND the Ball is 'inside'
-   * the PlayArea's bounds.
+   * Determines whether any side of a Ball is tangentially touching any side of the PlayArea from the INSIDE.
    * @public
    *
    * @param {Ball} ball
