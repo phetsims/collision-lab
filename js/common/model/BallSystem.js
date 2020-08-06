@@ -125,7 +125,7 @@ class BallSystem {
     // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
     //
     // For the dependencies, we use:
-    //  - The KE Properties of the prepopulatedBalls. However, only the balls in the system are used in the calculation.
+    //  - mass and velocity Properties of the all Balls. Only the balls in the system are used for the calculation.
     //  - balls.lengthProperty, since removing or adding a Ball changes the total kinetic energy of the system.
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
