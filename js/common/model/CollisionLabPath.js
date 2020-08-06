@@ -28,8 +28,6 @@ import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameter
 import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import PathDataPoint from './PathDataPoint.js';
 
-// import Bounds2 from '../../../../dot/js/Bounds2.js';
-
 // constants
 const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 
@@ -39,8 +37,6 @@ class CollisionLabPath {
    * @param {Property.<Vector2>} positionProperty - the position of the moving object, in meters.
    * @param {Property.<boolean>} pathsVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
    *                                                    only recorded if this is true and are cleared when set to false.
-   * @param {Property.<number>} elapsedTimeProperty - total elapsed time of the simulation, in seconds.
-   * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    */
   constructor( positionProperty, pathsVisibleProperty ) {
     assert && AssertUtils.assertPropertyOf( positionProperty, Vector2 );
