@@ -193,17 +193,17 @@ class PlayArea {
   isBallTouchingBottom( ball ) { return Utils.equalsEpsilon( ball.bottom, this.bottom, EPSILON ); } // @public
 
   /**
-   * Determines whether any side of a Ball is tangentially touching any side of the PlayArea from the INSIDE.
+   * Determines whether any side of a Ball is tangentially touching any side of the PlayArea from the inside.
    * @public
    *
    * @param {Ball} ball
    * @returns {boolean}
    */
   isBallTouchingSide( ball ) {
-    return this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) ||
-                                                           this.isBallTouchingBottom( ball ) ||
-                                                           this.isBallTouchingLeft( ball ) ||
-                                                           this.isBallTouchingRight( ball ) );
+    return this.isBallTouchingTop( ball ) ||
+           this.isBallTouchingBottom( ball ) ||
+           this.isBallTouchingLeft( ball ) ||
+           this.isBallTouchingRight( ball );
   }
 }
 
