@@ -29,6 +29,7 @@ import Ball from './Ball.js';
 
 // constants
 const ELASTICITY_PERCENT_RANGE = CollisionLabConstants.ELASTICITY_PERCENT_RANGE;
+const EPSILON = CollisionLabConstants.ZERO_THRESHOLD;
 
 class PlayArea {
 
@@ -179,26 +180,31 @@ class PlayArea {
            ball.bottom < this.top;
   }
 
-  // @public
-  isBallTouchingTop( ball ) {
-    return Utils.equalsEpsilon( ball.top, this.top, CollisionLabConstants.ZERO_THRESHOLD );
-  }
-  // @public
-  isBallTouchingBottom( ball ) {
-    return Utils.equalsEpsilon( ball.bottom, this.bottom, CollisionLabConstants.ZERO_THRESHOLD );
-  }
-  // @public
-  isBallTouchingLeft( ball ) {
-    return Utils.equalsEpsilon( ball.left, this.left, CollisionLabConstants.ZERO_THRESHOLD );
-  }
-  // @public
-  isBallTouchingRight( ball ) {
-    return Utils.equalsEpsilon( ball.right, this.right, CollisionLabConstants.ZERO_THRESHOLD );
-  }
+  /**
+   * Determines whether a respective side of a Ball is tangentially touching the corresponding side of the PlayArea.
+   * @public
+   *
+   * @param {Ball} ball
+   * @returns {boolean}
+   */
+  isBallTouchingTop( ball ) { return Utils.equalsEpsilon( ball.top, this.top, EPSILON ); } // @public
+  isBallTouchingLeft( ball ) { return Utils.equalsEpsilon( ball.left, this.left, EPSILON ); } // @public
+  isBallTouchingRight( ball ) { return Utils.equalsEpsilon( ball.right, this.right, EPSILON ); } // @public
+  isBallTouchingBottom( ball ) { return Utils.equalsEpsilon( ball.bottom, this.bottom, EPSILON ); } // @public
 
-  // @public
-  isBallTouching( ball ) {
-    return this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) || this.isBallTouchingBottom( ball ) || this.isBallTouchingLeft( ball ) || this.isBallTouchingRight( ball ) );
+  /**
+   * Determines whether any side of a Ball is tangentially touching any side of the PlayArea AND the Ball is 'inside'
+   * the PlayArea's bounds.
+   * @public
+   *
+   * @param {Ball} ball
+   * @returns {boolean}
+   */
+  isBallTouchingSide( ball ) {
+    return this.bounds.containsPoint( ball.position ) && ( this.isBallTouchingTop( ball ) ||
+                                                           this.isBallTouchingBottom( ball ) ||
+                                                           this.isBallTouchingLeft( ball ) ||
+                                                           this.isBallTouchingRight( ball ) );
   }
 }
 
