@@ -23,7 +23,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -102,10 +102,10 @@ class BallSystem {
       range: options.numberOfBallsRange
     } );
 
-    // @public (read-only) {ObservableArray.<Ball>} - an array of the balls currently within the system. Balls
+    // @public (read-only) {AxonArray.<Ball>} - an array of the balls currently within the system. Balls
     //                                                **must** be from prepopulatedBalls. Its length should match the
     //                                                numberOfBallsProperty's value.
-    this.balls = new ObservableArray();
+    this.balls = new AxonArray();
 
     // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
     // to match the numberOfBallsProperty's value. The same Balls are in the system with the same number of Balls value.
@@ -159,13 +159,13 @@ class BallSystem {
 
     // Observe when Balls are removed from the system and clear their trailing Paths. Listener lasts for the life-time
     // of the simulation since BallSystems are never disposed.
-    this.balls.addItemRemovedListener( ball => {
+    this.balls.elementRemovedEmitter.addListener( ball => {
       ball.path.clear();
     } );
 
     // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
     // life-time of the simulation since BallSystems are never disposed.
-    this.balls.addItemAddedListener( ball => {
+    this.balls.elementAddedEmitter.addListener( ball => {
       this.balls.forEach( ball => ball.insidePlayAreaProperty.value && ball.saveState() );
     } );
 

@@ -46,8 +46,8 @@ class CollisionLabPath {
     //                                         time period, which is PATH_DATA_POINT_LIFETIME seconds.
     this.dataPoints = [];
 
-    // @public (read-only) {Emitter} - Emits when the trailing 'path' has changed in any form. Using an ObservableArray
-    //                                 was considered for the dataPoints array instead of this, but ObservableArray's
+    // @public (read-only) {Emitter} - Emits when the trailing 'path' has changed in any form. Using an AxonArray
+    //                                 was considered for the dataPoints array instead of this, but AxonArray's
     //                                 itemRemovedEmitter emits after each item removed, which would result in redrawing
     //                                 too many times when multiple dataPoints are cleared. Thus, this is used for a
     //                                 slight performance boost.

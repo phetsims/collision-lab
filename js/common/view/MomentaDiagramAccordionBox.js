@@ -16,6 +16,7 @@
  * @author Brandon Li
  */
 
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -52,12 +53,12 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
   /**
    * @param {MomentaDiagram} momentaDiagram - the model for the MomentaDiagramAccordionBox.
-   * @param {ObservableArray.<Ball>} balls - the Balls that are in the PlayArea system.
+   * @param {AxonArray.<Ball>} balls - the Balls that are in the PlayArea system.
    * @param {Object} [options]
    */
   constructor( momentaDiagram, balls, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
 
     //----------------------------------------------------------------------------------------
 

@@ -22,6 +22,7 @@
  * @author Brandon Li
  */
 
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -36,12 +37,12 @@ class MomentaDiagram {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
-   * @param {ObservableArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
+   * @param {AxonArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {number} dimension - the dimension of the PlayArea, used for positioning differences. Either 1 or 2.
    */
   constructor( prepopulatedBalls, balls, dimension ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
@@ -59,7 +60,7 @@ class MomentaDiagram {
     // @public (read-only) {MomentaDiagramVector} - the total sum of the Momenta Vectors of the system.
     this.totalMomentumVector = new MomentaDiagramVector();
 
-    // @private {ObservableArray.<Balls>} - reference to the Balls in the BallSystem.
+    // @private {AxonArray.<Balls>} - reference to the Balls in the BallSystem.
     this.balls = balls;
 
     // @private {number} - reference to the passed-in dimension of the PlayArea.
@@ -130,7 +131,7 @@ class MomentaDiagram {
     //----------------------------------------------------------------------------------------
 
     // Reference the Momenta Vector associated with the first Ball in the system.
-    const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls.get( 0 ) );
+    const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls[ 0 ] );
 
     // Position the first Momenta Vector and the total Momenta Vector in the correct position.
     if ( this.dimension === PlayArea.Dimension.TWO ) {
