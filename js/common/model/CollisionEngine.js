@@ -43,15 +43,13 @@ import PlayArea from './PlayArea.js';
 
 
 const any = ( set, pred ) => {
-  let result = false;
-
-  set.forEach( value => {
+  for ( const value of set ) {
     if ( pred( value ) ) {
-      result = true;
+       return true;
     }
-  } );
+  }
 
-  return result;
+  return false;
 };
 
 
