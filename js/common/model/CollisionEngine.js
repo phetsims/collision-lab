@@ -111,18 +111,14 @@ class CollisionEngine {
    * @param {number} dt - time-delta in seconds
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
    */
-  async step( dt, elapsedTime ) {
+  step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    await CollisionLabUtils.sleep( 1 );
-    console.log( 'step' )
     // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    await CollisionLabUtils.sleep( 1 );
-    console.log( this.collisions )
     if ( !any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0  ) ) {
 
       // If there are no collisions detected, the Balls are in uniform motion for the rest of
@@ -138,7 +134,7 @@ class CollisionEngine {
         CollisionLabUtils.getMinValuesOf( this.collisions, collision => collision.time ) :
         CollisionLabUtils.getMaxValuesOf( this.collisions, collision => collision.time );
 
-      console.log( 'now handle', nextCollisions );
+
       const delta = dt - ( elapsedTime - nextCollisions[ 0 ].time );
 
       // Progress forwards to the exact point of contact of the nextCollision.
@@ -182,7 +178,7 @@ class CollisionEngine {
         return;
       }
 
-      console.log( 'calculuating ', ball1.index, ball2.index );
+
       /*----------------------------------------------------------------------------*
        * This calculation for detecting if the balls will collide comes from the
        * known fact that when the Balls are exactly colliding, their distance is
@@ -219,9 +215,9 @@ class CollisionEngine {
       };
       const h = travellingTowardsEachOther();
 
-      // console.log( 'trying', ball1.index, ball2.index, c )
+
       if ( this.playArea.elasticity !== 1 && Utils.equalsEpsilon( c, 0, 1E-8 ) && c < 0 && h ) { c = -c; }
-      // console.log( 'corrected c', c)
+
       // Solve for the possible roots of the quadratic outlined in the document above.
       const possibleRoots = Utils.solveQuadraticRootsReal(
                               deltaV.magnitudeSquared,
@@ -357,7 +353,7 @@ class CollisionEngine {
 
       // Solve for the collisionTime, which is the first border (minimum in time) the Ball would collide with.
       const collisionTime = Math.min( ...possibleCollisionTimes );
-      // console.log( 'erhehr', collisionTime, this.playArea.isBallTouchingSide( ball ))
+
       // If the collisionTime is finite and is within the current time-step period, the collision is registered.
       if ( possibleCollisionTimes.length && collisionTime >= 0 ) {
 
