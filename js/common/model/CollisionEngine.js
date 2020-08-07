@@ -41,6 +41,20 @@ import BallSystem from './BallSystem.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
+
+const any = ( set, pred ) => {
+  let result = false;
+
+  set.forEach( value => {
+    if ( pred( value ) ) {
+      result = true;
+    }
+  } );
+
+  return result;
+};
+
+
 class CollisionEngine {
 
   /**
@@ -107,10 +121,9 @@ class CollisionEngine {
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    const collisionsInThisTimeStep = this.collisions.filter( collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0 );
     await CollisionLabUtils.sleep( 1 );
-    console.log( this.collisions, collisionsInThisTimeStep )
-    if ( !collisionsInThisTimeStep.length ) {
+    console.log( this.collisions )
+    if ( !any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0  ) ) {
 
       // If there are no collisions detected, the Balls are in uniform motion for the rest of
       // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
@@ -122,9 +135,10 @@ class CollisionEngine {
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollisions = dt >= 0 ?
-        CollisionLabUtils.getMinValuesOf( collisionsInThisTimeStep, collision => collision.time ) :
-        CollisionLabUtils.getMaxValuesOf( collisionsInThisTimeStep, collision => collision.time );
+        CollisionLabUtils.getMinValuesOf( this.collisions, collision => collision.time ) :
+        CollisionLabUtils.getMaxValuesOf( this.collisions, collision => collision.time );
 
+      console.log( 'now handle', nextCollisions );
       const delta = dt - ( elapsedTime - nextCollisions[ 0 ].time );
 
       // Progress forwards to the exact point of contact of the nextCollision.
@@ -136,8 +150,6 @@ class CollisionEngine {
         collision.collidingObject instanceof Ball ?
           this.handleBallToBallCollision( collision.ball, collision.collidingObject, collision.time ) :
           this.handleBallToBorderCollision( collision.ball, dt );
-
-        arrayRemove( this.collisions, collision );
       } );
 
       // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
@@ -163,14 +175,14 @@ class CollisionEngine {
   detectBallToBallCollisions( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    const nonDetectedBalls = this.ballSystem.balls.filter( ball => {
-      return this.collisions.every( collision => !collision.includes( ball ) );
-    } );
-
     // Loop through each unique possible pair of Balls and check to see if they will collide.
-    CollisionLabUtils.forEachPossiblePair( nonDetectedBalls, ( ball1, ball2 ) => {
+    CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
-      console.log( 'calculuating ', ball1.index, ball2.index )
+      if ( any( this.collisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
+        return;
+      }
+
+      console.log( 'calculuating ', ball1.index, ball2.index );
       /*----------------------------------------------------------------------------*
        * This calculation for detecting if the balls will collide comes from the
        * known fact that when the Balls are exactly colliding, their distance is
@@ -291,6 +303,13 @@ class CollisionEngine {
     const v2yP = this.mutableVectors.normal.dotXY( v2t, v2nP );
     ball1.velocity = new Vector2( v1xP, v1yP );
     ball2.velocity = new Vector2( v2xP, v2yP );
+
+
+    this.collisions.forEach( collision => {
+      if ( collision.includes( ball1 ) || collision.includes( ball2 ) ) {
+        this.collisions.delete( collision );
+      }
+    } );
   }
 
   /*----------------------------------------------------------------------------*
@@ -313,11 +332,12 @@ class CollisionEngine {
   detectBallToBorderCollisions( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    const nonDetectedBalls = this.ballSystem.balls.filter( ball => {
-      return this.collisions.every( collision => !collision.includes( ball ) );
-    } );
     // Loop through each Balls and check to see if it will collide with the border.
-    this.playArea.reflectsBorder && nonDetectedBalls.forEach( ball => {
+    this.playArea.reflectsBorder && this.ballSystem.forEach( ball => {
+
+      if ( any( this.collisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
+        return;
+      }
 
       // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
       // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
@@ -342,7 +362,7 @@ class CollisionEngine {
       if ( possibleCollisionTimes.length && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
+        this.collisions.push( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -390,6 +410,13 @@ class CollisionEngine {
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
       ball.yVelocity *= -this.playArea.elasticity;
     }
+
+
+    this.collisions.forEach( collision => {
+      if ( collision.includes( ball ) ) {
+        this.collisions.delete( collision );
+      }
+    } );
   }
 }
 
