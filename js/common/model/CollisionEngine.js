@@ -65,8 +65,11 @@ class CollisionEngine {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    // @private {Set.<Collision>} - collection of Ball collisions.
+    // @private {Set.<Collision>} - collection of Ball collisions that may occur.
     this.collisions = new Set();
+
+    // @private {Set.<Collision>} - collection of Ball collisions that will not occur.
+    this.blacklistedCollisions = new Set();
 
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
@@ -98,7 +101,10 @@ class CollisionEngine {
    *   - When any of the Balls of the system are user-controlled.
    *   - When Balls are added or removed from the system.
    */
-  reset() { this.collisions.clear(); }
+  reset() {
+    this.collisions.clear();
+    this.blacklistedCollisions.clear();
+  }
 
   /**
    * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step.
@@ -177,7 +183,9 @@ class CollisionEngine {
       if ( any( this.collisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
         return;
       }
-
+      if ( any( this.blacklistedCollisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
+        return;
+      }
 
       /*----------------------------------------------------------------------------*
        * This calculation for detecting if the balls will collide comes from the
@@ -233,6 +241,9 @@ class CollisionEngine {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
+      }
+      else {
+        this.blacklistedCollisions.add( new Collision( ball1, ball2, -100 ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -306,6 +317,11 @@ class CollisionEngine {
         this.collisions.delete( collision );
       }
     } );
+    this.blacklistedCollisions.forEach( collision => {
+      if ( collision.includes( ball1 ) || collision.includes( ball2 ) ) {
+        this.blacklistedCollisions.delete( collision );
+      }
+    } );
   }
 
   /*----------------------------------------------------------------------------*
@@ -335,6 +351,9 @@ class CollisionEngine {
         return;
       }
 
+      if ( any( this.blacklistedCollisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
+        return;
+      }
       // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
       // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
       // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
@@ -359,6 +378,9 @@ class CollisionEngine {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.add( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
+      }
+      else {
+        this.blacklistedCollisions.add( new Collision( ball, this.playArea, -100 ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -408,9 +430,15 @@ class CollisionEngine {
     }
 
 
-    this.collisions.forEach( collision  => {
+    this.collisions.forEach( collision => {
       if ( collision.includes( ball ) ) {
         this.collisions.delete( collision );
+      }
+    } );
+
+    this.blacklistedCollisions.forEach( collision => {
+      if ( collision.includes( ball ) ) {
+        this.blacklistedCollisions.delete( collision );
       }
     } );
   }
