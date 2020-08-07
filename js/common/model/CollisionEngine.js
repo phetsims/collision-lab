@@ -31,6 +31,7 @@
  * @author Martin Veillette
  */
 
+import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
@@ -50,8 +51,8 @@ class CollisionEngine {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    // @private {Collision[]} - collection of Ball collisions.
-    this.collisions = [];
+    // @private {Set.<Collision>} - collection of Ball collisions.
+    this.collisions = new Set();
 
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
@@ -66,9 +67,11 @@ class CollisionEngine {
     this.playArea = playArea;
     this.ballSystem = ballSystem;
 
-    // Observe when any of the Balls in the system are being user-controlled and reset the CollisionEngine. Link
-    // persists for the lifetime of the sim since BallSystems/CollisionEngines are never disposed.
-    this.ballSystem.ballSystemUserControlledProperty.link( this.reset.bind( this ) );
+    // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
+    // changes and reset the CollisionEngine. Multilink persists for the lifetime of the sim since
+    // BallSystems/CollisionEngines are never disposed.
+    Property.multilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.numberOfBallsProperty ],
+      this.reset.bind( this ) );
   }
 
   /**
@@ -79,6 +82,7 @@ class CollisionEngine {
    *   - The reset all button is pressed.
    *   - The restart button is pressed.
    *   - When any of the Balls of the system are user-controlled.
+   *   - When Balls are added or removed from the system.
    */
   reset() { this.collisions = []; }
 
