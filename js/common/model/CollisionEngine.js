@@ -84,7 +84,7 @@ class CollisionEngine {
     // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
     // changes and reset the CollisionEngine. Multilink persists for the lifetime of the sim since
     // BallSystems/CollisionEngines are never disposed.
-    Property.multilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.numberOfBallsProperty ],
+    Property.lazyMultilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.numberOfBallsProperty ],
       this.reset.bind( this ) );
   }
 
@@ -98,7 +98,7 @@ class CollisionEngine {
    *   - When any of the Balls of the system are user-controlled.
    *   - When Balls are added or removed from the system.
    */
-  reset() { this.collisions = []; }
+  reset() { this.collisions.clear(); }
 
   /**
    * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step.
@@ -236,14 +236,14 @@ class CollisionEngine {
       if ( Number.isFinite( collisionTime ) && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.push( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
+        this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
       //   if ( elapsedTimeOfCollision >= 0 ) {
       //     // Register the collision and encapsulate information in a Collision instance.
-      //     this.collisions.push( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
+      //     this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
       //   }
       // }
     } );
@@ -333,7 +333,7 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Loop through each Balls and check to see if it will collide with the border.
-    this.playArea.reflectsBorder && this.ballSystem.forEach( ball => {
+    this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
 
       if ( any( this.collisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
         return;
@@ -362,7 +362,7 @@ class CollisionEngine {
       if ( possibleCollisionTimes.length && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.push( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
+        this.collisions.add( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -370,7 +370,7 @@ class CollisionEngine {
       //   if ( elapsedTimeOfCollision >= 0 ) {
 
       //     // Register the collision and encapsulate information in a Collision instance.
-      //     this.collisions.push( new Collision( ball, this.playArea, collisionTime * Math.sign( dt ) ) );
+      //     this.collisions.add( new Collision( ball, this.playArea, collisionTime * Math.sign( dt ) ) );
       //   }
       // }
     } );
@@ -412,7 +412,7 @@ class CollisionEngine {
     }
 
 
-    this.collisions.forEach( collision => {
+    this.collisions.forEach( collision  => {
       if ( collision.includes( ball ) ) {
         this.collisions.delete( collision );
       }

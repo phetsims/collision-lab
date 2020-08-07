@@ -152,7 +152,7 @@ const CollisionLabUtils = {
    * @returns {*[]} - an array of the extrema.
    */
   getExtremaOf( array, comparator ) {
-    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
     assert && assert( typeof comparator === 'function', `invalid comparator: ${comparator}` );
 
     // Flag of the resulting extrema.
@@ -186,7 +186,7 @@ const CollisionLabUtils = {
    * @returns {*[]} - an array of the maximum value(s).
    */
   getMinValuesOf( array, criterion ) {
-    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
     return CollisionLabUtils.getExtremaOf( array,
@@ -203,7 +203,7 @@ const CollisionLabUtils = {
    * @returns {*[]} - an array of the maximum value(s).
    */
   getMaxValuesOf( array, criterion ) {
-    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
     return CollisionLabUtils.getExtremaOf( array,
