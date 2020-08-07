@@ -42,6 +42,18 @@ class Collision {
   }
 
   /**
+   * Determines if a passed-in ball is involved in this Collision instance.
+   * @public
+   *
+   * @returns {boolean}
+   */
+  includes( ball ) {
+    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+
+    return this.ball === ball || this.collidingObject === ball;
+  }
+
+  /**
    * Debugging string for the Collision.
    * @public
    *
