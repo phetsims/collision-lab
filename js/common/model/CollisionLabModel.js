@@ -136,6 +136,7 @@ class CollisionLabModel {
     this.timeSpeedProperty.reset();
     this.playArea.reset();
     this.ballSystem.reset();
+    this.collisionEngine.reset();
     this.momentaDiagram.reset();
   }
 
@@ -149,6 +150,7 @@ class CollisionLabModel {
     this.isPlayingProperty.value = false;
     this.elapsedTimeProperty.reset();
     this.ballSystem.restart();
+    this.collisionEngine.reset();
   }
 
   /**

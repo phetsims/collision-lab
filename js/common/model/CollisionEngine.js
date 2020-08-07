@@ -34,11 +34,9 @@
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
-// import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import BallSystem from './BallSystem.js';
-// import BallUtils from './BallUtils.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
@@ -52,8 +50,8 @@ class CollisionEngine {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    // @private {Collision[]} - collection of the potential Ball collisions on each time step.
-    this.potentialCollisions = [];
+    // @private {Collision[]} - collection of Ball collisions.
+    this.collisions = [];
 
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
@@ -67,6 +65,23 @@ class CollisionEngine {
     // @protected - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
+
+    // Observe when any of the Balls in the system are being user-controlled and reset the CollisionEngine. Link
+    // persists for the lifetime of the sim since BallSystems/CollisionEngines are never disposed.
+    this.ballSystem.ballSystemUserControlledProperty.link( this.reset.bind( this ) );
+  }
+
+  /**
+   * Resets the CollisionEngine.
+   * @public
+   *
+   * This is invoked in the following scenarios:
+   *   - The reset all button is pressed.
+   *   - The restart button is pressed.
+   *   - When any of the Balls of the system are user-controlled.
+   */
+  reset() {
+    this.collisions = [];
   }
 
   /**
@@ -83,16 +98,13 @@ class CollisionEngine {
   step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+    const start = elapsedTime - dt;
 
-    // Reset potential collisions that were detected in the previous step call.
-    this.potentialCollisions = [];
-
-    // await CollisionLabUtils.sleep( 1 );
     // First detect all potential collisions that occur within this time-step at once.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
-    // console.log( 'collisions', this.potentialCollisions)
-    if ( !this.potentialCollisions.length ) {
+
+    if ( !this.collisions.length ) {
 
       // If there are no collisions detected within the given time-step, the Balls are in uniform motion for the rest of
       // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
@@ -104,8 +116,8 @@ class CollisionEngine {
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollisions = dt >= 0 ?
-        CollisionLabUtils.getMinValuesOf( this.potentialCollisions, collision => collision.collisionTime ) :
-        CollisionLabUtils.getMaxValuesOf( this.potentialCollisions, collision => collision.collisionTime );
+        CollisionLabUtils.getMinValuesOf( this.collisions, collision => collision.collisionTime ) :
+        CollisionLabUtils.getMaxValuesOf( this.collisions, collision => collision.collisionTime );
 
       // Compute the total elapsed-time of the simulation when next detected collision will occurred.
       // TODO: potential naming confusions here. CollisionTime is used in IntroBallSystem to reference elapsed time, but CollisionTime is used in Collision to reference delta-time.
@@ -140,7 +152,7 @@ class CollisionEngine {
    * collisions are detected before the collision occurs to avoid tunneling scenarios where Balls would pass through
    * each other with high velocities and/or slow frame rates.
    *
-   * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
+   * Collisions that are detected are added to the collisions array and the necessary information of each
    * collision is encapsulated in a Collision instance.
    * @protected - can be overridden in subclasses
    *
@@ -206,14 +218,14 @@ class CollisionEngine {
       if ( Number.isFinite( collisionTime ) && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
+        this.collisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
       }
       else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
 
         if ( elapsedTimeOfCollision >= 0 ) {
           // Register the collision and encapsulate information in a Collision instance.
-          this.potentialCollisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
+          this.collisions.push( new Collision( ball1, ball2, collisionTime * Math.sign( dt ) ) );
         }
       }
     } );
@@ -284,7 +296,7 @@ class CollisionEngine {
    * Although tunneling doesn't occur with ball-to-border collisions, collisions are still detected before they occur
    * to mirror the approach for ball-to-ball collisions.
    *
-   * Collisions that are detected are added to the potentialCollisions array and the necessary information of each
+   * Collisions that are detected are added to the collisions array and the necessary information of each
    * collision is encapsulated in a Collision instance.
    *
    * NOTE: no-op when the PlayArea's border doesn't reflect;
@@ -321,7 +333,7 @@ class CollisionEngine {
       if ( possibleCollisionTimes.length && collisionTime >= 0 && collisionTime <= Math.abs( dt ) ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
+        this.collisions.push( new Collision( ball, this.playArea, collisionTime * velocityMultipier ) );
       }
       else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
         const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -329,7 +341,7 @@ class CollisionEngine {
         if ( elapsedTimeOfCollision >= 0 ) {
 
           // Register the collision and encapsulate information in a Collision instance.
-          this.potentialCollisions.push( new Collision( ball, this.playArea, collisionTime * Math.sign( dt ) ) );
+          this.collisions.push( new Collision( ball, this.playArea, collisionTime * Math.sign( dt ) ) );
         }
       }
     } );
