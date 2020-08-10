@@ -22,7 +22,7 @@ const CollisionLabUtils = {
    * f( 4, 3 ).
    * @public
    *
-   * @param {AxonArray.<*>|*[]} collection
+   * @param {*[]} collection
    * @param {function(value:*,previousValue:*)} iterator
    */
   forEachAdjacentPair( collection, iterator ) {
@@ -42,7 +42,7 @@ const CollisionLabUtils = {
    * forEachPossiblePair( [ 1, 2, 3 ], f ) would invoke f( 1 , 2 ), f( 1, 3 ), and f( 2, 3 ).
    * @public
    *
-   * @param {AxonArray.<*>|*[]} collection
+   * @param {*[]} collection
    * @param {function(value1:*,value2:*)} iterator
    */
   forEachPossiblePair( collection, iterator ) {
@@ -216,7 +216,7 @@ const CollisionLabUtils = {
    * element of the collection.
    * @public
    *
-   * @param {AxonArray.<*>|*[]} collection
+   * @param {*[]} collection
    * @param {function(value:*):number} criterion
    * @returns {boolean}
    */
