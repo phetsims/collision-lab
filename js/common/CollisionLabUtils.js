@@ -9,7 +9,6 @@
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Utils from '../../../dot/js/Utils.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import AssertUtils from '../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabConstants from './CollisionLabConstants.js';
 
@@ -120,19 +119,22 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Determines whether an array is strictly sorted in ascending order (non-inclusive).
+   * Determines whether an array (or an AxonArray) is strictly sorted in ascending order (non-inclusive) by a criterion
+   * function that numerically ranks each element of the array. Each element is passed into the criterion function.
    * @public
    *
    * @param {number[]} array
+   * @param {function(value:*):number} criterion
    * @returns {boolean}
    */
-  isSorted( array ) {
-    assert && AssertUtils.assertArrayOf( array, 'number' );
+  isSorted( array, criterion ) {
+    assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
     // Flag that indicates if the array is sorted.
     let isSorted = true;
 
-    CollisionLabUtils.forEachAdjacentPair( array, ( value, previousValue ) => {
+    CollisionLabUtils.forEachAdjacentPair( array.map( criterion ), ( value, previousValue ) => {
       if ( isSorted ) {
         isSorted = ( value > previousValue );
       }
@@ -146,7 +148,7 @@ const CollisionLabUtils = {
    * @public
    *
    * @param {Iterable.<*>} iterable - collection of values.
-   * @param {function(value:*):number} criterion - function that ranks a value of the iterable, returning a number.
+   * @param {function(value:*):number} criterion - function that numerically ranks each value of the iterable.
    * @param {function(base:number, value:number):number} comparator - Returns -1 if base is more 'extreme' than value,
    *                                                                  0 if base is equally as 'extreme' as value, and
    *                                                                  1 if value is more 'extreme' than value.
@@ -206,24 +208,6 @@ const CollisionLabUtils = {
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
     return CollisionLabUtils.getExtremaOf( iterable, criterion, ( base, value ) => Math.sign( base - value ) );
-  },
-
-  /**
-   * Determines whether an array, or an AxonArray, is strictly sorted in ascending order (non-inclusive) by
-   * a criterion function that numerically ranks each element of the array. The criterion function is passed each
-   * element of the collection.
-   * @public
-   *
-   * @param {*[]} collection
-   * @param {function(value:*):number} criterion
-   * @returns {boolean}
-   */
-  isSortedBy( collection, criterion ) {
-    assert && assert( Array.isArray( collection ), `invalid collection: ${collection}` );
-    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
-
-    // Works for both AxonArrays and native Arrays.
-    return CollisionLabUtils.isSorted( collection.map( criterion ) );
   },
 
   /**

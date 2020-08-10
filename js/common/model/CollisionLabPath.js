@@ -127,7 +127,7 @@ class CollisionLabPath {
     this.dataPoints.push( new PathDataPoint( elapsedTime, this.positionProperty.value ) );
 
     // Verify that the dataPoints are strictly sorted by time.
-    assert && assert( CollisionLabUtils.isSortedBy( this.dataPoints, dataPoint => dataPoint.time ) );
+    assert && assert( CollisionLabUtils.isSorted( this.dataPoints, dataPoint => dataPoint.time ) );
 
     // Signal that the trailing 'Path' has changed.
     this.pathChangedEmitter.emit();
