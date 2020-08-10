@@ -6,26 +6,30 @@
  *
  * ## Collision detection:
  *
- *   - CollisionEngine deals with two types of collisions: ball-to-ball and ball-to-border collisions. Both of these
- *     collisions are detected *before* the collision occurs to avoid tunneling scenarios where Balls would pass through
- *     each other with high velocities and/or slow frame rates.
+ *   - CollisionEngine deals with 2 types of collisions: ball-ball and ball-border collisions. Both of these collisions
+ *     are detected *before* the collision occurs to avoid tunneling scenarios where Balls would pass through each
+ *     other with high velocities and/or time-steps. The algorithm for detecting ball-to-ball collisions is described
+ *     in https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
  *
- *   - Since there are only a maximum of 4 Balls in a PlayArea at a time, there are a maximum of 6 unique pairs of
- *     Balls to check, so a spatial partitioning collision detection optimization is not used. The algorithm for
- *     detecting ball-to-ball collisions is described in
- *     https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
+ *   - On each time-step, every ball-ball and ball-border combination is encapsulated in a Collision data-structure
+ *     instance, along with if and when the respective bodies will collide. These Collision instances are saved to
+ *     optimize the number of redundant collision-detection checks. On successive time-steps, Collision instances
+ *     are only created for ball-ball and ball-border combinations that haven't already been created. Collision
+ *     instances are removed when a collision is handled or some other state in the simulation changes.
  *
  * ## Collision response:
- *
- *   - On each time-step, *all* potential collisions are detected at once and encapsulated in a Collision instance. To
- *     fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the first
- *     collision is handled and progressed and all potential collisions afterwards are re-detected. This process is
- *     repeated until there are no collisions detected within the time-step.
  *
  *   - Collision response determines what affect a collision has on a Ball's motion. The algorithms for Ball collisions
  *     were adapted but significantly improved from the flash implementation of Collision Lab. They follow the standard
  *     rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
+ *
+ *   - On each time-step, after Collisions have been created for every ball-ball and ball-border combination, we check
+ *     if any of our 'saved' collisions that have associated collision-times are in between the previous and current
+ *     step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated
+ *     correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All
+ *     Collision instances that store the involved Ball(s) are removed. This detection-response is then repeated until
+ *     there are no collisions detected within the time-step.
  *
  * @author Brandon Li
  * @author Martin Veillette
