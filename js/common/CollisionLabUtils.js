@@ -244,6 +244,9 @@ const CollisionLabUtils = {
     if ( assert ) {
       return new Promise( resolve => setTimeout( resolve, time * 1000 ) );
     }
+    else {
+      throw new Error( 'CollisionLabUtils.sleep must be used with assertions on' );
+    }
   }
 };
 
