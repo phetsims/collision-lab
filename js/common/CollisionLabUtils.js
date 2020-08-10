@@ -150,28 +150,25 @@ const CollisionLabUtils = {
    * @param {function(base:number, value:number):number} comparator - Returns -1 if base is more 'extreme' than value,
    *                                                                  0 if base is equally as 'extreme' as value, and
    *                                                                  1 if value is more 'extreme' than value.
-   * @returns {Set<*>} - the extrema extracted from the iterable.
+   * @returns {*[]} - an array of the extrema extracted from the iterable.
    */
   getExtremaOf( iterable, criterion, comparator ) {
     assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
     assert && assert( typeof comparator === 'function', `invalid comparator: ${comparator}` );
-    const extrema = new Set();
-    let base; // Flag of the base value to compare iterated values to.
+    let extrema = [];
 
     for ( const item of iterable ) {
       if ( !extrema.length ) {
-        extrema.add( item );
-        base = item;
+        extrema.push( item );
       }
       else {
-        const comparison = comparator( criterion( base ), criterion( item ) );
+        const comparison = comparator( criterion( extrema[ 0 ] ), criterion( item ) );
         if ( comparison === -1 ) {
-          extrema.clear();
+          extrema = [ item ];
         }
-        if ( comparison <= 0 ) {
-          extrema.add( item );
-          base = item;
+        else if ( comparison === 0 ) {
+          extrema.push( item );
         }
       }
     }
@@ -186,7 +183,7 @@ const CollisionLabUtils = {
    *
    * @param {Iterable.<*>} iterable - collection of values
    * @param {function(value:*):number} criterion
-   * @returns {Set.<*>} - a set of the minimum value(s).
+   * @returns {*[]} - an array of the minimum value(s).
    */
   getMinValuesOf( iterable, criterion ) {
     assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
@@ -202,7 +199,7 @@ const CollisionLabUtils = {
    *
    * @param {Iterable.<*>} iterable - collection of values
    * @param {function(value:*):number} criterion
-   * @returns {Set.<*>} - a set of the maximum value(s).
+   * @returns {*[]} - an array of the maximum value(s).
    */
   getMaxValuesOf( iterable, criterion ) {
     assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
