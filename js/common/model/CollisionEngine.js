@@ -8,7 +8,7 @@
  *
  *   - CollisionEngine deals with 2 types of collisions: ball-ball and ball-border collisions. Both of these collisions
  *     are detected *before* the collision occurs to avoid tunneling scenarios where Balls would pass through each
- *     other with high velocities and/or time-steps. The algorithm for detecting ball-to-ball collisions is described
+ *     other with high velocities and/or time-steps. The algorithm for detecting ball-ball collisions is described fully
  *     in https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
  *
  *   - On each time-step, every ball-ball and ball-border combination is encapsulated in a Collision data-structure
@@ -19,7 +19,7 @@
  *
  * ## Collision response:
  *
- *   - Collision response determines what affect a collision has on a Ball's motion. The algorithms for Ball collisions
+ *   - Collision response determines what effect a collision has on a Ball's motion. The algorithms for Ball collisions
  *     were adapted but significantly improved from the flash implementation of Collision Lab. They follow the standard
  *     rigid-body collision model as described in
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
@@ -28,8 +28,8 @@
  *     if any of our 'saved' collisions that have associated collision-times are in between the previous and current
  *     step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated
  *     correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All
- *     Collision instances that store the involved Ball(s) are removed. This detection-response is then repeated until
- *     there are no collisions detected within the time-step.
+ *     Collision instances that store the involved Ball(s) are removed. This detection-response loop is then repeated
+ *     until there are no collisions detected within the time-step.
  *
  * @author Brandon Li
  * @author Martin Veillette
