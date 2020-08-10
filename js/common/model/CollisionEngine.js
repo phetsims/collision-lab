@@ -41,18 +41,6 @@ import BallSystem from './BallSystem.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
-
-const any = ( set, pred ) => {
-  for ( const value of set ) {
-    if ( pred( value ) ) {
-       return true;
-    }
-  }
-
-  return false;
-};
-
-
 class CollisionEngine {
 
   /**
@@ -123,7 +111,7 @@ class CollisionEngine {
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    if ( !any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0  ) ) {
+    if ( !CollisionLabUtils.any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0  ) ) {
 
       // If there are no collisions detected, the Balls are in uniform motion for the rest of
       // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
@@ -178,10 +166,10 @@ class CollisionEngine {
     // Loop through each unique possible pair of Balls and check to see if they will collide.
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
-      if ( any( this.collisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
+      if ( CollisionLabUtils.any( this.collisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
         return;
       }
-      if ( any( this.blacklistedCollisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
+      if ( CollisionLabUtils.any( this.blacklistedCollisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
         return;
       }
 
@@ -345,11 +333,11 @@ class CollisionEngine {
     // Loop through each Balls and check to see if it will collide with the border.
     this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
 
-      if ( any( this.collisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
+      if ( CollisionLabUtils.any( this.collisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
         return;
       }
 
-      if ( any( this.blacklistedCollisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
+      if ( CollisionLabUtils.any( this.blacklistedCollisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
         return;
       }
       // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are

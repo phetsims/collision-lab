@@ -211,6 +211,27 @@ const CollisionLabUtils = {
   },
 
   /**
+   * Checks if a predicate returns truthy for any element of collection. Like _.some but works for any iterable.
+   * Iteration is stopped once predicate returns truthy.
+   * @public
+   *
+   * @param {Iterable.<*>} iterable - collection of values.
+   * @param {function(value:*):boolean} predicate
+   * @returns {boolean}
+   */
+  any( iterable, predicate ) {
+    assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
+    assert && assert( typeof predicate === 'function', `invalid predicate: ${predicate}` );
+
+    for ( const value of iterable ) {
+      if ( predicate( value ) ) {
+         return true;
+      }
+    }
+    return false;
+  },
+
+  /**
    * A javascript version of the sleep function. This is **ONLY to be used for debugging**, and assertions must be
    * enabled for use. This was mostly used to debug CollisionEngine with large time steps. In this case, it should be
    * used in-conjunction with the step button to allow the javascript event loop to return before the next step.
