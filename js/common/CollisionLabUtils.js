@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import AxonArray from '../../../axon/js/AxonArray.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Utils from '../../../dot/js/Utils.js';
 import Vector2 from '../../../dot/js/Vector2.js';
@@ -17,16 +16,15 @@ import CollisionLabConstants from './CollisionLabConstants.js';
 const CollisionLabUtils = {
 
   /**
-   * Iterates through an array, or an AxonArray, in pairs, passing the current value and the previous value to the
-   * iterator function. For instance, forEachAdjacentPair( [ 1, 2, 3, 4 ], f ) would invoke f( 2, 1 ), f( 3, 2 ), and
-   * f( 4, 3 ).
+   * Iterates through an array in pairs, passing the current value and the previous value to an iterator function.
+   * For instance, forEachAdjacentPair( [ 1, 2, 3, 4 ], f ) would invoke f( 2, 1 ), f( 3, 2 ), and f( 4, 3 ).
    * @public
    *
    * @param {*[]} collection
    * @param {function(value:*,previousValue:*)} iterator
    */
   forEachAdjacentPair( collection, iterator ) {
-    assert && assert( Array.isArray( collection ) || collection instanceof AxonArray, `invalid collection: ${collection}` );
+    assert && assert( Array.isArray( collection ), `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
     for ( let i = 1; i < collection.length; i++ ) {
@@ -38,15 +36,15 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Iterates through an array, or an AxonArray, for all possible pairs, without duplicating calls. For instance,
-   * forEachPossiblePair( [ 1, 2, 3 ], f ) would invoke f( 1 , 2 ), f( 1, 3 ), and f( 2, 3 ).
+   * Iterates through an array (or an AxonArray) for all possible pairs, without duplicating calls. For instance,
+   * forEachPossiblePair( [ 1, 2, 3 ], f ) would invoke f( 1 , 2 ), f( 1, 3 ), and f( 2, 3 ), in that order.
    * @public
    *
    * @param {*[]} collection
    * @param {function(value1:*,value2:*)} iterator
    */
   forEachPossiblePair( collection, iterator ) {
-    assert && assert( Array.isArray( collection ) || collection instanceof AxonArray, `invalid collection: ${collection}` );
+    assert && assert( Array.isArray( collection ), `invalid collection: ${collection}` );
     assert && assert( typeof iterator === 'function', `invalid iterator: ${iterator}` );
 
     for ( let i = 0; i < collection.length - 1; i++ ) {
@@ -143,71 +141,74 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Gets the extrema of an array of values by some comparator function.
+   * Gets the extrema of an collection of values that are ranked by some criterion function. 'Extrema' are determined by
+   * a comparator function.
    * @public
    *
-   * @param {*[]} array
-   * @param {function(value:*,base:*):number} comparator - Return -1 if base is more 'extreme' than value, 0 if base
-   *                                                       is equally as 'extreme' as value, and 1 otherwise.
-   * @returns {*[]} - an array of the extrema.
+   * @param {Iterable.<*>} iterable - collection of values.
+   * @param {function(value:*):number} criterion - function that ranks a value of the iterable, returning a number.
+   * @param {function(base:number, value:number):number} comparator - Returns -1 if base is more 'extreme' than value,
+   *                                                                  0 if base is equally as 'extreme' as value, and
+   *                                                                  1 if value is more 'extreme' than value.
+   * @returns {Set<*>} - the extrema extracted from the iterable.
    */
-  getExtremaOf( array, comparator ) {
-    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+  getExtremaOf( iterable, criterion, comparator ) {
+    assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
+    assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
     assert && assert( typeof comparator === 'function', `invalid comparator: ${comparator}` );
+    const extrema = new Set();
+    let base; // Flag of the base value to compare iterated values to.
 
-    // Flag of the resulting extrema.
-    let extrema = [];
-
-    array.forEach( item => {
+    for ( const item of iterable ) {
       if ( !extrema.length ) {
-        extrema.push( item );
+        extrema.add( item );
+        base = item;
       }
       else {
-        const comparison = comparator( item, extrema[ 0 ] );
+        const comparison = comparator( criterion( base ), criterion( item ) );
         if ( comparison === -1 ) {
-          extrema = [ item ];
+          extrema.clear();
         }
-        else if ( comparison === 0 ) {
-          extrema.push( item );
+        if ( comparison <= 0 ) {
+          extrema.add( item );
+          base = item;
         }
       }
-    } );
+    }
 
     return extrema;
   },
 
   /**
-   * Gets the minimum value(s) of an array of values that are ranked by some criterion function. For instance,
-   * getMinValuesOf( [ 1, 1, 2, 3, 4, 1 ], _.identity ) returns [ 1, 1, 1 ].
+   * Gets the minimum value(s) of a collection of values that are ranked by some criterion function. For instance,
+   * getMinValuesOf( [ 1, 1, 2, 3, 4, 1 ], _.identity ) returns Set( [ 1, 1, 1 ] ).
    * @public
    *
-   * @param {*[]} array
+   * @param {Iterable.<*>} iterable - collection of values
    * @param {function(value:*):number} criterion
-   * @returns {*[]} - an array of the maximum value(s).
+   * @returns {Set.<*>} - a set of the minimum value(s).
    */
-  getMinValuesOf( array, criterion ) {
-    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+  getMinValuesOf( iterable, criterion ) {
+    assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
-    return CollisionLabUtils.getExtremaOf( array,
-      ( base, value ) => Math.sign( criterion( base ) - criterion( value ) ) );
+    return CollisionLabUtils.getExtremaOf( iterable, criterion, ( base, value ) => Math.sign( value - base ) );
   },
 
   /**
-   * Gets the maximum value(s) of an array of values that are ranked by some criterion function. For instance,
-   * getMaxValuesOf( [ 1, 2, 3, 3, 4, 4 ], _.identity ) returns [ 4, 4 ].
+   * Gets the maximum value(s) of a collection of values that are ranked by some criterion function. For instance,
+   * getMaxValuesOf( [ 1, 2, 3, 3, 4, 4 ], _.identity ) returns Set( [ 4, 4 ] ).
    * @public
    *
-   * @param {*[]} array
+   * @param {Iterable.<*>} iterable - collection of values
    * @param {function(value:*):number} criterion
-   * @returns {*[]} - an array of the maximum value(s).
+   * @returns {Set.<*>} - a set of the maximum value(s).
    */
-  getMaxValuesOf( array, criterion ) {
-    // assert && assert( Array.isArray( array ), `invalid array: ${array}` );
+  getMaxValuesOf( iterable, criterion ) {
+    assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
-    return CollisionLabUtils.getExtremaOf( array,
-      ( base, value ) => Math.sign( criterion( value ) - criterion( base ) ) );
+    return CollisionLabUtils.getExtremaOf( iterable, criterion, ( base, value ) => Math.sign( base - value ) );
   },
 
   /**
@@ -221,7 +222,7 @@ const CollisionLabUtils = {
    * @returns {boolean}
    */
   isSortedBy( collection, criterion ) {
-    assert && assert( Array.isArray( collection ) || collection instanceof AxonArray, `invalid collection: ${collection}` );
+    assert && assert( Array.isArray( collection ), `invalid collection: ${collection}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
 
     // Works for both AxonArrays and native Arrays.
