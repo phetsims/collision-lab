@@ -60,6 +60,11 @@ class CollisionEngine {
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = new Set();
 
+    // @private {number} - the 'direction' of the progression of the previous time-step of the sim, where:
+    //                       1 means the sim was being progressed forwards in the last time-step (dt > 0).
+    //                      -1 means the sim was being progressed backwards in the last time-step, (dt < 0)
+    this.timeStepDirection = 1;
+
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
       tangent: new Vector2( 0, 0 ),
@@ -72,7 +77,6 @@ class CollisionEngine {
     // @protected - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
-    this.previousSign = 1;
 
     // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
     // changes and reset the CollisionEngine. Multilink persists for the lifetime of the simulation since
@@ -90,6 +94,7 @@ class CollisionEngine {
    *   - The restart button is pressed.
    *   - When any of the Balls of the system are user-controlled.
    *   - When Balls are added or removed from the system.
+   *   - When the timeStepDirection changes.
    */
   reset() {
     this.collisions.clear();
@@ -118,22 +123,35 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    if ( this.previousSign !== Math.sign( dt ) ) {
+    // Get the 'direction' of this step.
+    const timeStepDirection = Math.sign( dt );
+
+    // If the 'direction' changed from the previous step and the current step, reset the CollisionEngine. This is
+    // because changing the 'direction' effectively changes the direction of the movement of the balls, meaning
+    // collisions should be re-detected.
+    if ( this.timeStepDirection !== timeStepDirection ) {
       this.reset();
-      this.previousSign = Math.sign( dt );
+      this.timeStepDirection = timeStepDirection;
     }
 
-    // First detect all potential collisions that have not already been detected.
+    // Now detect all potential collisions that have not already been detected.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    if ( CollisionLabUtils.any( this.collisions, collision => collision.willOccurInStep( dt, elapsedTime ) ) ) {
+    //----------------------------------------------------------------------------------------
 
-      // If there are collisions detected within the given time-step, only handle and progress the first collision.
-      // Find and reference the next Collision that will occur of the detected collisions.
+    // Gets all of the Collisions that have a collision 'time' in between the previous and current step, meaning the
+    // collision occurred and should be handled.
+    const collisionsInThisStep = CollisionLabUtils.filter( this.collisions,
+                                                           collision => collision.willOccurInStep( dt, elapsedTime ) );
+
+    if ( collisionsInThisStep.length ) {
+
+      // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
+      // Find and reference the next Collision that will occur of the collisions that will occur in this step.
       const nextCollisions = dt >= 0 ?
-        CollisionLabUtils.getMinValuesOf( this.collisions, collision => collision.time ) :
-        CollisionLabUtils.getMaxValuesOf( this.collisions, collision => collision.time );
+        CollisionLabUtils.getMinValuesOf( collisionsInThisStep, collision => collision.time ) :
+        CollisionLabUtils.getMaxValuesOf( collisionsInThisStep, collision => collision.time );
 
       const delta = dt - ( elapsedTime - nextCollisions[ 0 ].time );
 

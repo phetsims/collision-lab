@@ -161,15 +161,11 @@ const CollisionLabUtils = {
     let extrema = [];
 
     for ( const item of iterable ) {
-      const value = criterion( item );
-      if ( value === null ) {
-        continue;
-      }
       if ( !extrema.length ) {
         extrema.push( item );
       }
       else {
-        const comparison = comparator( criterion( extrema[ 0 ] ), value );
+        const comparison = comparator( criterion( extrema[ 0 ] ), criterion( item ) );
         if ( comparison === -1 ) {
           extrema = [ item ];
         }
@@ -215,7 +211,7 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Checks if a predicate returns truthy for any element of collection. Like _.some but works for any iterable.
+   * Checks if a predicate returns truthy for any element of a collection. Like _.some but works for any iterable.
    * Iteration is stopped once predicate returns truthy.
    * @public
    *
@@ -233,6 +229,28 @@ const CollisionLabUtils = {
       }
     }
     return false;
+  },
+
+  /**
+   * Iterates over a collection, returning an array of all the elements that a predicate function returns truthy for.
+   * Like _.filter but works for any iterable.
+   * @public
+   *
+   * @param {Iterable.<*>} iterable - collection of values.
+   * @param {function(value:*):boolean} predicate
+   * @returns {boolean}
+   */
+  filter( iterable, predicate ) {
+    assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
+    assert && assert( typeof predicate === 'function', `invalid predicate: ${predicate}` );
+    const result = [];
+
+    for ( const value of iterable ) {
+      if ( predicate( value ) ) {
+         result.push( value );
+      }
+    }
+    return result;
   },
 
   /**
