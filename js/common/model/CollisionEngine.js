@@ -55,11 +55,10 @@ class CollisionEngine {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    // @private {Set.<Collision>} - collection of Ball collisions that may occur.
+    // @private {Set.<Collision>} - collection of Ball collisions that may or may not occur. Some Collisions instances
+    //                              will not have a "collision time" which indicates that a Collision will not occur.
+    //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = new Set();
-
-    // @private {Set.<Collision>} - collection of Ball collisions that will not occur.
-    this.blacklistedCollisions = new Set();
 
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
@@ -93,7 +92,6 @@ class CollisionEngine {
    */
   reset() {
     this.collisions.clear();
-    this.blacklistedCollisions.clear();
   }
 
   /**
