@@ -56,7 +56,7 @@ class CollisionEngine {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
     // @private {Set.<Collision>} - collection of Ball collisions that may or may not occur. Some Collisions instances
-    //                              will not have a "collision time" which indicates that a Collision will not occur.
+    //                              will not have an associated "time" which indicates that a Collision will not occur.
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = new Set();
 
@@ -74,7 +74,7 @@ class CollisionEngine {
     this.ballSystem = ballSystem;
 
     // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
-    // changes and reset the CollisionEngine. Multilink persists for the lifetime of the sim since
+    // changes and reset the CollisionEngine. Multilink persists for the lifetime of the simulation since
     // BallSystems/CollisionEngines are never disposed.
     Property.lazyMultilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.numberOfBallsProperty ],
       this.reset.bind( this ) );
@@ -101,6 +101,14 @@ class CollisionEngine {
    * detected collision. It will then recursively call itself with a smaller step-size to re-detect all potential
    * collisions. This recursive process is repeated until there are no collisions detected within a given time-step.
    *
+   * On each time-step, after Collisions have been created for every ball-ball and ball-border combination, we check
+ *     if any of our 'saved' collisions that have associated collision-times are in between the previous and current
+ *     step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated
+ *     correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All
+ *     Collision instances that store the involved Ball(s) are removed. This detection-response loop is then repeated
+ *     until there are no collisions detected within the time-step.
+   *
+   *
    * @public
    * @param {number} dt - time-delta in seconds
    * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
@@ -109,18 +117,11 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    // First detect all potential collisions that occur within this time-step at once.
+    // First detect all potential collisions that have not already been detected.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    if ( !CollisionLabUtils.any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0  ) ) {
-
-      // If there are no collisions detected, the Balls are in uniform motion for the rest of
-      // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
-      // time-step.
-      return this.ballSystem.stepUniformMotion( dt, elapsedTime ); // return for TCO supported browsers.
-    }
-    else {
+    if ( CollisionLabUtils.any( this.collisions, collision => collision.time >= elapsedTime - dt && collision.time <= elapsedTime ) ) {
 
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
@@ -144,6 +145,19 @@ class CollisionEngine {
 
       // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
       return this.step( dt - delta, elapsedTime ); // return for TCO supported browsers.
+    }
+
+
+    if ( !CollisionLabUtils.any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0 ) ) {
+
+      // If there are no collisions detected, the Balls are in uniform motion for the rest of
+      // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
+      // time-step.
+      return this.ballSystem.stepUniformMotion( dt, elapsedTime ); // return for TCO supported browsers.
+    }
+    else {
+
+
     }
   }
 
