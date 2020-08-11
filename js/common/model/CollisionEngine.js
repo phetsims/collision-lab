@@ -129,7 +129,7 @@ class CollisionEngine {
     // Gets all of the Collisions that have a collision 'time' in between the previous and current step, meaning the
     // collision occurred and should be handled.
     const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
-      return _.inRange( collision.time, elapsedTime, elapsedTime + dt );
+      return CollisionLabUtils.inRange( collision.time, elapsedTime, elapsedTime + dt );
     } );
 
     if ( collisionsInThisStep.length ) {

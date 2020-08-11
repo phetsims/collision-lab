@@ -269,6 +269,20 @@ const CollisionLabUtils = {
     else {
       throw new Error( 'CollisionLabUtils.sleep must be used with assertions on' );
     }
+  },
+
+  /**
+   * Returns a boolean that indicates if a number is within the non-degenerate range of [a, b] or [b, a], where a, b are
+   * passed-in finite extrema. For instance, inRange( 2, 1, 3 ) -> true and inRange( -2, -1, -3 ) -> false.
+   * @public
+   *
+   * @param {number} number
+   * @param {number} a
+   * @param {number} b
+   * @returns {boolean}
+   */
+  inRange( number, a, b ) {
+    return ( number >= a && number <= b ) || ( number >= b && number <= a );
   }
 };
 
