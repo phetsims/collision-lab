@@ -161,11 +161,15 @@ const CollisionLabUtils = {
     let extrema = [];
 
     for ( const item of iterable ) {
+      const value = criterion( item );
+      if ( value === null ) {
+        continue;
+      }
       if ( !extrema.length ) {
         extrema.push( item );
       }
       else {
-        const comparison = comparator( criterion( extrema[ 0 ] ), criterion( item ) );
+        const comparison = comparator( criterion( extrema[ 0 ] ), value );
         if ( comparison === -1 ) {
           extrema = [ item ];
         }

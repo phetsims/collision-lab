@@ -72,6 +72,7 @@ class CollisionEngine {
     // @protected - reference to the passed-in parameters.
     this.playArea = playArea;
     this.ballSystem = ballSystem;
+    this.previousSign = 1;
 
     // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
     // changes and reset the CollisionEngine. Multilink persists for the lifetime of the simulation since
@@ -117,18 +118,22 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    if ( this.previousSign !== Math.sign( dt ) ) {
+      this.reset();
+      this.previousSign = Math.sign( dt );
+    }
+
     // First detect all potential collisions that have not already been detected.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    if ( CollisionLabUtils.any( this.collisions, collision => collision.time >= elapsedTime - dt && collision.time <= elapsedTime ) ) {
+    if ( CollisionLabUtils.any( this.collisions, collision => collision.willOccurInStep( dt, elapsedTime ) ) ) {
 
       // If there are collisions detected within the given time-step, only handle and progress the first collision.
       // Find and reference the next Collision that will occur of the detected collisions.
       const nextCollisions = dt >= 0 ?
         CollisionLabUtils.getMinValuesOf( this.collisions, collision => collision.time ) :
         CollisionLabUtils.getMaxValuesOf( this.collisions, collision => collision.time );
-
 
       const delta = dt - ( elapsedTime - nextCollisions[ 0 ].time );
 
@@ -146,18 +151,12 @@ class CollisionEngine {
       // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
       return this.step( dt - delta, elapsedTime ); // return for TCO supported browsers.
     }
-
-
-    if ( !CollisionLabUtils.any( this.collisions, collision => elapsedTime - collision.time <= dt && elapsedTime - collision.time >= 0 ) ) {
+    else {
 
       // If there are no collisions detected, the Balls are in uniform motion for the rest of
       // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
       // time-step.
       return this.ballSystem.stepUniformMotion( dt, elapsedTime ); // return for TCO supported browsers.
-    }
-    else {
-
-
     }
   }
 
@@ -183,9 +182,6 @@ class CollisionEngine {
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
       if ( CollisionLabUtils.any( this.collisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
-        return;
-      }
-      if ( CollisionLabUtils.any( this.blacklistedCollisions, collision => collision.includes( ball1 ) && collision.includes( ball2 ) ) ) {
         return;
       }
 
@@ -245,7 +241,7 @@ class CollisionEngine {
         this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
       }
       else {
-        this.blacklistedCollisions.add( new Collision( ball1, ball2, -100 ) );
+        this.collisions.add( new Collision( ball1, ball2, null ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -319,11 +315,6 @@ class CollisionEngine {
         this.collisions.delete( collision );
       }
     } );
-    this.blacklistedCollisions.forEach( collision => {
-      if ( collision.includes( ball1 ) || collision.includes( ball2 ) ) {
-        this.blacklistedCollisions.delete( collision );
-      }
-    } );
   }
 
   /*----------------------------------------------------------------------------*
@@ -353,9 +344,6 @@ class CollisionEngine {
         return;
       }
 
-      if ( CollisionLabUtils.any( this.blacklistedCollisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
-        return;
-      }
       // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
       // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
       // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
@@ -382,7 +370,7 @@ class CollisionEngine {
         this.collisions.add( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
       }
       else {
-        this.blacklistedCollisions.add( new Collision( ball, this.playArea, -100 ) );
+        this.collisions.add( new Collision( ball, this.playArea, null ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
       //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
@@ -435,12 +423,6 @@ class CollisionEngine {
     this.collisions.forEach( collision => {
       if ( collision.includes( ball ) ) {
         this.collisions.delete( collision );
-      }
-    } );
-
-    this.blacklistedCollisions.forEach( collision => {
-      if ( collision.includes( ball ) ) {
-        this.blacklistedCollisions.delete( collision );
       }
     } );
   }

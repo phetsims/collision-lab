@@ -22,14 +22,15 @@ import PlayArea from './PlayArea.js';
 class Collision {
 
   /**
-   * @param {Ball} ball - the Ball that is involved in the collision.
-   * @param {Ball|PlayArea} collidingObject - the object the Ball is colliding with.
-   * @param {number} time - the elapsed time of when the collision will occur.
+   * @param {Ball} ball - the Ball that is involved in the potential collision.
+   * @param {Ball|PlayArea} collidingObject - the object the Ball is potentially colliding with.
+   * @param {number|null} time - the elapsed time of when the collision will occur. Null indicates that the bodies will
+   *                             not collide.
    */
   constructor( ball, collidingObject, time ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
     assert && assert( collidingObject instanceof Ball || collidingObject instanceof PlayArea );
-    assert && assert( typeof time === 'number', `invalid time: ${time}` );
+    assert && assert( time === null || typeof time === 'number', `invalid time: ${time}` );
 
     // @public {Ball} - reference to the passed-in ball.
     this.ball = ball;
@@ -37,12 +38,12 @@ class Collision {
     // @public {Ball|PlayArea} - reference to the passed-in collidingObject.
     this.collidingObject = collidingObject;
 
-    // @public {number} - reference to the passed-in time.
+    // @public {number|null} - reference to the passed-in time.
     this.time = time;
   }
 
   /**
-   * Determines if a passed-in ball is involved in this Collision instance.
+   * Determines if a passed-in ball is involved stored as a one of the bodies of this Collision instance.
    * @public
    *
    * @returns {boolean}
@@ -51,6 +52,23 @@ class Collision {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     return this.ball === ball || this.collidingObject === ball;
+  }
+
+  /**
+   * @public
+   * @param {number} dt - time-delta in seconds
+   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   */
+  willOccurInStep( dt, elapsedTime ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+
+    if ( this.time === null ) {
+      return false;
+    }
+    const timeUntilCollision = this.time - ( elapsedTime - dt );
+
+    return Math.abs( timeUntilCollision ) <= Math.abs( dt ) && Math.abs( timeUntilCollision ) >= 0;
   }
 
   /**
