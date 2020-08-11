@@ -25,7 +25,7 @@
  *     http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf
  *
  *   - On each time-step, after Collisions have been created for every ball-ball and ball-border combination, we check
- *     if any of our 'saved' collisions that have associated collision-times are in between the previous and current
+ *     if any of our 'saved' collisions that have associated collision times are in between the previous and current
  *     step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated
  *     correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All
  *     Collision instances that store the involved Ball(s) are removed. This detection-response loop is then repeated
@@ -101,37 +101,23 @@ class CollisionEngine {
   }
 
   /**
-   * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step.
-   *
-   * To fully ensure that collisions are simulated correctly, this method will only handle and progress the first
-   * detected collision. It will then recursively call itself with a smaller step-size to re-detect all potential
-   * collisions. This recursive process is repeated until there are no collisions detected within a given time-step.
-   *
-   * On each time-step, after Collisions have been created for every ball-ball and ball-border combination, we check
- *     if any of our 'saved' collisions that have associated collision-times are in between the previous and current
- *     step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated
- *     correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All
- *     Collision instances that store the involved Ball(s) are removed. This detection-response loop is then repeated
- *     until there are no collisions detected within the time-step.
-   *
-   *
+   * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step. See
+   * the comment at the top of this file for a high-level overview of the collision detection-response loop.
    * @public
-   * @param {number} dt - time-delta in seconds
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
+   *
+   * @param {number} dt - time-delta in seconds of this step, in seconds.
+   * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
    */
   step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    // Get the 'direction' of this step.
-    const timeStepDirection = Math.sign( dt );
-
     // If the 'direction' changed from the previous step and the current step, reset the CollisionEngine. This is
     // because changing the 'direction' effectively changes the direction of the movement of the balls, meaning
     // collisions should be re-detected.
-    if ( this.timeStepDirection !== timeStepDirection ) {
+    if ( this.timeStepDirection !== Math.sign( dt ) ) {
       this.reset();
-      this.timeStepDirection = timeStepDirection;
+      this.timeStepDirection = Math.sign( dt );
     }
 
     // Now detect all potential collisions that have not already been detected.
@@ -142,8 +128,9 @@ class CollisionEngine {
 
     // Gets all of the Collisions that have a collision 'time' in between the previous and current step, meaning the
     // collision occurred and should be handled.
-    const collisionsInThisStep = CollisionLabUtils.filter( this.collisions,
-                                                           collision => collision.willOccurInStep( dt, elapsedTime ) );
+    const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
+      return _.inRange( collision.time, elapsedTime, elapsedTime + dt );
+    } );
 
     if ( collisionsInThisStep.length ) {
 
@@ -153,29 +140,28 @@ class CollisionEngine {
         CollisionLabUtils.getMinValuesOf( collisionsInThisStep, collision => collision.time ) :
         CollisionLabUtils.getMaxValuesOf( collisionsInThisStep, collision => collision.time );
 
-      const delta = dt - ( elapsedTime - nextCollisions[ 0 ].time );
+      // Reference when the collision will occur (in terms of both elapsedTime and a time-delta, respectively).
+      const collisionTime = nextCollisions[ 0 ].time;
+      const timeUntilCollision = collisionTime - elapsedTime;
 
-      // Progress forwards to the exact point of contact of the nextCollision.
-      this.ballSystem.stepUniformMotion( dt - ( elapsedTime - nextCollisions[ 0 ].time ), nextCollisions[ 0 ].time );
+      // Progress forwards to the exact point of contact of the collision.
+      this.ballSystem.stepUniformMotion( timeUntilCollision, collisionTime );
 
+      // Handle the response for the Collision depending on the type of collision.
       nextCollisions.forEach( collision => {
-
-        // Handle the response for the Ball Collision depending on the type of collision.
         collision.collidingObject instanceof Ball ?
-          this.handleBallToBallCollision( collision.ball, collision.collidingObject, collision.time ) :
+          this.handleBallToBallCollision( collision.ball, collision.collidingObject, collisionTime ) :
           this.handleBallToBorderCollision( collision.ball, dt );
       } );
 
-      // Recursively call step() with a smaller step-size to re-detect all potential collisions afterwards.
-      return this.step( dt - delta, elapsedTime ); // return for TCO supported browsers.
+      // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
+      return this.step( dt - timeUntilCollision, collisionTime );
     }
-    else {
 
-      // If there are no collisions detected, the Balls are in uniform motion for the rest of
-      // this time-step. The recursive process is stopped and the Balls are stepped uniformly to the end of the
-      // time-step.
-      return this.ballSystem.stepUniformMotion( dt, elapsedTime ); // return for TCO supported browsers.
-    }
+    // If there are no collisions within this step, the Balls are in uniform motion for the entirety of this step. The
+    // recursive process is stopped and the Balls are stepped uniformly to the end of the time-step. Return for TCO
+    // supported browsers
+    return this.ballSystem.stepUniformMotion( dt, elapsedTime );
   }
 
   /*----------------------------------------------------------------------------*
@@ -256,17 +242,17 @@ class CollisionEngine {
       if ( Number.isFinite( collisionTime ) && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
+        this.collisions.add( new Collision( ball1, ball2, elapsedTime + collisionTime * Math.sign( dt ) ) );
       }
       else {
         this.collisions.add( new Collision( ball1, ball2, null ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && h ) {
-      //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
+      //   const elapsedTimeOfCollision = elapsedTime + collisionTime;
 
       //   if ( elapsedTimeOfCollision >= 0 ) {
       //     // Register the collision and encapsulate information in a Collision instance.
-      //     this.collisions.add( new Collision( ball1, ball2, elapsedTime - dt + collisionTime * Math.sign( dt ) ) );
+      //     this.collisions.add( new Collision( ball1, ball2, elapsedTime + collisionTime * Math.sign( dt ) ) );
       //   }
       // }
     } );
@@ -385,13 +371,13 @@ class CollisionEngine {
       if ( possibleCollisionTimes.length && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball, this.playArea, elapsedTime - dt + collisionTime * velocityMultipier ) );
+        this.collisions.add( new Collision( ball, this.playArea, elapsedTime + collisionTime * velocityMultipier ) );
       }
       else {
         this.collisions.add( new Collision( ball, this.playArea, null ) );
       }
       // else if ( this.playArea.elasticity !== 1 && Number.isFinite( collisionTime ) && collisionTime <= Math.abs( dt ) && this.playArea.isBallTouchingSide( ball ) ) {
-      //   const elapsedTimeOfCollision = elapsedTime - dt + collisionTime;
+      //   const elapsedTimeOfCollision = elapsedTime + collisionTime;
 
       //   if ( elapsedTimeOfCollision >= 0 ) {
 

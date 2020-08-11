@@ -55,23 +55,6 @@ class Collision {
   }
 
   /**
-   * @public
-   * @param {number} dt - time-delta in seconds
-   * @param {number} elapsedTime - the total elapsed elapsedTime of the simulation, in seconds.
-   */
-  willOccurInStep( dt, elapsedTime ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-
-    if ( this.time === null ) {
-      return false;
-    }
-    const timeUntilCollision = this.time - ( elapsedTime - dt );
-
-    return Math.abs( timeUntilCollision ) <= Math.abs( dt ) && Math.abs( timeUntilCollision ) >= 0;
-  }
-
-  /**
    * Debugging string for the Collision.
    * @public
    *

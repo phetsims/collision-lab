@@ -188,7 +188,7 @@ class CollisionLabModel {
 
     // Step the Physics Engine and update the elapsedTimeProperty value.
     this.elapsedTimeProperty.value += dt;
-    this.collisionEngine.step( dt, this.elapsedTimeProperty.value );
+    this.collisionEngine.step( dt, this.elapsedTimeProperty.value - dt );
   }
 
   /**
