@@ -76,7 +76,9 @@ class Collision {
    * @returns {string}
    */
   toString() {
-    return `Collision[ body1: ${this.body1}, colliding with body2: ${this.body2}, at ${this.time} s ]`;
+    return Number.isFinite( this.time ) ?
+      `Collision[ body1: ${this.body1}, colliding with body2: ${this.body2}, at ${this.time} s ]` :
+      `Collision[ body1: ${this.body1}, will not collide with body2: ${this.body2} ]`;
   }
 }
 
