@@ -47,7 +47,7 @@ const NUMBER_OF_BALLS = 2;
 const OPACITY_RANGE = new Range( 0, 1 );
 const INTRO_INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1.0, 0 ), new Vector2( 1.00, 0 ), 0.5 ),
-  new BallState( new Vector2( 0.00, 0 ), new Vector2( -0.5, 0 ), 1.5 )
+  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.5 )
 ];
 
 class IntroBallSystem extends BallSystem {

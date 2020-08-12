@@ -20,7 +20,7 @@ import Explore2DPlayArea from './Explore2DPlayArea.js';
 const EXPLORE_2D_INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0.300 ), 0.50 ),
   new BallState( new Vector2( 0.00, 0.500 ), new Vector2( -0.5, -0.50 ), 1.50 ),
-  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.5, -0.25 ), 1.00 ),
+  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.25, -0.5 ), 1.00 ),
   new BallState( new Vector2( 0.20, -0.65 ), new Vector2( 1.10, 0.200 ), 1.00 )
 ];
 
