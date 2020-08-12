@@ -149,9 +149,9 @@ class CollisionEngine {
 
       // Handle the response for the Collision depending on the type of collision.
       nextCollisions.forEach( collision => {
-        collision.collidingObject instanceof Ball ?
-          this.handleBallToBallCollision( collision.ball, collision.collidingObject, collisionTime ) :
-          this.handleBallToBorderCollision( collision.ball, dt );
+        collision.body2 === this.playArea ?
+          this.handleBallToBorderCollision( collision.body1, dt ) :
+          this.handleBallToBallCollision( collision.body1, collision.body2, collisionTime );
       } );
 
       // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
@@ -344,7 +344,7 @@ class CollisionEngine {
     // Loop through each Balls and check to see if it will collide with the border.
     this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
 
-      if ( CollisionLabUtils.any( this.collisions, collision => collision.ball === ball && collision.collidingObject === this.playArea ) ) {
+      if ( CollisionLabUtils.any( this.collisions, collision => collision.body1 === ball && collision.body2 === this.playArea ) ) {
         return;
       }
 

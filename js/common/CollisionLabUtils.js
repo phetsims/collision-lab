@@ -158,20 +158,17 @@ const CollisionLabUtils = {
     assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
     assert && assert( typeof criterion === 'function', `invalid criterion: ${criterion}` );
     assert && assert( typeof comparator === 'function', `invalid comparator: ${comparator}` );
-    let extrema = [];
+    const iterator = iterable[ Symbol.iterator ]();
 
-    for ( const item of iterable ) {
-      if ( !extrema.length ) {
-        extrema.push( item );
+    let extrema = [ iterator.next().value ];
+
+    for ( const item of iterator ) {
+      const comparison = comparator( criterion( extrema[ 0 ] ), criterion( item ) );
+      if ( comparison === -1 ) {
+        extrema = [ item ];
       }
-      else {
-        const comparison = comparator( criterion( extrema[ 0 ] ), criterion( item ) );
-        if ( comparison === -1 ) {
-          extrema = [ item ];
-        }
-        else if ( comparison === 0 ) {
-          extrema.push( item );
-        }
+      else if ( comparison === 0 ) {
+        extrema.push( item );
       }
     }
 
