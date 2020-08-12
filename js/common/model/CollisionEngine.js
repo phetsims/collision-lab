@@ -160,6 +160,7 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    // CollisionEngine only deals with uniformly moving Balls, but sub-types might not (for the 'Inelastic' screen).
     this.ballSystem.stepUniformMotion( dt, elapsedTime + dt );
   }
 
@@ -172,6 +173,7 @@ class CollisionEngine {
   detectAllCollisions( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
     this.detectBallToBallCollisions( elapsedTime );
     this.detectBallToBorderCollisions( elapsedTime );
   }
@@ -180,7 +182,7 @@ class CollisionEngine {
    * Handles all Collision by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
    * @protected - can be overridden in subclasses.
    *
-   * @param {Collision} collision
+   * @param {Collision} collision - the Collision instance.
    */
   handleCollision( collision ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
