@@ -249,7 +249,7 @@ class CollisionEngine {
         const collisionTime = ( Number.isFinite( root ) && root >= 0 ) ? elapsedTime + root * velocityMultipier : null;
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collision.add( new Collision( ball1, ball2, collisionTime ) );
+        this.collisions.add( new Collision( ball1, ball2, collisionTime ) );
       }
     } );
   }
@@ -353,7 +353,7 @@ class CollisionEngine {
           elapsedTime + timeUntilCollision * velocityMultipier;
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collision.add( new Collision( ball, this.playArea, collisionTime ) );
+        this.collisions.add( new Collision( ball, this.playArea, collisionTime ) );
       }
     } );
   }
