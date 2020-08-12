@@ -41,7 +41,7 @@ const CollisionLabColors = {
   BALL_STROKE_COLOR: Color.BLACK,
   BALL_COLORS: [
     new Color( 37, 221, 222 ),
-    new Color( 325, 37, 173 ),
+    new Color( 255, 37, 173 ),
     new Color( 149, 27, 235 ),
     new Color( 235, 192, 27 )
   ],
