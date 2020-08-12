@@ -98,26 +98,23 @@ class CollisionEngine {
    *
    * Called when the reset/restart button is pressed or when some 'state' of the simulation changes.
    */
-  reset() {
-    this.collisions.clear();
-  }
+  reset() { this.collisions.clear(); }
 
   /**
    * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step. See
    * the comment at the top of this file for a high-level overview of the collision detection-response loop.
    * @public
    *
-   * @param {number} dt - time-delta in seconds of this step, in seconds.
+   * @param {number} dt - time-delta of this step, in seconds.
    * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
    */
   step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    this.timeStepDirectionProperty.value = Math.sign( dt );
 
     // First detect all potential collisions that have not already been detected.
-    this.detectBallToBallCollisions( dt, elapsedTime );
-    this.detectBallToBorderCollisions( dt, elapsedTime );
+    this.timeStepDirectionProperty.value = Math.sign( dt );
+    this.detectAllCollisions( elapsedTime );
 
     // Get all Collisions that have a collision 'time' in this time-step.
     const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
@@ -137,12 +134,10 @@ class CollisionEngine {
       const timeUntilCollision = collisionTime - elapsedTime;
 
       // Progress forwards to the exact point of contact of the collision.
-      this.ballSystem.stepUniformMotion( timeUntilCollision, collisionTime );
+      this.progressBalls( timeUntilCollision, elapsedTime );
 
       // Handle the response for the Collision depending on the type of collision.
-      nextCollisions.forEach( collision => collision.includes( this.playArea ) ?
-          this.handleBallToBorderCollision( collision.body1, dt ) :
-          this.handleBallToBallCollision( collision.body1, collision.body2, collisionTime ) );
+      nextCollisions.forEach( this.handleCollision.bind( this ) );
 
       // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
       return this.step( dt - timeUntilCollision, collisionTime );
@@ -150,8 +145,49 @@ class CollisionEngine {
 
     // If there are no collisions within this step, the Balls are in uniform motion for the entirety of this step. The
     // recursive process is stopped and the Balls are stepped uniformly to the end of the time-step. Return for TCO
-    // supported browsers
-    return this.ballSystem.stepUniformMotion( dt, elapsedTime );
+    // supported browsers.
+    return this.progressBalls( dt, elapsedTime );
+  }
+
+  /**
+   * Progresses the Balls forwards by the given time-delta, assuming there are no collisions.
+   * @protected - can be overridden in subclasses.
+   *
+   * @param {number} dt - time-delta, in seconds.
+   * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
+   */
+  progressBalls( dt, elapsedTime ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+
+    this.ballSystem.stepUniformMotion( dt, elapsedTime + dt );
+  }
+
+  /**
+   * Detects all ball-ball and ball-border collisions that have not already been detected.
+   * @protected - can be overridden in subclasses.
+   *
+   * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
+   */
+  detectAllCollisions( elapsedTime ) {
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+
+    this.detectBallToBallCollisions( elapsedTime );
+    this.detectBallToBorderCollisions( elapsedTime );
+  }
+
+  /**
+   * Handles all Collision by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
+   * @protected - can be overridden in subclasses.
+   *
+   * @param {Collision} collision
+   */
+  handleCollision( collision ) {
+    assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
+
+    collision.includes( this.playArea ) ?
+          this.handleBallToBorderCollision( collision.body1 ) :
+          this.handleBallToBallCollision( collision.body1, collision.body2, collision.time );
   }
 
   /*----------------------------------------------------------------------------*
@@ -165,12 +201,12 @@ class CollisionEngine {
    *
    * Collisions that are detected are added to the collisions array and the necessary information of each
    * collision is encapsulated in a Collision instance.
-   * @protected - can be overridden in subclasses
+   * @private
    *
-   * @param {number} dt - time-delta in seconds
+   * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
    */
-  detectBallToBallCollisions( dt, elapsedTime ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+  detectBallToBallCollisions( elapsedTime ) {
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Loop through each unique possible pair of Balls and check to see if they will collide.
     CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
@@ -189,7 +225,7 @@ class CollisionEngine {
        *----------------------------------------------------------------------------*/
 
       const deltaR = this.mutableVectors.deltaR.set( ball2.position ).subtract( ball1.position );
-      const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( Math.sign( dt ) );
+      const deltaV = this.mutableVectors.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( this.timeStepDirectionProperty.value );
       const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
       let c = deltaR.magnitudeSquared - sumOfRadiiSquared;
       const scratchVector = new Vector2( 0, 0 );
@@ -232,7 +268,7 @@ class CollisionEngine {
       if ( Number.isFinite( collisionTime ) && collisionTime >= 0 ) {
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball1, ball2, elapsedTime + collisionTime * Math.sign( dt ) ) );
+        this.collisions.add( new Collision( ball1, ball2, elapsedTime + collisionTime * this.timeStepDirectionProperty.value ) );
       }
       else {
         this.collisions.add( new Collision( ball1, ball2, null ) );
@@ -328,8 +364,7 @@ class CollisionEngine {
    *
    * @param {number} dt - time-delta in seconds
    */
-  detectBallToBorderCollisions( dt, elapsedTime ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+  detectBallToBorderCollisions( elapsedTime ) {
 
     // Loop through each Balls and check to see if it will collide with the border.
     this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
@@ -341,7 +376,7 @@ class CollisionEngine {
       // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
       // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
       // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
-      const velocityMultipier = Math.sign( dt );
+      const velocityMultipier = this.timeStepDirectionProperty.value;
 
       // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
       const leftCollisionTime = ( this.playArea.left - ball.left ) / ball.xVelocity * velocityMultipier;
@@ -389,15 +424,14 @@ class CollisionEngine {
    * @param {Ball} ball - the Ball involved in the collision.
    * @param {number} dt - time-delta in seconds
    */
-  handleBallToBorderCollision( ball, dt ) {
+  handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
     // essentially moving in the opposite direction of its velocity vector. This is used to determine the direction
     // that the Ball is moving towards; even if a Ball is touching a side(s) of the border, it's velocity doesn't change
     // unless it is moving towards that respective side.
-    const velocityMultipier = Math.sign( dt );
+    const velocityMultipier = this.timeStepDirectionProperty.value;
 
     // Update the velocity after the collision.
     if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * velocityMultipier < 0 ) ||
