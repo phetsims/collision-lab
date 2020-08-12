@@ -40,16 +40,16 @@ const CollisionLabColors = {
   BALL_LEADER_LINES_COLOR: Color.BLACK,
   BALL_STROKE_COLOR: Color.BLACK,
   BALL_COLORS: [
-    new Color( 225, 70, 124 ),
-    new Color( 73, 157, 247 ),
-    new Color( 10, 184, 25 ),
-    new Color( 255, 0, 215 )
+    new Color( 37, 221, 222 ),
+    new Color( 325, 37, 173 ),
+    new Color( 149, 27, 235 ),
+    new Color( 235, 192, 27 )
   ],
 
   // Vector Colors
   VELOCITY_VECTOR_FILL: Color.GREEN,
   VELOCITY_VECTOR_STROKE: Color.BLACK,
-  MOMENTUM_VECTOR_FILL: Color.YELLOW,
+  MOMENTUM_VECTOR_FILL: 'rgb( 71, 79, 179 )',
   MOMENTUM_VECTOR_STROKE: Color.BLACK,
 
   // Center of mass
