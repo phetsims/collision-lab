@@ -27,7 +27,7 @@ class Collision {
    */
   constructor( body1, body2, time ) {
     assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
-    assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
+    assert && assert( body2 instanceof Object, `invalid body2: ${body2}` );
     assert && assert( time === null || typeof time === 'number', `invalid time: ${time}` );
 
     // @public {Object} - reference to the passed-in bodies.
@@ -52,6 +52,38 @@ class Collision {
   }
 
   /**
+   * Determines if this Collision instance stores both of the passed-in bodies. The order in which bodies are passed-in
+   * doesn't matter.
+   * @public
+   *
+   * @param {Object} body1
+   * @param {Object} body2
+   * @returns {boolean}
+   */
+  includesBodies( body1, body2 ) {
+    assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
+    assert && assert( body2 instanceof Object, `invalid body2: ${body2}` );
+
+    return this.includes( body1 ) && this.includes( body2 );
+  }
+
+  /**
+   * Determines if this Collision instance stores either of the passed-in bodies. The order in which bodies are
+   * passed-in doesn't matter.
+   * @public
+   *
+   * @param {Object} body1
+   * @param {Object} body2
+   * @returns {boolean}
+   */
+  includesEither( body1, body2 ) {
+    assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
+    assert && assert( body2 instanceof Object, `invalid body2: ${body2}` );
+
+    return this.includes( body1 ) || this.includes( body2 );
+  }
+
+  /**
    * Returns a boolean that indicates if the stored 'time' of this Collision will occur in between two given times.
    * The order in which the times are given doesn't matter. For instance, if this.time = 2, inRange( 1, 3 ) and
    * inRange( 3, 1 ) would return true.
@@ -67,18 +99,6 @@ class Collision {
 
     return Number.isFinite( this.time ) && ( time2 >= time1 ) ? ( this.time >= time1 && this.time <= time2 ) :
                                                                 ( this.time >= time2 && this.time <= time1 );
-  }
-
-  /**
-   * Debugging string for the Collision.
-   * @public
-   *
-   * @returns {string}
-   */
-  toString() {
-    return Number.isFinite( this.time ) ?
-      `Collision[ body1: ${this.body1}, colliding with body2: ${this.body2}, at ${this.time} s ]` :
-      `Collision[ body1: ${this.body1}, will not collide with body2: ${this.body2} ]`;
   }
 }
 
