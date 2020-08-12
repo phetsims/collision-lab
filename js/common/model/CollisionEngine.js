@@ -83,7 +83,7 @@ class CollisionEngine {
     // Ball is user-controlled, when the number of Balls in the system changes, when a reflecting border is changed, or
     // when the 'direction' of time progression changes. In all of these scenarios, existing Collisions may be incorrect
     // and collisions should be re-detected. Multilink persists for the lifetime of the simulation.
-    Property.multilink( [
+    Property.lazyMultilink( [
       ballSystem.ballSystemUserControlledProperty,
       ballSystem.numberOfBallsProperty,
       playArea.reflectingBorderProperty,
