@@ -35,6 +35,7 @@
  * @author Martin Veillette
  */
 
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -60,10 +61,10 @@ class CollisionEngine {
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = new Set();
 
-    // @private {number} - the 'direction' of the progression of the previous time-step of the sim, where:
-    //                       1 means the sim was being progressed forwards in the last time-step (dt > 0).
-    //                      -1 means the sim was being progressed backwards in the last time-step, (dt < 0)
-    this.timeStepDirection = 1;
+    // @private {NumberProperty} - the 'direction' of the progression of the current time-step of the sim, where:
+    //                               1 means the sim is being progressed forwards in the current time-step (dt > 0).
+    //                              -1 means the sim is being progressed backwards in the current time-step, (dt < 0)
+    this.timeStepDirectionProperty = new NumberProperty( 1, { numberType: 'Integer' } );
 
     // @protected {Object} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
     this.mutableVectors = {
@@ -78,11 +79,16 @@ class CollisionEngine {
     this.playArea = playArea;
     this.ballSystem = ballSystem;
 
-    // Observe when any of the Balls in the system are being user-controlled or when the number of Balls in the system
-    // changes and reset the CollisionEngine. Multilink persists for the lifetime of the simulation since
-    // BallSystems/CollisionEngines are never disposed.
-    Property.lazyMultilink( [ ballSystem.ballSystemUserControlledProperty, ballSystem.numberOfBallsProperty ],
-      this.reset.bind( this ) );
+    // Observe when some 'state' in the simulation that invalidates our Collision instances changes. This occurs when a
+    // Ball is user-controlled, when the number of Balls in the system changes, when a reflecting border is changed, or
+    // when the 'direction' of time progression changes. In all of these scenarios, existing Collisions may be incorrect
+    // and collisions should be re-detected. Multilink persists for the lifetime of the simulation.
+    Property.multilink( [
+      ballSystem.ballSystemUserControlledProperty,
+      ballSystem.numberOfBallsProperty,
+      playArea.reflectingBorderProperty,
+      this.timeStepDirectionProperty
+    ], this.reset.bind( this ) );
   }
 
   /**
@@ -111,14 +117,7 @@ class CollisionEngine {
   step( dt, elapsedTime ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-
-    // If the 'direction' changed from the previous step and the current step, reset the CollisionEngine. This is
-    // because changing the 'direction' effectively changes the direction of the movement of the balls, meaning
-    // collisions should be re-detected.
-    if ( this.timeStepDirection !== Math.sign( dt ) ) {
-      this.reset();
-      this.timeStepDirection = Math.sign( dt );
-    }
+    this.timeStepDirectionProperty.value = Math.sign( dt );
 
     // Now detect all potential collisions that have not already been detected.
     this.detectBallToBallCollisions( dt, elapsedTime );
