@@ -88,19 +88,15 @@ class CollisionEngine {
       ballSystem.numberOfBallsProperty,
       playArea.reflectingBorderProperty,
       this.timeStepDirectionProperty
+
     ], this.reset.bind( this ) );
   }
 
   /**
-   * Resets the CollisionEngine.
+   * Resets the CollisionEngine. This removes all 'saved' Collision instances.
    * @public
    *
-   * This is invoked in the following scenarios:
-   *   - The reset all button is pressed.
-   *   - The restart button is pressed.
-   *   - When any of the Balls of the system are user-controlled.
-   *   - When Balls are added or removed from the system.
-   *   - When the timeStepDirection changes.
+   * Called when the reset/restart button is pressed or when some 'state' of the simulation changes.
    */
   reset() {
     this.collisions.clear();
