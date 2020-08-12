@@ -51,7 +51,23 @@ class Collision {
     return this.body1 === body || this.body2 === body;
   }
 
+  /**
+   * Returns a boolean that indicates if the stored 'time' of this Collision will occur in between two given times.
+   * The order in which the times are given doesn't matter. For instance, if this.time = 2, occursInRange( 1, 3 ) and
+   * occursInRange( 3, 1 ) would return true.
+   * @public
+   *
+   * @param {number} time1
+   * @param {number} time2
+   * @returns {boolean}
+   */
+  occursInRange( time1, time2 ) {
+    assert && assert( typeof time1 === 'number', `invalid time1: ${time1}` );
+    assert && assert( typeof time2 === 'number', `invalid time2: ${time2}` );
 
+    return Number.isFinite( this.time ) && ( time2 >= time1 ) ? ( this.time >= time1 && this.time <= time2 ) :
+                                                                ( this.time >= time2 && this.time <= time1 );
+  }
 
   /**
    * Debugging string for the Collision.
@@ -60,7 +76,7 @@ class Collision {
    * @returns {string}
    */
   toString() {
-    return `Collision[ ball: ${this.ball} colliding with: ${this.collidingObject}, at ${this.time} s ]`;
+    return `Collision[ body1: ${this.body1}, colliding with body2: ${this.body2}, at ${this.time} s ]`;
   }
 }
 
