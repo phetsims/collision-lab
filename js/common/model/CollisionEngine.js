@@ -115,16 +115,13 @@ class CollisionEngine {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
     this.timeStepDirectionProperty.value = Math.sign( dt );
 
-    // Now detect all potential collisions that have not already been detected.
+    // First detect all potential collisions that have not already been detected.
     this.detectBallToBallCollisions( dt, elapsedTime );
     this.detectBallToBorderCollisions( dt, elapsedTime );
 
-    //----------------------------------------------------------------------------------------
-
-    // Gets all of the Collisions that have a collision 'time' in between the previous and current step, meaning the
-    // collision occurred and should be handled.
+    // Get all Collisions that have a collision 'time' in this time-step.
     const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
-      return collision.occursInRange( elapsedTime, elapsedTime + dt );
+      return collision.inRange( elapsedTime, elapsedTime + dt );
     } );
 
     if ( collisionsInThisStep.length ) {
@@ -143,11 +140,9 @@ class CollisionEngine {
       this.ballSystem.stepUniformMotion( timeUntilCollision, collisionTime );
 
       // Handle the response for the Collision depending on the type of collision.
-      nextCollisions.forEach( collision => {
-        collision.body2 === this.playArea ?
+      nextCollisions.forEach( collision => collision.includes( this.playArea ) ?
           this.handleBallToBorderCollision( collision.body1, dt ) :
-          this.handleBallToBallCollision( collision.body1, collision.body2, collisionTime );
-      } );
+          this.handleBallToBallCollision( collision.body1, collision.body2, collisionTime ) );
 
       // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
       return this.step( dt - timeUntilCollision, collisionTime );

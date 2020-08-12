@@ -53,15 +53,15 @@ class Collision {
 
   /**
    * Returns a boolean that indicates if the stored 'time' of this Collision will occur in between two given times.
-   * The order in which the times are given doesn't matter. For instance, if this.time = 2, occursInRange( 1, 3 ) and
-   * occursInRange( 3, 1 ) would return true.
+   * The order in which the times are given doesn't matter. For instance, if this.time = 2, inRange( 1, 3 ) and
+   * inRange( 3, 1 ) would return true.
    * @public
    *
    * @param {number} time1
    * @param {number} time2
    * @returns {boolean}
    */
-  occursInRange( time1, time2 ) {
+  inRange( time1, time2 ) {
     assert && assert( typeof time1 === 'number', `invalid time1: ${time1}` );
     assert && assert( typeof time2 === 'number', `invalid time2: ${time2}` );
 
