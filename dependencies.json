@@ -1,12 +1,12 @@
 {
-  "comment": "# collision-lab 1.0.1-rc.2 Fri Aug 14 2020 12:11:19 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.1 Fri Aug 14 2020 12:17:34 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "1a41cef653bbed1025af5768bea958d7e3e0f8ae",
     "branch": "HEAD"
   },
   "axon": {
-    "sha": "6ae790812d04ab65fd72c79c7da1e27442c0a70d",
-    "branch": "HEAD"
+    "sha": "8f7c381a64d43e0c5a682fce241bc9b8290a30c0",
+    "branch": "master"
   },
   "brand": {
     "sha": "83c51961edf5b255206c82de7d6f4df6b4ea41bc",
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "b2cee104877dfb7348ee9c4609c00de78bb305ac",
+    "sha": "04b971001ff4ced7702be8affb9b038af5da950f",
     "branch": "1.0"
   },
   "dot": {
