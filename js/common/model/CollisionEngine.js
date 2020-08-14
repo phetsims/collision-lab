@@ -267,7 +267,7 @@ class CollisionEngine {
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
    */
-  handleBallToBallCollision( ball1, ball2, elapsedTimeOfCollision ) {
+  handleBallToBallCollision( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( BallUtils.areBallsTouching( ball1, ball2 ), 'Balls must be touching for a collision response' );

@@ -23,11 +23,39 @@ class RotatingBallCluster {
     this.angularVelocity = angularVelocity;
     this.centerOfMass = centerOfMass;
 
-    // @private {Vector2} - the position of the center of mass of the two balls involved in the collision. This vectors
-    //                      is a convenience reference for computations in step(). Mutated on each step() call.
-    this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
+    // // @private {Vector2} - the position of the center of mass of the two balls involved in the collision. This vectors
+    // //                      is a convenience reference for computations in step(). Mutated on each step() call.
+    // this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
+      // this.centerOfMassPosition.set( this.ballSystem.centerOfMass.position );
+
+      // // Update the angular and linear momentum reference. Values are the same before and after the collision.
+      // this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
+      // this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
 
   }
+
+  // @public
+  computeOrientations( dt ) {
+
+    const result = Map();
+    this.balls.forEach( ball => {
+      const r = ball.position.minus( this.centerOfMass.position );
+      const changeInAngle = this.angularVelocity * dt;
+      r.rotate( changeInAngle );
+
+      const v = new Vector2( -this.angularVelocity * r.y, this.angularVelocity * r.x );
+
+      // Move the center of mass to where it would be in this current frame.
+      const centerOfMassPositionP = this.centerOfMass.position.plus( this.centerOfMass.velocity.times( dt ) );
+
+      result[ ball ] = {
+        position: r.add( centerOfMassPositionP ),
+        velocity: v.add( this.centerOfMass.velocity )
+      };
+
+    } );
+  }
+
 
   /**
    * A time-discretization approach to rotating a Ball cluster that is stuck together because of a perfectly inelastic
