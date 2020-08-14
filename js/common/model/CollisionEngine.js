@@ -328,34 +328,38 @@ class CollisionEngine {
 
       // Only detect new ball-border collisions if it hasn't already been detected.
       if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball, this.playArea ) ) ) {
+        const timeUntilCollision = this.getCollisionTime( ball.position, ball.velocity, ball.radius );
 
-        // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
-        // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
-        // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
-        const velocityMultipier = this.timeStepDirectionProperty.value;
-
-        // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
-        const leftCollisionTime = ( this.playArea.left - ball.left ) / ball.xVelocity * velocityMultipier;
-        const rightCollisionTime = ( this.playArea.right - ball.right ) / ball.xVelocity * velocityMultipier;
-        const bottomCollisionTime = ( this.playArea.bottom - ball.bottom ) / ball.yVelocity * velocityMultipier;
-        const topCollisionTime = ( this.playArea.top - ball.top ) / ball.yVelocity * velocityMultipier;
-
-        // Calculate the time the Ball would collide with a horizontal/vertical border.
-        const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
-        const verticalCollisionTime = Math.max( bottomCollisionTime, topCollisionTime );
-        const possibleCollisionTimes = [ horizontalCollisionTime, verticalCollisionTime ].filter( Number.isFinite );
-
-        // Solve for the timeUntilCollision, which is the first border (minimum in time) the Ball would collide with.
-        const timeUntilCollision = Math.min( ...possibleCollisionTimes );
-
-        // If the timeUntilCollision is finite and is positive, the collision is detected and should be registered.
-        const collisionTime = !( Number.isFinite( timeUntilCollision ) && timeUntilCollision >= 0 ) ? null :
-          elapsedTime + timeUntilCollision * velocityMultipier;
+        const collisionTime = !( Number.isFinite( timeUntilCollision ) && timeUntilCollision * this.timeStepDirectionProperty.value >= 0 ) ? null :
+          elapsedTime + timeUntilCollision;
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.add( new Collision( ball, this.playArea, collisionTime ) );
       }
     } );
+  }
+
+  // @private
+  getCollisionTime( position, velocity, radius ) {
+
+    // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
+    // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
+    // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
+    const velocityMultipier = this.timeStepDirectionProperty.value;
+
+    // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
+    const leftCollisionTime = ( this.playArea.left - ( position.x - radius ) ) / velocity.x * velocityMultipier;
+    const rightCollisionTime = ( this.playArea.right - ( position.x + radius ) ) / velocity.x * velocityMultipier;
+    const bottomCollisionTime = ( this.playArea.bottom - ( position.y - radius ) ) / velocity.y * velocityMultipier;
+    const topCollisionTime = ( this.playArea.top - ( position.y + radius ) ) / velocity.y * velocityMultipier;
+
+    // Calculate the time the Ball would collide with a horizontal/vertical border.
+    const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
+    const verticalCollisionTime = Math.max( bottomCollisionTime, topCollisionTime );
+    const possibleCollisionTimes = [ horizontalCollisionTime, verticalCollisionTime ].filter( Number.isFinite );
+
+    // Solve for the timeUntilCollision, which is the first border (minimum in time) the Ball would collide with.
+    return Math.min( ...possibleCollisionTimes ) * velocityMultipier;
   }
 
   /**

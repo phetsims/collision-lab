@@ -35,15 +35,17 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
+import Collision from '../../common/model/Collision.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
 import InelasticCollisionType from './InelasticCollisionType.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
 import RotatingBallCluster from './RotatingBallCluster.js';
-import Collision from '../../common/model/Collision.js';
 
 class InelasticCollisionEngine extends CollisionEngine {
 
@@ -140,7 +142,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     if ( this.rotatingBallCluster ) {
       // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
-      this.handleBallClusterToBorderCollision( collision.time );
+      this.handleBallClusterToBorderCollision( collision );
       return;
     }
 
@@ -267,6 +269,77 @@ class InelasticCollisionEngine extends CollisionEngine {
     else {
       super.handleBallToBorderCollision( ball, dt );
     }
+  }
+
+  /*----------------------------------------------------------------------------*
+   * Rotating Ball Cluster to Border Collisions
+   *----------------------------------------------------------------------------*/
+  /**
+   * Detects all ball-to-border collisions of the BallSystem that haven't already occurred. Although tunneling doesn't
+   * occur with ball-to-border collisions, collisions are still detected before they occur to mirror the approach for
+   * ball-to-ball collisions. For newly detected collisions, information is encapsulated in a Collision instance.
+   * NOTE: no-op when the PlayArea's border doesn't reflect.
+   * @private
+   *
+   * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
+   */
+  detectBallClusterToBorderCollision( elapsedTime ) {
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
+    const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) ) );
+
+    const min = this.getCollisionTime( this.centerOfMass.position, this.centerOfMass.velocity, maxR );
+    const max = this.getCollisionTime( this.centerOfMass.position, this.centerOfMass.velocity, 0 );
+    const playAreaBounds = this.playArea.bounds.copy();
+
+
+    const helper = ( min, max ) => {
+      const mid = ( min + max ) / 2;
+      const orientations = this.rotatingBallCluster.computeOrientations( mid );
+
+      if ( CollisionLabUtils.any( orientations, item => {
+          const ball = item[ 0 ];
+          const schema = item[ 1 ];
+
+          return !playAreaBounds.set( this.playArea.bounds ).erode( ball.radius ).containsPoint( schema.position );
+      } ) ) {
+          // over
+          return helper( min, mid );
+
+        }
+      else {
+        if ( CollisionLabUtils.any( orientations, item => {
+            const ball = item[ 0 ];
+            const schema = item[ 1 ];
+            playAreaBounds.set( this.playArea.bounds ).erode( ball.radius );
+
+
+            return Utils.equalsEpsilon( schema.position.x, this.left, CollisionLabUtils.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.x, this.right, CollisionLabUtils.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.y, this.top, CollisionLabUtils.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.y, this.bottom, CollisionLabUtils.ZERO_THRESHOLD );
+        } ) ) {
+          // good enough
+          this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid + elapsedTime ) );
+
+        }
+        else {
+          // under
+          return helper( mid, max );
+
+        }
+
+      }
+    };
+    return helper( min, max );
+  }
+
+  // @private
+  handleBallClusterToBorderCollision( collision ) {
+    this.ballSystem.forEach( ball => {
+      ball.velocity = Vector2.ZERO;
+
+    } );
+    this.collisions.delete( collision );
   }
 }
 

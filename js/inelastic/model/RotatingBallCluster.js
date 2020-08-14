@@ -48,10 +48,10 @@ class RotatingBallCluster {
       // Move the center of mass to where it would be in this current frame.
       const centerOfMassPositionP = this.centerOfMass.position.plus( this.centerOfMass.velocity.times( dt ) );
 
-      result[ ball ] = {
+      result.set( ball, {
         position: r.add( centerOfMassPositionP ),
         velocity: v.add( this.centerOfMass.velocity )
-      };
+      } );
 
     } );
   }
@@ -71,11 +71,11 @@ class RotatingBallCluster {
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
+    // assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     // Convenience reference to the 2 Balls involved in the rotation.
-    const ball1 = this.ballSystem.balls.get( 0 );
-    const ball2 = this.ballSystem.balls.get( 1 );
+    const ball1 = this.balls.[ 0 ];
+    const ball2 = this.balls.[ 1 ];
 
     // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
     const r1 = ball1.position.minus( this.centerOfMassPosition );
@@ -107,15 +107,15 @@ class RotatingBallCluster {
     ball1.velocity = v1.add( centerOfMassVelocity );
     ball2.velocity = v2.add( centerOfMassVelocity );
 
-    // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
-    if ( assert ) {
+    // // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
+    // if ( assert ) {
 
-      const totalLinearMomentum = ball1.momentum.plus( ball2.momentum );
-      const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
+    //   const totalLinearMomentum = ball1.momentum.plus( ball2.momentum );
+    //   const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
 
-      assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
-      assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
-    }
+    //   assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
+    //   assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
+    // }
   }
 
   /**
@@ -128,15 +128,15 @@ class RotatingBallCluster {
    * @returns {number} - in kg*(m^2/s).
    */
   computeAngularMomentum( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( this.isRotatingBalls );
+    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    // assert && assert( this.isRotatingBalls );
 
-    // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    const r = ball.position.minus( this.centerOfMassPosition );
-    const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
+    // // Get the position vector (r) and momentum (p) relative to the center-of-mass
+    // const r = ball.position.minus( this.centerOfMassPosition );
+    // const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
 
-    // L = r x p (relative to the center-of-mass)
-    return r.crossScalar( p );
+    // // L = r x p (relative to the center-of-mass)
+    // return r.crossScalar( p );
   }
 }
 
