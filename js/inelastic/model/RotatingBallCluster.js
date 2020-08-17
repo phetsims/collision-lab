@@ -24,141 +24,107 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import Ball from '../../common/model/Ball.js';
-
-// constants
-const EPSILON = CollisionLabConstants.ZERO_THRESHOLD;
+import CenterOfMass from '../../common/model/CenterOfMass.js';
 
 class RotatingBallCluster {
 
+  /**
+   * @param {Ball[]} balls - an array of the Balls within the rotating ball cluster.
+   * @param {number} angularVelocity - the angular velocity of the rotation, in radians per second.
+   * @param {CenterOfMass} centerOfMass - the center of mass of the cluster of balls.
+   */
   constructor( balls, angularVelocity, centerOfMass ) {
+    assert && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( typeof angularVelocity === 'number', `invalid angularVelocity: ${angularVelocity}` );
+    assert && assert( centerOfMass instanceof CenterOfMass, `invalid centerOfMass: ${centerOfMass}` );
 
-    // @private
+    // @private {Ball[]} - reference to the passed-in balls.
     this.balls = balls;
+
+    // @private {number} - reference to the passed-in angularVelocity.
     this.angularVelocity = angularVelocity;
+
+    // @private {CenterOfMass} - reference to the passed-in centerOfMass.
     this.centerOfMass = centerOfMass;
-
-    // // @private {Vector2} - the position of the center of mass of the two balls involved in the collision. This vectors
-    // //                      is a convenience reference for computations in step(). Mutated on each step() call.
-    // this.centerOfMass.position = Vector2.ZERO.copy(); // in meters.
-      // this.centerOfMass.position.set( this.centerOfMass.position );
-
-      // // Update the angular and linear momentum reference. Values are the same before and after the collision.
-      // this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
-      // this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
-
   }
-
-  // @public
-  computeOrientations( dt ) {
-
-    const result = new Map();
-    this.balls.forEach( ball => {
-      const r = ball.position.minus( this.centerOfMass.position );
-      const changeInAngle = this.angularVelocity * dt;
-      r.rotate( changeInAngle );
-
-      const v = new Vector2( -this.angularVelocity * r.y, this.angularVelocity * r.x );
-
-      // Move the center of mass to where it would be in this current frame.
-      const centerOfMassPositionP = this.centerOfMass.position.plus( this.centerOfMass.velocity.times( dt ) );
-
-      result.set( ball, {
-        position: r.add( centerOfMassPositionP ),
-        velocity: v.add( this.centerOfMass.velocity )
-      } );
-
-    } );
-    return result;
-  }
-
 
   /**
-   * A time-discretization approach to rotating a Ball cluster that is stuck together because of a perfectly inelastic
-   * collisions that 'sticks'. This is called on each step of the simulation, where the Balls are rotated around the
-   * center of mass. The InelasticCollisionEngine changes reference frames to the center of mass of the 2 Balls. From
-   * there, standard uniform circular motion equations are used to compute the new velocity and position of each Ball.
+   * Moves every Ball in the cluster by one time-step, 'rotating' each ball around the center-of-mass of the cluster.
+   * @public
    *
-   * NOTE: this method assumes that the InelasticCollisionEngine is rotating the balls of the system. Don't call this
-   *       method if it isn't.
-   *
-   * @private
-   * @param {number} dt - time in seconds
+   * @param {number} dt - time-delta in seconds.
    */
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    // assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
-    const orientations = this.computeOrientations( dt );
-    orientations.forEach( ( value, key ) => {
-      key.position = value.position;
-      key.velocity = value.velocity;
-      key.rotationProperty.value += this.angularVelocity * dt;
+    // The angular displacement of each Ball relative to the center of mass.
+    const changeInAngle = this.angularVelocity * dt;
+
+    // Get the states of the Balls after the rotation occurs.
+    const rotationStates = this.getSteppedRotationStates( dt );
+
+    // Update each Ball.
+    rotationState.forEach( ( ballState, ball ) => {
+
+      // Set the state of the Ball.
+      ball.setState( ballState );
+
+      // Rotate the balls around their centers to provide a more realistic rotation experience. See
+      // https://github.com/phetsims/collision-lab/issues/87
+      ball.rotationProperty.value += changeInAngle;
     } );
-
-    // // Convenience reference to the 2 Balls involved in the rotation.
-    // const ball1 = this.balls[ 0 ];
-    // const ball2 = this.balls[ 1 ];
-
-    // // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
-    // const r1 = ball1.position.minus( this.centerOfMass.position );
-    // const r2 = ball2.position.minus( this.centerOfMass.position );
-    // const changeInAngle = this.angularVelocity * dt;
-
-    // // Rotate the position vectors to apply uniform circular motion about the center of mass.
-    // r1.rotate( changeInAngle );
-    // r2.rotate( changeInAngle );
-
-    // // Rotate the balls around their centers to provide a more realistic rotation experience. See
-    // // https://github.com/phetsims/collision-lab/issues/87
-    // ball1.rotationProperty.value += changeInAngle;
-    // ball2.rotationProperty.value += changeInAngle;
-
-    // // Compute the velocity of Both balls after this step, relative to the center of mass.
-    // const v1 = new Vector2( -this.angularVelocity * r1.y, this.angularVelocity * r1.x );
-    // const v2 = new Vector2( -this.angularVelocity * r2.y, this.angularVelocity * r2.x );
-
-    // //----------------------------------------------------------------------------------------
-
-    // // Move the center of mass to where it would be in this current frame.
-    // const centerOfMassPosition = this.centerOfMass.position.plus( this.centerOfMass.velocity.times( dt ) );
-    // const centerOfMassVelocity = this.centerOfMass.velocity;
-
-    // // Set the position and velocity of the Balls back in the absolute reference frame.
-    // ball1.position = r1.add( centerOfMassPosition );
-    // ball2.position = r2.add( centerOfMassPosition );
-    // ball1.velocity = v1.add( centerOfMassVelocity );
-    // ball2.velocity = v2.add( centerOfMassVelocity );
-
-    // // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
-    // if ( assert ) {
-
-    //   const totalLinearMomentum = ball1.momentum.plus( ball2.momentum );
-    //   const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
-
-    //   assert( Utils.equalsEpsilon( totalAngularMomentum, this.totalAngularMomentum, EPSILON ), 'angular momentum not conserved' );
-    //   assert( totalLinearMomentum.equalsEpsilon( this.totalLinearMomentum, EPSILON ), 'linear momentum not conserved' );
-    // }
   }
 
+  //----------------------------------------------------------------------------------------
+
   /**
-   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
-   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-   * The Ball must be one of the two Balls that the InelasticCollisionEngine is handling.
-   * @private
+   * Creates a BallState for every Ball that describes the state of each Ball after being 'rotated' for dt seconds. The
+   * position/velocity of each Ball changes, but the mass does not. Position/velocity of each ball is calculated by
+   * changing reference frames to the centerOfMass and applying standard uniform circular motion equations.
+   * @public
    *
-   * @param {Ball} ball
-   * @returns {number} - in kg*(m^2/s).
+   * @param {number} dt - time-delta, in seconds.
+   * @returns {Map.<Ball, BallState>} - maps Ball to a BallState instance.
    */
-  computeAngularMomentum( ball ) {
-    // assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    // assert && assert( this.isRotatingBalls );
+  getSteppedRotationStates( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
-    // // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    // const r = ball.position.minus( this.centerOfMass.position );
-    // const p = ball.velocity.minus( this.centerOfMass.velocity ).multiplyScalar( ball.mass );
+    // The resulting Map that maps each Ball to a BallState instance.
+    const ballToRotationStates = new Map();
 
-    // // L = r x p (relative to the center-of-mass)
-    // return r.crossScalar( p );
+    // The angular displacement of each Ball relative to the center of mass.
+    const changeInAngle = this.angularVelocity * dt;
+
+    // Compute the position/velocity of the center-of-mass **after** the rotation.
+    const centerOfMassPosition = this.centerOfMass.velocity.times( dt ).add( this.centerOfMass.position );
+    const centerOfMassVelocity = this.centerOfMass.velocity;
+
+    this.balls.forEach( ball => {
+
+      // Get the position vector of the Ball, relative to the center of mass. This is a change in reference frames.
+      const position = ball.position.minus( this.centerOfMass.position );
+
+      // Rotate the position vector to apply uniform circular motion about the center of mass.
+      position.rotate( changeInAngle );
+
+      // Compute the velocity of Both balls after this step, relative to the center of mass. The velocity is the
+      // cross product of the angular velocity (vector) and the position vector after the rotation. See
+      // https://en.wikipedia.org/wiki/Circular_motion#Velocity.
+      const velocity = new Vector2( -this.angularVelocity * position.y, this.angularVelocity * position.x );
+
+      // Compute the position and velocity of the Balls back in the absolute reference frame, creating a BallState
+      // instance to hold onto the vectors.
+      const ballState = new BallState(
+        position.add( centerOfMassPosition ),
+        velocity.add( centerOfMassVelocity ),
+        ball.mass
+      );
+
+      // Map each Ball to the BallState instance.
+      ballToRotationStates.set( ball, ballState );
+    } );
+
+    return ballToRotationStates;
   }
 }
 
