@@ -9,10 +9,6 @@
  * occurs, InelasticCollisionEngine will dynamically create a RotatingBallCluster instance. This means that there is a
  * third type of collision that InelasticCollisionEngine deals with - cluster-to-border collisions.
  *
- * Perfectly inelastic collisions that 'slip' behave like the standard rigid-body collision model of CollisionEngine,
- * the super-type. Thus, InelasticCollisionEngine will forward all 'slipping' collisions to the super-class and will
- * only handle responses to 'sticking' collisions.
- *
  * ## Rotation-Collision Response
  *
  *  - When a collision between 2 Balls is detected by CollisionEngine, and the collision is a perfectly inelastic
@@ -41,7 +37,6 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
@@ -67,32 +62,23 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     super( playArea, ballSystem );
 
-    //----------------------------------------------------------------------------------------
-
-    // @private {RotatingBallCluster} - indicates if the 2 Balls in the system are currently being rotated (handled) by this class.
-    //                      If this is false, the collision response is forwarded to the super-class.
+    // @private {RotatingBallCluster|null} - the RotatingBallCluster instance if the Balls in the system are being
+    //                                       rotated. Since there are only 2 Balls in the 'Inelastic' screen, there can
+    //                                       only be 1 RotatingBallCluster instance.
     this.rotatingBallCluster = null;
 
-    // Observe when any of the Balls in the system are being user-controlled or when the InelasticPreset is changed and
-    // reset the InelasticCollisionEngine. Multilink persists for the lifetime of the sim since
-    // InelasticCollisionEngines are never disposed.
-    Property.multilink( [
-      ballSystem.inelasticPresetProperty,
-      playArea.inelasticCollisionTypeProperty
-    ], this.reset.bind( this ) );
+    // Observe when the InelasticPreset is changed and reset the InelasticCollisionEngine. When the InelasticPreset is
+    // changed, Balls are set to different states, meaning existing Collisions may be incorrect and collisions should be
+    // re-detected. Link persists for the lifetime of the simulation.
+    ballSystem.inelasticPresetProperty.link( this.reset.bind( this ) );
   }
 
   /**
-   * Resets the InelasticCollisionEngine to its factory state.
+   * Resets the InelasticCollisionEngine.
+   * @override
    * @public
    *
-   * This is invoked in the following scenarios:
-   *   - the reset all button is pressed.
-   *   - the restart button is pressed.
-   *   - when any of the Balls involved in the rotation is user controlled, either by dragging or from the Keypad.
-   *   - when any of the Balls involved in the rotation collides with the border of the PlayArea.
-   *   - when the elasticity changes.
-   * See https://github.com/phetsims/collision-lab/issues/87.
+   * Called when the reset/restart button is pressed or when some 'state' of the simulation changes.
    */
   reset() {
     this.rotatingBallCluster = null;
@@ -101,7 +87,8 @@ class InelasticCollisionEngine extends CollisionEngine {
 
   /**
    * Progresses the Balls forwards by the given time-delta, assuming there are no collisions.
-   * @protected - can be overridden in subclasses.
+   * @protected
+   * @override
    *
    * @param {number} dt - time-delta, in seconds.
    * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
@@ -110,100 +97,59 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    // CollisionEngine only deals with uniformly moving Balls, but sub-types might not (for the 'Inelastic' screen).
+    // Step the RotatingBallCluster if it exists and update the trailing 'Paths' behind the Balls.
     if ( this.rotatingBallCluster ) {
       this.rotatingBallCluster.step( dt );
       this.ballSystem.updatePaths( elapsedTime + dt );
     }
     else {
-      this.ballSystem.stepUniformMotion( dt, elapsedTime + dt );
+      super.progressBalls( dt, elapsedTime );
     }
   }
 
   /**
-   * Detects all ball-ball and ball-border collisions that have not already been detected.
-   * @protected - can be overridden in subclasses.
+   * Detects all ball-ball, ball-border, and cluster-border collisions that have not already been detected.
+   * @protected
+   * @override
    *
    * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
    */
   detectAllCollisions( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    if ( !this.rotatingBallCluster ) {
-      // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
-      this.detectBallToBallCollisions( elapsedTime );
-      this.detectBallToBorderCollisions( elapsedTime );
+    // Detect cluster-border collisions if the RotatingBallCluster exists.
+    if ( this.rotatingBallCluster ) {
+      this.detectBallClusterToBorderCollision( elapsedTime );
     }
     else {
-      this.detectBallClusterToBorderCollision( elapsedTime );
+      super.detectAllCollisions( elapsedTime );
     }
   }
 
   /**
-   * Handles all Collision by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
-   * @protected - can be overridden in subclasses.
+   * Handles all Collisions by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
+   * @protected
+   * @override
    *
    * @param {Collision} collision - the Collision instance.
    */
   handleCollision( collision ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
 
-    if ( this.rotatingBallCluster ) {
-      // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
+    // Handle cluster-border collisions if the collision involves the rotatingBallCluster.
+    if ( this.rotatingBallCluster && collision.includes( this.rotatingBallCluster ) ) {
       this.handleBallClusterToBorderCollision( collision );
-      return;
     }
-
-    // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
-    collision.includes( this.playArea ) ?
-          this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2 ) :
-          this.handleBallToBallCollision( collision.body1, collision.body2, collision.time );
+    else {
+      super.handleCollision( collision );
+    }
   }
 
   //----------------------------------------------------------------------------------------
 
   /**
-   * Detects all ball-to-ball collisions of the BallSystem that occur within the passed-in time-step. Overridden to do
-   * nothing if the Balls in the 'Inelastic' screen are currently being rotated. Otherwise, the collision-detection
-   * algorithms are forwarded to the super-type.
-   *
-   * @override
-   * @protected
-   *
-   * @param {number} dt - time-delta in seconds
-   */
-  detectBallToBallCollisions( dt ) {
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-
-    !this.rotatingBallCluster && super.detectBallToBallCollisions( dt );
-  }
-
-  /**
-   * Computes the angular momentum of a Ball relative to the center-of-mass of the 2 Balls that are being rotated,
-   * using the L = r x p formula described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-   * The Ball must be one of the two Balls that the InelasticCollisionEngine is handling.
-   * @private
-   *
-   * @param {Ball} ball
-   * @returns {number} - in kg*(m^2/s).
-   */
-  computeAngularMomentum( ball ) {
-    assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    // assert && assert( this.isRotatingBalls );
-
-    // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    const r = ball.position.minus( this.ballSystem.centerOfMass.position );
-    const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
-
-    // L = r x p (relative to the center-of-mass)
-    return r.crossScalar( p );
-  }
-
-  /**
    * Processes and responds to a collision between two balls. Overridden to respond to perfectly inelastic 'stick'
-   * collisions between two Balls. If the collision isn't a 'sticking' collision, the response is forwarded to the
-   * super-class. Otherwise, this method is responsible for computing the total momentum and the angular velocity.
-   *
+   * collisions between two Balls, in which this method will create and reference a RotatingBallCluster instance.
    * @override
    * @protected
    *
@@ -216,6 +162,8 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
+    super.handleBallToBallCollision( ball1, ball2 );
+
     // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
@@ -225,38 +173,23 @@ class InelasticCollisionEngine extends CollisionEngine {
       const I1 = ball1.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball1.mass;
       const I2 = ball2.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball2.mass;
 
-      const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
-
       // Update the angular velocity reference. Formula comes from
       // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
-      const angularVelocity = totalAngularMomentum / ( I1 + I2 );
+      const angularVelocity = this.ballSystem.getTotalAngularMomentum() / ( I1 + I2 );
 
-      // Set the isRotatingBalls flag to true.
-      this.rotatingBallCluster = new RotatingBallCluster( [ ball1, ball2 ], angularVelocity, this.ballSystem.centerOfMass );
-
-      // Remove all collisions that involves either of the Balls.
-      this.collisions.forEach( collision => collision.includesEither( ball1, ball2 ) &&
-                                            this.collisions.delete( collision ) );
-      // // Update the position of the center of mass of the 2 Balls. This is used as a convenience vector for computations
-      // // in the step() method.
-      // this.ballSystem.centerOfMass.position.set( this.ballSystem.centerOfMass.position );
-
-      // // Update the angular and linear momentum reference. Values are the same before and after the collision.
-      // this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
-
-    }
-    else {
-
-      // Forward the collision-response to the super-class.
-      super.handleBallToBallCollision( ball1, ball2 );
+      // Create and reference a RotatingBallCluster instance. Since there are only 2 Balls in the 'Inelastic' screen,
+      // the RotatingBallCluster represents the entire BallSystem.
+      this.rotatingBallCluster = new RotatingBallCluster(
+        this.ballSystem.balls,
+        angularVelocity,
+        this.ballSystem.centerOfMass
+      );
     }
   }
 
   /**
    * Processes a ball-to-border collision and updates the velocity and the position of the Ball. Overridden to respond
-   * to perfectly inelastic 'stick' collisions. If the collision isn't a 'sticking' collision, the response is forwarded
-   * to the super-class.
-   *
+   * to perfectly inelastic 'stick' collisions, in which the Ball's velocity is set to 0.
    * @override
    * @protected
    *
@@ -265,22 +198,20 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+    super.handleBallToBorderCollision( ball );
 
+    // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
       // Set the velocity of the Ball to 0.
       ball.velocity = Vector2.ZERO;
-
-      this.collisions.forEach( collision => collision.includes( ball ) && this.collisions.delete( collision ) );
-    }
-    else {
-      super.handleBallToBorderCollision( ball );
     }
   }
 
   /*----------------------------------------------------------------------------*
    * Rotating Ball Cluster to Border Collisions
    *----------------------------------------------------------------------------*/
+
   /**
    * Detects all ball-to-border collisions of the BallSystem that haven't already occurred. Although tunneling doesn't
    * occur with ball-to-border collisions, collisions are still detected before they occur to mirror the approach for

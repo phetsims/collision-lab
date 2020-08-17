@@ -181,7 +181,7 @@ class CollisionEngine {
   }
 
   /**
-   * Handles all Collision by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
+   * Handles all Collisions by calling a response algorithm, dispatched by the type of bodies involved in the Collision.
    * @protected - can be overridden in subclasses.
    *
    * @param {Collision} collision - the Collision instance.
