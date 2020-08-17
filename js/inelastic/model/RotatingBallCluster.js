@@ -63,10 +63,10 @@ class RotatingBallCluster {
     // Get the states of the Balls after the rotation occurs.
     const rotationStates = this.getSteppedRotationStates( dt );
 
-    rotationStates.forEach( ( ballState, ball ) => {
+    this.balls.forEach( ball => {
 
       // Set the state of each Ball.
-      ball.setState( ballState );
+      ball.setState( rotationStates.get( ball ) );
 
       // Rotate the balls around their centers to provide a more realistic rotation experience. See
       // https://github.com/phetsims/collision-lab/issues/87
