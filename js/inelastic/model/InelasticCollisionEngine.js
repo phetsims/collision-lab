@@ -5,19 +5,21 @@
  * ball-to-ball collision responses for perfectly inelastic collisions that 'stick'.
  *
  * Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation, where Balls
- * completely stick together and rotate around the center of mass of the Balls, if the collision isn't head-on.
- * Perfectly inelastic collisions that 'slip' behaves like the standard rigid-body collision model of CollisionEngine,
- * the super-type. This, InelasticCollisionEngine will forward all 'slipping' collisions to the super-class and will
- * only handle responses to 'sticking' collisions.
+ * completely stick together and rotate around the center of mass of the Balls. When a 'sticky' collision between balls
+ * occurs, InelasticCollisionEngine will dynamically create a RotatingBallCluster instance. This means that there is a
+ * third type of collision that InelasticCollisionEngine deals with - cluster-to-border collisions.
  *
- * Currently, InelasticCollisionEngine only supports rotations of 2 Balls. For the 'Inelastic' screen, the elasticity is
- * always perfectly inelastic and there are only 2 Balls. See https://github.com/phetsims/collision-lab/issues/87.
+ * Perfectly inelastic collisions that 'slip' behave like the standard rigid-body collision model of CollisionEngine,
+ * the super-type. Thus, InelasticCollisionEngine will forward all 'slipping' collisions to the super-class and will
+ * only handle responses to 'sticking' collisions.
  *
  * ## Rotation-Collision Response
  *
- *  - When a collision between the 2 Balls is detected by CollisionEngine, and the collision is a perfectly inelastic
+ *  - When a collision between 2 Balls is detected by CollisionEngine, and the collision is a perfectly inelastic
  *    collisions that 'sticks', the collision response is overridden. The velocity of the center-of-mass of the 2
  *    Balls is the same before and after the collision, so there is no need to compute the center-of-mass velocity.
+ *    A RotatingBallCluster instance will be created. Currently, the 'Inelastic' screen only has 2 Balls, so the
+ *    RotatingBallCluster represents the entire BallSystem.
  *
  *  - Using the conservation of Angular Momentum (L), the InelasticCollisionEngine derives the angular velocity (omega)
  *    of the rotation of the balls relative to the center of mass. See the following for some general background:
@@ -25,11 +27,16 @@
  *      + https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles
  *      + https://en.wikipedia.org/wiki/Angular_velocity
  *
- *  - Then, on each step of the simulation, the Balls are rotated around the center of mass. The
- *    InelasticCollisionEngine changes reference frames to the center of mass of the 2 Balls. From there, standard
- *    uniform circular motion equations are used to compute the new velocity and position of each Ball. See:
- *      + https://en.wikipedia.org/wiki/Frame_of_reference
- *      + https://en.wikipedia.org/wiki/Circular_motion#Uniform_circular_motion
+ * ### Cluster-to-border Collision Detection:
+ *
+ *  - On the first time-step after a RotatingBallCluster instance has been created, InelasticCollisionEngine must detect
+ *    when it will collide with the border (if 'Reflecting Border' is on). There is no closed-form solution to finding
+ *    when the cluster will collide.
+ *
+ *  - The lower-bound of when the cluster will collide with the border is when the bounding circle of the cluster
+ *    collides with the border. The upper-bound is when the center-of-mass collides with the border.
+ *    InelasticCollisionEngine uses the bisection method to approximate when the cluster exactly collides with the
+ *    border. See https://en.wikipedia.org/wiki/Bisection_method.
  *
  * @author Brandon Li
  */
