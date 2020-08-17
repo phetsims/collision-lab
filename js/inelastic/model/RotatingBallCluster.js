@@ -25,8 +25,8 @@ class RotatingBallCluster {
 
     // // @private {Vector2} - the position of the center of mass of the two balls involved in the collision. This vectors
     // //                      is a convenience reference for computations in step(). Mutated on each step() call.
-    // this.centerOfMassPosition = Vector2.ZERO.copy(); // in meters.
-      // this.centerOfMassPosition.set( this.ballSystem.centerOfMass.position );
+    // this.centerOfMass.position = Vector2.ZERO.copy(); // in meters.
+      // this.centerOfMass.position.set( this.centerOfMass.position );
 
       // // Update the angular and linear momentum reference. Values are the same before and after the collision.
       // this.totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
@@ -37,7 +37,7 @@ class RotatingBallCluster {
   // @public
   computeOrientations( dt ) {
 
-    const result = Map();
+    const result = new Map();
     this.balls.forEach( ball => {
       const r = ball.position.minus( this.centerOfMass.position );
       const changeInAngle = this.angularVelocity * dt;
@@ -54,6 +54,7 @@ class RotatingBallCluster {
       } );
 
     } );
+    return result;
   }
 
 
@@ -73,39 +74,46 @@ class RotatingBallCluster {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     // assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
-    // Convenience reference to the 2 Balls involved in the rotation.
-    const ball1 = this.balls.[ 0 ];
-    const ball2 = this.balls.[ 1 ];
+    const orientations = this.computeOrientations( dt );
+    orientations.forEach( ( value, key ) => {
+      key.position = value.position;
+      key.velocity = value.velocity;
+      key.rotationProperty.value += this.angularVelocity * dt;
+    } );
 
-    // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
-    const r1 = ball1.position.minus( this.centerOfMassPosition );
-    const r2 = ball2.position.minus( this.centerOfMassPosition );
-    const changeInAngle = this.angularVelocity * dt;
+    // // Convenience reference to the 2 Balls involved in the rotation.
+    // const ball1 = this.balls[ 0 ];
+    // const ball2 = this.balls[ 1 ];
 
-    // Rotate the position vectors to apply uniform circular motion about the center of mass.
-    r1.rotate( changeInAngle );
-    r2.rotate( changeInAngle );
+    // // Get the position vectors of Both balls, relative to the center of mass. This is a change in reference frames.
+    // const r1 = ball1.position.minus( this.centerOfMass.position );
+    // const r2 = ball2.position.minus( this.centerOfMass.position );
+    // const changeInAngle = this.angularVelocity * dt;
 
-    // Rotate the balls around their centers to provide a more realistic rotation experience. See
-    // https://github.com/phetsims/collision-lab/issues/87
-    ball1.rotationProperty.value += changeInAngle;
-    ball2.rotationProperty.value += changeInAngle;
+    // // Rotate the position vectors to apply uniform circular motion about the center of mass.
+    // r1.rotate( changeInAngle );
+    // r2.rotate( changeInAngle );
 
-    // Compute the velocity of Both balls after this step, relative to the center of mass.
-    const v1 = new Vector2( -this.angularVelocity * r1.y, this.angularVelocity * r1.x );
-    const v2 = new Vector2( -this.angularVelocity * r2.y, this.angularVelocity * r2.x );
+    // // Rotate the balls around their centers to provide a more realistic rotation experience. See
+    // // https://github.com/phetsims/collision-lab/issues/87
+    // ball1.rotationProperty.value += changeInAngle;
+    // ball2.rotationProperty.value += changeInAngle;
 
-    //----------------------------------------------------------------------------------------
+    // // Compute the velocity of Both balls after this step, relative to the center of mass.
+    // const v1 = new Vector2( -this.angularVelocity * r1.y, this.angularVelocity * r1.x );
+    // const v2 = new Vector2( -this.angularVelocity * r2.y, this.angularVelocity * r2.x );
 
-    // Move the center of mass to where it would be in this current frame.
-    this.centerOfMassPosition.add( this.ballSystem.centerOfMass.velocity.times( dt ) );
-    const centerOfMassVelocity = this.ballSystem.centerOfMass.velocity;
+    // //----------------------------------------------------------------------------------------
 
-    // Set the position and velocity of the Balls back in the absolute reference frame.
-    ball1.position = r1.add( this.centerOfMassPosition );
-    ball2.position = r2.add( this.centerOfMassPosition );
-    ball1.velocity = v1.add( centerOfMassVelocity );
-    ball2.velocity = v2.add( centerOfMassVelocity );
+    // // Move the center of mass to where it would be in this current frame.
+    // const centerOfMassPosition = this.centerOfMass.position.plus( this.centerOfMass.velocity.times( dt ) );
+    // const centerOfMassVelocity = this.centerOfMass.velocity;
+
+    // // Set the position and velocity of the Balls back in the absolute reference frame.
+    // ball1.position = r1.add( centerOfMassPosition );
+    // ball2.position = r2.add( centerOfMassPosition );
+    // ball1.velocity = v1.add( centerOfMassVelocity );
+    // ball2.velocity = v2.add( centerOfMassVelocity );
 
     // // If assertions are enabled, then verify that both linear and angular momentum were conserved in this step.
     // if ( assert ) {
@@ -132,8 +140,8 @@ class RotatingBallCluster {
     // assert && assert( this.isRotatingBalls );
 
     // // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    // const r = ball.position.minus( this.centerOfMassPosition );
-    // const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
+    // const r = ball.position.minus( this.centerOfMass.position );
+    // const p = ball.velocity.minus( this.centerOfMass.velocity ).multiplyScalar( ball.mass );
 
     // // L = r x p (relative to the center-of-mass)
     // return r.crossScalar( p );

@@ -181,10 +181,10 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   computeAngularMomentum( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( this.isRotatingBalls );
+    // assert && assert( this.isRotatingBalls );
 
     // Get the position vector (r) and momentum (p) relative to the center-of-mass
-    const r = ball.position.minus( this.centerOfMassPosition );
+    const r = ball.position.minus( this.ballSystem.centerOfMass.position );
     const p = ball.velocity.minus( this.ballSystem.centerOfMass.velocity ).multiplyScalar( ball.mass );
 
     // L = r x p (relative to the center-of-mass)
@@ -214,8 +214,8 @@ class InelasticCollisionEngine extends CollisionEngine {
       // Get the moment of inertia of both Balls, treated as point masses rotating around their center of mass. The
       // reason why we treat the Balls as point masses is because of the formula L = r^2 * m * omega, where r^2 * m is
       // the moment of inertia of a point-mass. See https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-      const I1 = ball1.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball1.mass;
-      const I2 = ball2.position.minus( this.centerOfMassPosition ).magnitudeSquared * ball2.mass;
+      const I1 = ball1.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball1.mass;
+      const I2 = ball2.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball2.mass;
 
       const totalAngularMomentum = this.computeAngularMomentum( ball1 ) + this.computeAngularMomentum( ball2 );
 
@@ -231,7 +231,7 @@ class InelasticCollisionEngine extends CollisionEngine {
                                             this.collisions.delete( collision ) );
       // // Update the position of the center of mass of the 2 Balls. This is used as a convenience vector for computations
       // // in the step() method.
-      // this.centerOfMassPosition.set( this.ballSystem.centerOfMass.position );
+      // this.ballSystem.centerOfMass.position.set( this.ballSystem.centerOfMass.position );
 
       // // Update the angular and linear momentum reference. Values are the same before and after the collision.
       // this.totalLinearMomentum.set( ball1.momentum ).add( ball2.momentum );
@@ -285,39 +285,47 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   detectBallClusterToBorderCollision( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) ) );
+    if ( CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
+      return;
+    }
 
-    const min = this.getCollisionTime( this.centerOfMass.position, this.centerOfMass.velocity, maxR );
-    const max = this.getCollisionTime( this.centerOfMass.position, this.centerOfMass.velocity, 0 );
+
+    const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) + ball.radius ) ) + 1E-4;
+
+    const min = this.getCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR );
+    const max = this.getCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0 );
     const playAreaBounds = this.playArea.bounds.copy();
 
 
     const helper = ( min, max ) => {
       const mid = ( min + max ) / 2;
       const orientations = this.rotatingBallCluster.computeOrientations( mid );
+      let overlapping = 0;
+      let touching = 0;
 
-      if ( CollisionLabUtils.any( orientations, item => {
-          const ball = item[ 0 ];
-          const schema = item[ 1 ];
+      orientations.forEach( ( schema, ball ) => {
 
-          return !playAreaBounds.set( this.playArea.bounds ).erode( ball.radius ).containsPoint( schema.position );
-      } ) ) {
+          playAreaBounds.set( this.playArea.bounds ).erode( ball.radius );
+          if ( Utils.equalsEpsilon( schema.position.x - ball.radius, this.playArea.left, 1E-4 ) ||
+                  Utils.equalsEpsilon( schema.position.x + ball.radius, this.playArea.right, 1E-4 ) ||
+                  Utils.equalsEpsilon( schema.position.y + ball.radius, this.playArea.top, 1E-4 ) ||
+                  Utils.equalsEpsilon( schema.position.y - ball.radius, this.playArea.bottom, 1E-4 ) ) {
+
+            touching += 1;
+          }
+          else if ( !playAreaBounds.containsPoint( schema.position ) ) {
+            overlapping += 1;
+          }
+      } );
+
+
+      if ( overlapping > 0 ) {
           // over
           return helper( min, mid );
 
-        }
+      }
       else {
-        if ( CollisionLabUtils.any( orientations, item => {
-            const ball = item[ 0 ];
-            const schema = item[ 1 ];
-            playAreaBounds.set( this.playArea.bounds ).erode( ball.radius );
-
-
-            return Utils.equalsEpsilon( schema.position.x, this.left, CollisionLabUtils.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.x, this.right, CollisionLabUtils.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.y, this.top, CollisionLabUtils.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.y, this.bottom, CollisionLabUtils.ZERO_THRESHOLD );
-        } ) ) {
+        if ( touching > 0 ) {
           // good enough
           this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid + elapsedTime ) );
 
@@ -325,9 +333,7 @@ class InelasticCollisionEngine extends CollisionEngine {
         else {
           // under
           return helper( mid, max );
-
         }
-
       }
     };
     return helper( min, max );
@@ -335,11 +341,12 @@ class InelasticCollisionEngine extends CollisionEngine {
 
   // @private
   handleBallClusterToBorderCollision( collision ) {
-    this.ballSystem.forEach( ball => {
+    this.ballSystem.balls.forEach( ball => {
       ball.velocity = Vector2.ZERO;
 
     } );
     this.collisions.delete( collision );
+    this.rotatingBallCluster = null;
   }
 }
 

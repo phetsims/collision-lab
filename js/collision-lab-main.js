@@ -33,7 +33,7 @@ simLauncher.launch( () => {
     // new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) ),
     new Explore1DScreen( Tandem.ROOT.createTandem( 'explore1DScreen' ) ),
     new Explore2DScreen( Tandem.ROOT.createTandem( 'explore2DScreen' ) ),
-    // new InelasticScreen( Tandem.ROOT.createTandem( 'inelasticScreen' ) )
+    new InelasticScreen( Tandem.ROOT.createTandem( 'inelasticScreen' ) )
   ], simOptions );
 
   sim.start();
