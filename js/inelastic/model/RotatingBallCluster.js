@@ -75,8 +75,8 @@ class RotatingBallCluster {
   }
 
   /**
-   * Creates a BallState for every Ball that describes the state of each Ball after being 'rotated' for dt seconds. The
-   * position/velocity of each Ball changes, but the mass does not. Position/velocity of each ball is calculated by
+   * Creates BallStates that describe the state of each Ball after being 'rotated' for dt seconds. The position and
+   * velocity of each Ball generally changes, but the mass does not. The position/velocity of each ball is calculated by
    * changing reference frames to the centerOfMass and applying standard uniform circular motion equations.
    * @public
    *
