@@ -19,11 +19,11 @@
  * @author Brandon Li
  */
 
-import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import Ball from '../../common/model/Ball.js';
+import BallState from '../../common/model/BallState.js';
 import CenterOfMass from '../../common/model/CenterOfMass.js';
 
 class RotatingBallCluster {
@@ -63,7 +63,7 @@ class RotatingBallCluster {
     // Get the states of the Balls after the rotation occurs.
     const rotationStates = this.getSteppedRotationStates( dt );
 
-    rotationState.forEach( ( ballState, ball ) => {
+    rotationStates.forEach( ( ballState, ball ) => {
 
       // Set the state of each Ball.
       ball.setState( ballState );

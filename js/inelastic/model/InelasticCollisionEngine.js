@@ -301,7 +301,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     const helper = ( min, max ) => {
       const mid = ( min + max ) / 2;
-      const orientations = this.rotatingBallCluster.computeOrientations( mid );
+      const orientations = this.rotatingBallCluster.getSteppedRotationStates( mid );
       let overlapping = 0;
       let touching = 0;
 
