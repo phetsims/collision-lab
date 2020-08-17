@@ -1,6 +1,20 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
+ * RotatingBallCluster is a data structure that represents a 'stuck' cluster of Balls, where each ball is rotating
+ * around the center-of-mass of the cluster of Balls. As of now, there are no ball-to-cluster collisions, meaning
+ * RotatingBallClusters are immutable (balls can't be added).
+ *
+ * Perfectly inelastic collisions that 'stick' are a new feature of the HTML5 version of the simulation. They happen
+ * only for the 'Inelastic' screen. When a 'sticky' collision between balls occurs, InelasticCollisionEngine will
+ * dynamically create a RotatingBallCluster instance, holding onto the balls involved in the rotation, the angular
+ * velocity of the rotation, and the center of mass of the cluster.
+ *
+ * RotatingBallCluster is also responsible for 'stepping' (rotating) the position/velocity of the Balls on each
+ * time-step. It is implemented by changing reference frames to the center of mass and applying the standard
+ * uniform circular motion equations to compute the new velocity and position of each Ball. See:
+ *   + https://en.wikipedia.org/wiki/Frame_of_reference
+ *   + https://en.wikipedia.org/wiki/Circular_motion#Uniform_circular_motion
  *
  * @author Brandon Li
  */

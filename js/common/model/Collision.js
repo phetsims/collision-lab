@@ -1,11 +1,11 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * An immutable data-structure that contains information about a potential collision, including the two colliding bodies
+ * An immutable data structure that contains information about a potential collision, including the two colliding bodies
  * involved in the collision and at what time the collision will occur, if it does at all. Doesn't hold onto any
  * listeners or Properties, so no dispose method is needed.
  *
- * The Collision data-structure is used to encapsulate the necessary information of a potential collision that may
+ * The Collision data structure is used to encapsulate the necessary information of a potential collision that may
  * happen in the future. CollisionEngine will create Collision instances for every combination of physical bodies
  * upfront, along with an associated "time" of when the collision will occur. If a Collision doesn't have an associated
  * "time", it means that the stored bodies will not collide. These Collision instances are saved to reduce redundant

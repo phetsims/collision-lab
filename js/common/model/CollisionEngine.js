@@ -11,7 +11,7 @@
  *     other with high velocities and/or time-steps. The algorithm for detecting ball-ball collisions is described fully
  *     in https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
  *
- *   - On each time-step, every ball-ball and ball-border combination is encapsulated in a Collision data-structure
+ *   - On each time-step, every ball-ball and ball-border combination is encapsulated in a Collision data structure
  *     instance, along with if and when the respective bodies will collide. These Collision instances are saved to
  *     optimize the number of redundant collision-detection checks. On successive time-steps, Collision instances
  *     are only created for ball-ball and ball-border combinations that haven't already been created. Collision
