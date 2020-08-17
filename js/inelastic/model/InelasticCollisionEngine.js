@@ -38,6 +38,7 @@ import Property from '../../../../axon/js/Property.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
 import Collision from '../../common/model/Collision.js';
@@ -255,9 +256,8 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @param {Ball} ball - the Ball involved in the collision.
    * @param {number} dt - time-delta in seconds
    */
-  handleBallToBorderCollision( ball, dt ) {
+  handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
 
     if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
 
@@ -267,7 +267,7 @@ class InelasticCollisionEngine extends CollisionEngine {
       this.collisions.forEach( collision => collision.includes( ball ) && this.collisions.delete( collision ) );
     }
     else {
-      super.handleBallToBorderCollision( ball, dt );
+      super.handleBallToBorderCollision( ball );
     }
   }
 
@@ -288,7 +288,9 @@ class InelasticCollisionEngine extends CollisionEngine {
     if ( CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
       return;
     }
-
+    if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
+      return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
+    }
 
     const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) + ball.radius ) ) + 1E-4;
 
@@ -306,10 +308,10 @@ class InelasticCollisionEngine extends CollisionEngine {
       orientations.forEach( ( schema, ball ) => {
 
           playAreaBounds.set( this.playArea.bounds ).erode( ball.radius );
-          if ( Utils.equalsEpsilon( schema.position.x - ball.radius, this.playArea.left, 1E-4 ) ||
-                  Utils.equalsEpsilon( schema.position.x + ball.radius, this.playArea.right, 1E-4 ) ||
-                  Utils.equalsEpsilon( schema.position.y + ball.radius, this.playArea.top, 1E-4 ) ||
-                  Utils.equalsEpsilon( schema.position.y - ball.radius, this.playArea.bottom, 1E-4 ) ) {
+          if ( Utils.equalsEpsilon( schema.position.x - ball.radius, this.playArea.left, CollisionLabConstants.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.x + ball.radius, this.playArea.right, CollisionLabConstants.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.y + ball.radius, this.playArea.top, CollisionLabConstants.ZERO_THRESHOLD ) ||
+                  Utils.equalsEpsilon( schema.position.y - ball.radius, this.playArea.bottom, CollisionLabConstants.ZERO_THRESHOLD ) ) {
 
             touching += 1;
           }
@@ -343,8 +345,8 @@ class InelasticCollisionEngine extends CollisionEngine {
   handleBallClusterToBorderCollision( collision ) {
     this.ballSystem.balls.forEach( ball => {
       ball.velocity = Vector2.ZERO;
-
     } );
+
     this.collisions.delete( collision );
     this.rotatingBallCluster = null;
   }
