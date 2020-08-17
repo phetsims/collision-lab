@@ -81,16 +81,21 @@ class CollisionEngine {
     this.ballSystem = ballSystem;
 
     // Observe when some 'state' in the simulation that invalidates our Collision instances changes. This occurs when a
-    // Ball is user-controlled, when the number of Balls in the system changes, when a reflecting border is changed, or
-    // when the 'direction' of time progression changes. In all of these scenarios, existing Collisions may be incorrect
-    // and collisions should be re-detected. Multilink persists for the lifetime of the simulation.
+    // Ball is user-controlled, when the number of Balls in the system changes, or when the 'direction' of time
+    // progression changes. In all of these scenarios, existing Collisions may be incorrect and collisions should be
+    // re-detected. Multilink persists for the lifetime of the simulation.
     Property.lazyMultilink( [
       ballSystem.ballSystemUserControlledProperty,
       ballSystem.numberOfBallsProperty,
-      playArea.reflectingBorderProperty,
       this.timeStepDirectionProperty
 
     ], this.reset.bind( this ) );
+
+    // Observe when the PlayArea's reflectingBorderProperty changes, meaning existing Collisions that involve the
+    // PlayArea may be incorrect and collisions should be re-detected. Link persists for the lifetime of the simulation.
+    playArea.reflectingBorderProperty.lazyLink( () => {
+      this.collisions.forEach( collision => collision.includes( playArea ) && this.collisions.delete( collision ) );
+    } );
   }
 
   /**

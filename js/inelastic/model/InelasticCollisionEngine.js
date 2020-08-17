@@ -70,7 +70,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Observe when the InelasticPreset is changed and reset the InelasticCollisionEngine. When the InelasticPreset is
     // changed, Balls are set to different states, meaning existing Collisions may be incorrect and collisions should be
     // re-detected. Link persists for the lifetime of the simulation.
-    ballSystem.inelasticPresetProperty.link( this.reset.bind( this ) );
+    ballSystem.inelasticPresetProperty.lazyLink( this.reset.bind( this ) );
   }
 
   /**
