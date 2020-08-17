@@ -63,10 +63,9 @@ class RotatingBallCluster {
     // Get the states of the Balls after the rotation occurs.
     const rotationStates = this.getSteppedRotationStates( dt );
 
-    // Update each Ball.
     rotationState.forEach( ( ballState, ball ) => {
 
-      // Set the state of the Ball.
+      // Set the state of each Ball.
       ball.setState( ballState );
 
       // Rotate the balls around their centers to provide a more realistic rotation experience. See
@@ -74,8 +73,6 @@ class RotatingBallCluster {
       ball.rotationProperty.value += changeInAngle;
     } );
   }
-
-  //----------------------------------------------------------------------------------------
 
   /**
    * Creates a BallState for every Ball that describes the state of each Ball after being 'rotated' for dt seconds. The
