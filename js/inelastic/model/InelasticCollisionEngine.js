@@ -50,6 +50,9 @@ import InelasticCollisionType from './InelasticCollisionType.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
 import RotatingBallCluster from './RotatingBallCluster.js';
 
+// constants
+const TOLERANCE = CollisionLabConstants.ZERO_THRESHOLD;
+
 class InelasticCollisionEngine extends CollisionEngine {
 
   /**
@@ -236,29 +239,58 @@ class InelasticCollisionEngine extends CollisionEngine {
     const max = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0, elapsedTime );
     const playAreaBounds = this.playArea.bounds.copy();
 
-    const willCollide = ( mid ) => {
-      const orientations = this.rotatingBallCluster.getSteppedRotationStates( mid - elapsedTime );
-      let overlapping = 0;
-      let touching = 0;
 
-      orientations.forEach( ( schema, ball ) => {
-
-          playAreaBounds.set( this.playArea.bounds ).erode( ball.radius );
-          if ( Utils.equalsEpsilon( schema.position.x - ball.radius, this.playArea.left, CollisionLabConstants.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.x + ball.radius, this.playArea.right, CollisionLabConstants.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.y + ball.radius, this.playArea.top, CollisionLabConstants.ZERO_THRESHOLD ) ||
-                  Utils.equalsEpsilon( schema.position.y - ball.radius, this.playArea.bottom, CollisionLabConstants.ZERO_THRESHOLD ) ) {
-
-            touching += 1;
-          }
-          else if ( !playAreaBounds.containsPoint( schema.position ) ) {
-            overlapping += 1;
-          }
-      } );
-      return overlapping ? 1 : ( touching ? 0 : -1 );
-    };
     const collisionTime = CollisionLabUtils.bisection( willCollide, min, max );
     this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
+  }
+
+  /**
+   * Indicates if the rotatingBallCluster will approximately collide with the border at some passed-in time-delta OR if
+   * it is an over/under estimate. If any of the Balls in cluster are overlapping (more than some threshold), then the
+   * dt is considered an overestimate. Likewise, if none of the balls are overlapping, the dt is an underestimate. If
+   * any of the Balls are tangentially touching the side of the PlayArea, it is considered to be 'close enough'.
+   * @private
+   *
+   * @param {number} dt
+   * @returns {number} - Returns -1 if the passed-in time is an underestimate,
+   *                              0 if the passed-in time is considered 'close enough'
+   *                              1 if the passed-in time is an overestimate.
+   */
+  willClusterCollideWithBorderAt( dt ) {
+    assert && assert( typeof dt === 'number' && dt >= 0, `invalid dt: ${dt}` );
+    assert && assert( this.rotatingBallCluster, 'cannot call willClusterCollideWithBorderAt' );
+
+    // Get the states of the Balls after the time-delta.
+    const rotationStates = this.getSteppedRotationStates( dt );
+
+    // Flags that track the number of Balls in the cluster that are overlapping and tangentially touching the border.
+    let overlapping = 0;
+    let touching = 0;
+
+    this.rotatingBallCluster.balls.forEach( ball => {
+
+      // Position of the Ball after the time-delta.
+      const position = rotationStates.get( ball ).position;
+      const left = position.x - ball.radius;
+      const right = position.x + ball.radius;
+      const top = position.y + ball.radius;
+      const bottom = position.y - ball.radius;
+
+      if ( Utils.equalsEpsilon( left, this.playArea.left, TOLERANCE ) ||
+           Utils.equalsEpsilon( right, this.playArea.right, TOLERANCE ) ||
+           Utils.equalsEpsilon( top, this.playArea.top, TOLERANCE ) ||
+           Utils.equalsEpsilon( bottom, this.playArea.bottom, TOLERANCE ) ) {
+        touching += 1;
+      }
+      else if ( left > this.playArea.left ||
+                right < this.playArea.right ||
+                bottom < this.playArea.bottom ||
+                top > this.playArea.top ) {
+        overlapping += 1;
+      }
+    } );
+
+    return overlapping ? 1 : ( touching ? 0 : -1 );
   }
 
   // @private
