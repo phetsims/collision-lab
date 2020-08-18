@@ -232,8 +232,8 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) + ball.radius ) ) + 1E-4;
 
-    const min = this.getCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR );
-    const max = this.getCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0 );
+    const min = this.getBallToBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR );
+    const max = this.getBallToBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0 );
     const playAreaBounds = this.playArea.bounds.copy();
 
 
@@ -265,9 +265,9 @@ class InelasticCollisionEngine extends CollisionEngine {
 
       }
       else {
-        if ( touching > 0 ) {
+        if ( touching > 0 && overlapping === 0 ) {
           // good enough
-          this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid + elapsedTime ) );
+          this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid ) );
 
         }
         else {
