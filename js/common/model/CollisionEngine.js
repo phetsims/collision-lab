@@ -71,6 +71,10 @@ class CollisionEngine {
     this.playArea = playArea;
     this.ballSystem = ballSystem;
 
+    // @private {Vector2} - mutable Vector2 instances, reused in critical code to reduce memory allocations.
+    this.deltaR = new Vector2( 0, 0 );
+    this.deltaV = new Vector2( 0, 0 );
+
     // Observe when some 'state' in the simulation that invalidates our Collision instances changes. This occurs when a
     // Ball is user-controlled, when the number of Balls in the system changes, or when the 'direction' of time
     // progression changes. In all of these scenarios, existing Collisions may be incorrect and collisions should be
@@ -79,7 +83,6 @@ class CollisionEngine {
       ballSystem.ballSystemUserControlledProperty,
       ballSystem.numberOfBallsProperty,
       this.timeStepDirectionProperty
-
     ], this.reset.bind( this ) );
 
     // Observe when the PlayArea's reflectingBorderProperty changes, meaning existing Collisions that involve the
@@ -237,15 +240,15 @@ class CollisionEngine {
          * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
          *----------------------------------------------------------------------------*/
 
-        const deltaR.set( ball2.position ).subtract( ball1.position );
-        const deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
+        this.deltaR.set( ball2.position ).subtract( ball1.position );
+        this.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
         const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
 
         // Solve for the possible roots of the quadratic outlined in the document above.
         const possibleRoots = Utils.solveQuadraticRootsReal(
-                                deltaV.magnitudeSquared,
-                                deltaV.dot( deltaR ) * 2,
-                                deltaR.magnitudeSquared - sumOfRadiiSquared );
+                                this.deltaV.magnitudeSquared,
+                                this.deltaV.dot( this.deltaR ) * 2,
+                                this.deltaR.magnitudeSquared - sumOfRadiiSquared );
 
         // The minimum root of the quadratic is when the Balls will first collide.
         const root = possibleRoots ? Math.min( ...possibleRoots ) : null;
