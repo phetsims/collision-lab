@@ -257,28 +257,8 @@ class InelasticCollisionEngine extends CollisionEngine {
       } );
       return overlapping ? 1 : ( touching ? 0 : -1 );
     };
-
-
-    const helper = ( min, max ) => {
-      const mid = ( min + max ) / 2;
-      const res = willCollide( mid );
-
-
-      if ( res > 0 ) { return helper( min, mid ); }
-      else {
-        if ( res === 0 ) {
-
-          // good enough
-          this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid ) );
-        }
-        else {
-
-          // under
-          return helper( mid, max );
-        }
-      }
-    };
-    return helper( min, max );
+    const collisionTime = CollisionLabUtils.bisection( willCollide, min, max );
+    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
   }
 
   // @private
