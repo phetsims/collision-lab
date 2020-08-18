@@ -280,12 +280,12 @@ class InelasticCollisionEngine extends CollisionEngine {
   }
 
   // @private
-  handleBallClusterToBorderCollision( collision ) {
+  handleBallClusterToBorderCollision() {
     this.ballSystem.balls.forEach( ball => {
       ball.velocity = Vector2.ZERO;
     } );
 
-    this.collisions.delete( collision );
+    this.invalidateCollisions( this.rotatingBallCluster );
     this.rotatingBallCluster = null;
   }
 }

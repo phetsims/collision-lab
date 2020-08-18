@@ -93,9 +93,7 @@ class CollisionEngine {
 
     // Observe when the PlayArea's reflectingBorderProperty changes, meaning existing Collisions that involve the
     // PlayArea may be incorrect and collisions should be re-detected. Link persists for the lifetime of the simulation.
-    playArea.reflectingBorderProperty.lazyLink( () => {
-      this.collisions.forEach( collision => collision.includes( playArea ) && this.collisions.delete( collision ) );
-    } );
+    playArea.reflectingBorderProperty.lazyLink( () => this.invalidateCollisions( playArea ) );
   }
 
   /**
@@ -198,6 +196,18 @@ class CollisionEngine {
     collision.includes( this.playArea ) ?
           this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2 ) :
           this.handleBallToBallCollision( collision.body1, collision.body2, collision.time );
+  }
+
+  /**
+   * Remove all collisions that involves the passed-in body.
+   * @protected
+   *
+   * @param {Object} body
+   */
+  invalidateCollisions( body ) {
+    assert && assert( body instanceof Object, `invalid body: ${body}` );
+
+    this.collisions.forEach( collision => collision.includes( body ) && this.collisions.delete( collision ) );
   }
 
   /*----------------------------------------------------------------------------*
@@ -309,8 +319,8 @@ class CollisionEngine {
     ball2.velocity = new Vector2( v2xP, v2yP );
 
     // Remove all collisions that involves either of the Balls.
-    this.collisions.forEach( collision => collision.includesEither( ball1, ball2 ) &&
-                                          this.collisions.delete( collision ) );
+    this.invalidateCollisions( ball1 );
+    this.invalidateCollisions( ball2 );
   }
 
   /*----------------------------------------------------------------------------*
@@ -420,7 +430,7 @@ class CollisionEngine {
     }
 
     // Remove all collisions that involves the involved Ball.
-    this.collisions.forEach( collision => collision.includes( ball ) && this.collisions.delete( collision ) );
+    this.invalidateCollisions( ball );
   }
 }
 
