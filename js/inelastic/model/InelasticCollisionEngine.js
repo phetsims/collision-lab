@@ -216,31 +216,49 @@ class InelasticCollisionEngine extends CollisionEngine {
    *----------------------------------------------------------------------------*/
 
   /**
-   * Detects all ball-to-border collisions of the BallSystem that haven't already occurred. Although tunneling doesn't
-   * occur with ball-to-border collisions, collisions are still detected before they occur to mirror the approach for
-   * ball-to-ball collisions. For newly detected collisions, information is encapsulated in a Collision instance.
-   * NOTE: no-op when the PlayArea's border doesn't reflect.
+   * Detects the cluster-to-border collision of the rotatingBallCluster if it hasn't already been detected. Although
+   * tunneling doesn't occur with cluster-to-border collisions, collisions are still detected before they occur to
+   * mirror the approach in the super-class. For newly detected collisions, information is encapsulated in a Collision
+   * instance. NOTE: no-op when the PlayArea's border doesn't reflect.
    * @private
    *
    * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
    */
   detectBallClusterToBorderCollision( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    if ( CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
-      return;
+    assert && assert( this.rotatingBallCluster, 'cannot call willClusterCollideWithBorderAt' );
+
+    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected or
+    // if any of the Balls are outside of the PlayArea.
+    if ( !this.playArea.reflectsBorder ||
+         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ||
+         this.rotatingBallCluster.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
+      return; /** do nothing **/
     }
-    if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
+
+    // Handle degenerate case where the cluster is already colliding with the border.
+    if ( this.willClusterCollideWithBorderAt( 0 ) === 0 ) {
       return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
     }
 
-    const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) + ball.radius ) ) + 1E-4;
+    // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
+    // cluster collides with the border.
+    const minCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position,
+                                                          this.ballSystem.centerOfMass.velocity,
+                                                          this.rotatingBallCluster.boundingCircleRadius,
+                                                          elapsedTime );
 
-    const min = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR, elapsedTime );
-    const max = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0, elapsedTime );
-    const playAreaBounds = this.playArea.bounds.copy();
+    // Get the upper-bound of when the cluster will collide with the border, which is when the center-of-mass collides
+    // with the border.
+    const maxCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position,
+                                                          this.ballSystem.centerOfMass.velocity,
+                                                          0,
+                                                          elapsedTime );
 
+    // Use the bisection method to approximate when the cluster exactly collides with the border.
+    const collisionTime = CollisionLabUtils.bisection( time => this.willClusterCollideWithBorderAt( time - elapsedTime ), minCollisionTime, maxCollisionTime );
 
-    const collisionTime = CollisionLabUtils.bisection( willCollide, min, max );
+    // Register the collision and encapsulate information in a Collision instance.
     this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
   }
 
@@ -259,9 +277,10 @@ class InelasticCollisionEngine extends CollisionEngine {
   willClusterCollideWithBorderAt( dt ) {
     assert && assert( typeof dt === 'number' && dt >= 0, `invalid dt: ${dt}` );
     assert && assert( this.rotatingBallCluster, 'cannot call willClusterCollideWithBorderAt' );
+    assert && assert( this.playArea.reflectsBorder, 'cannot call willClusterCollideWithBorderAt' );
 
     // Get the states of the Balls after the time-delta.
-    const rotationStates = this.getSteppedRotationStates( dt );
+    const rotationStates = this.rotatingBallCluster.getSteppedRotationStates( dt );
 
     // Flags that track the number of Balls in the cluster that are overlapping and tangentially touching the border.
     let overlapping = 0;
@@ -282,8 +301,8 @@ class InelasticCollisionEngine extends CollisionEngine {
            Utils.equalsEpsilon( bottom, this.playArea.bottom, TOLERANCE ) ) {
         touching += 1;
       }
-      else if ( left > this.playArea.left ||
-                right < this.playArea.right ||
+      else if ( left < this.playArea.left ||
+                right > this.playArea.right ||
                 bottom < this.playArea.bottom ||
                 top > this.playArea.top ) {
         overlapping += 1;

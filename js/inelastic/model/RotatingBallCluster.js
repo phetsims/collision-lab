@@ -49,6 +49,16 @@ class RotatingBallCluster {
   }
 
   /**
+   * Gets the radius of the bounding circle of the entire RotatingBallCluster, in meters.
+   * @public
+   *
+   * @returns {number}
+   */
+  get boundingCircleRadius() {
+    return Math.max( ...this.balls.map( ball => ball.position.distance( this.centerOfMass.position ) + ball.radius ) );
+  }
+
+  /**
    * Moves every Ball in the cluster by one time-step, 'rotating' each ball around the center-of-mass of the cluster.
    * @public
    *

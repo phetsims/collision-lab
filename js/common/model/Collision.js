@@ -68,22 +68,6 @@ class Collision {
   }
 
   /**
-   * Determines if this Collision instance stores either of the passed-in bodies. The order in which bodies are
-   * passed-in doesn't matter.
-   * @public
-   *
-   * @param {Object} body1
-   * @param {Object} body2
-   * @returns {boolean}
-   */
-  includesEither( body1, body2 ) {
-    assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
-    assert && assert( body2 instanceof Object, `invalid body2: ${body2}` );
-
-    return this.includes( body1 ) || this.includes( body2 );
-  }
-
-  /**
    * Returns a boolean that indicates if the stored 'time' of this Collision will occur in between two given times.
    * The order in which the times are given doesn't matter. For instance, if this.time = 2, inRange( 1, 3 ) and
    * inRange( 3, 1 ) would return true.
