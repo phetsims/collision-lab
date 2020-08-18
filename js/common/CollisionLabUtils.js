@@ -235,7 +235,7 @@ const CollisionLabUtils = {
    *
    * @param {Iterable.<*>} iterable - collection of values.
    * @param {function(value:*):boolean} predicate
-   * @returns {boolean}
+   * @returns {*[]}
    */
   filter( iterable, predicate ) {
     assert && assert( typeof iterable[ Symbol.iterator ] === 'function', `invalid iterable: ${iterable}` );
