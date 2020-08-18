@@ -226,7 +226,7 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   detectBallClusterToBorderCollision( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    assert && assert( this.rotatingBallCluster, 'cannot call willClusterCollideWithBorderAt' );
+    assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderAt' );
 
     // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected or
     // if any of the Balls are outside of the PlayArea.
@@ -237,7 +237,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     }
 
     // Handle degenerate case where the cluster is already colliding with the border.
-    if ( this.willClusterCollideWithBorderAt( 0 ) === 0 ) {
+    if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
       return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
     }
 
@@ -255,11 +255,13 @@ class InelasticCollisionEngine extends CollisionEngine {
                                                           0,
                                                           elapsedTime );
 
-    // Use the bisection method to approximate when the cluster exactly collides with the border.
-    const collisionTime = CollisionLabUtils.bisection( time => this.willClusterCollideWithBorderAt( time - elapsedTime ), minCollisionTime, maxCollisionTime );
-
-    // Register the collision and encapsulate information in a Collision instance.
-    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
+    // Use the bisection method to approximate when the cluster exactly collides with the border and register the
+    // collision and encapsulate information in a Collision instance.
+    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, CollisionLabUtils.bisection(
+      time => this.willBallClusterCollideWithBorderAt( time - elapsedTime ),
+      minCollisionTime,
+      maxCollisionTime
+    ) ) );
   }
 
   /**
@@ -274,10 +276,10 @@ class InelasticCollisionEngine extends CollisionEngine {
    *                              0 if the passed-in time is considered 'close enough'
    *                              1 if the passed-in time is an overestimate.
    */
-  willClusterCollideWithBorderAt( dt ) {
-    assert && assert( typeof dt === 'number' && dt >= 0, `invalid dt: ${dt}` );
-    assert && assert( this.rotatingBallCluster, 'cannot call willClusterCollideWithBorderAt' );
-    assert && assert( this.playArea.reflectsBorder, 'cannot call willClusterCollideWithBorderAt' );
+  willBallClusterCollideWithBorderAt( dt ) {
+    assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
+    assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderAt' );
+    assert && assert( this.playArea.reflectsBorder, 'cannot call willBallClusterCollideWithBorderAt' );
 
     // Get the states of the Balls after the time-delta.
     const rotationStates = this.rotatingBallCluster.getSteppedRotationStates( dt );
@@ -312,12 +314,21 @@ class InelasticCollisionEngine extends CollisionEngine {
     return overlapping ? 1 : ( touching ? 0 : -1 );
   }
 
-  // @private
+  /**
+   * Handles a cluster-to-border collision by updating the velocity of the Balls.
+   * @private
+   *
+   * When a rotating ball cluster collides the border, every ball in the cluster has 0 velocity.
+   */
   handleBallClusterToBorderCollision() {
-    this.ballSystem.balls.forEach( ball => {
+    assert && assert( this.rotatingBallCluster, 'cannot call handleBallToBorderCollision' );
+
+    // Set the velocity of every Ball to 0.
+    this.rotatingBallCluster.balls.forEach( ball => {
       ball.velocity = Vector2.ZERO;
     } );
 
+    // Remove all collisions that involves rotatingBallCluster.
     this.invalidateCollisions( this.rotatingBallCluster );
     this.rotatingBallCluster = null;
   }
