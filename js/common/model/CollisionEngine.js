@@ -333,19 +333,36 @@ class CollisionEngine {
 
       // Only detect new ball-border collisions if it hasn't already been detected.
       if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball, this.playArea ) ) ) {
-        const timeUntilCollision = this.getCollisionTime( ball.position, ball.velocity, ball.radius );
 
-        const collisionTime = !( Number.isFinite( timeUntilCollision ) && timeUntilCollision * this.timeStepDirectionProperty.value >= 0 ) ? null :
-          elapsedTime + timeUntilCollision;
+        // Calculate when the Ball will collide with the border.
+        const collisionTime = this.getBallToBorderCollisionTime(
+          ball.position,
+          ball.velocity,
+          ball.radius,
+          elapsedTime
+        );
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball, this.playArea, collisionTime ) );
+        this.collisions.add( new Collision( ball, this.playArea, collisionTime  ) );
       }
     } );
   }
 
-  // @private
-  getCollisionTime( position, velocity, radius ) {
+  /**
+   * Calculates when some Ball will collide with the PlayArea's border. Instead of passing in a Ball instance, key
+   * attributes of the Ball are passed-in. This API is required for sub-classes (see InelasticCollisionEngine).
+   * @protected
+   *
+   * @param {Vector2} position - the position of the Ball.
+   * @param {Vector2} velocity - the velocity of the Ball.
+   * @param {number} radius - the radius of the Ball.
+   * @param {number} elapsedTime - elapsedTime, based on where the Ball is positioned when this method is called.
+   */
+  getBallToBorderCollisionTime( position, velocity, radius, elapsedTime ) {
+    assert && assert( position instanceof Vector2, `invalid position: ${position}` );
+    assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
+    assert && assert( typeof radius === 'number', `invalid radius: ${radius}` );
+    assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
     // essentially moving in the opposite direction of its velocity vector. For calculating if Balls will collide,
@@ -364,7 +381,9 @@ class CollisionEngine {
     const possibleCollisionTimes = [ horizontalCollisionTime, verticalCollisionTime ].filter( Number.isFinite );
 
     // Solve for the timeUntilCollision, which is the first border (minimum in time) the Ball would collide with.
-    return Math.min( ...possibleCollisionTimes ) * velocityMultipier;
+    const timeUntilCollision = Math.min( ...possibleCollisionTimes ) * velocityMultipier;
+
+    return possibleCollisionTimes.length ? elapsedTime + timeUntilCollision : null;
   }
 
   /**
