@@ -251,6 +251,49 @@ const CollisionLabUtils = {
   },
 
   /**
+   * Finds the root of some function, f, in some interval [min, max], using the bisection method. If maxIterations is
+   * reached, an error is thrown. See https://en.wikipedia.org/wiki/Bisection_method. This method differs in that
+   * the function provided isn't the polynomial itself, but rather indicates if some input is an over or under estimate.
+   * @public
+   *
+   * @param {function(value:*):number} f - Returns -1 if the value input is an underestimate,
+   *                                                0 if the value input is considered 'close enough'
+   *                                                1 if the value input is an overestimate.
+   * @param {number} min - min value of the interval to check.
+   * @param {number} max - max value of the interval to check.
+   * @param {number} [maxIterations] - will throw an error after this many iterations to guard against infinite loops.
+   * @returns {number}
+   */
+  bisection( f, min, max, maxIterations = 100 ) {
+    assert && assert( typeof f === 'function', `invalid f: ${f}` );
+    assert && assert( typeof min === 'number', `invalid min: ${min}` );
+    assert && assert( typeof max === 'number', `invalid max: ${max}` );
+    assert && assert( typeof maxIterations === 'number', `invalid maxIterations: ${maxIterations}` );
+
+    for ( let i = 0; i < maxIterations; i++ ) {
+
+      // Get the new midpoint of the interval.
+      const midpoint = ( min + max ) / 2;
+
+      // Get the result of f at the midpoint.
+      const result = f( midpoint );
+
+      if ( result === 1 ) {
+        max = midpoint;
+      }
+      else if ( result === 0 ) {
+        return midpoint;
+      }
+      else {
+        min = midpoint;
+      }
+    }
+
+    // At this point, maxIterations was reached, so an error is thrown.
+    assert && assert( false, 'maxIterations reached for bisection' );
+  },
+
+  /**
    * A javascript version of the sleep function. This is **ONLY to be used for debugging**, and assertions must be
    * enabled for use. This was mostly used to debug CollisionEngine with large time steps. In this case, it should be
    * used in-conjunction with the step button to allow the javascript event loop to return before the next step.

@@ -335,12 +335,7 @@ class CollisionEngine {
       if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball, this.playArea ) ) ) {
 
         // Calculate when the Ball will collide with the border.
-        const collisionTime = this.getBallToBorderCollisionTime(
-          ball.position,
-          ball.velocity,
-          ball.radius,
-          elapsedTime
-        );
+        const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.add( new Collision( ball, this.playArea, collisionTime  ) );
@@ -358,7 +353,7 @@ class CollisionEngine {
    * @param {number} radius - the radius of the Ball.
    * @param {number} elapsedTime - elapsedTime, based on where the Ball is positioned when this method is called.
    */
-  getBallToBorderCollisionTime( position, velocity, radius, elapsedTime ) {
+  getBorderCollisionTime( position, velocity, radius, elapsedTime ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
     assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
     assert && assert( typeof radius === 'number', `invalid radius: ${radius}` );

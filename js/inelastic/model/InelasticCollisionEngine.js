@@ -232,14 +232,12 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     const maxR = Math.max( ...this.rotatingBallCluster.balls.map( ball => ball.position.distance( this.ballSystem.centerOfMass.position ) + ball.radius ) ) + 1E-4;
 
-    const min = this.getBallToBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR );
-    const max = this.getBallToBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0 );
+    const min = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, maxR, elapsedTime );
+    const max = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position, this.ballSystem.centerOfMass.velocity, 0, elapsedTime );
     const playAreaBounds = this.playArea.bounds.copy();
 
-
-    const helper = ( min, max ) => {
-      const mid = ( min + max ) / 2;
-      const orientations = this.rotatingBallCluster.getSteppedRotationStates( mid );
+    const willCollide = ( mid ) => {
+      const orientations = this.rotatingBallCluster.getSteppedRotationStates( mid - elapsedTime );
       let overlapping = 0;
       let touching = 0;
 
@@ -257,20 +255,24 @@ class InelasticCollisionEngine extends CollisionEngine {
             overlapping += 1;
           }
       } );
+      return overlapping ? 1 : ( touching ? 0 : -1 );
+    };
 
 
-      if ( overlapping > 0 ) {
-          // over
-          return helper( min, mid );
+    const helper = ( min, max ) => {
+      const mid = ( min + max ) / 2;
+      const res = willCollide( mid );
 
-      }
+
+      if ( res > 0 ) { return helper( min, mid ); }
       else {
-        if ( touching > 0 && overlapping === 0 ) {
+        if ( res === 0 ) {
+
           // good enough
           this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, mid ) );
-
         }
         else {
+
           // under
           return helper( mid, max );
         }
