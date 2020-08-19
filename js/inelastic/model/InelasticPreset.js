@@ -75,17 +75,17 @@ const InelasticPreset = Enumeration.byMap( {
    * learning goals of perfectly inelastic collisions.
    *----------------------------------------------------------------------------*/
 
-  NAME_1: new InelasticPresetValue( [
+  CRISS_CROSS: new InelasticPresetValue( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 1.00, 0.5 ), 0.50 ),
     new BallState( new Vector2( 0.50, 0.00 ), new Vector2( -1.0, 0.5 ), 0.50 )
   ] ),
 
-  NAME_2: new InelasticPresetValue( [
+  HEAD_ON: new InelasticPresetValue( [
     new BallState( new Vector2( -0.5, 0.00 ), new Vector2( 0.50, 0 ), 0.5 ),
     new BallState( new Vector2( 0.50, 0.00 ), new Vector2( -0.5, 0 ), 0.5 )
   ] ),
 
-  NAME_3: new InelasticPresetValue( [
+  GLANCING: new InelasticPresetValue( [
     new BallState( new Vector2( -0.65, 0.00 ), new Vector2( 0, 0 ), 1.8 ),
     new BallState( new Vector2( 0.6, 0.12 ), new Vector2( -1, 0 ), 0.3 )
   ] )
