@@ -297,17 +297,17 @@ class InelasticCollisionEngine extends CollisionEngine {
       const top = position.y + ball.radius;
       const bottom = position.y - ball.radius;
 
-      if ( Utils.equalsEpsilon( left, this.playArea.left, TOLERANCE ) ||
-           Utils.equalsEpsilon( right, this.playArea.right, TOLERANCE ) ||
-           Utils.equalsEpsilon( top, this.playArea.top, TOLERANCE ) ||
-           Utils.equalsEpsilon( bottom, this.playArea.bottom, TOLERANCE ) ) {
-        touching += 1;
-      }
-      else if ( left < this.playArea.left ||
-                right > this.playArea.right ||
-                bottom < this.playArea.bottom ||
-                top > this.playArea.top ) {
+      if ( left < this.playArea.left ||
+          right > this.playArea.right ||
+          bottom < this.playArea.bottom ||
+          top > this.playArea.top ) {
         overlapping += 1;
+      }
+      else if ( Utils.equalsEpsilon( left, this.playArea.left, TOLERANCE ) ||
+                Utils.equalsEpsilon( right, this.playArea.right, TOLERANCE ) ||
+                Utils.equalsEpsilon( top, this.playArea.top, TOLERANCE ) ||
+                Utils.equalsEpsilon( bottom, this.playArea.bottom, TOLERANCE ) ) {
+        touching += 1;
       }
     } );
 
