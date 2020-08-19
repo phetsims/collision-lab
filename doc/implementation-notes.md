@@ -1,9 +1,6 @@
 # Collision Lab - implementation notes
 
-This document contains notes related to the implementation of Collision Lab. 
-This is not an exhaustive description of the implementation. The intention is 
-to provide a high-level overview and to supplement the internal documentation 
-(source code comments) and external documentation (design documents).  
+This document contains notes related to the implementation of Collision Lab. This is not an exhaustive description of the implementation. The intention is to provide a high-level overview and to supplement the internal documentation (source code comments) and external documentation (design documents).  
 
 Before reading this document, you are encouraged to read:
 * [model.md](https://github.com/phetsims/collision-lab/blob/master/doc/model.md), a high-level description of the simulation model
@@ -30,17 +27,17 @@ This section describes how this simulation addresses implementation consideratio
 
 **Coordinate Transforms**: The model coordinate frame is in meters (m), with +x right, +y up. The standard (scenery) view coordinate frame has +x right, +y down. Thus, Collision Lab uses a [ModelViewTransform2](https://github.com/phetsims/phetcommon/blob/master/js/view/ModelViewTransform2.js) scaling transformation that inverts the y-axis.
 
-**Query Parameters**: Query parameters are used to enable sim-specific features, mainly for debugging and
-testing. Sim-specific query parameters are documented in
-[CollisionLabQueryParameters](../js/common/CollisionLabQueryParameters.js).
+**Query Parameters**: Query parameters are used to enable sim-specific features, mainly for debugging and testing. Sim-specific query parameters are documented in [CollisionLabQueryParameters](../js/common/CollisionLabQueryParameters.js).
 
 **Assertions**: The implementation makes heavy use of `assert` to verify pre/post assumptions and perform type checking. This sim performs type-checking for almost all function arguments via `assert`. If you are making modifications to this sim, do so with assertions enabled via the `?ea` query parameter.
 
-**Memory Management**: There are no dynamically allocated objects for the collision lab simulation. The same Ball objects (both model and view) are used with the same number of Balls, meaning Balls are created at the start of the sim and persist for the lifetime of the sim. See [BallSystem](../js/common/model/BallSystem.js) for details.
+**Memory Management**: The only dynamically allocated objects in the simulation are [PathDataPoint](../js/common/model/PathDataPoint.js), [BallState](../js/common/model/BallState.js), [Collision](../js/common/model/Collision.js), and [RotatingBallCluster](../js/inelastic/model/RotatingBallCluster.js). However, none of these data structures hold onto any [Properties](https://github.com/phetsims/axon/blob/master/js/Property.js) or listeners, so simply un-referencing them will allow the garbage collector to free the memory.
+
+Otherwise, there are no dynamically allocated objects in the simulation. The same Ball objects (both model and view) are used with the same number of Balls, meaning Balls are created at the start of the sim and persist for the lifetime of the sim. See [BallSystem](../js/common/model/BallSystem.js) for details.
 
 For the view, the simulation takes advantage of this and creates scenery Nodes that represent each Ball (for the Ball Values Panel, Paths, BallNodes, etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
 
-Thus, all observer/observable relationships exist for the lifetime of the sim, so there is no need to call the various memory-management functions associated with these objects (unlink, dispose, removeListener, etc.).
+Thus, all observer/observable relationships exist for the lifetime of the sim, so there is no need to call the various memory-management functions associated with these objects (`unlink`, `dispose`, `removeListener`, etc.).
 
 ## Class Overview
 
