@@ -30,7 +30,7 @@ class InelasticScreenView extends CollisionLabScreenView {
 
     options = merge( {
 
-      playAreaControlSetOptions: {
+      playAreaTopRightControlsOptions: {
         includeNumberOfBallsSpinner: false
       }
 

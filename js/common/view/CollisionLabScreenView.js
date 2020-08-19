@@ -6,7 +6,7 @@
  * Displays these components:
  *   Balls
  *   PlayArea, Scale Bar, Kinetic Energy NumberDisplay
- *   PlayAreaControlSet
+ *   PlayAreaTopRightControls
  *   Return Balls Button
  *   Restart button and Elapsed Time NumberDisplay
  *   BallValuesPanel
@@ -38,7 +38,7 @@ import KeypadDialog from './KeypadDialog.js';
 import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
-import PlayAreaControlSet from './PlayAreaControlSet.js';
+import PlayAreaTopRightControls from './PlayAreaTopRightControls.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
 import RestartButton from './RestartButton.js';
@@ -66,11 +66,11 @@ class CollisionLabScreenView extends ScreenView {
       // {number} - the top of the PlayArea, in view coordinates.
       playAreaTop: CollisionLabConstants.SCREEN_VIEW_Y_MARGIN,
 
-      // {boolean} - indicates if the PlayAreaControlSet is included.
-      includePlayAreaControlSet: true,
+      // {boolean} - indicates if the PlayAreaTopRightControls is included.
+      includePlayAreaTopRightControls: true,
 
-      // {Object} - options to passed to the PlayAreaControlSet. Ignored if includePlayAreaControlSet is false.
-      playAreaControlSetOptions: null
+      // {Object} - options to passed to the PlayAreaTopRightControls, if it is included.
+      playAreaTopRightControlsOptions: null
 
     }, options );
 
@@ -220,15 +220,15 @@ class CollisionLabScreenView extends ScreenView {
 
     //----------------------------------------------------------------------------------------
 
-    // Add the PlayAreaControlSet if it is included.
-    if ( options.includePlayAreaControlSet ) {
-      const playAreaControlSet = new PlayAreaControlSet(
+    // Add the PlayAreaTopRightControls if it is included.
+    if ( options.includePlayAreaTopRightControls ) {
+      const playAreaControlSet = new PlayAreaTopRightControls(
         model.ballSystem.numberOfBallsProperty,
         model.ballSystem.numberOfBallsRange,
         model.playArea.gridVisibleProperty, merge( {
           left: playAreaViewBounds.right + 8,
           top: playAreaViewBounds.top + 2
-        }, options.playAreaControlSetOptions ) );
+        }, options.playAreaTopRightControlsOptions ) );
 
       this.addChild( playAreaControlSet );
       playAreaControlSet.moveToBack();

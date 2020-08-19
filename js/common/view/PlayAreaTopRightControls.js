@@ -1,15 +1,15 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A view specialized to display Controls for the user to change the number of Balls in the PlayArea system and the
+ * A view specialized to display Controls for the user to change the number of Balls in the BallSystem and the
  * visibility of the PlayArea's Grid. It is positioned just outside the PlayArea on the top-right side and appears on
  * all of the Screens except for the 'Intro' screen.
  *
- * The PlayAreaControlSet consists of:
- *   - a NumberSpinner to allow the user to change the number of balls in the PlayArea
+ * The PlayAreaTopRightControls consists of:
+ *   - a NumberSpinner to allow the user to change the number of balls in the system.
  *   - a GridCheckbox to toggle the visibility of the grid.
  *
- * PlayAreaControlSets are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * PlayAreaTopRightControlss are created at the start of the sim and are never disposed, so no dispose method is necessary.
  *
  * @author Brandon Li
  */
@@ -28,10 +28,10 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-class PlayAreaControlSet extends VBox {
+class PlayAreaTopRightControls extends VBox {
 
   /**
-   * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the PlayArea system.
+   * @param {Property.<number>} numberOfBallsProperty - the number of Balls in the BallSystem.
    * @param {Range} numberOfBallsRange - the range of the number of Balls
    * @param {Property.<boolean>} gridVisibleProperty
    * @param {Object} [options]
@@ -44,7 +44,7 @@ class PlayAreaControlSet extends VBox {
 
     options = merge( {
 
-      // {boolean} - indicates if components of the PlayAreaControlSet are included (mutually exclusive).
+      // {boolean} - indicates if components of the PlayAreaTopRightControls are included (mutually exclusive).
       includeGridCheckbox: true,
       includeNumberOfBallsSpinner: true,
 
@@ -81,8 +81,8 @@ class PlayAreaControlSet extends VBox {
     }, options );
 
     // Set options that cannot be overridden.
-    assert && assert( !options.spacing, 'PlayAreaControlSet sets spacing' );
-    assert && assert( !options.children, 'PlayAreaControlSet sets children' );
+    assert && assert( !options.spacing, 'PlayAreaTopRightControls sets spacing' );
+    assert && assert( !options.children, 'PlayAreaTopRightControls sets children' );
     options.spacing = options.numberSpinnerToGridCheckboxMargin;
     options.children = [];
 
@@ -90,10 +90,10 @@ class PlayAreaControlSet extends VBox {
 
     if ( options.includeNumberOfBallsSpinner ) {
 
-      // Create the title Text of the PlayAreaControlSet.
+      // Create the title Text of the PlayAreaTopRightControls.
       const ballsText = new Text( collisionLabStrings.balls, options.titleTextOptions );
 
-      // Create the NumberSpinner of the PlayAreaControlSet to allow the user to change the number of balls.
+      // Create the NumberSpinner of the PlayAreaTopRightControls to allow the user to change the number of balls.
       const numberOfBallsSpinner = new NumberSpinner( numberOfBallsProperty,
         new Property( numberOfBallsRange ),
         options.numberSpinnerOptions );
@@ -122,5 +122,5 @@ class PlayAreaControlSet extends VBox {
   }
 }
 
-collisionLab.register( 'PlayAreaControlSet', PlayAreaControlSet );
-export default PlayAreaControlSet;
+collisionLab.register( 'PlayAreaTopRightControls', PlayAreaTopRightControls );
+export default PlayAreaTopRightControls;

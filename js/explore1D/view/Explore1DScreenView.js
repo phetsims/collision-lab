@@ -31,7 +31,7 @@ class Explore1DScreenView extends CollisionLabScreenView {
     options = merge( {
 
       playAreaTop: CollisionLabConstants.PLAY_AREA_VIEW_TOP_1D,
-      playAreaControlSetOptions: {
+      playAreaTopRightControlsOptions: {
         includeGridCheckbox: false
       }
     }, options );
