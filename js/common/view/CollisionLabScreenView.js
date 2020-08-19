@@ -141,7 +141,7 @@ class CollisionLabScreenView extends ScreenView {
           stepForwardButtonOptions: { listener: model.stepForwards.bind( model ) }
         }
       } );
-    timeControlNode.setPlayPauseButtonCenter( playAreaNode.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
+    timeControlNode.setPlayPauseButtonCenter( playAreaViewBounds.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
 
     // Restart Button
     const restartButton = new RestartButton( {
