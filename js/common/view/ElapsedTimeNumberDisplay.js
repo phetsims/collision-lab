@@ -16,6 +16,7 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import StopwatchNode from '../../../../scenery-phet/js/StopwatchNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -43,8 +44,10 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
         units: collisionLabStrings.units.seconds
       } ),
       textOptions: {
-        font: CollisionLabConstants.DISPLAY_FONT,
-        maxWidth: 70 // constrain width for i18n, determined empirically
+        maxWidth: 70, // constrain width for i18n, determined empirically
+
+        // Avoid jitter in the ElapsedTimeNumberDisplay, see https://github.com/phetsims/collision-lab/issues/140.
+        font: StopwatchNode.NUMBER_FONT_FAMILY
       },
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
 
