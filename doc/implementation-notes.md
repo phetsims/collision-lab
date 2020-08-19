@@ -75,6 +75,8 @@ All screens have screen-specific classes to account for the described [screen di
 
 The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
 
+Commonly sub-typed classes are [BallSystem](../js/common/model/BallSystem.js), [PlayArea](../js/common/model/PlayArea.js), [CollisionEngine](../js/common/model/CollisionEngine.js), [BallSystemNode](../js/common/view/BallSystemNode.js), [PlayAreaNode](../js/common/view/PlayAreaNode.js), and [CollisionLabControlPanel](../js/common/view/CollisionLabControlPanel.js).
+
 ### Inelastic Screen
 
 The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences) section.
@@ -83,7 +85,7 @@ The _Inelastic_ screen introduces many components and behaviors that are unique 
 
 [InelasticCollisionEngine](../js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation).
 
-[InelasticPreset](../js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetRadioButtonGroup](../js/inelastic/model/PresetRadioButtonGroup.js).
+[InelasticPreset](../js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetRadioButtonGroup](../js/inelastic/view/PresetRadioButtonGroup.js).
 
 ## Collision Implementation
 
