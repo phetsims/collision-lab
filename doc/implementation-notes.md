@@ -53,7 +53,7 @@ This section describes the **main** classes that are common to multiple screens.
 
 [Ball](../js/common/model/Ball.js) is the model for the Balls that appear in the sim.
 
-[CollisionEngine](../js/common/model/CollisionEngine.js) implements collision detection and responses of Balls for all screens. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation) 
+[CollisionEngine](../js/common/model/CollisionEngine.js) implements collision detection and responses of Balls for all screens. Reference the [Collision Implementation](implementation-notes.md#collision-implementation) section.
 
 [BallSystem](../js/common/model/BallSystem.js) is the class that instantiates pre-populated Balls and tracks the number of Balls and which Balls that are in the "system."
 
@@ -71,7 +71,7 @@ This section describes the **main** classes that are common to multiple screens.
 
 ### Screen-specific classes
 
-All screens have screen-specific to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences).
+All screens have screen-specific classes to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences).
 
 The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
 
@@ -79,11 +79,11 @@ The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.
 
 The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences) section.
 
-[InelasticCollisionType](../js/inelastic/model/InelasticCollisionType.js) is an Enumeration of the different types of collisions ("Stick" vs "Slip").
+[InelasticCollisionType](../js/inelastic/model/InelasticCollisionType.js) is an Enumeration of the different types of perfectly inelastic collisions ("Stick" vs "Slip").
 
 [InelasticCollisionEngine](../js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation).
 
-[InelasticPreset](../js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetComboBox](../js/inelastic/model/PresetComboBox.js).
+[InelasticPreset](../js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetRadioButtonGroup](../js/inelastic/model/PresetRadioButtonGroup.js).
 
 ## Collision Implementation
 
