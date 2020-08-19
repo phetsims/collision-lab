@@ -27,7 +27,9 @@ class RestartButton extends RectangularPushButton {
       baseColor: CollisionLabColors.RESTART_BUTTON,
       lineWidth: 0,
       xMargin: 6,
-      yMargin: 5
+      yMargin: 5,
+      touchAreaXDilation: 5,
+      touchAreaYDilation: 5
 
     }, options );
 

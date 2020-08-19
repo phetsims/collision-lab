@@ -11,7 +11,6 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import HStrut from '../../../../scenery/js/nodes/HStrut.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Checkbox from '../../../../sun/js/Checkbox.js';
@@ -34,10 +33,14 @@ class CollisionLabCheckbox extends Checkbox {
       // {Node|null} optional icon, to the right of text
       icon: null,
 
-      // {number} - the width of the entire Checkbox, including its content. If the icon is provided, it is placed at
-      //            the far-right side to ensure that this is the width of the entire Checkbox. This is generally
+      // {number} - the max-width of the entire Checkbox, including its content. If the icon is provided, it is placed
+      //            at the far-right side to ensure such that the maxWidth is the width of the entire Checkbox. This is
       //            used to align icons within a control-panel. This is also used to compute the maxWidth for the Text.
-      width: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH
+      maxWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
+
+      // {number} - amount to dilate the 'touch area' of the Checkbox.
+      touchAreaXDilation: 0,
+      touchAreaYDilation: 0
 
     }, options );
 
@@ -53,22 +56,24 @@ class CollisionLabCheckbox extends Checkbox {
       contentNode.addChild( options.icon );
 
       // Apply the maxWidth of the labelText for i18n.
-      labelText.maxWidth = options.width - options.boxWidth - 2 * options.spacing - options.icon.width;
+      labelText.maxWidth = options.maxWidth - options.boxWidth - 2 * options.spacing - options.icon.width;
 
       // Position the icon to the far-right side of the constant-size Checkbox.
-      options.icon.right = options.width - options.boxWidth - options.spacing;
+      options.icon.right = options.maxWidth - options.boxWidth - options.spacing;
       options.icon.centerY = labelText.centerY;
     }
     else {
 
       // Apply the maxWidth of the labelText for i18n.
-      labelText.maxWidth = options.width - options.boxWidth - options.spacing;
-
-      // Prevents the content from getting narrower than fixedWidth
-      contentNode.addChild( new HStrut( labelText.maxWidth, { pickable: false, centerLeft: labelText.centerLeft } ) );
+      labelText.maxWidth = options.maxWidth - options.boxWidth - options.spacing;
     }
 
     super( contentNode, checkboxProperty, options );
+
+    // Dilate 'touch area', if provided.
+    if ( options.touchAreaXDilation || options.touchAreaYDilation ) {
+      this.touchArea = this.localBounds.dilatedXY( options.touchAreaXDilation, options.touchAreaYDilation );
+    }
   }
 }
 

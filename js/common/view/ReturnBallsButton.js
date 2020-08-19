@@ -36,7 +36,9 @@ class ReturnBallsButton extends RectangularPushButton {
       labelFont: CollisionLabConstants.CONTROL_FONT,
 
       // super-class options
-      baseColor: CollisionLabColors.RETURN_BALLS_BUTTON
+      baseColor: CollisionLabColors.RETURN_BALLS_BUTTON,
+      touchAreaXDilation: 5,
+      touchAreaYDilation: 5
 
     }, options );
 

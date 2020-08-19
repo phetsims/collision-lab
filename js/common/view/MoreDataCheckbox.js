@@ -28,7 +28,9 @@ class MoreDataCheckbox extends CollisionLabCheckbox {
     options = merge( {
 
       // super-class options
-      width: 150 // constrain width for i18n, determined empirically
+      width: 150, // constrain width for i18n, determined empirically
+      touchAreaXDilation: 5,
+      touchAreaYDilation: 3.5
 
     }, options );
 
