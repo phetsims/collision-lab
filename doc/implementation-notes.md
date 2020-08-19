@@ -61,7 +61,7 @@ This section describes the **main** classes that are common to multiple screens.
 
 [CollisionLabViewProperties](../js/common/view/CollisionLabViewProperties.js) a collection of boolean AXON Properties, mostly for visibility, that applies to all screens.
 
-[CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js) is the base `ScreenView` for all screens. 
+[CollisionLabScreenView](../js/common/view/CollisionLabScreenView.js) is the base `ScreenView` for all screens. 
 
 [PlayAreaNode](../js/common/view/PlayAreaNode.js) is the PlayArea view for all screens.
 
