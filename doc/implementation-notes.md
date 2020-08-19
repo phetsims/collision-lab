@@ -21,7 +21,7 @@ Much of the terminology for this sim is identified by labels that are visible in
 * _inelastic collision type_ refers to which type of perfectly inelastic collision, see [InelasticCollisionType](../js/inelastic/model/InelasticCollisionType.js)
 * _inelastic preset_ refers to a preset for the 'Inelastic screen', see [InelasticPreset](../js/inelastic/model/InelasticPreset.js)
 
-## General
+## General Considerations
 
 This section describes how this simulation addresses implementation considerations that are typically encountered in PhET simulations.
 
