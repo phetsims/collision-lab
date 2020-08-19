@@ -35,7 +35,7 @@ This section describes how this simulation addresses implementation consideratio
 
 Otherwise, there are no dynamically allocated objects in the simulation. The same Ball objects (both model and view) are used with the same number of Balls, meaning Balls are created at the start of the sim and persist for the lifetime of the sim. See [BallSystem](../js/common/model/BallSystem.js) for details.
 
-For the view, the simulation takes advantage of this and creates scenery [Nodes](https://github.com/phetsims/scenery/blob/master/js/nodes/Node.js) that represent each Ball (for the [Ball Values Panel](../js/common/view/BallValuesPanel.js), [Paths]((../js/common/view/PathsNode.js), [BallNodes]((../js/common/view/BallNode.js), etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
+For the view, the simulation takes advantage of this and creates scenery [Nodes](https://github.com/phetsims/scenery/blob/master/js/nodes/Node.js) that represent each Ball (for the [Ball Values Panel](../js/common/view/BallValuesPanel.js), [Paths](../js/common/view/PathsNode.js), [BallNodes]((../js/common/view/BallNode.js), etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
 
 Thus, all observer/observable relationships exist for the lifetime of the sim, so there is no need to call the various memory-management functions associated with these objects (`unlink`, `dispose`, `removeListener`, etc.).
 
