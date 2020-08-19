@@ -54,7 +54,6 @@ class InelasticPresetValue {
       // Changing the preset resets the trailing 'Path' and the rotation of the Ball.
       ball.path.clear();
       ball.rotationProperty.reset();
-      // TODO, investigate setting the state (or maybe setting the restartState attribute), then calling restart()
 
       // Verify that the Ball is in-Bounds.
       assert && assert( ball.insidePlayAreaProperty.value );
