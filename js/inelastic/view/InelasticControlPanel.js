@@ -11,22 +11,19 @@
  * @author Brandon Li
  */
 
-import Dimension2 from '../../../../dot/js/Dimension2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
 import HStrut from '../../../../scenery/js/nodes/HStrut.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../scenery/js/nodes/VBox.js';
-import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
-import InelasticCollisionType from '../model/InelasticCollisionType.js';
+import StickSlipABSwitch from './StickSlipABSwitch.js';
 
 class InelasticControlPanel extends CollisionLabControlPanel {
 
@@ -55,19 +52,7 @@ class InelasticControlPanel extends CollisionLabControlPanel {
 
     options = merge( {
 
-      // {Object} - passed to the labels of the ABSwitch
-      stickSlipTextOptions: {
-        font: CollisionLabConstants.CONTROL_FONT,
-        maxWidth: 70 // constrain width for i18n, determined empirically
-      },
-
-      // {Object} - passed to the ABSwitch instance.
-      stickSlipABSwitchOptions: {
-        toggleSwitchOptions: {
-          size: new Dimension2( 28, 12 )
-        }
-      },
-
+      // super-class options
       includeElasticityNumberControl: false
 
     }, options );
@@ -96,26 +81,14 @@ class InelasticControlPanel extends CollisionLabControlPanel {
       font: new PhetFont( 12 )
     } );
 
-
-    // Create an AlignGroup for the Text Nodes to match their widths.
-    const labelAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
-
-    // Create the Labels of the ABSwitch.
-    const stickLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.stick, options.stickSlipTextOptions ) );
-    const slipLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.slip, options.stickSlipTextOptions ) );
-
     // Create the 'Stick' vs 'Slip' ABSwitch.
-    const stickSlipSwitch = new ABSwitch( inelasticCollisionTypeProperty,
-      InelasticCollisionType.STICK, stickLabel,
-      InelasticCollisionType.SLIP, slipLabel,
-      options.stickSlipABSwitchOptions );
+    const stickSlipSwitch = new StickSlipABSwitch( inelasticCollisionTypeProperty );
 
     const elasticityControls = new VBox( { spacing: 4, children: [
       elasticityReadout,
       new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false } ),
       stickSlipSwitch
     ] } );
-
 
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), inelasticCollisionTitle );
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), elasticityControls );
