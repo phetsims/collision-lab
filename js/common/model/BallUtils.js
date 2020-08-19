@@ -6,6 +6,7 @@
  * @author Brandon Li
  */
 
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -164,12 +165,12 @@ const BallUtils = {
    * @public
    *
    * @param {Ball} ball
-   * @param {ObservableArray.<Ball>} balls - all the balls in the system
+   * @param {AxonArray.<Ball>} balls - all the balls in the system
    * @returns {Ball|undefined}
    */
   getClosestOverlappingBall( ball, balls ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( balls.includes( ball ) );
 
     // Filter the Balls array to get the Balls that are overlapping with the passed-in Ball.
@@ -217,11 +218,11 @@ const BallUtils = {
    * Gets the total Kinetic Energy of a collection of Balls. See https://en.wikipedia.org/wiki/Kinetic_energy.
    * @public
    *
-   * @param {ObservableArray.<Ball>} balls
+   * @param {AxonArray.<Ball>} balls
    * @returns {number} - in Joules.
    */
   getTotalKineticEnergy( balls ) {
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
 
     let totalKineticEnergy = 0;
     balls.forEach( ball => {

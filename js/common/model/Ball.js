@@ -179,7 +179,13 @@ class Ball {
    *
    * See https://github.com/phetsims/collision-lab/issues/76 for context on the differences between reset and restart.
    */
-  restart() { this.setState( this.restartState ); }
+  restart() {
+    this.setState( this.restartState );
+
+    // Setting the state resets the trailing 'Path' and the rotation of the Ball.
+    this.path.clear();
+    this.rotationProperty.reset();
+  }
 
   /**
    * Moves the ball by some time step, assuming that the Ball isn't accelerating and is in uniform motion.
@@ -214,10 +220,6 @@ class Ball {
     this.position = ballState.position;
     this.velocity = ballState.velocity;
     this.mass = ballState.mass;
-
-    // Setting the state resets the trailing 'Path' and the rotation of the Ball.
-    this.path.clear();
-    this.rotationProperty.reset();
   }
 
   /**

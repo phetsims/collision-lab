@@ -121,6 +121,29 @@ class InelasticBallSystem extends BallSystem {
     super.reset();
     this.inelasticPresetProperty.reset();
   }
+
+
+  /**
+   * Computes the angular momentum of the entire BallSystem, relative to the center-of-mass, using the L = r x p formula
+   * described in https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
+   * @public
+   *
+   * @returns {number} - in kg*(m^2/s).
+   */
+  getTotalAngularMomentum() {
+    let totalAngularMomentum = 0;
+
+    this.balls.forEach( ball => {
+
+      // Get the position vector (r) and momentum (p) relative to the center-of-mass
+      const r = ball.position.minus( this.centerOfMass.position );
+      const p = ball.velocity.minus( this.centerOfMass.velocity ).multiplyScalar( ball.mass );
+
+      // L = r x p (relative to the center-of-mass)
+      totalAngularMomentum += r.crossScalar( p );
+    } );
+    return totalAngularMomentum;
+  }
 }
 
 collisionLab.register( 'InelasticBallSystem', InelasticBallSystem );

@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A multipurpose data-structure that immutably contains information about the mass, position, and velocity of a Ball.
+ * A multipurpose data structure that immutably contains information about the mass, position, and velocity of a Ball.
  * Doesn't hold onto any listeners or Properties, so no dispose method is needed.
  *
  * ## Usages of BallState:

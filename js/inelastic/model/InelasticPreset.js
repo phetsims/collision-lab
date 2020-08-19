@@ -12,6 +12,7 @@
  * @author Brandon Li
  */
 
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -39,16 +40,21 @@ class InelasticPresetValue {
    * If the preset doesn't have any associated BallStates, then nothing happens.
    * @public
    *
-   * @param {ObservableArray.<Ball>} balls
+   * @param {AxonArray.<Ball>} balls
    */
   setBalls( balls ) {
-    assert && AssertUtils.assertObservableArrayOf( balls, Ball );
+    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( !this.ballStates || this.ballStates.length === balls.length );
 
     this.ballStates && balls.forEach( ( ball, index ) => {
 
       // Set the state of the Ball with the corresponding BallState index.
       ball.setState( this.ballStates[ index ] );
+
+      // Changing the preset resets the trailing 'Path' and the rotation of the Ball.
+      ball.path.clear();
+      ball.rotationProperty.reset();
+      // TODO, investigate setting the state (or maybe setting the restartState attribute), then calling restart()
 
       // Verify that the Ball is in-Bounds.
       assert && assert( ball.insidePlayAreaProperty.value );
