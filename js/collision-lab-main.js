@@ -17,9 +17,9 @@ import IntroScreen from './intro/IntroScreen.js';
 
 const simOptions = {
   credits: {
-    leadDesign: '',
+    leadDesign: 'Michael Dubson, Amy Rouinfar',
     softwareDevelopment: 'Brandon Li, Martin Veillette',
-    team: '',
+    team: 'Trish Loeblein, Ariel Paul, Kathy Perkins',
     qualityAssurance: '',
     graphicArts: '',
     soundDesign: '',
