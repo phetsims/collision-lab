@@ -20,10 +20,10 @@
  * @author Brandon Li
  */
 
+import AxonArray from '../../../../axon/js/AxonArray.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';

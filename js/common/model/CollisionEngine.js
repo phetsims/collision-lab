@@ -338,7 +338,7 @@ class CollisionEngine {
         const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
 
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball, this.playArea, collisionTime  ) );
+        this.collisions.add( new Collision( ball, this.playArea, collisionTime ) );
       }
     } );
   }

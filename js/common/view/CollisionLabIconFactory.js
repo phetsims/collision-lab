@@ -15,8 +15,8 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import ScreenIcon from '../../../../joist/js/ScreenIcon.js';
 import Screen from '../../../../joist/js/Screen.js';
+import ScreenIcon from '../../../../joist/js/ScreenIcon.js';
 import merge from '../../../../phet-core/js/merge.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';

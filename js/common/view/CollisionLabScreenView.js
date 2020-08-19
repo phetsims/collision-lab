@@ -21,8 +21,8 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
-import Orientation from '../../../../phet-core/js/Orientation.js';
 import merge from '../../../../phet-core/js/merge.js';
+import Orientation from '../../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';

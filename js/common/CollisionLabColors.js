@@ -63,6 +63,11 @@ const CollisionLabColors = {
   // Scale Bar
   SCALE_BAR_COLOR: Color.BLACK,
 
+  // Radio Buttons
+  RADIO_BUTTON_BASE_COLOR: Color.WHITE,
+  RADIO_BUTTON_SELECTED_STROKE: 'rgb( 65, 154, 201 )',
+  RADIO_BUTTON_DESELECTED_STROKE: 'rgb( 50, 50, 50 )',
+
   // Miscellaneous
   CHANGE_IN_MOMENTUM_DASHED_LINE: 'rgb( 182, 181, 182 )',
   HIGHLIGHTED_NUMBER_DISPLAY_FILL: PhetColorScheme.BUTTON_YELLOW,
