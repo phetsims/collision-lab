@@ -226,7 +226,7 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   detectBallClusterToBorderCollision( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
-    assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderAt' );
+    assert && assert( this.rotatingBallCluster, 'cannot call detectBallClusterToBorderCollision' );
 
     // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected or
     // if any of the Balls are outside of the PlayArea.
@@ -258,7 +258,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Use the bisection method to approximate when the cluster exactly collides with the border and register the
     // collision and encapsulate information in a Collision instance.
     this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, CollisionLabUtils.bisection(
-      time => this.willBallClusterCollideWithBorderAt( time - elapsedTime ),
+      time => this.willBallClusterCollideWithBorderIn( time - elapsedTime ),
       minCollisionTime,
       maxCollisionTime
     ) ) );
@@ -276,10 +276,10 @@ class InelasticCollisionEngine extends CollisionEngine {
    *                              0 if the passed-in time is considered 'close enough'
    *                              1 if the passed-in time is an overestimate.
    */
-  willBallClusterCollideWithBorderAt( dt ) {
+  willBallClusterCollideWithBorderIn( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
-    assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderAt' );
-    assert && assert( this.playArea.reflectsBorder, 'cannot call willBallClusterCollideWithBorderAt' );
+    assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderIn' );
+    assert && assert( this.playArea.reflectsBorder, 'cannot call willBallClusterCollideWithBorderIn' );
 
     // Get the states of the Balls after the time-delta.
     const rotationStates = this.rotatingBallCluster.getSteppedRotationStates( dt );
