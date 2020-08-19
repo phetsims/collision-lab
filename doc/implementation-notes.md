@@ -75,7 +75,7 @@ All screens have screen-specific classes to account for the described [screen di
 
 The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
 
-Commonly sub-typed classes are [BallSystem](../js/common/model/BallSystem.js), [PlayArea](../js/common/model/PlayArea.js), [CollisionEngine](../js/common/model/CollisionEngine.js), [BallSystemNode](../js/common/view/BallSystemNode.js), [PlayAreaNode](../js/common/view/PlayAreaNode.js), and [CollisionLabControlPanel](../js/common/view/CollisionLabControlPanel.js).
+Commonly sub-typed classes are [BallSystem](../js/common/model/BallSystem.js), [PlayArea](../js/common/model/PlayArea.js), [CollisionEngine](../js/common/model/CollisionEngine.js), [BallSystemNode](../js/common/view/BallSystemNode.js), and [CollisionLabControlPanel](../js/common/view/CollisionLabControlPanel.js).
 
 ### Inelastic Screen
 
