@@ -293,10 +293,20 @@ const CollisionLabUtils = {
     assert && assert( false, 'maxIterations reached for bisection' );
   },
 
+  /**
+   * Returns the original value if is larger than the passed-in threshold. If it is less than the threshold (in absolute
+   * value), than original value is rounded down to 0.
+   * @public
+   *
+   * @param {number} value
+   * @param {number} threshold
+   * @returns {Promise}
+   */
+  clampDown( value, threshold = CollisionLabConstants.ZERO_THRESHOLD ) {
+    assert && assert( typeof value === 'number', `invalid value: ${value}` );
+    assert && assert( typeof threshold === 'number', `invalid threshold: ${threshold}` );
 
-  // @public
-  clampDown( number, min_value = CollisionLabConstants.ZERO_THRESHOLD ) {
-    return Math.abs( number ) < min_value ? 0 : number;
+    return Math.abs( value ) < threshold ? 0 : value;
   },
 
   /**
