@@ -104,14 +104,14 @@ class CollisionEngine {
    *
    * @param {number} dt - time-delta of this step, in seconds.
    * @param {number} elapsedTime - elapsedTime, based on where the Balls are positioned when this method is called.
+   * @param {number} [maxIterations] - max number of iterations in the detection-response loop. Once this number is
+   *                                   reached, collision-response is considered to be finished for the step.
    */
-  step( dt, elapsedTime ) {
+  step( dt, elapsedTime, maxIterations = 100 ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    if ( dt === 0 ) {
-      return;
-    }
+    if ( !maxIterations ) { return this.progressBalls( dt, elapsedTime ); }
 
     // First detect all potential collisions that have not already been detected.
     this.timeStepDirectionProperty.value = Math.sign( dt );
@@ -147,7 +147,7 @@ class CollisionEngine {
       nextCollisions.forEach( this.handleCollision.bind( this ) );
 
       // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
-      return this.step( dt - timeUntilCollision, collisionTime );
+      return this.step( dt - timeUntilCollision, collisionTime, maxIterations - 1 );
     }
   }
 
