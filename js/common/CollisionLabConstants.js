@@ -42,7 +42,7 @@ const CollisionLabConstants = {
   ZERO_THRESHOLD: 1E-10,
 
   // Balls that have a component of their velocity smaller than this value have the component set to 0 m/s.
-  MIN_VELOCITY: 1E-4,
+  MIN_VELOCITY: 1E-3,
 
   // Balls
   BALL_DEFAULT_DENSITY: 35,   // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
