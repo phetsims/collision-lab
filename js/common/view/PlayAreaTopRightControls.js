@@ -9,7 +9,8 @@
  *   - a NumberSpinner to allow the user to change the number of balls in the system.
  *   - a GridCheckbox to toggle the visibility of the grid.
  *
- * PlayAreaTopRightControlss are created at the start of the sim and are never disposed, so no dispose method is necessary.
+ * PlayAreaTopRightControls are created at the start of the sim and are never disposed, so no dispose method is
+ * necessary.
  *
  * @author Brandon Li
  */

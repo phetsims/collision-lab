@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * Top level view for the 'Intro' screen.
+ * Top level view for the 'Inelastic' screen.
  *
  * @author BrandonLi
  */

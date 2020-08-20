@@ -4,8 +4,8 @@
  * IntroControlPanel is a CollisionLabControlPanel sub-type for the 'Intro' screen, which appears on the
  * upper-right corner of the screen.
  *
- * It adds a 'Change in Momentum' Checkbox to allow the user to toggle the visibility of the change in momentum vectors. The
- * checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
+ * It adds a 'Change in Momentum' Checkbox to allow the user to toggle the visibility of the change in momentum vectors.
+ * The checkbox is inserted right above the 'Center of Mass' Checkbox of the super-class. It also removes the
  * 'Reflecting Border' Checkbox and the 'Path' Checkbox.
  *
  * @author Brandon Li

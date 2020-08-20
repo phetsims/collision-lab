@@ -5,9 +5,9 @@
  * simulation. It is present on all screens.
  *
  * The KeypadDialog is shown when requested through the beginEdit() method, which occurs when the user presses on a
- * BallValuesPanelNumberDisplay, to allow the user to manipulate a Ball Property. Edits must be within a specified range.
- * There will be a 'Enter' button to allow the user to submit a edit, and edits are canceled if the user hides the
- * Dialog.
+ * BallValuesPanelNumberDisplay, to allow the user to manipulate a Ball Property. Edits must be within a specified
+ * range. There will be a 'Enter' button to allow the user to submit a edit, and edits are canceled if the user hides
+ * the Dialog.
  *
  * KeypadDialog is created at the start of the sim and is never disposed, so no dispose method is necessary and
  * internal links are left as-is.
@@ -137,8 +137,8 @@ class KeypadDialog extends Dialog {
   }
 
   /**
-   * Begins an edit by showing the KeypadDialog. Called when the user presses on a BallValuesPanelNumberDisplay to allow the
-   * user to manipulate a valueProperty.
+   * Begins an edit by showing the KeypadDialog. Called when the user presses on a BallValuesPanelNumberDisplay to allow
+   * the user to manipulate a valueProperty.
    * @public
    *
    * @param {Property.<number>} valueProperty - the Property that the user can manipulate through the KeypadDialog

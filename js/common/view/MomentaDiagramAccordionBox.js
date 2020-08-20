@@ -66,7 +66,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
       gridLineSpacing: 1,   // {number} - the spacing of the grid lines, in model units (kg * m/s)
       zoomControlMargin: 5, // {number} - the margins between the edge of the Grid and the zoom controls
-      dimension: PlayArea.Dimension.TWO,        // {number} - the dimension of the screen that the MomentaDiagram appears in.
+      dimension: PlayArea.Dimension.TWO, // {number} - the dimension of the screen that the MomentaDiagram appears in.
 
       // {number} - the width of the content (grid) of the MomentaDiagramAccordionBox.
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
