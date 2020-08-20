@@ -109,6 +109,10 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    if ( dt === 0 ) {
+      return;
+    }
+
     // First detect all potential collisions that have not already been detected.
     this.timeStepDirectionProperty.value = Math.sign( dt );
     this.detectAllCollisions( elapsedTime );
@@ -247,7 +251,7 @@ class CollisionEngine {
         const possibleRoots = Utils.solveQuadraticRootsReal(
                                 this.deltaV.magnitudeSquared,
                                 this.deltaV.dot( this.deltaR ) * 2,
-                                this.deltaR.magnitudeSquared - sumOfRadiiSquared );
+                                CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
 
         // The minimum root of the quadratic is when the Balls will first collide.
         const root = possibleRoots ? Math.min( ...possibleRoots ) : null;
@@ -363,10 +367,10 @@ class CollisionEngine {
     const velocityMultipier = this.timeStepDirectionProperty.value;
 
     // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
-    const leftCollisionTime = ( this.playArea.left - ( position.x - radius ) ) / velocity.x * velocityMultipier;
-    const rightCollisionTime = ( this.playArea.right - ( position.x + radius ) ) / velocity.x * velocityMultipier;
-    const bottomCollisionTime = ( this.playArea.bottom - ( position.y - radius ) ) / velocity.y * velocityMultipier;
-    const topCollisionTime = ( this.playArea.top - ( position.y + radius ) ) / velocity.y * velocityMultipier;
+    const leftCollisionTime = CollisionLabUtils.clampDown( this.playArea.left - ( position.x - radius ) ) / velocity.x * velocityMultipier;
+    const rightCollisionTime = CollisionLabUtils.clampDown( this.playArea.right - ( position.x + radius ) ) / velocity.x * velocityMultipier;
+    const bottomCollisionTime = CollisionLabUtils.clampDown( this.playArea.bottom - ( position.y - radius ) ) / velocity.y * velocityMultipier;
+    const topCollisionTime = CollisionLabUtils.clampDown( this.playArea.top - ( position.y + radius ) ) / velocity.y * velocityMultipier;
 
     // Calculate the time the Ball would collide with a horizontal/vertical border.
     const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );

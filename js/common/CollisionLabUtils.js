@@ -293,6 +293,12 @@ const CollisionLabUtils = {
     assert && assert( false, 'maxIterations reached for bisection' );
   },
 
+
+  // @public
+  clampDown( number, min_value = CollisionLabConstants.ZERO_THRESHOLD ) {
+    return Math.abs( number ) < min_value ? 0 : number;
+  },
+
   /**
    * A javascript version of the sleep function. This is **ONLY to be used for debugging**, and assertions must be
    * enabled for use. This was mostly used to debug CollisionEngine with large time steps. In this case, it should be

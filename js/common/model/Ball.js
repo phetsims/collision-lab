@@ -367,7 +367,7 @@ class Ball {
    * @param {number} xVelocity - in m/s.
    */
   set xVelocity( xVelocity ) {
-    this.xVelocityProperty.value = Math.abs( xVelocity ) < CollisionLabConstants.MIN_VELOCITY ? 0 : xVelocity;
+    this.xVelocityProperty.value = CollisionLabUtils.clampDown( xVelocity, CollisionLabConstants.MIN_VELOCITY );
   }
 
   /**
@@ -377,7 +377,7 @@ class Ball {
    * @param {number} yVelocity - in m/s.
    */
   set yVelocity( yVelocity ) {
-    this.yVelocityProperty.value = Math.abs( yVelocity ) < CollisionLabConstants.MIN_VELOCITY ? 0 : yVelocity;
+    this.yVelocityProperty.value = CollisionLabUtils.clampDown( yVelocity, CollisionLabConstants.MIN_VELOCITY );
   }
 }
 
