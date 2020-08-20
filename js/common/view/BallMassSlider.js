@@ -33,7 +33,9 @@ class BallMassSlider extends HSlider {
       trackSize: new Dimension2( 180, 0.5 ),
       thumbSize: new Dimension2( 12, 22 ),
       thumbFill: CollisionLabColors.BALL_COLORS[ ball.index - 1 ],
-      thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 )
+      thumbFillHighlighted: CollisionLabColors.BALL_COLORS[ ball.index - 1 ].colorUtilsBrighter( 0.5 ),
+      thumbTouchAreaXDilation: 7,
+      thumbTouchAreaYDilation: 1
 
     }, options );
 
@@ -43,7 +45,7 @@ class BallMassSlider extends HSlider {
     assert && assert( !options.drag, 'BallMassSlider sets drag.' );
     assert && assert( !options.endDrag, 'BallMassSlider sets endDrag.' );
 
-    // Set the massUserControlledProperty of the Ball to true when dragging. See
+    // Set the massUserControlle dProperty of the Ball to true when dragging. See
     // https://github.com/phetsims/collision-lab/issues/76
     options.startDrag = () => { ball.massUserControlledProperty.value = true; };
     options.endDrag = () => {
