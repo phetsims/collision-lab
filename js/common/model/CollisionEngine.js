@@ -362,11 +362,19 @@ class CollisionEngine {
     // reverse the velocity of the ball for convenience and reverse the collisionTime back at the end.
     const velocityMultipier = this.timeStepDirectionProperty.value;
 
+    // Reference quantities of the Ball.
+    const left = position.x - radius;
+    const right = position.x + radius;
+    const top = position.y + radius;
+    const bottom = position.y - radius;
+    const xVelocity = velocity.x * velocityMultipier;
+    const yVelocity = velocity.y * velocityMultipier;
+
     // Calculate the time the Ball would collide with each respective border, ignoring all other walls for now.
-    const leftCollisionTime = CollisionLabUtils.clampDown( this.playArea.left - ( position.x - radius ) ) / velocity.x * velocityMultipier;
-    const rightCollisionTime = CollisionLabUtils.clampDown( this.playArea.right - ( position.x + radius ) ) / velocity.x * velocityMultipier;
-    const bottomCollisionTime = CollisionLabUtils.clampDown( this.playArea.bottom - ( position.y - radius ) ) / velocity.y * velocityMultipier;
-    const topCollisionTime = CollisionLabUtils.clampDown( this.playArea.top - ( position.y + radius ) ) / velocity.y * velocityMultipier;
+    const leftCollisionTime = CollisionLabUtils.clampDown( this.playArea.left - left ) / xVelocity;
+    const rightCollisionTime = CollisionLabUtils.clampDown( this.playArea.right - right ) / xVelocity;
+    const bottomCollisionTime = CollisionLabUtils.clampDown( this.playArea.bottom - bottom ) / yVelocity;
+    const topCollisionTime = CollisionLabUtils.clampDown( this.playArea.top - top ) / yVelocity;
 
     // Calculate the time the Ball would collide with a horizontal/vertical border.
     const horizontalCollisionTime = Math.max( leftCollisionTime, rightCollisionTime );
