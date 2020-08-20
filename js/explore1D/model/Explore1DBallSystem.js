@@ -47,8 +47,8 @@ class Explore1DBallSystem extends BallSystem {
       // Verify that every Ball's yPosition and yVelocity is always 0. Links lasts for the lifetime of the sim.
       this.prepopulatedBalls.forEach( ball => {
 
-        ball.yVelocityProperty.link( yVelocity => assert( yVelocity === 0 ), 'yVelocity must be 0 for Explore 1D' );
-        ball.yPositionProperty.link( yPosition => assert( yPosition === 0 ), 'yPosition must be 0 for Explore 1D' );
+        ball.yVelocityProperty.link( yVelocity => assert( yVelocity === 0, 'yVelocity must be 0 for Explore 1D' ) );
+        ball.yPositionProperty.link( yPosition => assert( yPosition === 0, 'yPosition must be 0 for Explore 1D' ) );
       } );
 
       // Verify that Paths are never visible for the 'Explore 1D' screen.
