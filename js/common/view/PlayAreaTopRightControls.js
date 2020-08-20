@@ -73,6 +73,8 @@ class PlayAreaTopRightControls extends VBox {
             font: new PhetFont( 26 )
           }
         },
+        touchAreaXDilation: 8,
+        touchAreaYDilation: 4,
         arrowButtonLineWidth: 0.5
       },
 
