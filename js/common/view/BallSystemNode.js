@@ -9,8 +9,8 @@
  *   - Displaying the Center of Mass.
  *   - PathsNode for all 'paths'.
  *
- * BallSystemNode takes advantage of the prepopulatedBalls in the BallSystem, which all Balls in the system must be apart
- * of. Instead of creating a BallNode each time a Ball is added to the system, it creates a BallNode for each
+ * BallSystemNode takes advantage of the prepopulatedBalls in the BallSystem, which all Balls in the system must be
+ * apart of. Instead of creating a BallNode each time a Ball is added to the system, it creates a BallNode for each
  * prepopulatedBall and adjusts its visibility based on whether or not it is in the system. There is no performance loss
  * since Balls not in the BallSystem are not stepped or updated. Thus, BallNodes and BallSystemNodes are never disposed.
  *

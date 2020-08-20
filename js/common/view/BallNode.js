@@ -214,10 +214,16 @@ class BallNode extends Node {
       end: () => {
         leaderLinesNode.visible = false;
 
+        const constrainedBounds = BallUtils.getBallGridSafeConstrainedBounds(
+          ball.playArea.bounds,
+          ball.radius,
+          10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+        );
+
         // Round the position to match the displayed value on drag-release. See
         // https://github.com/phetsims/collision-lab/issues/136.
         ball.position = CollisionLabUtils.roundVectorToNearest(
-          BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radius, 10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES ).closestPointTo( ball.position ),
+          constrainedBounds.closestPointTo( ball.position ),
           10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES
         );
         // When the user is finished dragging the Ball, bump the Ball away from the other Balls that it is overlapping
@@ -251,7 +257,7 @@ class BallNode extends Node {
       if ( valuesVisible ) { // Only update positioning if the NumberDisplays are visible.
 
         // Update the position of the velocity and momentum NumberDisplays.
-        speedNumberDisplay.centerBottom = ballCircle.centerTop.minusXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
+        speedNumberDisplay.centerBottom = ballCircle.centerTop.subtractXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
         momentumNumberDisplay.centerTop = ballCircle.centerBottom.addXY( 0, CollisionLabConstants.VALUE_DISPLAY_MARGIN );
       }
     } );

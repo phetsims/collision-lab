@@ -53,9 +53,12 @@ const BallUtils = {
    * @public
    * @param {Bounds2} playAreaBounds - the bounds of the PlayArea.
    * @param {number} radius - the radius of the Ball, in meters.
+   * @param {number} [gridLineSpacing] - spacing between grid-lines, in meters.
    * @returns {Bounds2}
    */
-  getBallGridSafeConstrainedBounds( playAreaBounds, radius, gridLineSpacing = CollisionLabConstants.MINOR_GRIDLINE_SPACING ) {
+  getBallGridSafeConstrainedBounds( playAreaBounds,
+                                    radius,
+                                    gridLineSpacing = CollisionLabConstants.MINOR_GRIDLINE_SPACING ) {
     assert && assert( playAreaBounds instanceof Bounds2, `invalid playAreaBounds: ${playAreaBounds}` );
     assert && assert( typeof radius === 'number' && radius > 0, `invalid radius: ${radius}` );
 
