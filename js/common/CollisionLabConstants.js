@@ -41,7 +41,7 @@ const CollisionLabConstants = {
   // See https://github.com/phetsims/collision-lab/issues/51.
   ZERO_THRESHOLD: 1E-10,
 
-  // TODO: doc
+  // Balls that have a component of their velocity smaller than this value have the component set to 0 m/s.
   MIN_VELOCITY: 1E-4,
 
   // Balls
