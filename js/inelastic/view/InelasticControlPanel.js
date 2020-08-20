@@ -78,7 +78,8 @@ class InelasticControlPanel extends CollisionLabControlPanel {
       units: collisionLabStrings.units.percent,
       value: elasticityPercentProperty.value
     } ), {
-      font: new PhetFont( 12 )
+      font: new PhetFont( 12 ),
+      maxWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH
     } );
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
