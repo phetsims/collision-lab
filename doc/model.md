@@ -38,7 +38,7 @@ The elasticity slider directly controls the [coefficient of restitution](https:/
 
 Perfectly inelastic collisions are disabled for the _Explore 2D_ screen by design. However, perfectly inelastic collisions are enabled in the _Inelastic_ screen. 
 
-In the _Inelastic_ screen, there are two types of perfectly inelastic collisions: stick vs slip. Perfectly inelastic collisions that "'"slip"'" follow the standard collision-response algorithm, where the component of
+In the _Inelastic_ screen, there are two types of perfectly inelastic collisions: stick vs slip. Perfectly inelastic collisions that "slip" follow the standard collision-response algorithm, where the component of
 velocity along the line of contact (see [Impact Particles](http://web.mst.edu/~reflori/be150/Dyn%20Lecture%20Videos/Impact%20Particles%201/Impact%20Particles%201.pdf)) is exactly equal before and after the collision. Perfectly inelastic collisions that "stick", as described above, results in a rotation of Balls.
 
 
