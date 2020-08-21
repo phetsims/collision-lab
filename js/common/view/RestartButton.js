@@ -28,8 +28,8 @@ class RestartButton extends RectangularPushButton {
       lineWidth: 0,
       xMargin: 6,
       yMargin: 5,
-      touchAreaXDilation: 5,
-      touchAreaYDilation: 5
+      touchAreaXDilation: 8,
+      touchAreaYDilation: 8
 
     }, options );
 

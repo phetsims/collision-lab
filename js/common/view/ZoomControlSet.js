@@ -34,7 +34,9 @@ class ZoomControlSet extends HBox {
         disabledBaseColor: ColorConstants.LIGHT_GRAY,
         radius: 8,
         xMargin: 5,
-        yMargin: 3
+        yMargin: 3,
+        touchAreaXDilation: 3.5,
+        touchAreaYDilation: 6
       },
 
       // {number}
