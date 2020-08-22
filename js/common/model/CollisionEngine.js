@@ -75,12 +75,13 @@ class CollisionEngine {
     this.deltaV = new Vector2( 0, 0 );
 
     // Observe when some 'state' in the simulation that invalidates our Collision instances changes. This occurs when a
-    // Ball is user-controlled, when the number of Balls in the system changes, or when the 'direction' of time
-    // progression changes. In all of these scenarios, existing Collisions may be incorrect and collisions should be
-    // re-detected. Multilink persists for the lifetime of the simulation.
+    // Ball is user-controlled, when the number of Balls in the system changes, when the 'Constant' size checkbox is
+    // toggled, or when the 'direction' of time progression changes. In all of these scenarios, existing Collisions may
+    // be incorrect and collisions should be re-detected. Multilink persists for the lifetime of the simulation.
     Property.lazyMultilink( [
       ballSystem.ballSystemUserControlledProperty,
       ballSystem.numberOfBallsProperty,
+      ballSystem.ballsConstantSizeProperty,
       this.timeStepDirectionProperty
     ], this.reset.bind( this ) );
 
