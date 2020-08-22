@@ -255,13 +255,14 @@ class InelasticCollisionEngine extends CollisionEngine {
                                                           0,
                                                           elapsedTime );
 
-    // Use the bisection method to approximate when the cluster exactly collides with the border and register the
-    // collision and encapsulate information in a Collision instance.
-    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, CollisionLabUtils.bisection(
-      time => this.willBallClusterCollideWithBorderIn( time - elapsedTime ),
-      minCollisionTime,
-      maxCollisionTime
-    ) ) );
+    // Use the bisection method to approximate when the cluster exactly collides with the border.
+    const collisionTime = ( !Number.isFinite( minCollisionTime ) || !Number.isFinite( maxCollisionTime ) ) ? null :
+      CollisionLabUtils.bisection( time => this.willBallClusterCollideWithBorderIn( time - elapsedTime ),
+        minCollisionTime,
+        maxCollisionTime );
+
+    // Register the collision and encapsulate information in a Collision instance.
+    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
   }
 
   /**

@@ -252,7 +252,7 @@ const CollisionLabUtils = {
 
   /**
    * Finds the root of some function, f, in some interval [min, max], using the bisection method. If maxIterations is
-   * reached, an error is thrown. See https://en.wikipedia.org/wiki/Bisection_method. This method differs in that
+   * reached, the midpoint is returned. See https://en.wikipedia.org/wiki/Bisection_method. This method differs in that
    * the function provided isn't the polynomial itself, but rather indicates if some input is an over or under estimate.
    * @public
    *
@@ -261,7 +261,7 @@ const CollisionLabUtils = {
    *                                                1 if the value input is an overestimate.
    * @param {number} min - min value of the interval to check.
    * @param {number} max - max value of the interval to check.
-   * @param {number} [maxIterations] - will throw an error after this many iterations to guard against infinite loops.
+   * @param {number} [maxIterations] - the midpoint is returned after this many iterations.
    * @returns {number}
    */
   bisection( f, min, max, maxIterations = 100 ) {
@@ -289,8 +289,8 @@ const CollisionLabUtils = {
       }
     }
 
-    // At this point, maxIterations was reached, so an error is thrown.
-    assert && assert( false, 'maxIterations reached for bisection' );
+    // At this point, maxIterations was reached, so return the midpoint.
+    return ( min + max ) / 2;
   },
 
   /**
