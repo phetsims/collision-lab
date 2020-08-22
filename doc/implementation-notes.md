@@ -71,7 +71,7 @@ This section describes the **main** classes that are common to multiple screens.
 
 ### Screen-specific classes
 
-All screens have screen-specific classes to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences).
+All screens have screen-specific classes to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md).
 
 The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
 
@@ -79,7 +79,7 @@ Commonly sub-typed classes are [BallSystem](../js/common/model/BallSystem.js), [
 
 ### Inelastic Screen
 
-The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md#screen-differences) section.
+The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [model description](https://github.com/phetsims/collision-lab/blob/master/model.md).
 
 [InelasticCollisionType](../js/inelastic/model/InelasticCollisionType.js) is an Enumeration of the different types of perfectly inelastic collisions ("Stick" vs "Slip").
 
