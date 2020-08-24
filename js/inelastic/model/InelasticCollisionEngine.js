@@ -228,11 +228,9 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
     assert && assert( this.rotatingBallCluster, 'cannot call detectBallClusterToBorderCollision' );
 
-    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected or
-    // if any of the Balls are outside of the PlayArea.
+    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected.
     if ( !this.playArea.reflectsBorder ||
-         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ||
-         this.rotatingBallCluster.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
+         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
       return; /** do nothing **/
     }
 
@@ -240,6 +238,10 @@ class InelasticCollisionEngine extends CollisionEngine {
     if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
       return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
     }
+
+    // Handle degenerate case where the cluster is out-of-bounds. In the design, if an object is partially out-of-bounds
+    // when the Reflecting Border is turned on, it will continue to escape.
+    if ( this.rotatingBallCluster.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) { return; }
 
     // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
     // cluster collides with the border.
