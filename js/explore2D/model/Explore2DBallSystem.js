@@ -16,14 +16,6 @@ import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import Explore2DPlayArea from './Explore2DPlayArea.js';
 
-// constants
-const EXPLORE_2D_INITIAL_BALL_STATES = [
-  new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0.300 ), 0.50 ),
-  new BallState( new Vector2( 0.00, 0.500 ), new Vector2( -0.5, -0.50 ), 1.50 ),
-  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.25, -0.5 ), 1.00 ),
-  new BallState( new Vector2( 0.20, -0.65 ), new Vector2( 1.10, 0.200 ), 1.00 )
-];
-
 class Explore2DBallSystem extends BallSystem {
 
   /**
@@ -33,7 +25,7 @@ class Explore2DBallSystem extends BallSystem {
   constructor( playArea, options ) {
     assert && assert( playArea instanceof Explore2DPlayArea, `invalid playArea: ${playArea}` );
 
-    super( EXPLORE_2D_INITIAL_BALL_STATES, playArea, options );
+    super( Explore2DBallSystem.INITIAL_BALL_STATES, playArea, options );
 
     //----------------------------------------------------------------------------------------
 
@@ -42,13 +34,21 @@ class Explore2DBallSystem extends BallSystem {
     if ( assert ) {
 
       // Verify that the correct number of BallStates were provided.
-      assert( EXPLORE_2D_INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
+      assert( Explore2DBallSystem.INITIAL_BALL_STATES.length === this.numberOfBallsRange.max );
 
       // Verify that the position of BallStates were inside the PlayArea's bounds.
-      assert( EXPLORE_2D_INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
+      assert( Explore2DBallSystem.INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
     }
   }
 }
+
+// @public (read-only) {BallState[]} - the initial BallStates of all Balls in the 'Explore 2D' screen.
+Explore2DBallSystem.INITIAL_BALL_STATES = [
+  new BallState( new Vector2( -1.0, 0.000 ), new Vector2( 1.00, 0.300 ), 0.50 ),
+  new BallState( new Vector2( 0.00, 0.500 ), new Vector2( -0.5, -0.50 ), 1.50 ),
+  new BallState( new Vector2( -1.0, -0.50 ), new Vector2( -0.25, -0.5 ), 1.00 ),
+  new BallState( new Vector2( 0.20, -0.65 ), new Vector2( 1.10, 0.200 ), 1.00 )
+];
 
 collisionLab.register( 'Explore2DBallSystem', Explore2DBallSystem );
 export default Explore2DBallSystem;
