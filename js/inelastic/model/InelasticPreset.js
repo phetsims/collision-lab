@@ -88,6 +88,11 @@ const InelasticPreset = Enumeration.byMap( {
   GLANCING: new InelasticPresetValue( [
     new BallState( new Vector2( -0.65, 0.00 ), new Vector2( 0, 0 ), 1.8 ),
     new BallState( new Vector2( 0.6, 0.12 ), new Vector2( -1, 0 ), 0.3 )
+  ] ),
+
+  DEBUG: new InelasticPresetValue( [
+    new BallState( new Vector2( -1.19, -0.45 ), new Vector2( 0.36, 0.61 ), 0.5 ),
+    new BallState( new Vector2( -0.3, -0.22 ), new Vector2( 0.09, 0.75 ), 0.5 )
   ] )
 
 } );

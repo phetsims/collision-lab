@@ -234,10 +234,16 @@ class InelasticCollisionEngine extends CollisionEngine {
       return; /** do nothing **/
     }
 
-    // Handle degenerate cases where the cluster has already or is currently colliding with the border.
-    if ( this.willBallClusterCollideWithBorderIn( 0 ) >= 0 ) {
+    const isBallClusterCollidingWithBorder = this.willBallClusterCollideWithBorderIn( 0 );
+
+    // Handle degenerate case where the cluster is already colliding with the border.
+    if ( isBallClusterCollidingWithBorder === 0 ) {
       return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
     }
+
+    // Handle degenerate case where the cluster is out-of-bounds. In this scenario, the collision between the cluster
+    // and the border is considered degenerate and the collision is not registered.
+    if ( isBallClusterCollidingWithBorder === -1 ) { return; /** do nothing **/ }
 
     // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
     // cluster collides with the border.
