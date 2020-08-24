@@ -228,16 +228,14 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
     assert && assert( this.rotatingBallCluster, 'cannot call detectBallClusterToBorderCollision' );
 
-    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected or
-    // if any of the Balls are outside of the PlayArea.
+    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected.
     if ( !this.playArea.reflectsBorder ||
-         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ||
-         this.rotatingBallCluster.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) {
+         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
       return; /** do nothing **/
     }
 
-    // Handle degenerate case where the cluster is already colliding with the border.
-    if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
+    // Handle degenerate cases where the cluster has already or is currently colliding with the border.
+    if ( this.willBallClusterCollideWithBorderIn( 0 ) >= 0 ) {
       return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
     }
 
