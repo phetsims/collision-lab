@@ -71,7 +71,7 @@ class BallNode extends Node {
                valuesVisibleProperty,
                velocityVectorVisibleProperty,
                momentumVectorVisibleProperty,
-               elasticityPercentProperty,
+               elasticityPercentProperty, //REVIEW: No JSDoc for this parameter?
                isPlayingProperty,
                modelViewTransform,
                options ) {

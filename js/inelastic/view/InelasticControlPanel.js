@@ -42,7 +42,7 @@ class InelasticControlPanel extends CollisionLabControlPanel {
                reflectingBorderProperty,
                elasticityPercentProperty,
                ballsConstantSizeProperty,
-               inelasticCollisionTypeProperty,
+               inelasticCollisionTypeProperty, //REVIEW: Don't see JSDoc for this param
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );

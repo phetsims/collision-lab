@@ -48,7 +48,7 @@ class InelasticModel extends CollisionLabModel {
    * @protected
    *
    * @param {InelasticPlayArea} playArea
-   * @param {InelasticBallSystem} introBallSystem
+   * @param {InelasticBallSystem} ballSystem
    * @returns {InelasticCollisionEngine}
    */
   createCollisionEngine( playArea, ballSystem ) {

@@ -24,6 +24,7 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
   /**
    * @param {Property.<number>} totalKineticEnergyProperty
    * @param {Property.<boolean>} kineticEnergyVisibleProperty
+   * @param {Object} [options]
    */
   constructor( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options ) {
     assert && AssertUtils.assertPropertyOf( totalKineticEnergyProperty, 'number' );

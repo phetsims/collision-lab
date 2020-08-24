@@ -83,6 +83,9 @@ class KeypadDialog extends Dialog {
 
     // @private {Keypad} - the Keypad of the KeypadDialog.
     this.keypad = new Keypad( Keypad.PositiveAndNegativeFloatingPointLayout, {
+      //REVIEW: It seems like we're using multiple options for a subcomponent. Can we instead
+      //REVIEW: have options.keypadOptions passed through here, where those options are isolated?
+      //REVIEW: Thoughts?
       maxDigits: options.maxDigits,
       maxDigitsRightOfMantissa: options.maxDecimals
     } );

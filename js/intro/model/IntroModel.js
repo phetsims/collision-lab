@@ -48,7 +48,7 @@ class IntroModel extends CollisionLabModel {
    * @protected
    *
    * @param {IntroPlayArea} playArea
-   * @param {IntroBallSystem} introBallSystem
+   * @param {IntroBallSystem} ballSystem
    * @returns {IntroCollisionEngine}
    */
   createCollisionEngine( playArea, ballSystem ) {

@@ -197,7 +197,7 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
-   * @param {number} dt - time-delta in seconds
+   * @param {number} dt - time-delta in seconds REVIEW: dt doesn't exist here anymore?
    */
   handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );

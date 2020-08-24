@@ -20,6 +20,7 @@ import Ball from '../model/Ball.js';
 class BallMassSlider extends HSlider {
 
   /**
+   * REVIEW: missing JSDoc for ballSystem
    * @param {Ball} ball
    * @param {Object} [options]
    */

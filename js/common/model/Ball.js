@@ -213,7 +213,7 @@ class Ball {
    * Sets the Properties of this Ball to match the passed-in BallState.
    * @public
    *
-   * @param {BallState} BallState
+   * @param {BallState} ballState
    */
   setState( ballState ) {
     assert && assert( ballState instanceof BallState, `invalid ballState: ${ballState}` );
