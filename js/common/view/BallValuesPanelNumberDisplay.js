@@ -27,12 +27,10 @@ import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
-import BallUtils from '../model/BallUtils.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import KeypadDialog from './KeypadDialog.js';
 
@@ -121,88 +119,6 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
         fireOnDown: true
       } ) );
     }
-  }
-
-  /**
-   * Gets the property of a Ball that is associated with a BallValuesPanelColumnType.
-   * @private
-   *
-   * @param {Ball} ball
-   * @param {BallValuesPanelColumnTypes} columnType
-   * @returns {Property.<number>}
-   */
-  static getBallProperty( ball, columnType ) {
-    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
-
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return ball.massProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return ball.xPositionProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return ball.yPositionProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return ball.xVelocityProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return ball.yVelocityProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) { return ball.xMomentumProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) { return ball.yMomentumProperty; }
-    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
-  }
-
-  /**
-   * Gets the property of a Ball that indicates if the user is controlling the associated BallProperty.
-   * @private
-   *
-   * @param {Ball} ball
-   * @param {BallValuesPanelColumnTypes} columnType
-   * @returns {Property.<number>}
-   */
-  static getUserControlledProperty( ball, columnType ) {
-    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
-
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return ball.massUserControlledProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return ball.xPositionUserControlledProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return ball.yPositionUserControlledProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return ball.xVelocityUserControlledProperty; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return ball.yVelocityUserControlledProperty; }
-    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
-  }
-
-  /**
-   * Gets the unit of a associated BallProperty of a BallValuesPanelColumnType, used when the user is editing the
-   * BallProperty.
-   * @private
-   *
-   * @param {BallValuesPanelColumnTypes} columnType
-   * @returns {string}
-   */
-  static getEditingUnit( columnType ) {
-    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
-
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return collisionLabStrings.units.kilograms; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return collisionLabStrings.units.meters; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return collisionLabStrings.units.meters; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return collisionLabStrings.units.metersPerSecond; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return collisionLabStrings.units.metersPerSecond; }
-    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
-  }
-
-  /**
-   * Gets the range of a associated BallProperty of a BallValuesPanelColumnType, used when the user is editing the
-   * BallProperty.
-   * @private
-   *
-   * @param {Ball} ball
-   * @param {BallValuesPanelColumnTypes} columnType
-   * @returns {Range}
-   */
-  static getEditingRange( ball, columnType ) {
-    assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-    assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
-
-    if ( columnType === BallValuesPanelColumnTypes.MASS ) { return CollisionLabConstants.MASS_RANGE; }
-    else if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) { return BallUtils.getKeypadXPositionRange( ball ); }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) { return BallUtils.getKeypadYPositionRange( ball ); }
-    else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) { return CollisionLabConstants.VELOCITY_RANGE; }
-    else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) { return CollisionLabConstants.VELOCITY_RANGE; }
-    else { assert && assert( false, `invalid columnType: ${columnType}` ); }
   }
 }
 
