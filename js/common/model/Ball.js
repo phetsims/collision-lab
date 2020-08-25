@@ -52,11 +52,15 @@ class Ball {
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPositiveInteger( index );
 
+    //REVIEW: Is anything specific to NumberProperty being used here? Otherwise convention is to document this as
+    //REVIEW: {Property.<number>} -- and elsewhere as used in the code
     // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
     //                            individually display each component and to allow the user to manipulate separately.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
+    //REVIEW: Is anything specific to DerivedProperty being used here? Otherwise convention is to document this as
+    //REVIEW: {Property.<Vector2>} -- and elsewhere as used in the code
     // @public {DerivedProperty.<Vector2>} - Property of the center-position of the Ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
@@ -109,6 +113,13 @@ class Ball {
     //                            used for 'sticky' collisions in the 'Inelastic' screen.
     this.rotationProperty = new NumberProperty( 0 );
 
+    //REVIEW: This feels like something that the ball itself should not be tracking. This is listed as a Property, but
+    //REVIEW: I see no link or observers listed for it. It's requiring an external playArea (which ideally we should be
+    //REVIEW: able to create a Ball without a playArea, but that's not a problem), but also assumes what
+    //REVIEW: playArea.containsAnyPartOfBall does. Furthermore, because that method uses the top/left/etc., the value of
+    //REVIEW: this COULD change based on the radiusProperty, BUT the radiusProperty is not included in the dependencies.
+    //REVIEW: Having this be a check on the PlayArea or elsewhere can prevent this class of bug, and I don't see an
+    //REVIEW: advantage to having a Property to track this.
     // @public {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is inside the PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
@@ -255,6 +266,8 @@ class Ball {
     }
 
     // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.
+    //REVIEW: Can the dimension change? Or can we pass in the dimension on ball creation, so we don't need access to the
+    //REVIEW: playArea?
     ( this.playArea.dimension === PlayArea.Dimension.ONE ) && correctedPosition.setY( 0 );
 
     // Finally, set the position of the Ball to the corrected position.
