@@ -343,7 +343,7 @@ class Ball {
    *
    * @param {number} yPosition - in meters
    */
-  set yPosition( yPosition ) { this.position = this.position.copy().setX( yPosition ); }
+  set yPosition( yPosition ) { this.position = this.position.copy().setY( yPosition ); }
 
   /**
    * Sets the velocity of the Ball, in m/s.

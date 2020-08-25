@@ -17,7 +17,6 @@
 
 import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
-import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import Keypad from '../../../../scenery-phet/js/keypad/Keypad.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -68,11 +67,11 @@ class KeypadDialog extends Dialog {
 
     super( contentNode, options );
 
-    // @private {Property.<number>|null} - reference to the Property that the Keypad is editing. If null, the
-    //                                     KeypadDialog is hidden.
-    this.valueProperty = null;
+    // @private {function(value:number)|null} - reference to the function called when a edit in-range successfully
+    //                                          occurs. If null, the Keypad dialog is currently not shown.
+    this.editValue = null;
 
-    // @private {Range|null} - reference to the Range of the valueProperty that the Keypad is editing, if non-null.
+    // @private {Range|null} - reference to the Range of the value that the Keypad is editing, if non-null.
     this.valueRange = null;
 
     // @private {function|null} - reference to a potential callback function for when the Keypad is finished editing.
@@ -141,22 +140,22 @@ class KeypadDialog extends Dialog {
 
   /**
    * Begins an edit by showing the KeypadDialog. Called when the user presses on a BallValuesPanelNumberDisplay to allow
-   * the user to manipulate a valueProperty.
+   * the user to manipulate a Ball.
    * @public
    *
-   * @param {Property.<number>} valueProperty - the Property that the user can manipulate through the KeypadDialog
+   * @param {function(value:number)} editValue - the function called when a edit in-range successfully occurs.
    * @param {Range} valueRange - the Range that the user can edit the valueProperty
    * @param {string} unitsString - the template string that formats the text on the rangeText.
    * @param {function} editFinishedCallback - callback when edit is entered or canceled.
    */
-  beginEdit( valueProperty, valueRange, unitsString, editFinishedCallback ) {
-    assert && AssertUtils.assertPropertyOf( valueProperty, 'number' );
+  beginEdit( editValue, valueRange, unitsString, editFinishedCallback ) {
+    assert && assert( typeof editValue === 'function', `invalid editValue: ${editValue}` );
     assert && assert( valueRange instanceof Range, `invalid valueRange: ${valueRange}` );
     assert && assert( typeof unitsString === 'string', `invalid unitsString: ${unitsString}` );
     assert && assert( typeof editFinishedCallback === 'function', `invalid editFinishedCallback: ${editFinishedCallback}` );
 
     // Update references. These references are released when the edit is canceled or finished.
-    this.valueProperty = valueProperty;
+    this.editValue = editValue;
     this.valueRange = valueRange;
     this.editFinishedCallback = editFinishedCallback;
 
@@ -192,7 +191,7 @@ class KeypadDialog extends Dialog {
 
     // If the edit is valid, the valueProperty is set and the edit.
     if ( Number.isFinite( value ) && this.valueRange.contains( value ) ) {
-      this.valueProperty.value = value;
+      this.editValue( value );
       this.finishEdit();
     }
     else { this.warnOutOfRange(); }

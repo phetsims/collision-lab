@@ -55,11 +55,10 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       && columnType !== BallValuesPanelColumnTypes.MASS_SLIDERS, `invalid columnType: ${columnType}` );
 
     // Indicates if the Ball Property can be edited.
-    const canEdit = columnType !== BallValuesPanelColumnTypes.X_MOMENTUM &&
-                    columnType !== BallValuesPanelColumnTypes.Y_MOMENTUM;
+    const canEdit = columnType.editConfig !== null;
 
     // Gets the property of the Ball that is associated with the BallValuesPanelColumnType.
-    const ballProperty = BallValuesPanelNumberDisplay.getBallProperty( ball, columnType );
+    const ballProperty = columnType.createDisplayProperty( ball );
 
     options = merge( {
       align: 'center',
@@ -82,7 +81,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     if ( canEdit ) {
 
       // Get the Property that indicates if the user is controlling the associated BallProperty.
-      const userControlledProperty = BallValuesPanelNumberDisplay.getUserControlledProperty( ball, columnType );
+      const userControlledProperty = columnType.editConfig.getUserControlledProperty( ball );
 
       // Observe when the user is controlling the associated BallProperty and a highlight to the NumberDisplay. See
       // https://github.com/phetsims/collision-lab/issues/95. Link is never disposed since BallValuesPanelNumberDisplays
@@ -93,7 +92,8 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       } );
 
       // Get the unit displayed when the user is editing the BallProperty.
-      const unit = BallValuesPanelNumberDisplay.getEditingUnit( columnType );
+      const unit = columnType.editConfig.editingUnit;
+      const editValue = value => columnType.editConfig.editValue( ball, value );
 
       // Observe when the user presses the NumberDisplay and open the KeypadDialog to allow the user to edit the
       // ballProperty. Listener is never removed since BallValuesPanelNumberDisplays are never disposed.
@@ -104,9 +104,9 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           userControlledProperty.value = true;
 
           // Get the editing Range of the BallProperty. Must be recomputed every time the KeypadDialog is opened.
-          const editingRange = BallValuesPanelNumberDisplay.getEditingRange( ball, columnType );
+          const editingRange = columnType.editConfig.getEditingRange( ball );
 
-          keypadDialog.beginEdit( ballProperty, editingRange, unit, () => {
+          keypadDialog.beginEdit( editValue, editingRange, unit, () => {
 
             // When the user is finished editing the BallProperty, bump the Ball away from the other Balls that it is
             // overlapping with. See https://github.com/phetsims/collision-lab/issues/100.

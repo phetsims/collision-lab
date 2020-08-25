@@ -9,6 +9,7 @@
  * @author Brandon Li
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -19,15 +20,20 @@ import BallUtils from '../model/BallUtils.js';
 class BallValuesPanelColumnType {
 
   /**
+   * @param {function(ball: Ball):Property.<number>|null} createDisplayProperty - Function that gets a Property that is
+   *   displayed in the NumberDisplays in the column. Null means that there is no Property displayed. This function is
+   *   called ONCE at the start of the sim.
+   *
    * @param {Object|null} editConfig - contains information on how a Ball is edited if a NumberDisplay in this
    *                                   column 'type' is pressed. Null means the column is not editable in any way.
    *                                   The object contains:
    * {
+   *
    *    // Function that edits a value of a Ball via Keypad.
    *    editValue: {function(ball: Ball, value: number)},
    *
    *    // Gets the range in which the value can be edited.
-   *    editingRange: {function(ball: Ball):Range},
+   *    getEditingRange: {function(ball: Ball):Range},
    *
    *    // The unit associated with the column type.
    *    editingUnit: {string},
@@ -37,71 +43,74 @@ class BallValuesPanelColumnType {
    *
    * }
    */
-  constructor( editConfig ) {
+  constructor( createDisplayProperty, editConfig ) {
 
-    // @public (read-only) {Object}
+    // @public (read-only) {Object|null}
     this.editConfig = editConfig;
+
+    // @public (read-only) {function|null}
+    this.createDisplayProperty = createDisplayProperty;
   }
 }
 
 const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of Ball Icons. For displaying purposes only.
-  'BALL_ICONS': new BallValuesPanelColumnType( null ),
+  'BALL_ICONS': new BallValuesPanelColumnType( null, null ),
 
   // Column of mass NumberDisplays. Editable by the user.
-  'MASS': new BallValuesPanelColumnType( {
+  'MASS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.mass = mass; },
-    editingRange: () => CollisionLabConstants.MASS_RANGE,
+    getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
   } ),
 
   // Column of sliders to change the Mass of a Ball. Only shown when 'More Data' is unchecked.
-  'MASS_SLIDERS': new BallValuesPanelColumnType( {
+  'MASS_SLIDERS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.mass = mass; },
-    editingRange: () => CollisionLabConstants.MASS_RANGE,
+    getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
   } ),
 
   // Column of x-position NumberDisplays. Editable by the user.
-  'X_POSITION': new BallValuesPanelColumnType( {
+  'X_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xPosition ) => { ball.xPosition = xPosition; },
-    editingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
+    getEditingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'xPositionUserControlledProperty' )
   } ),
 
   // Column of y-position NumberDisplays. Editable by the user and shown for 2D screens only.
-  'Y_POSITION': new BallValuesPanelColumnType( {
+  'Y_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yPosition ) => { ball.yPosition = yPosition; },
-    editingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
+    getEditingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'yPositionUserControlledProperty' )
   } ),
 
   // Column of x-velocity NumberDisplays. Editable by the user.
-  'X_VELOCITY': new BallValuesPanelColumnType( {
+  'X_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xVelocity ) => { ball.xVelocity = xVelocity; },
-    editingRange: () => CollisionLabConstants.VELOCITY_RANGE,
+    getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'xVelocityUserControlledProperty' )
   } ),
 
   // Column of y-velocity NumberDisplays. Editable by the user and shown for 2D screens only.
-  'Y_VELOCITY': new BallValuesPanelColumnType( {
+  'Y_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yVelocity ) => { ball.yVelocity = yVelocity; },
-    editingRange: () => CollisionLabConstants.VELOCITY_RANGE,
+    getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'yVelocityUserControlledProperty' )
   } ),
 
   // Column of x-momentum NumberDisplays. NOT editable by the user.
-  'X_MOMENTUM': new BallValuesPanelColumnType( null ),
+  'X_MOMENTUM': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'x' ) ), null ),
 
   // Column of y-momentum NumberDisplays. NOT editable by the user and shown for 2D screens only.
-  'Y_MOMENTUM': new BallValuesPanelColumnType( null )
+  'Y_MOMENTUM': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'y' ) ), null )
 
 } );
 
