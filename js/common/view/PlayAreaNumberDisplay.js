@@ -19,6 +19,7 @@ import Range from '../../../../dot/js/Range.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
@@ -57,7 +58,7 @@ class PlayAreaNumberDisplay extends NumberDisplay {
       maxWidth: 150,
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
       textOptions: {
-        font: CollisionLabConstants.DISPLAY_FONT
+        font: new PhetFont( 14 )
       }
     }, options );
 

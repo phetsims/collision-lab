@@ -17,6 +17,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 
 class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
@@ -36,6 +37,9 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
         label: collisionLabStrings.kineticEnergy,
         units: collisionLabStrings.units.joules
       } ),
+      textOptions: {
+        font: CollisionLabConstants.DISPLAY_FONT
+      },
       maxWidth: 300 // constrain width for i18n, determined empirically.
 
     }, options );
