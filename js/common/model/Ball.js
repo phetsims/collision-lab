@@ -300,8 +300,8 @@ class Ball {
    *
    * @returns {number} - in m/s.
    */
-  get xVelocity() { return this.xVelocityProperty.value; }
-  get yVelocity() { return this.yVelocityProperty.value; }
+  get xVelocity() { return this.velocity.x; }
+  get yVelocity() { return this.velocity.y; }
 
   /**
    * Gets the linear momentum of this Ball, in kg*(m/s).
