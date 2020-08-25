@@ -12,6 +12,8 @@
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
+import BallUtils from '../model/BallUtils.js';
 
 // @private
 class BallValuesPanelColumnType {
@@ -66,7 +68,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   // Column of x-position NumberDisplays. Editable by the user.
   'X_POSITION': new BallValuesPanelColumnType( {
     editValue: ( ball, xPosition ) => { ball.xPosition = xPosition; },
-    editingRange: () => BallUtils.getKeypadXPositionRange( ball ),
+    editingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'xPositionUserControlledProperty' )
   } ),
@@ -74,7 +76,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   // Column of y-position NumberDisplays. Editable by the user and shown for 2D screens only.
   'Y_POSITION': new BallValuesPanelColumnType( {
     editValue: ( ball, yPosition ) => { ball.yPosition = yPosition; },
-    editingRange: () => BallUtils.getKeypadYPositionRange( ball ),
+    editingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'yPositionUserControlledProperty' )
   } ),
@@ -88,7 +90,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of y-velocity NumberDisplays. Editable by the user and shown for 2D screens only.
-  'Y_VELOCITY':  new BallValuesPanelColumnType( {
+  'Y_VELOCITY': new BallValuesPanelColumnType( {
     editValue: ( ball, yVelocity ) => { ball.yVelocity = yVelocity; },
     editingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
