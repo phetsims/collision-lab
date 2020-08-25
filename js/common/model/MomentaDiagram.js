@@ -28,13 +28,14 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
 import PlayArea from './PlayArea.js';
 
 // constants
-const VERTICAL_SPACING_1D = 0.5;
+const VERTICAL_SPACING_1D = CollisionLabQueryParameters.momentaDiagram1DSpacing;
 
 class MomentaDiagram {
 

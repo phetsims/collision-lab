@@ -58,6 +58,18 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
     type: 'number',
     defaultValue: 0.01,
     isValidValue: value => ( value > 0 )
+  },
+
+  /**
+   * Vertical spacing between the vectors in the 'Momenta Diagram' for 1D screens ('Intro' and 'Explore 1D'), in kg m/s.
+   * Used for pixel polishing.
+   *
+   * For internal use only.
+   */
+  momentaDiagram1DSpacing: {
+    type: 'number',
+    defaultValue: 0.5,
+    isValidValue: value => ( value > 0 )
   }
 } );
 
