@@ -33,6 +33,9 @@ import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
 import PlayArea from './PlayArea.js';
 
+// constants
+const VERTICAL_SPACING_1D = 0.5;
+
 class MomentaDiagram {
 
   /**
@@ -148,8 +151,8 @@ class MomentaDiagram {
 
       // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
-      firstMomentaVector.tailY = 1 + Math.floor( ( this.balls.length - 1 ) / 2 );
-      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length;
+      firstMomentaVector.tailY = VERTICAL_SPACING_1D + Math.floor( ( this.balls.length - VERTICAL_SPACING_1D ) / 2 );
+      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length * VERTICAL_SPACING_1D;
     }
 
     // Position the rest of the Momentum vectors. Loop in pairs.
@@ -168,7 +171,7 @@ class MomentaDiagram {
         momentaVector.tailX = previousMomentaVector.tipX;
 
         // Stack vertically on top of each other by progressively decrementing the tipY by 1.
-        momentaVector.tailY = previousMomentaVector.tailY - 1;
+        momentaVector.tailY = previousMomentaVector.tailY - VERTICAL_SPACING_1D;
       }
     } );
   }
