@@ -18,10 +18,7 @@
 
 import AxonArray from '../../../../axon/js/AxonArray.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import Dimension2 from '../../../../dot/js/Dimension2.js';
-import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import GridNode from '../../../../griddle/js/GridNode.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -40,14 +37,13 @@ import Ball from '../model/Ball.js';
 import MomentaDiagram from '../model/MomentaDiagram.js';
 import PlayArea from '../model/PlayArea.js';
 import MomentaDiagramVectorNode from './MomentaDiagramVectorNode.js';
-import ZoomControlSet from './ZoomControlSet.js';
+import MomentaDiagramZoomControlSet from './MomentaDiagramZoomControlSet.js';
 
 // constants
 const PANEL_X_MARGIN = CollisionLabConstants.PANEL_X_MARGIN;
 const PANEL_Y_MARGIN = CollisionLabConstants.PANEL_Y_MARGIN;
 const PANEL_CORNER_RADIUS = CollisionLabConstants.PANEL_CORNER_RADIUS;
-const MOMENTA_DIAGRAM_ASPECT_RATIO = new Dimension2( 7, 6 );
-const MOMENTA_DIAGRAM_ZOOM_RANGE = new RangeWithValue( 0.25, 4, 2 );
+const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 
 class MomentaDiagramAccordionBox extends AccordionBox {
 
@@ -109,23 +105,8 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       options.contentWidth * MOMENTA_DIAGRAM_ASPECT_RATIO.height / MOMENTA_DIAGRAM_ASPECT_RATIO.width
     );
 
-    // The zoom factor of the MomentaDiagram.
-    const zoomProperty = new NumberProperty( MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue, {
-      range: MOMENTA_DIAGRAM_ZOOM_RANGE
-    } );
-
     // Create a separate modelViewTransform in a Property for mapping MomentaDiagramCoordinates to view coordinates.
-    const modelViewTransformProperty = new DerivedProperty( [ zoomProperty ], zoomFactor => {
-
-      // The Bounds of the MomentaDiagram, in kg*(m/s). Derived from the zoom factor.
-      // The center of the MomentaDiagram is the origin.
-      const bounds = new Bounds2(
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
-        -MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
-        MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor
-      );
-
+    const modelViewTransformProperty = new DerivedProperty( [ momentaDiagram.boundsProperty ], bounds => {
       return ModelViewTransform2.createRectangleInvertedYMapping( bounds, gridViewBounds );
     }, {
       valueType: ModelViewTransform2
@@ -195,7 +176,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
     const backgroundNode = new Rectangle( gridViewBounds, { fill: CollisionLabColors.GRID_BACKGROUND } );
 
     // Create the Zoom Controls
-    const zoomControlSet = new ZoomControlSet( zoomProperty, MOMENTA_DIAGRAM_ZOOM_RANGE, {
+    const zoomControlSet = new MomentaDiagramZoomControlSet( momentaDiagram, {
       bottom: gridViewBounds.maxY - options.zoomControlMargin,
       right: gridViewBounds.maxX - options.zoomControlMargin
     } );
@@ -212,19 +193,6 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       clipArea: Shape.bounds( gridViewBounds )
     } );
     super( contentNode, options );
-
-    // @private {Property.<number>} - for resetting.
-    this.zoomProperty = zoomProperty;
-  }
-
-  /**
-   * Resets the MomentaDiagramAccordionBox.
-   * @public
-   *
-   * Called when the reset-all button is pressed.
-   */
-  reset() {
-    this.zoomProperty.reset();
   }
 }
 

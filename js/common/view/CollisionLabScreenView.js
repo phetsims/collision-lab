@@ -193,7 +193,6 @@ class CollisionLabScreenView extends ScreenView {
       listener: () => {
         model.reset();
         viewProperties.reset();
-        momentaDiagram.reset();
       },
       right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - CollisionLabConstants.SCREEN_VIEW_Y_MARGIN

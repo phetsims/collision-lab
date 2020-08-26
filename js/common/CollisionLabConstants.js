@@ -7,7 +7,9 @@
  * @author Martin Veillette
  */
 
+import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
+import RangeWithValue from '../../../dot/js/RangeWithValue.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
@@ -47,6 +49,10 @@ const CollisionLabConstants = {
   // Balls
   BALL_DEFAULT_DENSITY: 35,   // Uniform Density of Balls if constant-radius is OFF, in kg/m^3.
   BALL_CONSTANT_RADIUS: 0.15, // Radius of Balls if constant-radius is on, in meters.
+
+  // Momenta Diagram
+  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 7, 6 ),
+  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 4, 2 ),
 
   //----------------------------------------------------------------------------------------
 
