@@ -32,7 +32,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
    * @param {Property.<boolean>} isPlayingProperty
-   * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
+   * @param {Property.<TimeSpeed>} timeSpeedProperty
    * @param {Property.<number>} elapsedTimeProperty
    * @param {Property.<boolean>} ballSystemUserControlledProperty
    * @param {Property.<number>} elasticityProperty

@@ -22,7 +22,7 @@ import InelasticPreset from '../model/InelasticPreset.js';
 class PresetRadioButtonGroup extends RadioButtonGroup {
 
   /**
-   * @param {EnumerationProperty.<InelasticPreset>} presetProperty
+   * @param {Property.<InelasticPreset>} presetProperty
    * @param {Object} [options]
    */
   constructor( presetProperty, options ) {

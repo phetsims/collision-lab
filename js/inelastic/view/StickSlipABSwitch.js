@@ -24,7 +24,7 @@ import InelasticCollisionType from '../model/InelasticCollisionType.js';
 class StickSlipABSwitch extends ABSwitch {
 
   /**
-   * @param {EnumerationProperty.<InelasticCollisionType>} inelasticCollisionTypeProperty
+   * @param {Property.<InelasticCollisionType>} inelasticCollisionTypeProperty
    * @param {Object} [options]
    */
   constructor( inelasticCollisionTypeProperty, options ) {

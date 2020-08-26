@@ -29,7 +29,7 @@ class InelasticPlayArea extends PlayArea {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {EnumerationProperty.<InelasticCollisionType>} - the type of perfectly inelastic collision. Ignored
+    // @public {Property.<InelasticCollisionType>} - the type of perfectly inelastic collision. Ignored
     //                                                           if the elasticity isn't 0.
     this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionType,
       InelasticCollisionType.STICK );

@@ -69,7 +69,7 @@ class InelasticBallSystem extends BallSystem {
       assert( INELASTIC_INITIAL_BALL_STATES.every( ballState => playArea.bounds.containsPoint( ballState.position ) ) );
     }
 
-    // @public {EnumerationProperty.<InelasticPreset>} - the current InelasticPreset.
+    // @public {Property.<InelasticPreset>} - the current InelasticPreset.
     this.inelasticPresetProperty = new EnumerationProperty( InelasticPreset, InelasticPreset.CUSTOM );
 
     //----------------------------------------------------------------------------------------

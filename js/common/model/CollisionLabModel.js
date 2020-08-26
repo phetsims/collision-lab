@@ -40,7 +40,7 @@ class CollisionLabModel {
     // @public (read-only) {Property.<number>} - the total elapsed time of the simulation, in seconds.
     this.elapsedTimeProperty = new NumberProperty( 0, { isValidValue: value => value >= 0 } );
 
-    // @public {EnumerationProperty.<TimeSpeed>} - the speed rate of the simulation. Set externally in the view.
+    // @public {Property.<TimeSpeed>} - the speed rate of the simulation. Set externally in the view.
     this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
     //----------------------------------------------------------------------------------------
