@@ -6,6 +6,7 @@
  * coordinate frame from the PlayArea.
  *
  * Responsibilities are:
+ *   - Keeping track of the zoom and Bounds of the MomentaDiagram.
  *   - Create a MomentaDiagramVector for all possible Balls and one for the total Momentum Vector. Momenta Diagram takes
  *     advantage of the prepopulatedBalls, which all Balls in the system must be apart of. Instead of creating a
  *     MomentaDiagramVector each time a Ball is added to the system, it creates one for each prepopulatedBall and
@@ -24,10 +25,14 @@
 
 import AxonArray from '../../../../axon/js/AxonArray.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
@@ -36,6 +41,9 @@ import PlayArea from './PlayArea.js';
 
 // constants
 const VERTICAL_SPACING_1D = CollisionLabQueryParameters.momentaDiagram1DSpacing;
+const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
+const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
+const ZOOM_MULTIPLIER = 2;
 
 class MomentaDiagram {
 
@@ -49,9 +57,31 @@ class MomentaDiagram {
     assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
+    // @public {Property.<number>} - the zoom factor of the MomentaDiagram. This is set externally in the view.
+    this.zoomProperty = new NumberProperty( MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue, {
+      range: MOMENTA_DIAGRAM_ZOOM_RANGE
+    } );
+
+    // @public (read-only) {Property.<Bounds2>} - the Bounds of the MomentaDiagram, in kg*(m/s). Derived from the zoom
+    //                                            factor. This is inside the model to make the spacing between
+    //                                            MomentaDiagramVectors visually uniform for 1D screens. See
+    //                                            https://github.com/phetsims/collision-lab/issues/164.
+    this.boundsProperty = new DerivedProperty( [ this.zoomProperty ], zoomFactor => {
+
+      // The center of the MomentaDiagram is the origin.
+      return new Bounds2(
+        -MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
+        -MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor,
+        MOMENTA_DIAGRAM_ASPECT_RATIO.width / 2 / zoomFactor,
+        MOMENTA_DIAGRAM_ASPECT_RATIO.height / 2 / zoomFactor
+      );
+    } );
+
     // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
     //                             and components of the Momenta Vectors are only updated if this is true.
     this.expandedProperty = new BooleanProperty( false );
+
+    //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Map.<Ball, MomentaDiagramVector>} - Map prepopulatedBalls to an associated Momenta Vector.
     this.ballToMomentaVectorMap = new Map();
@@ -96,6 +126,7 @@ class MomentaDiagram {
    * Called when the reset-all button is pressed.
    */
   reset() {
+    this.zoomProperty.reset();
     this.expandedProperty.reset();
     this.ballToMomentaVectorMap.forEach( momentaVector => { momentaVector.reset(); } );
     this.totalMomentumVector.reset();
@@ -141,8 +172,8 @@ class MomentaDiagram {
     if ( this.dimension === PlayArea.Dimension.TWO ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
-      firstMomentaVector.tail = Vector2.ZERO;
-      this.totalMomentumVector.tail = Vector2.ZERO;
+      firstMomentaVector.tail = this.boundsProperty.value.center;
+      this.totalMomentumVector.tail = this.boundsProperty.value.center;
     }
     else {
 
@@ -175,6 +206,22 @@ class MomentaDiagram {
         momentaVector.tailY = previousMomentaVector.tailY - VERTICAL_SPACING_1D;
       }
     } );
+  }
+
+  /**
+   * Zooms the MomentaDiagram in. Called when the zoom-in button is pressed.
+   * @public
+   */
+  zoomIn() {
+    this.zoomProperty.value *= ZOOM_MULTIPLIER;
+  }
+
+  /**
+   * Zooms the MomentaDiagram out. Called when the zoom-out button is pressed.
+   * @public
+   */
+  zoomOut() {
+    this.zoomProperty.value /= ZOOM_MULTIPLIER;
   }
 }
 
