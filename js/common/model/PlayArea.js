@@ -49,7 +49,7 @@ class PlayArea {
       isGridVisibleInitially: false,
 
       // {boolean} - indicates if the PlayArea's borders reflect initially (and after resetting).
-      reflectsBorderInitially: true,
+      reflectingBorderInitially: true,
 
       // {number} - the initial elasticity of the PlayArea (and after resetting), as a percentage.
       initialElasticityPercent: ELASTICITY_PERCENT_RANGE.max
@@ -66,7 +66,7 @@ class PlayArea {
 
     // @public {Property.<boolean>} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
     //                             is manipulated in the view.
-    this.reflectingBorderProperty = new BooleanProperty( options.reflectsBorderInitially );
+    this.reflectingBorderProperty = new BooleanProperty( options.reflectingBorderInitially );
 
     // @public {Property.<boolean>} - indicates if the grid of the PlayArea is visible. This is placed inside of the model
     //                             since the visibility of the grid affects the drag-snapping of Balls.
@@ -99,7 +99,7 @@ class PlayArea {
    *
    * @returns {boolean}
    */
-  get reflectsBorder() {
+  get reflectingBorder() {
     return this.reflectingBorderProperty.value;
   }
 

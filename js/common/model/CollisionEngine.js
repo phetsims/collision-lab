@@ -332,7 +332,7 @@ class CollisionEngine {
   detectBallToBorderCollisions( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    this.playArea.reflectsBorder && this.ballSystem.balls.forEach( ball => {
+    this.playArea.reflectingBorder && this.ballSystem.balls.forEach( ball => {
 
       // Only detect new ball-border collisions if it hasn't already been detected.
       if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball, this.playArea ) ) ) {

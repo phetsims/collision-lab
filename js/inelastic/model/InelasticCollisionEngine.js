@@ -229,7 +229,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( this.rotatingBallCluster, 'cannot call detectBallClusterToBorderCollision' );
 
     // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected.
-    if ( !this.playArea.reflectsBorder ||
+    if ( !this.playArea.reflectingBorder ||
          CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
       return; /** do nothing **/
     }
@@ -282,7 +282,7 @@ class InelasticCollisionEngine extends CollisionEngine {
   willBallClusterCollideWithBorderIn( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderIn' );
-    assert && assert( this.playArea.reflectsBorder, 'cannot call willBallClusterCollideWithBorderIn' );
+    assert && assert( this.playArea.reflectingBorder, 'cannot call willBallClusterCollideWithBorderIn' );
 
     // Get the states of the Balls after the time-delta.
     const rotationStates = this.rotatingBallCluster.getSteppedRotationStates( dt );

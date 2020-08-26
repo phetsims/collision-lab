@@ -26,7 +26,7 @@ class IntroPlayArea extends PlayArea {
     options = merge( {
 
       isGridVisibleInitially: true,
-      reflectsBorderInitially: false,
+      reflectingBorderInitially: false,
       bounds: new Bounds2(
         PlayArea.DEFAULT_BOUNDS.left,
         -CollisionLabConstants.PLAY_AREA_1D_HEIGHT / 2,
@@ -46,8 +46,8 @@ class IntroPlayArea extends PlayArea {
     } );
 
     // Verify that the border never reflects for the 'Intro' screen.
-    assert && this.reflectingBorderProperty.link( reflectsBorder => {
-      assert( reflectsBorder === false, 'No reflecting borders for the Intro screen.' );
+    assert && this.reflectingBorderProperty.link( reflectingBorder => {
+      assert( reflectingBorder === false, 'No reflecting borders for the Intro screen.' );
     } );
   }
 }
