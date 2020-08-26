@@ -21,7 +21,6 @@
 
 import Emitter from '../../../../axon/js/Emitter.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import arrayRemove from '../../../../phet-core/js/arrayRemove.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
@@ -104,24 +103,15 @@ class CollisionLabPath {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
     if ( !this.pathsVisibleProperty.value ) { return; /** do nothing **/ }
 
-    // Remove any expired PathDataPoints that are not within the MAX_DATA_POINT_LIFETIME.
-    const expiredPathDataPoints = this.dataPoints.filter( dataPoint => {
-      return dataPoint.time + PATH_DATA_POINT_LIFETIME <= elapsedTime;
-    } );
+    for ( let i = 0; i < this.dataPoints.length; i++ ) {
+      const dataPoint = this.dataPoints[ i ];
 
-    expiredPathDataPoints.forEach( expiredPathDataPoint => { arrayRemove( this.dataPoints, expiredPathDataPoint ); } );
-
-    //----------------------------------------------------------------------------------------
-
-    // Remove any PathDataPoints that are ahead of the total elapsedTime of the simulation. This occurs when the
-    // step-backward button is pressed.
-    const futurePathDataPoints = this.dataPoints.filter( dataPoint => {
-      return dataPoint.time >= elapsedTime;
-    } );
-
-    futurePathDataPoints.forEach( futurePathDataPoint => { arrayRemove( this.dataPoints, futurePathDataPoint ); } );
-
-    //----------------------------------------------------------------------------------------
+      // Remove any expired PathDataPoints that are not within the MAX_DATA_POINT_LIFETIME or that are ahead of the
+      // total elapsedTime of the simulation. This occurs when the step-backward button is pressed.
+      if ( dataPoint.time + PATH_DATA_POINT_LIFETIME <= elapsedTime || dataPoint.time >= elapsedTime ) {
+        this.dataPoints.splice( i--, 1 ); // Remove it, and step back so we'll scan the next index
+      }
+    }
 
     // Add a new PathDataPoint for the current position of the moving object.
     this.dataPoints.push( new PathDataPoint( elapsedTime, this.positionProperty.value ) );
