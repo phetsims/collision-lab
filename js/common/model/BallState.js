@@ -18,9 +18,8 @@
  *         - Pauses the sim.
  *         - Sets the elapsed time to 0.
  *         - Sets the Balls' position, mass, and velocity to their most recent saved BallState. Their restart BallState
- *           is saved when the user finishes controlling one of the Balls.
- *         - Only balls currently in the BallSystem are restarted. Only balls in the BallSystem that are fully inside
- *           the PlayArea's bounds have their states saved.
+ *           is saved when the user finishes controlling one of the Balls. However, if any of the balls are outside
+ *           the PlayArea's bounds, the states are not saved. See https://github.com/phetsims/collision-lab/issues/163.
  *
  * @author Brandon Li
  */

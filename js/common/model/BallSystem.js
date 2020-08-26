@@ -167,20 +167,20 @@ class BallSystem {
     // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
     // life-time of the simulation since BallSystems are never disposed.
     this.balls.elementAddedEmitter.addListener( ball => {
-      this.balls.forEach( ball => ball.insidePlayAreaProperty.value && ball.saveState() );
+      this.balls.every( ball => ball.insidePlayAreaProperty.value ) && this.balls.forEach( ball => ball.saveState() );
     } );
 
     // Observe when the user is done controlling any of the Balls to:
-    //   1. Save the states of all Balls that are both in the system and fully inside the PlayArea's bounds.
+    //   1. Save the states of all Balls if every ball is inside the PlayArea's bounds.
     //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
     //   3. Reset the rotation of Balls relative to their centers.
     //
     // Link lasts for the life-time of the sim as BallSystems are never disposed.
     this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
-      if ( !ballSystemUserControlled ) {
+      if ( !ballSystemUserControlled && this.balls.every( ball => ball.insidePlayAreaProperty.value ) ) {
         this.balls.forEach( ball => {
 
-          // Save the state of each Ball in the BallSystem that is fully inside the PlayArea.
+          // Save the state of each Ball.
           ball.insidePlayAreaProperty.value && ball.saveState();
           ball.path.clear();
           ball.rotationProperty.reset();
