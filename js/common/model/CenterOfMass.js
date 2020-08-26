@@ -75,7 +75,7 @@ class CenterOfMass {
     // This DerivedProperty is never disposed and persists for the lifetime of the sim.
     this.velocityProperty = new DerivedProperty(
       [ ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
-      () => this.computeVelocity( balls ), {
+      () => this.computeVelocity( balls ), { //REVIEW: computeVelocity doesn't take parameters anymore?
         valueType: Vector2
       } );
 
@@ -136,6 +136,7 @@ class CenterOfMass {
    * @returns {number} - in kg.
    */
   computeTotalBallSystemMass() {
+    //REVIEW: if helpful, return _.sumBy( this.balls, ball => ball.mass );
     let totalMass = 0;
 
     this.balls.forEach( ball => {
@@ -156,6 +157,9 @@ class CenterOfMass {
     // Determine the total first moment (mass * position) of the system.
     const totalFirstMoment = Vector2.ZERO.copy();
     this.balls.forEach( ball => {
+      //REVIEW: I see effort to prevent GC here, if that's needed then you can have a scratch vector declared in the
+      //REVIEW: top-level scope such that this could be totalFirstMoment.add( scratchVector.set( ball.position ).multiply( ball.mass ) )
+      //REVIEW: so that the .times() wouldn't create garbage.
       totalFirstMoment.add( ball.position.times( ball.mass ) );
     } );
 
