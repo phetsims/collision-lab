@@ -67,20 +67,20 @@ class MomentaDiagramVector {
   get tail() { return this.tailPositionProperty.value; }
 
   /**
-   * Gets the tail's y-coordinate, in kg*(m/s).
-   * @public
-   *
-   * @returns {number}
-   */
-  get tailY() { return this.tail.y; }
-
-  /**
    * Gets the tail's x-coordinate, in kg*(m/s).
    * @public
    *
    * @returns {number}
    */
   get tailX() { return this.tail.x; }
+
+  /**
+   * Gets the tail's y-coordinate, in kg*(m/s).
+   * @public
+   *
+   * @returns {number}
+   */
+  get tailY() { return this.tail.y; }
 
   /**
    * Sets the tail position, in kg*(m/s).
