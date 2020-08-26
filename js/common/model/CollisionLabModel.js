@@ -34,7 +34,7 @@ class CollisionLabModel {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    // @public {BooleanProperty} - indicates the play/pause state of the screen. Usually manipulated in the view.
+    // @public {Property.<boolean>} - indicates the play/pause state of the screen. Usually manipulated in the view.
     this.isPlayingProperty = new BooleanProperty( false );
 
     // @public (read-only) {Property.<number>} - the total elapsed time of the simulation, in seconds.

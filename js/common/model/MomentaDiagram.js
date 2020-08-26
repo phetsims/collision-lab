@@ -76,7 +76,7 @@ class MomentaDiagram {
       );
     } );
 
-    // @public {BooleanProperty} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
+    // @public {Property.<boolean>} - indicates if the MomentaDiagram is expanded. This is in the model since the positions
     //                             and components of the Momenta Vectors are only updated if this is true.
     this.expandedProperty = new BooleanProperty( false );
 

@@ -65,16 +65,16 @@ class BallSystem {
     // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
     this.numberOfBallsRange = options.numberOfBallsRange;
 
-    // @public {BooleanProperty} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
+    // @public {Property.<boolean>} - indicates if Ball sizes (radii) are constant (ie. independent of mass). This Property
     //                             is manipulated externally in the view.
     this.ballsConstantSizeProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball and center of mass trailing 'paths' are visible. This is in the
+    // @public {Property.<boolean>} - indicates if the Ball and center of mass trailing 'paths' are visible. This is in the
     //                             model since paths only show the path of the moving object after the visibility
     //                             checkbox is checked and are empty when false.
     this.pathsVisibleProperty = new BooleanProperty( options.pathsVisibleInitially );
 
-    // @public {BooleanProperty} - indicates if the center of mass is visible. This is in the model since the
+    // @public {Property.<boolean>} - indicates if the center of mass is visible. This is in the model since the
     //                             CenterOfMass's trailing 'Path' is empty if this is false and PathDataPoints for
     //                             the CenterOfMass are only recorded if this is true and paths are visible.
     this.centerOfMassVisibleProperty = new BooleanProperty( false );
@@ -95,7 +95,7 @@ class BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {NumberProperty} - Property of the number of Balls in the system. This Property is manipulated
+    // @public {Property.<number>} - Property of the number of Balls in the system. This Property is manipulated
     //                            externally in the view.
     this.numberOfBallsProperty = new NumberProperty( options.numberOfBallsRange.defaultValue, {
       numberType: 'Integer',
@@ -123,7 +123,7 @@ class BallSystem {
       this.pathsVisibleProperty
     );
 
-    // @public {DerivedProperty.<number>} - the total kinetic energy of the system of balls.
+    // @public {Property.<number>} - the total kinetic energy of the system of balls.
     //
     // For the dependencies, we use:
     //  - mass and velocity Properties of the all Balls. Only the balls in the system are used for the calculation.
@@ -138,7 +138,7 @@ class BallSystem {
         isValidValue: value => value >= 0
       } );
 
-    // @public {DerivedProperty.<boolean>} - indicates if there are any Balls that are being controlled. Uses the
+    // @public {Property.<boolean>} - indicates if there are any Balls that are being controlled. Uses the
     //                                       userControlledProperty of all possible Balls as dependencies but only the
     //                                       Balls in the system are considered in the derivation function.
     this.ballSystemUserControlledProperty = new DerivedProperty(
@@ -147,7 +147,7 @@ class BallSystem {
         valueType: 'boolean'
       } );
 
-    // @public {DerivedProperty.<boolean>} - indicates if all of the Balls in the system are NOT inside of the PlayArea.
+    // @public {Property.<boolean>} - indicates if all of the Balls in the system are NOT inside of the PlayArea.
     //                                       Uses the insidePlayAreaProperty of all possible Balls but only the Balls in
     //                                       the system are considered in the derivation function.
     this.ballsNotInsidePlayAreaProperty = new DerivedProperty(

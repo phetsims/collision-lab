@@ -14,19 +14,19 @@ class CollisionLabViewProperties {
 
   constructor() {
 
-    // @public {BooleanProperty} - indicates if the velocity vectors of Balls are visible.
+    // @public {Property.<boolean>} - indicates if the velocity vectors of Balls are visible.
     this.velocityVectorVisibleProperty = new BooleanProperty( true );
 
-    // @public {BooleanProperty} - indicates if the momentum vectors of Balls are visible.
+    // @public {Property.<boolean>} - indicates if the momentum vectors of Balls are visible.
     this.momentumVectorVisibleProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball 'values' NumberDisplays that appear next to Balls are visible.
+    // @public {Property.<boolean>} - indicates if the Ball 'values' NumberDisplays that appear next to Balls are visible.
     this.valuesVisibleProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Kinetic Energy NumberDisplay is visible.
+    // @public {Property.<boolean>} - indicates if the Kinetic Energy NumberDisplay is visible.
     this.kineticEnergyVisibleProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the 'More Data' in the BallValuesPanel is visible.
+    // @public {Property.<boolean>} - indicates if the 'More Data' in the BallValuesPanel is visible.
     this.moreDataVisibleProperty = new BooleanProperty( false );
   }
 

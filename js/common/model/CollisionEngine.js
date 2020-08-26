@@ -61,7 +61,7 @@ class CollisionEngine {
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = new Set();
 
-    // @private {NumberProperty} - the 'direction' of the progression of the current time-step of the sim, where:
+    // @private {Property.<number>} - the 'direction' of the progression of the current time-step of the sim, where:
     //                               1 means the sim is being progressed forwards in the current time-step, (dt > 0).
     //                              -1 means the sim is being progressed backwards in the current time-step, (dt < 0)
     this.timeStepDirectionProperty = new NumberProperty( 1, { numberType: 'Integer' } );

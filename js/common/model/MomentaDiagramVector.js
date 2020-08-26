@@ -25,16 +25,16 @@ class MomentaDiagramVector {
 
   constructor() {
 
-    // @public {Vector2Property} - the tail position of the Vector, in kg*(m/s). Initialized at the origin and to be
-    //                             updated later in MomentaDiagram.js
+    // @public {Property.<Vector2>} - the tail position of the Vector, in kg*(m/s). Initialized at the origin and to be
+    //                                updated later in MomentaDiagram.js
     this.tailPositionProperty = new Vector2Property( Vector2.ZERO );
 
-    // @public {Vector2Property} - the Momentum Vector's components, which are its x and y scalar values. Initialized
-    //                             at zero and to be updated later in MomentaDiagram.js
+    // @public {Property.<Vector2>} - the Momentum Vector's components, which are its x and y scalar values. Initialized
+    //                                at zero and to be updated later in MomentaDiagram.js
     this.componentsProperty = new Vector2Property( Vector2.ZERO );
 
-    // @public {DerivedProperty.<Vector2>} - the tip position of the Vector. Never disposed since MomentaDiagramVectors
-    //                                       are never disposed.
+    // @public {Property.<Vector2>} - the tip position of the Vector. Never disposed since MomentaDiagramVectors
+    //                                are never disposed.
     this.tipPositionProperty = new DerivedProperty( [ this.tailPositionProperty, this.componentsProperty ],
       ( tailPosition, components ) => tailPosition.plus( components ), {
         valueType: Vector2

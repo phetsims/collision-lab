@@ -64,15 +64,15 @@ class PlayArea {
     // @public (read-only) {PlayArea.Dimension} - the dimensions of the PlayArea (1D vs 2D).
     this.dimension = dimension;
 
-    // @public {BooleanProperty} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
+    // @public {Property.<boolean>} - indicates if the Balls reflect at the Border of the PlayArea bounds. This Property
     //                             is manipulated in the view.
     this.reflectingBorderProperty = new BooleanProperty( options.reflectsBorderInitially );
 
-    // @public {BooleanProperty} - indicates if the grid of the PlayArea is visible. This is placed inside of the model
+    // @public {Property.<boolean>} - indicates if the grid of the PlayArea is visible. This is placed inside of the model
     //                             since the visibility of the grid affects the drag-snapping of Balls.
     this.gridVisibleProperty = new BooleanProperty( options.isGridVisibleInitially );
 
-    // @public {NumberProperty} - Property of the elasticity of all collisions in the PlayArea, as a percentage. See
+    // @public {Property.<number>} - Property of the elasticity of all collisions in the PlayArea, as a percentage. See
     //                            https://en.wikipedia.org/wiki/Coefficient_of_restitution for background.
     this.elasticityPercentProperty = new NumberProperty( options.initialElasticityPercent, {
       range: ELASTICITY_PERCENT_RANGE

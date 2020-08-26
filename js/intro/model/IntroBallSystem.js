@@ -74,7 +74,7 @@ class IntroBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {BooleanProperty} - indicates if the 'Change in Momentum' vectors are visible. This is in the model since
+    // @public {Property.<boolean>} - indicates if the 'Change in Momentum' vectors are visible. This is in the model since
     //                             the change in momentum vectors are only updated after the visibility checkbox is
     //                             checked and are zero when false. Set externally in the view.
     this.changeInMomentumVisibleProperty = new BooleanProperty( false );

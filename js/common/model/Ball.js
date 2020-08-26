@@ -52,31 +52,27 @@ class Ball {
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPositiveInteger( index );
 
-    //REVIEW: Is anything specific to NumberProperty being used here? Otherwise convention is to document this as
-    //REVIEW: {Property.<number>} -- and elsewhere as used in the code
-    // @public {NumberProperty} - Properties of the Ball's center coordinates, in meters. Separated into components to
+    // @public {Property.<number>} - Properties of the Ball's center coordinates, in meters. Separated into components to
     //                            individually display each component and to allow the user to manipulate separately.
     this.xPositionProperty = new NumberProperty( initialBallState.position.x );
     this.yPositionProperty = new NumberProperty( initialBallState.position.y );
 
-    //REVIEW: Is anything specific to DerivedProperty being used here? Otherwise convention is to document this as
-    //REVIEW: {Property.<Vector2>} -- and elsewhere as used in the code
-    // @public {DerivedProperty.<Vector2>} - Property of the center-position of the Ball, in meters.
+    // @public {Property.<Vector2>} - Property of the center-position of the Ball, in meters.
     this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
       ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
       { valueType: Vector2 } );
 
-    // @public {NumberProperty} - the Ball's velocity, in m/s. Separated into components to individually display each
-    //                            component and to allow the user to manipulate separately.
+    // @public {Property.<number>} - the Ball's velocity, in m/s. Separated into components to individually display each
+    //                               component and to allow the user to manipulate separately.
     this.xVelocityProperty = new NumberProperty( initialBallState.velocity.x );
     this.yVelocityProperty = new NumberProperty( initialBallState.velocity.y );
 
-    // @public {DerivedProperty.<Vector2>} - Property of the velocity of the Ball, in m/s.
+    // @public {Property.<Vector2>} - Property of the velocity of the Ball, in m/s.
     this.velocityProperty = new DerivedProperty( [ this.xVelocityProperty, this.yVelocityProperty ],
       ( xVelocity, yVelocity ) => new Vector2( xVelocity, yVelocity ),
       { valueType: Vector2 } );
 
-    // @public {DerivedProperty.<number>} speedProperty - Property of the speed of the Ball, in m/s.
+    // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude, {
       isValidValue: value => value >= 0,
       valueType: 'number'
@@ -84,19 +80,19 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public (read-only) {NumberProperty} - Property of the mass of the Ball, in kg. Manipulated in the view.
+    // @public (read-only) {Property.<number>} - Property of the mass of the Ball, in kg. Manipulated in the view.
     this.massProperty = new NumberProperty( initialBallState.mass, { range: CollisionLabConstants.MASS_RANGE } );
 
-    // @public {DerivedProperty.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
+    // @public {Property.<Vector2>} - Property of the momentum of the Ball, in kg*(m/s).
     this.momentumProperty = new DerivedProperty( [ this.massProperty, this.velocityProperty ],
       ( mass, velocity ) => velocity.timesScalar( mass ),
       { valueType: Vector2 } );
 
-    // @public {DerivedProperty.<number>} - the momentum, in kg*m/s. Separated into components to display individually.
+    // @public {Property.<number>} - the momentum, in kg*m/s. Separated into components to display individually.
     this.xMomentumProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.x );
     this.yMomentumProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.y );
 
-    // @public {DerivedProperty.<number>} - magnitude of this Ball's momentum, kg*(m/s).
+    // @public {Property.<number>} - magnitude of this Ball's momentum, kg*(m/s).
     this.momentumMagnitudeProperty = new DerivedProperty( [ this.momentumProperty ], momentum => momentum.magnitude, {
       isValidValue: value => value >= 0,
       valueType: 'number'
@@ -104,12 +100,12 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {DerivedProperty.<number>} - Property of the radius of the Ball, in meters.
+    // @public {Property.<number>} - Property of the radius of the Ball, in meters.
     this.radiusProperty = new DerivedProperty( [ this.massProperty, isConstantSizeProperty ],
       BallUtils.calculateBallRadius,
       { valueType: 'number', isValidValue: value => value > 0 } );
 
-    // @public {NumberProperty} - Property of the rotation of the Ball relative to its own center, in radians. This is
+    // @public {Property.<number>} - Property of the rotation of the Ball relative to its own center, in radians. This is
     //                            used for 'sticky' collisions in the 'Inelastic' screen.
     this.rotationProperty = new NumberProperty( 0 );
 
@@ -120,7 +116,7 @@ class Ball {
     //REVIEW: this COULD change based on the radiusProperty, BUT the radiusProperty is not included in the dependencies.
     //REVIEW: Having this be a check on the PlayArea or elsewhere can prevent this class of bug, and I don't see an
     //REVIEW: advantage to having a Property to track this.
-    // @public {DerivedProperty.<boolean>} - indicates if ANY part of the Ball is inside the PlayArea's bounds.
+    // @public {Property.<boolean>} - indicates if ANY part of the Ball is inside the PlayArea's bounds.
     this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
@@ -130,18 +126,18 @@ class Ball {
 
     //----------------------------------------------------------------------------------------
 
-    // @public {BooleanProperty} - indicates if the Ball's mass is being manipulated by the user. Set in the view.
+    // @public {Property.<boolean>} - indicates if the Ball's mass is being manipulated by the user. Set in the view.
     this.massUserControlledProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball's position is being manipulated by the user. Set in the view.
+    // @public {Property.<boolean>} - indicates if the Ball's position is being manipulated by the user. Set in the view.
     this.xPositionUserControlledProperty = new BooleanProperty( false );
     this.yPositionUserControlledProperty = new BooleanProperty( false );
 
-    // @public {BooleanProperty} - indicates if the Ball's velocity is being manipulated by the user. Set in the view.
+    // @public {Property.<boolean>} - indicates if the Ball's velocity is being manipulated by the user. Set in the view.
     this.xVelocityUserControlledProperty = new BooleanProperty( false );
     this.yVelocityUserControlledProperty = new BooleanProperty( false );
 
-    // @public {DerivedProperty.<boolean>} - indicates if the Ball is being controlled by the user in any way, either by
+    // @public {Property.<boolean>} - indicates if the Ball is being controlled by the user in any way, either by
     //                                       dragging or through the Keypad.
     this.userControlledProperty = new DerivedProperty( [ this.massUserControlledProperty,
       this.xPositionUserControlledProperty,
