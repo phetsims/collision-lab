@@ -33,17 +33,16 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
-import CollisionLabQueryParameters from '../CollisionLabQueryParameters.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
 import MomentaDiagramVector from './MomentaDiagramVector.js';
 import PlayArea from './PlayArea.js';
 
 // constants
-const VERTICAL_SPACING_1D = CollisionLabQueryParameters.momentaDiagram1DSpacing;
 const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
 const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 const ZOOM_MULTIPLIER = 2;
+const DEFAULT_1D_VERTICAL_SPACING = 0.5;
 
 class MomentaDiagram {
 
@@ -109,10 +108,11 @@ class MomentaDiagram {
     //  - The momentum Properties of the prepopulatedBalls. Only the balls in the BallSystem are positioned and used in
     //    the total momentum calculation.
     //  - balls.lengthProperty, since removing or adding a Ball changes the total momentum.
+    //  - this.zoomProperty, since changing the zoom changes the vertical spacing between vectors for 1D screens.
     //
     // This Multilink is never disposed and lasts for the lifetime of the sim.
     Property.multilink(
-      [ this.expandedProperty, ...prepopulatedBalls.map( ball => ball.momentumProperty ), balls.lengthProperty ],
+      [ this.expandedProperty, ...prepopulatedBalls.map( ball => ball.momentumProperty ), balls.lengthProperty, this.zoomProperty ],
       expanded => {
         expanded && this.updateVectors(); // Only update if the MomentaDiagram is visible (expanded).
       }
@@ -168,6 +168,9 @@ class MomentaDiagram {
     // Reference the Momenta Vector associated with the first Ball in the system.
     const firstMomentaVector = this.ballToMomentaVectorMap.get( this.balls[ 0 ] );
 
+    // Calculate the vertical spacing between the vectors for 1D screens, which is dependent on the zoom-level.
+    const verticalSpacing = DEFAULT_1D_VERTICAL_SPACING / this.zoomProperty.value * MOMENTA_DIAGRAM_ZOOM_RANGE.defaultValue;
+
     // Position the first Momenta Vector and the total Momenta Vector in the correct position.
     if ( this.dimension === PlayArea.Dimension.TWO ) {
 
@@ -183,8 +186,8 @@ class MomentaDiagram {
 
       // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
-      firstMomentaVector.tailY = VERTICAL_SPACING_1D + Math.floor( ( this.balls.length - VERTICAL_SPACING_1D ) / 2 );
-      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length * VERTICAL_SPACING_1D;
+      firstMomentaVector.tailY = verticalSpacing * this.balls.length / 2;
+      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length * verticalSpacing;
     }
 
     // Position the rest of the Momentum vectors. Loop in pairs.
@@ -202,8 +205,8 @@ class MomentaDiagram {
         // tipX-to-tailX
         momentaVector.tailX = previousMomentaVector.tipX;
 
-        // Stack vertically on top of each other by progressively decrementing the tipY by 1.
-        momentaVector.tailY = previousMomentaVector.tailY - VERTICAL_SPACING_1D;
+        // Stack vertically on top of each other by progressively decrementing the tipY.
+        momentaVector.tailY = previousMomentaVector.tailY - verticalSpacing;
       }
     } );
   }
