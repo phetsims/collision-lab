@@ -23,8 +23,11 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import DynamicProperty from '../../../../axon/js/DynamicProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -52,25 +55,39 @@ class Ball {
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPositiveInteger( index );
 
-    // @public {Property.<number>} - Properties of the Ball's center coordinates, in meters. Separated into components to
-    //                            individually display each component and to allow the user to manipulate separately.
-    this.xPositionProperty = new NumberProperty( initialBallState.position.x );
-    this.yPositionProperty = new NumberProperty( initialBallState.position.y );
-
     // @public {Property.<Vector2>} - Property of the center-position of the Ball, in meters.
-    this.positionProperty = new DerivedProperty( [ this.xPositionProperty, this.yPositionProperty ],
-      ( xPosition, yPosition ) => new Vector2( xPosition, yPosition ),
-      { valueType: Vector2 } );
+    this.positionProperty = new Vector2Property( initialBallState.position );
 
-    // @public {Property.<number>} - the Ball's velocity, in m/s. Separated into components to individually display each
-    //                               component and to allow the user to manipulate separately.
-    this.xVelocityProperty = new NumberProperty( initialBallState.velocity.x );
-    this.yVelocityProperty = new NumberProperty( initialBallState.velocity.y );
+    //REVIEW: Can we reduce this easily, so we don't actually require the updates (and can instead listen to just one Property?)
+    // @public {Property.<number>} - Properties of the Ball's center coordinates, in meters. Separated into components
+    // to individually display each component, and to allow the user to manipulate separately.
+    this.xPositionProperty = new DynamicProperty( new Property( this.positionProperty ), {
+      bidirectional: true,
+      map: v => v.x,
+      inverseMap: x => new Vector2( x, this.positionProperty.value.y )
+    } );
+    this.yPositionProperty = new DynamicProperty( new Property( this.positionProperty ), {
+      bidirectional: true,
+      map: v => v.y,
+      inverseMap: y => new Vector2( this.positionProperty.value.x, y )
+    } );
 
     // @public {Property.<Vector2>} - Property of the velocity of the Ball, in m/s.
-    this.velocityProperty = new DerivedProperty( [ this.xVelocityProperty, this.yVelocityProperty ],
-      ( xVelocity, yVelocity ) => new Vector2( xVelocity, yVelocity ),
-      { valueType: Vector2 } );
+    this.velocityProperty = new Vector2Property( initialBallState.velocity );
+
+    //REVIEW: Can we reduce this easily, so we don't actually require the updates (and can instead listen to just one Property?)
+    // @public {Property.<number>} - the Ball's velocity, in m/s. Separated into components to individually display each
+    //                               component and to allow the user to manipulate separately.
+    this.xVelocityProperty = new DynamicProperty( new Property( this.velocityProperty ), {
+      bidirectional: true,
+      map: v => v.x,
+      inverseMap: x => new Vector2( x, this.velocityProperty.value.y )
+    } );
+    this.yVelocityProperty = new DynamicProperty( new Property( this.velocityProperty ), {
+      bidirectional: true,
+      map: v => v.y,
+      inverseMap: y => new Vector2( this.velocityProperty.value.x, y )
+    } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude, {
@@ -165,8 +182,7 @@ class Ball {
    * @public
    */
   reset() {
-    this.xPositionProperty.reset();
-    this.yPositionProperty.reset();
+    this.positionProperty.reset();
     this.xVelocityProperty.reset();
     this.yVelocityProperty.reset();
     this.massProperty.reset();
@@ -355,8 +371,8 @@ class Ball {
    */
   set position( position ) {
     assert && assert( position instanceof Vector2, `invalid position: ${position}` );
-    this.xPositionProperty.value = position.x;
-    this.yPositionProperty.value = position.y;
+
+    this.positionProperty.value = position;
   }
 
   /**
