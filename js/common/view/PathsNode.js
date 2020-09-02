@@ -25,7 +25,6 @@ import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
 import CollisionLabPath from '../model/CollisionLabPath.js';
@@ -101,12 +100,15 @@ class PathsNode extends CanvasNode {
     const lastPathDataPointTime = _.last( path.dataPoints ).time;
 
     // Draw the segments that connect each of the PathDataPoints by iterating pairwise.
-    CollisionLabUtils.forEachAdjacentPair( path.dataPoints, ( dataPoint, previousDataPoint ) => {
+    for ( let i = 1; i < path.dataPoints.length; i++ ) {
+      const dataPoint = path.dataPoints[ i ];
+      const previousDataPoint = path.dataPoints[ i - 1 ];
 
       // Each segment of the dataPoint path needs a new canvas path to create the gradient effect.
       context.beginPath();
 
       // Get the start and end positions of the line-segment.
+      //REVIEW: for performance, can we avoid running the MVT on each interior point twice?
       const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousDataPoint.position );
       const segmentEndPosition = this.modelViewTransform.modelToViewPosition( dataPoint.position );
 
@@ -122,9 +124,8 @@ class PathsNode extends CanvasNode {
       // Using built-in toFixed for performance reasons (similar to Color.computeCSS()), and in addition avoiding a lot
       // of the mutation and overhead by just directly creating the CSS color string.
       context.strokeStyle = `rgba(${baseColor.r},${baseColor.g},${baseColor.b},${alpha.toFixed( 20 )})`;
-      context.lineWidth = LINE_WIDTH;
       context.stroke();
-    } );
+    }
   }
 
   /**
@@ -137,10 +138,14 @@ class PathsNode extends CanvasNode {
   paintCanvas( context ) {
     assert && assert( context instanceof CanvasRenderingContext2D, `invalid context: ${context}` );
 
+    // Set once only for performmance
+    context.lineWidth = LINE_WIDTH;
+
     // First draw the trailing 'Paths' behind every Ball.
-    this.prepopulatedBalls.forEach( ball => {
+    for ( let i = 0; i < this.prepopulatedBalls.length; i++ ) {
+      const ball = this.prepopulatedBalls[ i ];
       this.drawPath( ball.path, CollisionLabColors.BALL_COLORS[ ball.index - 1 ], context );
-    } );
+    }
 
     // Draw the trailing 'Path' behind the CenterOfMass.
     this.drawPath( this.centerOfMassPath, CollisionLabColors.CENTER_OF_MASS_FILL, context );
