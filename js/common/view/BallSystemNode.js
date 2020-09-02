@@ -19,6 +19,7 @@
  * @author Brandon Li
  */
 
+import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -56,6 +57,10 @@ class BallSystemNode extends Node {
     assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
+
+    options = merge( {
+      preventFit: true
+    }, options );
 
     super( options );
 
