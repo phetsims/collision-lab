@@ -112,43 +112,47 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    if ( !maxIterations ) { return this.progressBalls( dt, elapsedTime ); }
+    let iterations = 0;
+    while ( iterations++ < maxIterations ) {
+      // First detect all potential collisions that have not already been detected.
+      this.timeStepDirectionProperty.value = Math.sign( dt );
+      this.detectAllCollisions( elapsedTime );
 
-    // First detect all potential collisions that have not already been detected.
-    this.timeStepDirectionProperty.value = Math.sign( dt );
-    this.detectAllCollisions( elapsedTime );
+      // Get all Collisions that have a collision 'time' in this time-step.
+      const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
+        return collision.inRange( elapsedTime, elapsedTime + dt );
+      } );
 
-    // Get all Collisions that have a collision 'time' in this time-step.
-    const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
-      return collision.inRange( elapsedTime, elapsedTime + dt );
-    } );
+      if ( !collisionsInThisStep.length ) {
 
-    if ( !collisionsInThisStep.length ) {
+        // If there are no collisions within this step, the Balls are in uniform motion for the entirety of this step.
+        // The recursive process is stopped and the Balls are stepped uniformly to the end of the time-step.
+        this.progressBalls( dt, elapsedTime );
 
-      // If there are no collisions within this step, the Balls are in uniform motion for the entirety of this step.
-      // The recursive process is stopped and the Balls are stepped uniformly to the end of the time-step.
-      this.progressBalls( dt, elapsedTime );
-    }
-    else {
+        break;
+      }
+      else {
 
-      // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
-      // Find and reference the next Collision that will occur of the collisions that will occur in this step.
-      const nextCollisions = dt >= 0 ?
-        CollisionLabUtils.getMinValuesOf( collisionsInThisStep, collision => collision.time ) :
-        CollisionLabUtils.getMaxValuesOf( collisionsInThisStep, collision => collision.time );
+        // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
+        // Find and reference the next Collision that will occur of the collisions that will occur in this step.
+        const nextCollisions = dt >= 0 ?
+          CollisionLabUtils.getMinValuesOf( collisionsInThisStep, collision => collision.time ) :
+          CollisionLabUtils.getMaxValuesOf( collisionsInThisStep, collision => collision.time );
 
-      // Reference when the collision will occur (in terms of both elapsedTime and a time-delta, respectively).
-      const collisionTime = nextCollisions[ 0 ].time;
-      const timeUntilCollision = collisionTime - elapsedTime;
+        // Reference when the collision will occur (in terms of both elapsedTime and a time-delta, respectively).
+        const collisionTime = nextCollisions[ 0 ].time;
+        const timeUntilCollision = collisionTime - elapsedTime;
 
-      // Progress forwards to the exact point of contact of the collision.
-      this.progressBalls( timeUntilCollision, elapsedTime );
+        // Progress forwards to the exact point of contact of the collision.
+        this.progressBalls( timeUntilCollision, elapsedTime );
 
-      // Handle the response for the Collision depending on the type of collision.
-      nextCollisions.forEach( this.handleCollision.bind( this ) );
+        // Handle the response for the Collision depending on the type of collision.
+        nextCollisions.forEach( this.handleCollision.bind( this ) );
 
-      // Recursively call step() with the remaining time after the collision, returning for TCO supported browsers.
-      return this.step( dt - timeUntilCollision, collisionTime, maxIterations - 1 );
+        // Continue on to the next iteration
+        dt -= timeUntilCollision;
+        elapsedTime = collisionTime;
+      }
     }
   }
 
