@@ -116,10 +116,14 @@ class PathsNode extends CanvasNode {
 
       // Linearly reduce the stroke-alpha to give a "fade over-time" illusion.
       const alpha = Utils.linear( firstPathDataPointTime, lastPathDataPointTime, 0, 1, dataPoint.time );
-      context.strokeStyle = this.scratchColor.set( baseColor ).setAlpha( alpha ).toCSS();
+
+      //REVIEW: we've never handled PaintDef, Color.set will only handle the color/string combination
+
+      // Using built-in toFixed for performance reasons (similar to Color.computeCSS()), and in addition avoiding a lot
+      // of the mutation and overhead by just directly creating the CSS color string.
+      context.strokeStyle = `rgba(${baseColor.r},${baseColor.g},${baseColor.b},${alpha.toFixed( 20 )})`;
       context.lineWidth = LINE_WIDTH;
       context.stroke();
-      context.closePath();
     } );
   }
 
