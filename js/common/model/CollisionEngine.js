@@ -228,47 +228,59 @@ class CollisionEngine {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
     // Loop through each unique possible pair of Balls.
-    CollisionLabUtils.forEachPossiblePair( this.ballSystem.balls, ( ball1, ball2 ) => {
+    for ( let i = 1; i < this.ballSystem.balls.length; i++ ) {
+      const ball1 = this.ballSystem.balls[ i - 1 ];
+      const ball2 = this.ballSystem.balls[ i ];
+
       assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
       // Only detect new ball-ball collisions if it hasn't already been detected.
-      if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball1, ball2 ) ) ) {
-
-        // Reference the multiplier of the velocity of the Ball. When the sim is being reversed, Balls are essentially
-        // moving in the opposite direction of its velocity vector. For calculating if Balls will collide, reverse the
-        // velocity of the ball for convenience and reverse the collisionTime back at the end.
-        const velocityMultipier = this.timeStepDirectionProperty.value;
-
-        /*----------------------------------------------------------------------------*
-         * This calculation for detecting if the balls will collide comes from the
-         * known fact that when the Balls are exactly colliding, their distance is
-         * exactly equal to the sum of their radii.
-         *
-         * Documenting the derivation was beyond the scope of code comments. Please reference
-         * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
-         *----------------------------------------------------------------------------*/
-
-        this.deltaR.set( ball2.position ).subtract( ball1.position );
-        this.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
-        const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
-
-        // Solve for the possible roots of the quadratic outlined in the document above.
-        const possibleRoots = Utils.solveQuadraticRootsReal(
-                                this.deltaV.magnitudeSquared,
-                                this.deltaV.dot( this.deltaR ) * 2,
-                                CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
-
-        // The minimum root of the quadratic is when the Balls will first collide.
-        const root = possibleRoots ? Math.min( ...possibleRoots ) : null;
-
-        // If the quadratic root is finite and the collisionTime is positive, the collision is detected and should be
-        // registered.
-        const collisionTime = ( Number.isFinite( root ) && root >= 0 ) ? elapsedTime + root * velocityMultipier : null;
-
-        // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball1, ball2, collisionTime ) );
+      let hasCollision = false;
+      for ( let j = 0; j < this.collisions.length; j++ ) {
+        if ( this.collisions[ j ].includesBodies( ball1, ball2 ) ) {
+          hasCollision = true;
+          break;
+        }
       }
-    } );
+      if ( hasCollision ) {
+        continue;
+      }
+
+      // Reference the multiplier of the velocity of the Ball. When the sim is being reversed, Balls are essentially
+      // moving in the opposite direction of its velocity vector. For calculating if Balls will collide, reverse the
+      // velocity of the ball for convenience and reverse the collisionTime back at the end.
+      const velocityMultipier = this.timeStepDirectionProperty.value;
+
+      /*----------------------------------------------------------------------------*
+       * This calculation for detecting if the balls will collide comes from the
+       * known fact that when the Balls are exactly colliding, their distance is
+       * exactly equal to the sum of their radii.
+       *
+       * Documenting the derivation was beyond the scope of code comments. Please reference
+       * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
+       *----------------------------------------------------------------------------*/
+
+      this.deltaR.set( ball2.position ).subtract( ball1.position );
+      this.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
+      const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
+
+      // Solve for the possible roots of the quadratic outlined in the document above.
+      const possibleRoots = Utils.solveQuadraticRootsReal(
+                              this.deltaV.magnitudeSquared,
+                              this.deltaV.dot( this.deltaR ) * 2,
+                              CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
+
+      // The minimum root of the quadratic is when the Balls will first collide.
+      const root = possibleRoots ? Math.min( ...possibleRoots ) : null;
+
+      // If the quadratic root is finite and the collisionTime is positive, the collision is detected and should be
+      // registered.
+      const collisionTime = ( Number.isFinite( root ) && root >= 0 ) ? elapsedTime + root * velocityMultipier : null;
+
+      // Register the collision and encapsulate information in a Collision instance.
+      //REVIEW: GC pool this?
+      this.collisions.add( new Collision( ball1, ball2, collisionTime ) );
+    }
   }
 
   /**
