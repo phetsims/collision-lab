@@ -230,9 +230,9 @@ class BallSystem {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    this.balls.forEach( ball => {
-      ball.stepUniformMotion( dt );
-    } );
+    for ( let i = 0; i < this.balls.length; i++ ) {
+      this.balls[ i ].stepUniformMotion( dt );
+    }
 
     // Update the trailing 'Paths' of all Balls in the system and the CenterOfMass.
     this.updatePaths( elapsedTime );
@@ -247,7 +247,9 @@ class BallSystem {
   updatePaths( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
-    this.balls.forEach( ball => ball.path.updatePath( elapsedTime ) );
+    for ( let i = 0; i < this.balls.length; i++ ) {
+      this.balls[ i ].path.updatePath( elapsedTime );
+    }
     this.centerOfMass.path.updatePath( elapsedTime );
   }
 
