@@ -26,6 +26,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
    * @param {Property.<boolean>} pathsVisibleProperty
    * @param {Property.<boolean>} reflectingBorderProperty
    * @param {Property.<number>} elasticityPercentProperty
+   * @param {Range} enabledElasticityRange
    * @param {Property.<boolean>} ballsConstantSizeProperty
    * @param {Object} [options]
    */
@@ -34,7 +35,7 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
                pathsVisibleProperty,
                reflectingBorderProperty,
                elasticityPercentProperty,
-               enabledElasticityRange, //REVIEW: Don't see doc for this?
+               enabledElasticityRange,
                ballsConstantSizeProperty,
                options ) {
     assert && assert( viewProperties instanceof CollisionLabViewProperties, `invalid viewProperties: ${viewProperties}` );

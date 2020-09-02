@@ -68,7 +68,7 @@ const InelasticPreset = Enumeration.byMap( {
 
   // The custom preset, which indicates that the user can set up a 'custom' collision scenario. When the preset
   // is set to CUSTOM, none of the balls are changed, so there are no BallStates that are associated with this Preset.
-  CUSTOM: new InelasticPresetValue(), //REVIEW: the constructor param is required, should null be used here instead? Or change the param to optional?
+  CUSTOM: new InelasticPresetValue( null ),
 
   /*----------------------------------------------------------------------------*
    * The rest of the Presets are specific collision scenarios that relate to the

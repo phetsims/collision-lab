@@ -62,6 +62,7 @@ class BallNode extends Node {
    * @param {Property.<boolean>} valuesVisibleProperty - indicates if the momentum and speed NumberDisplays are visible.
    * @param {Property.<boolean>} velocityVectorVisibleProperty - indicates if the velocity vector is visible.
    * @param {Property.<boolean>} momentumVectorVisibleProperty - indicates if the momentum vector is visible.
+   * @param {Property.<number>} elasticityPercentProperty - elasticity of all collisions as a percentage
    * @param {Property.<boolean>} isPlayingProperty - indicates if simulation is playing or not.
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
@@ -71,7 +72,7 @@ class BallNode extends Node {
                valuesVisibleProperty,
                velocityVectorVisibleProperty,
                momentumVectorVisibleProperty,
-               elasticityPercentProperty, //REVIEW: No JSDoc for this parameter?
+               elasticityPercentProperty,
                isPlayingProperty,
                modelViewTransform,
                options ) {

@@ -20,13 +20,12 @@ import Ball from '../model/Ball.js';
 class BallMassSlider extends HSlider {
 
   /**
-   * REVIEW: missing JSDoc for ballSystem
    * @param {Ball} ball
+   * @param {BallSystem} ballSystem
    * @param {Object} [options]
    */
   constructor( ball, ballSystem, options ) {
     assert && assert( ball instanceof Ball, `invalid Ball: ${ball}` );
-
 
     options = merge( {
 

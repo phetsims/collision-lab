@@ -46,13 +46,17 @@ class KeypadDialog extends Dialog {
       // {Font} - font used for all Text instances within the Dialog.
       font: new PhetFont( 15 ),
 
-      // {number} - maximum number of decimal places that can be entered on the keypad.
-      maxDecimals: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
-
-      maxDigits: 8,       // {number} - maximum number of digits that can be entered on the keypad.
       valueBoxWidth: 85,  // {number} - width of the value field, height determined by valueFont.
       valueYMargin: 3,    // {number} - vertical margin inside the value box.
       contentSpacing: 10, // {number} - vertical spacing between the content of the KeypadDialog.
+
+      keypadOptions: {
+        // {number} - maximum number of digits that can be entered on the keypad.
+        maxDigits: 8,
+
+        // {number} - maximum number of decimal places that can be entered on the keypad.
+        maxDigitsRightOfMantissa: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+      },
 
       // super-class options
       xSpacing: 2,
@@ -82,13 +86,7 @@ class KeypadDialog extends Dialog {
     //----------------------------------------------------------------------------------------
 
     // @private {Keypad} - the Keypad of the KeypadDialog.
-    this.keypad = new Keypad( Keypad.PositiveAndNegativeFloatingPointLayout, {
-      //REVIEW: It seems like we're using multiple options for a subcomponent. Can we instead
-      //REVIEW: have options.keypadOptions passed through here, where those options are isolated?
-      //REVIEW: Thoughts?
-      maxDigits: options.maxDigits,
-      maxDigitsRightOfMantissa: options.maxDecimals
-    } );
+    this.keypad = new Keypad( Keypad.PositiveAndNegativeFloatingPointLayout, options.keypadOptions );
 
     // @private {Text} - the Text Node that displays the Range of the current edit.
     this.rangeText = new Text( '', { font: options.font, maxWidth: this.keypad.width } );
