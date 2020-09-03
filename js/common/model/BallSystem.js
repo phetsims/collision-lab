@@ -102,9 +102,9 @@ class BallSystem {
       range: options.numberOfBallsRange
     } );
 
-    // @public (read-only) {AxonArray.<Ball>} - an array of the balls currently within the system. Balls
-    //                                                **must** be from prepopulatedBalls. Its length should match the
-    //                                                numberOfBallsProperty's value.
+    // @public (read-only) {AxonArray.<Ball>} - an array of the balls currently within the system. Balls **must** be
+    //                                          from prepopulatedBalls. Its length should match the
+    //                                          numberOfBallsProperty's value.
     this.balls = new AxonArray();
 
     // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
