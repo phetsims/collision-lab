@@ -138,7 +138,7 @@ class PathsNode extends CanvasNode {
   paintCanvas( context ) {
     assert && assert( context instanceof CanvasRenderingContext2D, `invalid context: ${context}` );
 
-    // Set once only for performmance
+    // Set once only for performance.
     context.lineWidth = LINE_WIDTH;
 
     // First draw the trailing 'Paths' behind every Ball.
