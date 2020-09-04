@@ -16,8 +16,7 @@
     "supportedBrands": [
       "phet",
       "adapted-from-phet"
-    ],
-    "supportsZoom": true
+    ]
   },
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_es6_eslintrc.js"
