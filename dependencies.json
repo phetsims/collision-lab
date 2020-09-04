@@ -1,23 +1,23 @@
 {
-  "comment": "# collision-lab 1.0.1 Fri Aug 14 2020 12:17:34 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.1 Thu Sep 03 2020 16:15:30 GMT-0800 (Alaska Daylight Time)",
   "assert": {
     "sha": "1a41cef653bbed1025af5768bea958d7e3e0f8ae",
     "branch": "HEAD"
   },
   "axon": {
     "sha": "8f7c381a64d43e0c5a682fce241bc9b8290a30c0",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "brand": {
     "sha": "83c51961edf5b255206c82de7d6f4df6b4ea41bc",
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "381be90748be2c7e9e80250f6324572728eb44b8",
-    "branch": "HEAD"
+    "sha": "43a8c8a154c8899d4b3d15020525ab021e975079",
+    "branch": "collision-lab-1.0"
   },
   "collision-lab": {
-    "sha": "04b971001ff4ced7702be8affb9b038af5da950f",
+    "sha": "211f0f29a57582bd309d1d2842a9097f041b0c77",
     "branch": "1.0"
   },
   "dot": {
@@ -39,6 +39,10 @@
   "phet-io": {
     "sha": "fa89c8ccde9808bb56ca8111fbfefa4d985d49a2",
     "branch": "HEAD"
+  },
+  "phet-io-client-guides": {
+    "sha": "03ad7db09f93034342d74396e900ded0eb8dfa63",
+    "branch": "master"
   },
   "phet-io-wrappers": {
     "sha": "3e8368293628108337895ec1b3d8e011bbc8b7ff",
