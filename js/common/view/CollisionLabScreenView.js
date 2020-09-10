@@ -112,7 +112,7 @@ class CollisionLabScreenView extends ScreenView {
       model.ballSystem.totalKineticEnergyProperty,
       viewProperties.kineticEnergyVisibleProperty, {
         left: playAreaViewBounds.left + 5,
-        bottom: playAreaViewBounds.bottom - 5
+        bottom: playAreaViewBounds.bottom - 3
       } );
 
     // Return Balls Button
