@@ -24,6 +24,10 @@
     "sha": "13e3c418baa5a2bdaf975c6fd0fea6744bb9de98",
     "branch": "HEAD"
   },
+  "griddle": {
+    "sha": "ea25fdb1001421848a50de465af9910fd240c4e0",
+    "branch": "HEAD"
+  },
   "joist": {
     "sha": "fde53086e1ad77c58a5249788b6bd7c5002589f2",
     "branch": "HEAD"
