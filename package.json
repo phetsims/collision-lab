@@ -13,6 +13,9 @@
     "requirejsNamespace": "COLLISION_LAB",
     "simulation": true,
     "runnable": true,
+    "phetLibs": [
+      "griddle"
+    ],
     "supportedBrands": [
       "phet",
       "adapted-from-phet"
