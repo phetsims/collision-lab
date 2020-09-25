@@ -27,7 +27,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import Node from '../../../../scenery/js/nodes/Node.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CenterOfMass from '../model/CenterOfMass.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
@@ -68,8 +67,7 @@ class CenterOfMassNode extends Node {
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.velocity,
         units: collisionLabStrings.units.metersPerSecond
-      } ),
-      backgroundBaseFill: CollisionLabColors.CENTER_OF_MASS_FILL
+      } )
     } );
 
     // Set the children in the correct rendering order.

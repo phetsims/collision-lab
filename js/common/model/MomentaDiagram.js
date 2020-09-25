@@ -96,7 +96,7 @@ class MomentaDiagram {
     // @private {AxonArray.<Balls>} - reference to the Balls in the BallSystem.
     this.balls = balls;
 
-    // @private {number} - reference to the passed-in dimension of the PlayArea.
+    // @public {number} - reference to the passed-in dimension of the PlayArea.
     this.dimension = dimension;
 
     //----------------------------------------------------------------------------------------
