@@ -281,7 +281,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Handle degenerate case where the cluster is already colliding with the border.
     if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
-      const collision = new Collision( this.rotatingBallCluster, this.playArea, elapsedTime );
+      const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, elapsedTime );
 
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
 
@@ -313,7 +313,7 @@ class InelasticCollisionEngine extends CollisionEngine {
         maxCollisionTime );
 
     // Register the collision and encapsulate information in a Collision instance.
-    const collision = new Collision( this.rotatingBallCluster, this.playArea, collisionTime );
+    const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, collisionTime );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
     this.collisions.push( collision );
   }

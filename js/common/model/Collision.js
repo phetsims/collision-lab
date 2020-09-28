@@ -15,6 +15,7 @@
  * @author Brandon Li
  */
 
+import Poolable from '../../../../phet-core/js/Poolable.js';
 import collisionLab from '../../collisionLab.js';
 
 class Collision {
@@ -26,16 +27,40 @@ class Collision {
    *                             not collide.
    */
   constructor( body1, body2, time ) {
+    this.initialize( body1, body2, time );
+  }
+
+  /**
+   * Initializes based on the poolable pattern
+   * @public
+   *
+   * @param {Object} body1 - the first physical object involved in the collision.
+   * @param {Object} body2 - the second physical object involved in the collision.
+   * @param {number|null} time - the elapsed time of when the collision will occur. Null indicates that the bodies will
+   *                             not collide.
+   */
+  initialize( body1, body2, time ) {
     assert && assert( body1 instanceof Object, `invalid body1: ${body1}` );
     assert && assert( body2 instanceof Object, `invalid body2: ${body2}` );
     assert && assert( time === null || typeof time === 'number', `invalid time: ${time}` );
 
-    // @public {Object} - reference to the passed-in bodies.
+    // @public {Object|null} - reference to the passed-in bodies, null when disposed
     this.body1 = body1;
     this.body2 = body2;
 
     // @public {number|null} - reference to the passed-in time.
     this.time = time;
+  }
+
+  /**
+   * Releases references, and puts it back into the pool.
+   * @public
+   */
+  dispose() {
+    this.body1 = null;
+    this.body2 = null;
+
+    this.freeToPool();
   }
 
   /**
@@ -85,6 +110,10 @@ class Collision {
                                                                   ( this.time >= time2 && this.time <= time1 ) );
   }
 }
+
+Poolable.mixInto( Collision, {
+  initialize: Collision.prototype.initialize
+} );
 
 collisionLab.register( 'Collision', Collision );
 export default Collision;

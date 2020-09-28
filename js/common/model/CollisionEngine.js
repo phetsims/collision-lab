@@ -111,7 +111,9 @@ class CollisionEngine {
    * Called when the reset/restart button is pressed or when some 'state' of the simulation changes.
    */
   reset() {
-    this.collisions.length = 0;
+    while ( this.collisions.length ) {
+      this.collisions.pop().dispose();
+    }
   }
 
   /**
@@ -277,8 +279,11 @@ class CollisionEngine {
     assert && assert( body instanceof Object, `invalid body: ${body}` );
 
     for ( let i = this.collisions.length - 1; i >= 0; i-- ) {
-      if ( this.collisions[ i ].includes( body ) ) {
+      const collision = this.collisions[ i ];
+
+      if ( collision.includes( body ) ) {
         this.collisions.splice( i, 1 );
+        collision.dispose(); // Frees to pool
       }
     }
   }
@@ -349,7 +354,7 @@ class CollisionEngine {
         // registered.
         const collisionTime = ( Number.isFinite( root ) && root >= 0 && !isEffectivelyParallel ) ? elapsedTime + root * velocityMultipier : null;
 
-        const collision = new Collision( ball1, ball2, collisionTime );
+        const collision = Collision.createFromPool( ball1, ball2, collisionTime );
 
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )} root:${root} ${this.deltaV.dot( this.deltaR )}` );
 
@@ -457,7 +462,7 @@ class CollisionEngine {
         // Calculate when the Ball will collide with the border.
         const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
 
-        const collision = new Collision( ball, this.playArea, collisionTime );
+        const collision = Collision.createFromPool( ball, this.playArea, collisionTime );
 
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
 
