@@ -126,15 +126,8 @@ class Ball {
     //                            used for 'sticky' collisions in the 'Inelastic' screen.
     this.rotationProperty = new NumberProperty( 0 );
 
-    //REVIEW: This feels like something that the ball itself should not be tracking. This is listed as a Property, but
-    //REVIEW: I see no link or observers listed for it. It's requiring an external playArea (which ideally we should be
-    //REVIEW: able to create a Ball without a playArea, but that's not a problem), but also assumes what
-    //REVIEW: playArea.containsAnyPartOfBall does. Furthermore, because that method uses the top/left/etc., the value of
-    //REVIEW: this COULD change based on the radiusProperty, BUT the radiusProperty is not included in the dependencies.
-    //REVIEW: Having this be a check on the PlayArea or elsewhere can prevent this class of bug, and I don't see an
-    //REVIEW: advantage to having a Property to track this.
     // @public {Property.<boolean>} - indicates if ANY part of the Ball is inside the PlayArea's bounds.
-    this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty ],
+    this.insidePlayAreaProperty = new DerivedProperty( [ this.positionProperty, this.radiusProperty ],
       () => playArea.containsAnyPartOfBall( this ),
       { valueType: 'boolean' } );
 
