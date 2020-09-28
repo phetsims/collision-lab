@@ -134,6 +134,11 @@ class CollisionEngine {
     let iterations = 0;
     while ( iterations++ < maxIterations ) {
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `iteration ${iterations} dt:${dt}, elapsedTime:${elapsedTime}` );
+      sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
+      sceneryLog && sceneryLog.Sim && this.ballSystem.balls.forEach( ball => {
+        sceneryLog.Sim( `#${ball.index} velocity:${ball.velocity.toString()}` );
+      } );
 
       // First detect all potential collisions that have not already been detected.
       this.timeStepDirectionProperty.value = Math.sign( dt );
@@ -157,6 +162,7 @@ class CollisionEngine {
         // The recursive process is stopped and the Balls are stepped uniformly to the end of the time-step.
         this.progressBalls( dt, elapsedTime );
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.pop();
         break;
       }
       else {
@@ -183,6 +189,8 @@ class CollisionEngine {
         dt -= timeUntilCollision;
         elapsedTime = collisionTime;
       }
+
+      sceneryLog && sceneryLog.Sim && sceneryLog.pop();
     }
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
@@ -324,10 +332,14 @@ class CollisionEngine {
         this.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
         const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
 
+        const relativeDotProduct = this.deltaV.dot( this.deltaR );
+
+        const isEffectivelyParallel = Math.abs( relativeDotProduct ) < 1e-10;
+
         // Solve for the possible roots of the quadratic outlined in the document above.
         const possibleRoots = Utils.solveQuadraticRootsReal(
                                 this.deltaV.magnitudeSquared,
-                                this.deltaV.dot( this.deltaR ) * 2,
+                                relativeDotProduct * 2,
                                 CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
 
         // The minimum root of the quadratic is when the Balls will first collide.
@@ -335,11 +347,11 @@ class CollisionEngine {
 
         // If the quadratic root is finite and the collisionTime is positive, the collision is detected and should be
         // registered.
-        const collisionTime = ( Number.isFinite( root ) && root >= 0 ) ? elapsedTime + root * velocityMultipier : null;
+        const collisionTime = ( Number.isFinite( root ) && root >= 0 && !isEffectivelyParallel ) ? elapsedTime + root * velocityMultipier : null;
 
         const collision = new Collision( ball1, ball2, collisionTime );
 
-        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )} root:${root} ${this.deltaV.dot( this.deltaR )}` );
 
         // Register the collision and encapsulate information in a Collision instance.
         //REVIEW: GC pool this?
@@ -379,15 +391,28 @@ class CollisionEngine {
     const normal = ball2.position.minus( ball1.position ).normalize();
     const tangent = new Vector2( -normal.y, normal.x );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `normal ${normal}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `tangent ${tangent}` );
+
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
     const v1n = ball1.velocity.dot( normal );
     const v2n = ball2.velocity.dot( normal );
     const v1t = ball1.velocity.dot( tangent );
     const v2t = ball2.velocity.dot( tangent );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1n ${v1n}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1t ${v1t}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2n ${v2n}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2t ${v2t}` );
+
     // Compute the 'normal' components of velocities after collision (P for prime = after).
-    const v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
-    const v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
+    let v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
+    let v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
+
+    // Remove negligible normal velocities to prevent oscillations,
+    // see https://github.com/phetsims/collision-lab/issues/171
+    if ( Math.abs( v1nP ) < 1e-8 ) { v1nP = 0; }
+    if ( Math.abs( v2nP ) < 1e-8 ) { v2nP = 0; }
 
     // Change coordinate frames back into the standard x-y coordinate frame.
     const v1xP = tangent.dotXY( v1t, v1nP );
