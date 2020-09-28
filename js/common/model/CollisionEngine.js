@@ -60,6 +60,7 @@ class CollisionEngine {
     //                              will not have an associated "time" which indicates that a Collision will not occur.
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = [];
+    this.nextCollisions = []; // Minimizing GC by using a persistent array
 
     // @private {Property.<number>} - the 'direction' of the progression of the current time-step of the sim, where:
     //                               1 means the sim is being progressed forwards in the current time-step, (dt > 0).
@@ -138,11 +139,24 @@ class CollisionEngine {
         } );
       }
 
-      // Get all Collisions that have a collision 'time' in this time-step.
-      //REVIEW: Don't closure here
-      const collisionsInThisStep = this.collisions.filter( collision => collision.inRange( elapsedTime, elapsedTime + dt ) );
+      // Get all Collisions that have a collision 'time' in this time-step. Rolled back to simple logic for performance
+      // and memory characteristics
+      // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
+      // Find and reference the next Collision that will occur of the collisions that will occur in this step.
+      this.nextCollisions.length = 0;
+      let bestPotentialCollisionTime = elapsedTime + dt;
+      for ( let i = this.collisions.length - 1; i >= 0; i-- ) {
+        const collision = this.collisions[ i ];
+        if ( collision.inRange( elapsedTime, bestPotentialCollisionTime ) ) {
+          if ( collision.time !== bestPotentialCollisionTime ) {
+            bestPotentialCollisionTime = collision.time;
+            this.nextCollisions.length = 0;
+          }
+          this.nextCollisions.push( collision );
+        }
+      }
 
-      if ( !collisionsInThisStep.length ) {
+      if ( !this.nextCollisions.length ) {
 
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'no collisions in step' );
 
@@ -154,15 +168,8 @@ class CollisionEngine {
         break;
       }
       else {
-
-        // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
-        // Find and reference the next Collision that will occur of the collisions that will occur in this step.
-        const nextCollisions = dt >= 0 ?
-          CollisionLabUtils.getMinValuesOf( collisionsInThisStep, collision => collision.time ) :
-          CollisionLabUtils.getMaxValuesOf( collisionsInThisStep, collision => collision.time );
-
         // Reference when the collision will occur (in terms of both elapsedTime and a time-delta, respectively).
-        const collisionTime = nextCollisions[ 0 ].time;
+        const collisionTime = bestPotentialCollisionTime;
         const timeUntilCollision = collisionTime - elapsedTime;
 
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `collision in step in ${timeUntilCollision}` );
@@ -171,7 +178,9 @@ class CollisionEngine {
         this.progressBalls( timeUntilCollision, elapsedTime );
 
         // Handle the response for the Collision depending on the type of collision.
-        nextCollisions.forEach( this.handleCollision.bind( this ) );
+        for ( let i = this.nextCollisions.length - 1; i >= 0; i-- ) {
+          this.handleCollision( this.nextCollisions[ i ] );
+        }
 
         // Continue on to the next iteration
         dt -= timeUntilCollision;
