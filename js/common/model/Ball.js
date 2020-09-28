@@ -23,9 +23,7 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import DynamicProperty from '../../../../axon/js/DynamicProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -58,36 +56,8 @@ class Ball {
     // @public {Property.<Vector2>} - Property of the center-position of the Ball, in meters.
     this.positionProperty = new Vector2Property( initialBallState.position );
 
-    //REVIEW: Can we reduce this easily, so we don't actually require the updates (and can instead listen to just one Property?)
-    // @public {Property.<number>} - Properties of the Ball's center coordinates, in meters. Separated into components
-    // to individually display each component, and to allow the user to manipulate separately.
-    this.xPositionProperty = new DynamicProperty( new Property( this.positionProperty ), {
-      bidirectional: true,
-      map: v => v.x,
-      inverseMap: x => new Vector2( x, this.positionProperty.value.y )
-    } );
-    this.yPositionProperty = new DynamicProperty( new Property( this.positionProperty ), {
-      bidirectional: true,
-      map: v => v.y,
-      inverseMap: y => new Vector2( this.positionProperty.value.x, y )
-    } );
-
     // @public {Property.<Vector2>} - Property of the velocity of the Ball, in m/s.
     this.velocityProperty = new Vector2Property( initialBallState.velocity );
-
-    //REVIEW: Can we reduce this easily, so we don't actually require the updates (and can instead listen to just one Property?)
-    // @public {Property.<number>} - the Ball's velocity, in m/s. Separated into components to individually display each
-    //                               component and to allow the user to manipulate separately.
-    this.xVelocityProperty = new DynamicProperty( new Property( this.velocityProperty ), {
-      bidirectional: true,
-      map: v => v.x,
-      inverseMap: x => new Vector2( x, this.velocityProperty.value.y )
-    } );
-    this.yVelocityProperty = new DynamicProperty( new Property( this.velocityProperty ), {
-      bidirectional: true,
-      map: v => v.y,
-      inverseMap: y => new Vector2( this.velocityProperty.value.x, y )
-    } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude, {
@@ -176,8 +146,7 @@ class Ball {
    */
   reset() {
     this.positionProperty.reset();
-    this.xVelocityProperty.reset();
-    this.yVelocityProperty.reset();
+    this.velocityProperty.reset();
     this.massProperty.reset();
     this.rotationProperty.reset();
     this.path.clear();
@@ -335,8 +304,8 @@ class Ball {
    *
    * @returns {number} - in m/s.
    */
-  get xVelocity() { return this.xVelocityProperty.value; }
-  get yVelocity() { return this.yVelocityProperty.value; }
+  get xVelocity() { return this.velocity.x; }
+  get yVelocity() { return this.velocity.y; }
 
   /**
    * Gets the linear momentum of this Ball, in kg*(m/s).
@@ -369,16 +338,28 @@ class Ball {
   }
 
   /**
+   * Sets the x-position of the Ball, in meters.
+   * @public
+   *
+   * @param {number} xPosition - in meters
+   */
+  set xPosition( xPosition ) { this.position = this.position.copy().setX( xPosition ); }
+
+  /**
+   * Sets the y-position of the Ball, in meters.
+   * @public
+   *
+   * @param {number} yPosition - in meters
+   */
+  set yPosition( yPosition ) { this.position = this.position.copy().setY( yPosition ); }
+
+  /**
    * Sets the velocity of the Ball, in m/s.
    * @public
    *
    * @param {Vector2} velocity - in m/s.
    */
-  set velocity( velocity ) {
-    assert && assert( velocity instanceof Vector2, `invalid velocity: ${velocity}` );
-    this.xVelocity = velocity.x;
-    this.yVelocity = velocity.y;
-  }
+  set velocity( velocity ) { this.velocityProperty.value = velocity; }
 
   /**
    * Sets the horizontal velocity of the Ball, in m/s.
@@ -387,7 +368,7 @@ class Ball {
    * @param {number} xVelocity - in m/s.
    */
   set xVelocity( xVelocity ) {
-    this.xVelocityProperty.value = CollisionLabUtils.clampDown( xVelocity, CollisionLabConstants.MIN_VELOCITY );
+    this.velocity = this.velocity.copy().setX( CollisionLabUtils.clampDown( xVelocity, CollisionLabConstants.MIN_VELOCITY ) );
   }
 
   /**
@@ -397,7 +378,7 @@ class Ball {
    * @param {number} yVelocity - in m/s.
    */
   set yVelocity( yVelocity ) {
-    this.yVelocityProperty.value = CollisionLabUtils.clampDown( yVelocity, CollisionLabConstants.MIN_VELOCITY );
+    this.velocity = this.velocity.copy().setY( CollisionLabUtils.clampDown( yVelocity, CollisionLabConstants.MIN_VELOCITY ) );
   }
 }
 
