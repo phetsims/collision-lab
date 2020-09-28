@@ -42,7 +42,7 @@ import PlayArea from './PlayArea.js';
 const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
 const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 const ZOOM_MULTIPLIER = 2;
-const DEFAULT_1D_VERTICAL_SPACING = 0.5;
+const DEFAULT_1D_VERTICAL_SPACING = 0.4;
 
 class MomentaDiagram {
 
@@ -186,7 +186,7 @@ class MomentaDiagram {
 
       // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
-      firstMomentaVector.tailY = verticalSpacing * this.balls.length / 2;
+      firstMomentaVector.tailY = verticalSpacing * ( this.balls.length / 2 + 0.9 );
       this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length * verticalSpacing;
     }
 
