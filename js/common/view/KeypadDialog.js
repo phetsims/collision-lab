@@ -153,6 +153,8 @@ class KeypadDialog extends Dialog {
     assert && assert( typeof unitsString === 'string', `invalid unitsString: ${unitsString}` );
     assert && assert( typeof editFinishedCallback === 'function', `invalid editFinishedCallback: ${editFinishedCallback}` );
 
+    this.keypad.clear();
+
     // Update references. These references are released when the edit is canceled or finished.
     this.valueProperty = valueProperty;
     this.valueRange = valueRange;
