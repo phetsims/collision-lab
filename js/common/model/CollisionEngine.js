@@ -46,6 +46,20 @@ import BallSystem from './BallSystem.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
+const collisionToString = collision => {
+  if ( collision.body2 instanceof PlayArea ) {
+    if ( collision.body1 instanceof Ball ) {
+      return `#${collision.body1.index}-border`;
+    }
+    else {
+      return 'cluster-border';
+    }
+  }
+  else {
+    return `#${collision.body1.index}-#${collision.body2.index}`;
+  }
+};
+
 class CollisionEngine {
 
   /**
@@ -56,10 +70,10 @@ class CollisionEngine {
     assert && assert( playArea instanceof PlayArea, `invalid playArea: ${playArea}` );
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
 
-    // @private {Set.<Collision>} - collection of Ball collisions that may or may not occur. Some Collisions instances
+    // @protected {Array.<Collision>} - collection of Ball collisions that may or may not occur. Some Collisions instances
     //                              will not have an associated "time" which indicates that a Collision will not occur.
     //                              See the comment at the top for a high level overview of how this set is used.
-    this.collisions = new Set();
+    this.collisions = [];
 
     // @private {Property.<number>} - the 'direction' of the progression of the current time-step of the sim, where:
     //                               1 means the sim is being progressed forwards in the current time-step, (dt > 0).
@@ -96,7 +110,9 @@ class CollisionEngine {
    *
    * Called when the reset/restart button is pressed or when some 'state' of the simulation changes.
    */
-  reset() { this.collisions.clear(); }
+  reset() {
+    this.collisions.length = 0;
+  }
 
   /**
    * Steps the CollisionEngine, which initializes both collision detection and responses for a given time-step. See
@@ -112,18 +128,30 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `step dt:${dt}, elapsedTime:${elapsedTime}, maxIterations:${maxIterations}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     let iterations = 0;
     while ( iterations++ < maxIterations ) {
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `iteration ${iterations} dt:${dt}, elapsedTime:${elapsedTime}` );
+
       // First detect all potential collisions that have not already been detected.
       this.timeStepDirectionProperty.value = Math.sign( dt );
       this.detectAllCollisions( elapsedTime );
 
+      if ( sceneryLog && sceneryLog.Sim ) {
+        this.collisions.forEach( collision => {
+          sceneryLog.Sim( `${collision.inRange( elapsedTime, elapsedTime + dt ) ? '[in-step] ' : ''}${collision.time} ${collisionToString(collision)}` );
+        } );
+      }
+
       // Get all Collisions that have a collision 'time' in this time-step.
-      const collisionsInThisStep = CollisionLabUtils.filter( this.collisions, collision => {
-        return collision.inRange( elapsedTime, elapsedTime + dt );
-      } );
+      //REVIEW: Don't closure here
+      const collisionsInThisStep = this.collisions.filter( collision => collision.inRange( elapsedTime, elapsedTime + dt ) );
 
       if ( !collisionsInThisStep.length ) {
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'no collisions in step' );
 
         // If there are no collisions within this step, the Balls are in uniform motion for the entirety of this step.
         // The recursive process is stopped and the Balls are stepped uniformly to the end of the time-step.
@@ -143,6 +171,8 @@ class CollisionEngine {
         const collisionTime = nextCollisions[ 0 ].time;
         const timeUntilCollision = collisionTime - elapsedTime;
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `collision in step in ${timeUntilCollision}` );
+
         // Progress forwards to the exact point of contact of the collision.
         this.progressBalls( timeUntilCollision, elapsedTime );
 
@@ -154,6 +184,25 @@ class CollisionEngine {
         elapsedTime = collisionTime;
       }
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
+  }
+
+  /**
+   * Whether there already exists a collision between the two bodies.
+   * @public
+   *
+   * @param {Object} body1
+   * @param {Object} body2
+   * @returns {boolean}
+   */
+  hasCollisionBetween( body1, body2 ) {
+    for ( let i = this.collisions.length - 1; i >= 0; i-- ) {
+      if ( this.collisions[ i ].includesBodies( body1, body2 ) ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -167,8 +216,13 @@ class CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'CollisionEngine.progressBalls' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // CollisionEngine only deals with uniformly moving Balls, but sub-types might not (for the 'Inelastic' screen).
     this.ballSystem.stepUniformMotion( dt, elapsedTime + dt );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -194,10 +248,15 @@ class CollisionEngine {
   handleCollision( collision ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'CollisionEngine.handleCollision' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
     collision.includes( this.playArea ) ?
           this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2 ) :
           this.handleBallToBallCollision( collision.body1, collision.body2, collision.time );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -209,7 +268,11 @@ class CollisionEngine {
   invalidateCollisions( body ) {
     assert && assert( body instanceof Object, `invalid body: ${body}` );
 
-    this.collisions.forEach( collision => collision.includes( body ) && this.collisions.delete( collision ) );
+    for ( let i = this.collisions.length - 1; i >= 0; i-- ) {
+      if ( this.collisions[ i ].includes( body ) ) {
+        this.collisions.splice( i, 1 );
+      }
+    }
   }
 
   /*----------------------------------------------------------------------------*
@@ -227,6 +290,9 @@ class CollisionEngine {
   detectBallToBallCollisions( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallToBallCollisions' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // Loop through each unique possible pair of Balls.
     for ( let i = 1; i < this.ballSystem.balls.length; i++ ) {
       const ball1 = this.ballSystem.balls[ i ];
@@ -236,14 +302,7 @@ class CollisionEngine {
         assert && assert( ball1 !== ball2, 'ball cannot collide with itself' );
 
         // Only detect new ball-ball collisions if it hasn't already been detected.
-        let hasCollision = false;
-        for ( let j = 0; j < this.collisions.length; j++ ) {
-          if ( this.collisions[ j ].includesBodies( ball1, ball2 ) ) {
-            hasCollision = true;
-            break;
-          }
-        }
-        if ( hasCollision ) {
+        if ( this.hasCollisionBetween( ball1, ball2 ) ) {
           continue;
         }
 
@@ -278,11 +337,17 @@ class CollisionEngine {
         // registered.
         const collisionTime = ( Number.isFinite( root ) && root >= 0 ) ? elapsedTime + root * velocityMultipier : null;
 
+        const collision = new Collision( ball1, ball2, collisionTime );
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+
         // Register the collision and encapsulate information in a Collision instance.
         //REVIEW: GC pool this?
-        this.collisions.add( new Collision( ball1, ball2, collisionTime ) );
+        this.collisions.push( collision );
       }
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -301,6 +366,9 @@ class CollisionEngine {
   handleBallToBallCollision( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `CollisionEngine.handleBallToBallCollision #${ball1.index} #${ball2.index}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
     // Convenience references to known ball values.
     const m1 = ball1.mass;
@@ -332,6 +400,8 @@ class CollisionEngine {
     // Remove all collisions that involves either of the Balls.
     this.invalidateCollisions( ball1 );
     this.invalidateCollisions( ball2 );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /*----------------------------------------------------------------------------*
@@ -350,18 +420,28 @@ class CollisionEngine {
   detectBallToBorderCollisions( elapsedTime ) {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallToBorderCollisions' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
+    //REVIEW: Don't have a closure for this
     this.playArea.reflectingBorder && this.ballSystem.balls.forEach( ball => {
 
       // Only detect new ball-border collisions if it hasn't already been detected.
-      if ( !CollisionLabUtils.any( this.collisions, collision => collision.includesBodies( ball, this.playArea ) ) ) {
+      if ( !this.hasCollisionBetween( ball, this.playArea ) ) {
 
         // Calculate when the Ball will collide with the border.
         const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
 
+        const collision = new Collision( ball, this.playArea, collisionTime );
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+
         // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.add( new Collision( ball, this.playArea, collisionTime ) );
+        this.collisions.push( collision );
       }
     } );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -423,6 +503,9 @@ class CollisionEngine {
   handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `CollisionEngine.handleBallToBorderCollision #${ball.index}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // Reference the multiplier of the velocity of the Ball. When the sim is being reversed (dt < 0), Balls are
     // essentially moving in the opposite direction of its velocity vector. This is used to determine the direction
     // that the Ball is moving towards; even if a Ball is touching a side(s) of the border, it's velocity doesn't change
@@ -433,11 +516,15 @@ class CollisionEngine {
     if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * velocityMultipier < 0 ) ||
          ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity * velocityMultipier > 0 ) ) {
 
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border X bounce` );
+
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
       ball.xVelocity *= -this.playArea.elasticity;
     }
     if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity * velocityMultipier < 0 ) ||
          ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity * velocityMultipier > 0 ) ) {
+
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border Y bounce` );
 
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
       ball.yVelocity *= -this.playArea.elasticity;
@@ -445,6 +532,8 @@ class CollisionEngine {
 
     // Remove all collisions that involves the involved Ball.
     this.invalidateCollisions( ball );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 }
 

@@ -45,6 +45,7 @@ import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
 import Collision from '../../common/model/Collision.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
+import PlayArea from '../../common/model/PlayArea.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
 import InelasticCollisionType from './InelasticCollisionType.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
@@ -52,6 +53,20 @@ import RotatingBallCluster from './RotatingBallCluster.js';
 
 // constants
 const TOLERANCE = CollisionLabConstants.ZERO_THRESHOLD;
+
+const collisionToString = collision => {
+  if ( collision.body2 instanceof PlayArea ) {
+    if ( collision.body1 instanceof Ball ) {
+      return `#${collision.body1.index}-border`;
+    }
+    else {
+      return 'cluster-border';
+    }
+  }
+  else {
+    return `#${collision.body1.index}-#${collision.body2.index}`;
+  }
+};
 
 class InelasticCollisionEngine extends CollisionEngine {
 
@@ -100,6 +115,9 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'InelasticCollisionEngine.progressBalls' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // Step the RotatingBallCluster if it exists and update the trailing 'Paths' behind the Balls.
     if ( this.rotatingBallCluster ) {
       this.rotatingBallCluster.step( dt );
@@ -108,6 +126,8 @@ class InelasticCollisionEngine extends CollisionEngine {
     else {
       super.progressBalls( dt, elapsedTime );
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -139,6 +159,9 @@ class InelasticCollisionEngine extends CollisionEngine {
   handleCollision( collision ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'InelasticCollisionEngine.handleCollision' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // Handle cluster-border collisions if the collision involves the rotatingBallCluster.
     if ( this.rotatingBallCluster && collision.includes( this.rotatingBallCluster ) ) {
       this.handleBallClusterToBorderCollision( collision );
@@ -146,6 +169,8 @@ class InelasticCollisionEngine extends CollisionEngine {
     else {
       super.handleCollision( collision );
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   //----------------------------------------------------------------------------------------
@@ -164,6 +189,9 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
     assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `InelasticCollisionEngine.handleBallToBallCollision #${ball1.index} #${ball2.index}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
     super.handleBallToBallCollision( ball1, ball2 );
 
@@ -187,7 +215,11 @@ class InelasticCollisionEngine extends CollisionEngine {
         angularVelocity,
         this.ballSystem.centerOfMass
       );
+
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'RotatingBallCluster created' );
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /**
@@ -200,6 +232,10 @@ class InelasticCollisionEngine extends CollisionEngine {
    */
   handleBallToBorderCollision( ball ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `InelasticCollisionEngine.handleBallToBorderCollision #${ball.index}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     super.handleBallToBorderCollision( ball );
 
     // Handle collisions that 'stick'.
@@ -208,6 +244,8 @@ class InelasticCollisionEngine extends CollisionEngine {
       // Set the velocity of the Ball to 0.
       ball.velocity = Vector2.ZERO;
     }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 
   /*----------------------------------------------------------------------------*
@@ -227,15 +265,27 @@ class InelasticCollisionEngine extends CollisionEngine {
     assert && assert( typeof elapsedTime === 'number' && elapsedTime >= 0, `invalid elapsedTime: ${elapsedTime}` );
     assert && assert( this.rotatingBallCluster, 'cannot call detectBallClusterToBorderCollision' );
 
-    // No-op if the PlayArea's border doesn't reflect or the cluster-to-border collision has already been detected.
-    if ( !this.playArea.reflectingBorder ||
-         CollisionLabUtils.any( this.collisions, collision => collision.includes( this.rotatingBallCluster ) ) ) {
-      return; /** do nothing **/
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallClusterToBorderCollision' );
+
+    // No-op if the PlayArea's border doesn't reflect
+    if ( !this.playArea.reflectingBorder ) {
+      return;
+    }
+
+    // No-op if the cluster-to-border collision has already been detected
+    for ( let i = 0; i < this.collisions.length; i++ ) {
+      if ( this.collisions[ i ].includes( this.rotatingBallCluster ) ) {
+        return;
+      }
     }
 
     // Handle degenerate case where the cluster is already colliding with the border.
     if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
-      return this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, elapsedTime ) );
+      const collision = new Collision( this.rotatingBallCluster, this.playArea, elapsedTime );
+
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+
+      return this.collisions.push( collision );
     }
 
     // Handle degenerate case where the cluster is out-of-bounds. In the design, if an object is partially out-of-bounds
@@ -263,7 +313,9 @@ class InelasticCollisionEngine extends CollisionEngine {
         maxCollisionTime );
 
     // Register the collision and encapsulate information in a Collision instance.
-    this.collisions.add( new Collision( this.rotatingBallCluster, this.playArea, collisionTime ) );
+    const collision = new Collision( this.rotatingBallCluster, this.playArea, collisionTime );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+    this.collisions.push( collision );
   }
 
   /**
@@ -325,6 +377,9 @@ class InelasticCollisionEngine extends CollisionEngine {
   handleBallClusterToBorderCollision() {
     assert && assert( this.rotatingBallCluster, 'cannot call handleBallToBorderCollision' );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'InelasticCollisionEngine.handleBallClusterToBorderCollision' );
+    sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
     // Set the velocity of every Ball to 0.
     this.rotatingBallCluster.balls.forEach( ball => {
       ball.velocity = Vector2.ZERO;
@@ -333,6 +388,8 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Remove all collisions that involves rotatingBallCluster.
     this.invalidateCollisions( this.rotatingBallCluster );
     this.rotatingBallCluster = null;
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
 }
 
