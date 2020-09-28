@@ -45,7 +45,6 @@ import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
 import Collision from '../../common/model/Collision.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
-import PlayArea from '../../common/model/PlayArea.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
 import InelasticCollisionType from './InelasticCollisionType.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
@@ -53,20 +52,6 @@ import RotatingBallCluster from './RotatingBallCluster.js';
 
 // constants
 const TOLERANCE = CollisionLabConstants.ZERO_THRESHOLD;
-
-const collisionToString = collision => {
-  if ( collision.body2 instanceof PlayArea ) {
-    if ( collision.body1 instanceof Ball ) {
-      return `#${collision.body1.index}-border`;
-    }
-    else {
-      return 'cluster-border';
-    }
-  }
-  else {
-    return `#${collision.body1.index}-#${collision.body2.index}`;
-  }
-};
 
 class InelasticCollisionEngine extends CollisionEngine {
 
@@ -283,7 +268,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
       const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, elapsedTime );
 
-      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
 
       return this.collisions.push( collision );
     }
@@ -314,7 +299,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Register the collision and encapsulate information in a Collision instance.
     const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, collisionTime );
-    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
     this.collisions.push( collision );
   }
 

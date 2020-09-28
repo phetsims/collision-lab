@@ -46,20 +46,6 @@ import BallSystem from './BallSystem.js';
 import Collision from './Collision.js';
 import PlayArea from './PlayArea.js';
 
-const collisionToString = collision => {
-  if ( collision.body2 instanceof PlayArea ) {
-    if ( collision.body1 instanceof Ball ) {
-      return `#${collision.body1.index}-border`;
-    }
-    else {
-      return 'cluster-border';
-    }
-  }
-  else {
-    return `#${collision.body1.index}-#${collision.body2.index}`;
-  }
-};
-
 class CollisionEngine {
 
   /**
@@ -148,7 +134,7 @@ class CollisionEngine {
 
       if ( sceneryLog && sceneryLog.Sim ) {
         this.collisions.forEach( collision => {
-          sceneryLog.Sim( `${collision.inRange( elapsedTime, elapsedTime + dt ) ? '[in-step] ' : ''}${collision.time} ${collisionToString(collision)}` );
+          sceneryLog.Sim( `${collision.inRange( elapsedTime, elapsedTime + dt ) ? '[in-step] ' : ''}${collision.time} ${collision}` );
         } );
       }
 
@@ -356,7 +342,7 @@ class CollisionEngine {
 
         const collision = Collision.createFromPool( ball1, ball2, collisionTime );
 
-        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )} root:${root} ${this.deltaV.dot( this.deltaR )}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision} root:${root} ${this.deltaV.dot( this.deltaR )}` );
 
         // Register the collision and encapsulate information in a Collision instance.
         //REVIEW: GC pool this?
@@ -464,7 +450,7 @@ class CollisionEngine {
 
         const collision = Collision.createFromPool( ball, this.playArea, collisionTime );
 
-        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collisionToString( collision )}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.push( collision );

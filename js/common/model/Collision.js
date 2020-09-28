@@ -17,6 +17,8 @@
 
 import Poolable from '../../../../phet-core/js/Poolable.js';
 import collisionLab from '../../collisionLab.js';
+import Ball from './Ball.js';
+import PlayArea from './PlayArea.js';
 
 class Collision {
 
@@ -108,6 +110,25 @@ class Collision {
 
     return Number.isFinite( this.time ) && ( ( time2 >= time1 ) ? ( this.time >= time1 && this.time <= time2 ) :
                                                                   ( this.time >= time2 && this.time <= time1 ) );
+  }
+
+  /**
+   * @public
+   *
+   * @returns {string}
+   */
+  toString() {
+    if ( this.body2 instanceof PlayArea ) {
+      if ( this.body1 instanceof Ball ) {
+        return `#${this.body1.index}-border`;
+      }
+      else {
+        return 'cluster-border';
+      }
+    }
+    else {
+      return `#${this.body1.index}-#${this.body2.index}`;
+    }
   }
 }
 
