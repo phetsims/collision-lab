@@ -265,17 +265,29 @@ class InelasticCollisionEngine extends CollisionEngine {
     }
 
     // Handle degenerate case where the cluster is already colliding with the border.
-    if ( this.rotatingBallCluster.balls.some( ball => this.playArea.isBallTouchingSide( ball ) ) ) {
-      const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, elapsedTime );
+    for ( let i = 0; i < this.rotatingBallCluster.balls.length; i++ ) {
+      const ball = this.rotatingBallCluster.balls[ i ];
 
-      sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
+      // If any ball is touching the side
+      if ( this.playArea.isBallTouchingSide( ball ) ) {
+        const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, elapsedTime );
 
-      return this.collisions.push( collision );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
+
+        this.collisions.push( collision );
+        return;
+      }
     }
 
     // Handle degenerate case where the cluster is out-of-bounds. In the design, if an object is partially out-of-bounds
     // when the Reflecting Border is turned on, it will continue to escape.
-    if ( this.rotatingBallCluster.balls.some( ball => !this.playArea.fullyContainsBall( ball ) ) ) { return; }
+    for ( let i = 0; i < this.rotatingBallCluster.balls.length; i++ ) {
+      const ball = this.rotatingBallCluster.balls[ i ];
+
+      if ( !this.playArea.fullyContainsBall( ball ) ) {
+        return;
+      }
+    }
 
     // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
     // cluster collides with the border.
@@ -327,7 +339,8 @@ class InelasticCollisionEngine extends CollisionEngine {
     let overlapping = 0;
     let touching = 0;
 
-    this.rotatingBallCluster.balls.forEach( ball => {
+    for ( let i = 0; i < this.rotatingBallCluster.balls.length; i++ ) {
+      const ball = this.rotatingBallCluster.balls[ i ];
 
       // Position of the Ball after the time-delta.
       const position = rotationStates.get( ball ).position;
@@ -348,7 +361,7 @@ class InelasticCollisionEngine extends CollisionEngine {
                 Utils.equalsEpsilon( bottom, this.playArea.bottom, TOLERANCE ) ) {
         touching += 1;
       }
-    } );
+    }
 
     return overlapping ? 1 : ( touching ? 0 : -1 );
   }

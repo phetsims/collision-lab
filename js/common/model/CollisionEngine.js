@@ -61,6 +61,7 @@ class CollisionEngine {
     //                              See the comment at the top for a high level overview of how this set is used.
     this.collisions = [];
     this.nextCollisions = []; // Minimizing GC by using a persistent array
+    this.collisionsToDispose = [];
 
     // @private {Property.<number>} - the 'direction' of the progression of the current time-step of the sim, where:
     //                               1 means the sim is being progressed forwards in the current time-step, (dt > 0).
@@ -99,7 +100,7 @@ class CollisionEngine {
    */
   reset() {
     while ( this.collisions.length ) {
-      this.collisions.pop().dispose();
+      this.collisionsToDispose.push( this.collisions.pop() );
     }
   }
 
@@ -185,6 +186,10 @@ class CollisionEngine {
         // Continue on to the next iteration
         dt -= timeUntilCollision;
         elapsedTime = collisionTime;
+      }
+
+      while ( this.collisionsToDispose.length ) {
+        this.collisionsToDispose.pop().dispose();
       }
 
       sceneryLog && sceneryLog.Sim && sceneryLog.pop();
@@ -278,7 +283,7 @@ class CollisionEngine {
 
       if ( collision.includes( body ) ) {
         this.collisions.splice( i, 1 );
-        collision.dispose(); // Frees to pool
+        this.collisionsToDispose.push( collision );
       }
     }
   }
@@ -448,23 +453,25 @@ class CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallToBorderCollisions' );
     sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
-    //REVIEW: Don't have a closure for this
-    this.playArea.reflectingBorder && this.ballSystem.balls.forEach( ball => {
+    if ( this.playArea.reflectingBorder ) {
+      for ( let i = this.ballSystem.balls.length - 1; i >= 0; i-- ) {
+        const ball = this.ballSystem.balls[ i ];
 
-      // Only detect new ball-border collisions if it hasn't already been detected.
-      if ( !this.hasCollisionBetween( ball, this.playArea ) ) {
+        // Only detect new ball-border collisions if it hasn't already been detected.
+        if ( !this.hasCollisionBetween( ball, this.playArea ) ) {
 
-        // Calculate when the Ball will collide with the border.
-        const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
+          // Calculate when the Ball will collide with the border.
+          const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
 
-        const collision = Collision.createFromPool( ball, this.playArea, collisionTime );
+          const collision = Collision.createFromPool( ball, this.playArea, collisionTime );
 
-        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
+          sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision}` );
 
-        // Register the collision and encapsulate information in a Collision instance.
-        this.collisions.push( collision );
+          // Register the collision and encapsulate information in a Collision instance.
+          this.collisions.push( collision );
+        }
       }
-    } );
+    }
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
