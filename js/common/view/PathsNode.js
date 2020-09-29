@@ -18,6 +18,7 @@
 
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -99,18 +100,19 @@ class PathsNode extends CanvasNode {
     const firstPathDataPointTime = path.dataPoints[ 0 ].time;
     const lastPathDataPointTime = _.last( path.dataPoints ).time;
 
-    // Draw the segments that connect each of the PathDataPoints by iterating pairwise.
+    // Draw the segments that connect each of the PathDataPoints by iterating pairwise. Storing the previous view
+    // position, so we will only need to compute the view position of each point once.
+    let previousViewPosition = path.dataPoints.length ? this.modelViewTransform.modelToViewPosition( path.dataPoints[ 0 ].position ) : new Vector2( 0, 0 );
     for ( let i = 1; i < path.dataPoints.length; i++ ) {
       const dataPoint = path.dataPoints[ i ];
-      const previousDataPoint = path.dataPoints[ i - 1 ];
 
       // Each segment of the dataPoint path needs a new canvas path to create the gradient effect.
       context.beginPath();
 
       // Get the start and end positions of the line-segment.
-      //REVIEW: for performance, can we avoid running the MVT on each interior point twice?
-      const segmentStartPosition = this.modelViewTransform.modelToViewPosition( previousDataPoint.position );
+      const segmentStartPosition = previousViewPosition;
       const segmentEndPosition = this.modelViewTransform.modelToViewPosition( dataPoint.position );
+      previousViewPosition = segmentEndPosition;
 
       // Draw the line-segment that connects the start and end positions.
       context.moveTo( segmentStartPosition.x, segmentStartPosition.y );
