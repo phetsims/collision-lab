@@ -47,9 +47,9 @@ const CollisionLabColors = {
   ],
 
   // Vector Colors
-  VELOCITY_VECTOR_FILL: Color.GREEN,
+  VELOCITY_VECTOR_FILL: PhetColorScheme.VELOCITY,
   VELOCITY_VECTOR_STROKE: Color.BLACK,
-  MOMENTUM_VECTOR_FILL: 'rgb( 50, 50, 255 )',
+  MOMENTUM_VECTOR_FILL: PhetColorScheme.MOMENTUM,
   MOMENTUM_VECTOR_STROKE: Color.BLACK,
 
   // Center of mass
