@@ -22,7 +22,7 @@
   window.phet.chipper.packageObject =
     {
       "name": "collision-lab",
-      "version": "1.1.0-dev.6",
+      "version": "1.1.0-dev.7",
       "license": "GPL-3.0",
       "repository": {
         "type": "git",
@@ -35,13 +35,19 @@
         "requirejsNamespace": "COLLISION_LAB",
         "simulation": true,
         "runnable": true,
+        "phetLibs": [
+          "griddle"
+        ],
         "supportedBrands": [
           "phet",
           "adapted-from-phet"
         ]
       },
       "eslintConfig": {
-        "extends": "../chipper/eslint/sim_es6_eslintrc.js"
+        "extends": "../chipper/eslint/sim_es6_eslintrc.js",
+        "globals": {
+          "sceneryLog": false
+        }
       }
     };
   window.phet.chipper.stringRepos =
@@ -49,6 +55,10 @@
       {
         "repo": "collision-lab",
         "requirejsNamespace": "COLLISION_LAB"
+      },
+      {
+        "repo": "griddle",
+        "requirejsNamespace": "GRIDDLE"
       },
       {
         "repo": "joist",
@@ -65,6 +75,10 @@
       {
         "repo": "tambo",
         "requirejsNamespace": "TAMBO"
+      },
+      {
+        "repo": "twixt",
+        "requirejsNamespace": "TWIXT"
       }
     ];
 
