@@ -229,7 +229,7 @@ class BallNode extends Node {
         );
         // When the user is finished dragging the Ball, bump the Ball away from the other Balls that it is overlapping
         // with. See https://github.com/phetsims/collision-lab/issues/100.
-        ballSystem.bumpBallAwayFromOtherBalls( ball );
+        ballSystem.bumpBallAwayFromOthers( ball );
 
         ball.xPositionUserControlledProperty.value = false;
         ball.yPositionUserControlledProperty.value = false;

@@ -54,10 +54,14 @@ class Ball {
     assert && AssertUtils.assertPositiveInteger( index );
 
     // @public {Property.<Vector2>} - Property of the center-position of the Ball, in meters.
-    this.positionProperty = new Vector2Property( initialBallState.position );
+    this.positionProperty = new Vector2Property( initialBallState.position, {
+      useDeepEquality: true
+    } );
 
     // @public {Property.<Vector2>} - Property of the velocity of the Ball, in m/s.
-    this.velocityProperty = new Vector2Property( initialBallState.velocity );
+    this.velocityProperty = new Vector2Property( initialBallState.velocity, {
+      useDeepEquality: true
+    } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
     this.speedProperty = new DerivedProperty( [ this.velocityProperty ], velocity => velocity.magnitude, {

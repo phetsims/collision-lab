@@ -110,7 +110,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
 
             // When the user is finished editing the BallProperty, bump the Ball away from the other Balls that it is
             // overlapping with. See https://github.com/phetsims/collision-lab/issues/100.
-            ballSystem.bumpBallAwayFromOtherBalls( ball );
+            ballSystem.bumpBallAwayFromOthers( ball );
 
             // Now indicate that the user is finished editing this BallProperty.
             userControlledProperty.value = false;

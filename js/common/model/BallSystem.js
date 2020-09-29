@@ -254,9 +254,19 @@ class BallSystem {
   }
 
   /**
-   * Bumps a ball way from the other Balls in the system that it is currently overlapping with. The 'bumped' ball
-   * will be placed to a position adjacent to the other Balls. This method does nothing if the Ball isn't overlapping
-   * with any other Balls. See https://github.com/phetsims/collision-lab/issues/100.
+   * @public
+   *
+   * @param {Ball} ball
+   */
+  bumpBallIntoPlayArea( ball ) {
+    ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.positionProperty.value );
+  }
+
+  /**
+   * Bumps a ball way from the other balls/borders in the system that it is currently overlapping with. The 'bumped'
+   * ball will be placed to a position adjacent to the other Balls. This method does nothing if the Ball isn't
+   * overlapping with anything. See https://github.com/phetsims/collision-lab/issues/100 and
+   * https://github.com/phetsims/collision-lab/issues/167.
    *
    * This is called when the user is finished controlling the radius or the position of the Ball, either through the
    * Keypad or by dragging the Ball, that now overlaps with another Ball. It was decided that it was most natural and
@@ -273,8 +283,10 @@ class BallSystem {
    * @public
    * @param {Ball} ball - the Ball that was just user-controlled and should be 'bumped' away.
    */
-  bumpBallAwayFromOtherBalls( ball ) {
+  bumpBallAwayFromOthers( ball ) {
     assert && assert( ball instanceof Ball && this.balls.includes( ball ), `invalid ball: ${ball}` );
+
+    this.bumpBallIntoPlayArea( ball );
 
     // Flag that points to the closest Ball that overlaps with the passed-in Ball. Will be undefined if no other balls
     // are overlapping with the passed-in Ball.
@@ -303,6 +315,8 @@ class BallSystem {
 
       // Move the Ball next to the overlappingBall, using the directionVector.
       BallUtils.moveBallNextToBall( ball, overlappingBall, directionVector );
+
+      this.bumpBallIntoPlayArea( ball );
 
       // Recompute the overlappingBall for the next iteration.
       bumpedAwayFromBalls.push( overlappingBall );
