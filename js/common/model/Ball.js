@@ -242,8 +242,6 @@ class Ball {
     }
 
     // If the PlayArea is 1D, ensure that the y-position of the Ball is set to 0.
-    //REVIEW: Can the dimension change? Or can we pass in the dimension on ball creation, so we don't need access to the
-    //REVIEW: playArea?
     ( this.playArea.dimension === PlayArea.Dimension.ONE ) && correctedPosition.setY( 0 );
 
     // Finally, set the position of the Ball to the corrected position.

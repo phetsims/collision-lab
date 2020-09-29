@@ -359,7 +359,6 @@ class CollisionEngine {
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `adding collision ${collision} root:${root} ${this.deltaV.dot( this.deltaR )}` );
 
         // Register the collision and encapsulate information in a Collision instance.
-        //REVIEW: GC pool this?
         this.collisions.push( collision );
       }
     }
