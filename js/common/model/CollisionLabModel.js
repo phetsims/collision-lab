@@ -187,10 +187,9 @@ class CollisionLabModel {
     assert && assert( typeof dt === 'number' && dt !== 0, `invalid dt: ${dt}` );
 
     // Step the Physics Engine and update the elapsedTimeProperty value.
-    //REVIEW: Should we store the old "elapsed time" and pass it through to the collisionEngine step? Or are we
-    //REVIEW: supporting the elapsedTimeProperty being changed on modifications?
+    const previousElapsedTime = this.elapsedTimeProperty.value;
     this.elapsedTimeProperty.value += dt;
-    this.collisionEngine.step( dt, this.elapsedTimeProperty.value - dt );
+    this.collisionEngine.step( dt, previousElapsedTime );
   }
 
   /**
