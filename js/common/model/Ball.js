@@ -183,8 +183,6 @@ class Ball {
 
     // Since velocity is the first derivative of position, and the ball isn't accelerating, we can solely multiply
     // the velocity by the delta-time to get the displacement.
-    //REVIEW: for GC, consider reusing Vector2 instances or just mutate them. Will require inspection of what we do with
-    //REVIEW: positions, and whether it's possible.
     this.position = this.velocity.times( dt ).add( this.position );
   }
 
