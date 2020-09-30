@@ -313,6 +313,12 @@ class BallSystem {
       // If we have already bumped away from the overlappingBall, reverse the directionVector.
       bumpedAwayFromBalls.includes( overlappingBall ) && directionVector.multiply( -1 );
 
+      // If trying each side of the ball doesn't work (because they might be both overlapping with a border), try
+      // a random direction.
+      if ( bumpedAwayFromBalls.length > 5 ) {
+        directionVector.rotate( 2 * Math.PI * phet.joist.random.nextDouble() );
+      }
+
       // Move the Ball next to the overlappingBall, using the directionVector.
       BallUtils.moveBallNextToBall( ball, overlappingBall, directionVector );
 
