@@ -1,4 +1,4 @@
-xao0dith# How To Compute When Two Balls Will Collide:
+# How To Compute When Two Balls Will Collide:
 Author: [@brandonLi8](https://github.com/brandonLi8)
 
 #### Background:
@@ -33,7 +33,7 @@ Since Balls are undergoing uniform-motion, they are traveling in a straight line
 
 <img src="https://render.githubusercontent.com/render/math?math=\large \qquad\quad \vec{r}_{\contact\2} = \vec{r}_2 %2B \textrm{time} \cdot\vec{v}_2">
 
-<img src="https://github.com/phetsims/collision-lab/blob/priori/doc/algorithms/images/ball-contact-diagram.png" width="380">
+<img src="https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/images/ball-contact-diagram.png" width="380">
 
 Additionally, based on this picture, we know that when the Balls are exactly colliding, the distance between the centers of the balls is equal to the sum of the radii of the ball:
 
