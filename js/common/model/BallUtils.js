@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -38,8 +37,8 @@ const BallUtils = {
     assert && assert( typeof isConstantSize === 'boolean', `invalid isConstantSize: ${isConstantSize}` );
 
     return isConstantSize ?
-      CollisionLabConstants.BALL_CONSTANT_RADIUS :
-      ( 3 / 4 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY / Math.PI ) ** ( 1 / 3 );
+           CollisionLabConstants.BALL_CONSTANT_RADIUS :
+           ( 3 / 4 * mass / CollisionLabConstants.BALL_DEFAULT_DENSITY / Math.PI ) ** ( 1 / 3 );
   },
 
   /**
@@ -147,12 +146,12 @@ const BallUtils = {
    * @public
    *
    * @param {Ball} ball
-   * @param {AxonArray.<Ball>} balls - all the balls in the system
+   * @param {ObservableArrayDef.<Ball>} balls - all the balls in the system
    * @returns {Ball|undefined}
    */
   getClosestOverlappingBall( ball, balls ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
-    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( balls.includes( ball ) );
 
     // Filter the Balls array to get the Balls that are overlapping with the passed-in Ball.
@@ -200,11 +199,11 @@ const BallUtils = {
    * Gets the total Kinetic Energy of a collection of Balls. See https://en.wikipedia.org/wiki/Kinetic_energy.
    * @public
    *
-   * @param {AxonArray.<Ball>} balls
+   * @param {ObservableArrayDef.<Ball>} balls
    * @returns {number} - in Joules.
    */
   getTotalKineticEnergy( balls ) {
-    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
 
     let totalKineticEnergy = 0;
     balls.forEach( ball => {

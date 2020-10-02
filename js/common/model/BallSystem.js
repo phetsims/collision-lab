@@ -20,8 +20,8 @@
  * @author Brandon Li
  */
 
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
@@ -102,10 +102,10 @@ class BallSystem {
       range: options.numberOfBallsRange
     } );
 
-    // @public (read-only) {AxonArray.<Ball>} - an array of the balls currently within the system. Balls **must** be
+    // @public (read-only) {ObservableArrayDef.<Ball>} - an array of the balls currently within the system. Balls **must** be
     //                                          from prepopulatedBalls. Its length should match the
     //                                          numberOfBallsProperty's value.
-    this.balls = new AxonArray( { validator: { valueType: Ball } } );
+    this.balls = createObservableArray( { valueType: Ball } );
 
     // Observe when the number of Balls is manipulated by the user and, if so, add or remove the correct number of Balls
     // to match the numberOfBallsProperty's value. The same Balls are in the system with the same number of Balls value.
@@ -130,12 +130,12 @@ class BallSystem {
     //
     // This DerivedProperty is never disposed and lasts for the lifetime of the sim.
     this.totalKineticEnergyProperty = new DerivedProperty( [ this.balls.lengthProperty,
-        ...this.prepopulatedBalls.map( ball => ball.massProperty ),
-        ...this.prepopulatedBalls.map( ball => ball.velocityProperty )
-      ], () => BallUtils.getTotalKineticEnergy( this.balls ), {
-        valueType: 'number',
-        isValidValue: value => value >= 0
-      } );
+      ...this.prepopulatedBalls.map( ball => ball.massProperty ),
+      ...this.prepopulatedBalls.map( ball => ball.velocityProperty )
+    ], () => BallUtils.getTotalKineticEnergy( this.balls ), {
+      valueType: 'number',
+      isValidValue: value => value >= 0
+    } );
 
     // @public {Property.<boolean>} - indicates if there are any Balls that are being controlled. Uses the
     //                                       userControlledProperty of all possible Balls as dependencies but only the
@@ -303,8 +303,8 @@ class BallSystem {
       // direction of the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of
       // each other.
       const directionVector = !ball.position.equals( overlappingBall.position ) ?
-                                ball.position.minus( overlappingBall.position ).normalize() :
-                                Vector2.X_UNIT.copy();
+                              ball.position.minus( overlappingBall.position ).normalize() :
+                              Vector2.X_UNIT.copy();
 
       // Round the direction vector to match the displayed value on drag-release. See
       // https://github.com/phetsims/collision-lab/issues/136.
