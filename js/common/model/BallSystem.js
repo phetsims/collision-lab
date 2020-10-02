@@ -316,7 +316,12 @@ class BallSystem {
       // If trying each side of the ball doesn't work (because they might be both overlapping with a border), try
       // a random direction.
       if ( bumpedAwayFromBalls.length > 5 ) {
-        directionVector.rotate( 2 * Math.PI * phet.joist.random.nextDouble() );
+        if ( ball.positionProperty.value.y === 0 ) {
+          directionVector.setXY( phet.joist.random.nextBoolean() ? 1 : -1, 0 );
+        }
+        else {
+          directionVector.rotate( 2 * Math.PI * phet.joist.random.nextDouble() );
+        }
       }
 
       // Move the Ball next to the overlappingBall, using the directionVector.
