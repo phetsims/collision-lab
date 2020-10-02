@@ -98,26 +98,6 @@ class CenterOfMass {
   }
 
   /**
-   * Gets the position of the center of mass, in meter coordinates.
-   * @public
-   *
-   * @returns {Vector2} - in meter coordinates.
-   */
-  get position() {
-    return this.positionProperty.value;
-  }
-
-  /**
-   * Gets the velocity of the center of mass, in meters per second.
-   * @public
-   *
-   * @returns {Vector2} - in meters per second.
-   */
-  get velocity() {
-    return this.velocityProperty.value;
-  }
-
-  /**
    * Resets the CenterOfMass.
    * @public
    *
@@ -138,7 +118,7 @@ class CenterOfMass {
    * @returns {number} - in kg.
    */
   computeTotalBallSystemMass() {
-    return _.sumBy( this.balls, ball => ball.mass );
+    return _.sumBy( this.balls, ball => ball.massProperty.value );
   }
 
   /**
@@ -153,7 +133,7 @@ class CenterOfMass {
     // Determine the total first moment (mass * position) of the system.
     const totalFirstMoment = Vector2.ZERO.copy();
     this.balls.forEach( ball => {
-      totalFirstMoment.add( scratchVector.set( ball.position ).multiply( ball.mass ) );
+      totalFirstMoment.add( scratchVector.set( ball.positionProperty.value ).multiply( ball.massProperty.value ) );
     } );
 
     // The position of the center of mass is the total first moment divided by the total mass.
@@ -173,7 +153,7 @@ class CenterOfMass {
     // Determine the total momentum of the system.
     const totalMomentum = Vector2.ZERO.copy();
     this.balls.forEach( ball => {
-      totalMomentum.add( ball.momentum );
+      totalMomentum.add( ball.momentumProperty.value );
     } );
 
     // The velocity of the center of mass is the total momentum divided by the total mass.

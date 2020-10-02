@@ -172,7 +172,7 @@ class InelasticCollisionEngine extends CollisionEngine {
   handleBallToBallCollision( ball1, ball2 ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
-    assert && assert( this.playArea.elasticity === 0, 'must be perfectly inelastic for Inelastic screen' );
+    assert && assert( this.playArea.getElasticity() === 0, 'must be perfectly inelastic for Inelastic screen' );
     assert && assert( this.ballSystem.balls.length === 2, 'InelasticCollisionEngine only supports collisions of 2 Balls' );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `InelasticCollisionEngine.handleBallToBallCollision #${ball1.index} #${ball2.index}` );
@@ -181,13 +181,13 @@ class InelasticCollisionEngine extends CollisionEngine {
     super.handleBallToBallCollision( ball1, ball2 );
 
     // Handle collisions that 'stick'.
-    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
+    if ( this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionType.STICK ) {
 
       // Get the moment of inertia of both Balls, treated as point masses rotating around their center of mass. The
       // reason why we treat the Balls as point masses is because of the formula L = r^2 * m * omega, where r^2 * m is
       // the moment of inertia of a point-mass. See https://en.wikipedia.org/wiki/Angular_momentum#Discussion.
-      const I1 = ball1.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball1.mass;
-      const I2 = ball2.position.minus( this.ballSystem.centerOfMass.position ).magnitudeSquared * ball2.mass;
+      const I1 = ball1.positionProperty.value.minus( this.ballSystem.centerOfMass.positionProperty.value ).magnitudeSquared * ball1.massProperty.value;
+      const I2 = ball2.positionProperty.value.minus( this.ballSystem.centerOfMass.positionProperty.value ).magnitudeSquared * ball2.massProperty.value;
 
       // Update the angular velocity reference. Formula comes from
       // https://en.wikipedia.org/wiki/Angular_momentum#Collection_of_particles.
@@ -224,10 +224,10 @@ class InelasticCollisionEngine extends CollisionEngine {
     super.handleBallToBorderCollision( ball );
 
     // Handle collisions that 'stick'.
-    if ( this.playArea.inelasticCollisionType === InelasticCollisionType.STICK ) {
+    if ( this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionType.STICK ) {
 
       // Set the velocity of the Ball to 0.
-      ball.velocity = Vector2.ZERO;
+      ball.velocityProperty.value = Vector2.ZERO;
     }
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
@@ -253,7 +253,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallClusterToBorderCollision' );
 
     // No-op if the PlayArea's border doesn't reflect
-    if ( !this.playArea.reflectingBorder ) {
+    if ( !this.playArea.reflectingBorderProperty.value ) {
       return;
     }
 
@@ -291,15 +291,15 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
     // cluster collides with the border.
-    const minCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position,
-                                                          this.ballSystem.centerOfMass.velocity,
-                                                          this.rotatingBallCluster.boundingCircleRadius,
+    const minCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.positionProperty.value,
+                                                          this.ballSystem.centerOfMass.velocityProperty.value,
+                                                          this.rotatingBallCluster.getBoundingCircleRadius(),
                                                           elapsedTime );
 
     // Get the upper-bound of when the cluster will collide with the border, which is when the center-of-mass collides
     // with the border.
-    const maxCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.position,
-                                                          this.ballSystem.centerOfMass.velocity,
+    const maxCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.positionProperty.value,
+                                                          this.ballSystem.centerOfMass.velocityProperty.value,
                                                           0,
                                                           elapsedTime );
 
@@ -330,7 +330,7 @@ class InelasticCollisionEngine extends CollisionEngine {
   willBallClusterCollideWithBorderIn( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     assert && assert( this.rotatingBallCluster, 'cannot call willBallClusterCollideWithBorderIn' );
-    assert && assert( this.playArea.reflectingBorder, 'cannot call willBallClusterCollideWithBorderIn' );
+    assert && assert( this.playArea.reflectingBorderProperty.value, 'cannot call willBallClusterCollideWithBorderIn' );
 
     // Get the states of the Balls after the time-delta.
     const rotationStates = this.rotatingBallCluster.getSteppedRotationStates( dt );
@@ -342,12 +342,14 @@ class InelasticCollisionEngine extends CollisionEngine {
     for ( let i = 0; i < this.rotatingBallCluster.balls.length; i++ ) {
       const ball = this.rotatingBallCluster.balls[ i ];
 
+      const radius = ball.radiusProperty.value;
+
       // Position of the Ball after the time-delta.
       const position = rotationStates.get( ball ).position;
-      const left = position.x - ball.radius;
-      const right = position.x + ball.radius;
-      const top = position.y + ball.radius;
-      const bottom = position.y - ball.radius;
+      const left = position.x - radius;
+      const right = position.x + radius;
+      const top = position.y + radius;
+      const bottom = position.y - radius;
 
       if ( left < this.playArea.left ||
           right > this.playArea.right ||
@@ -380,7 +382,7 @@ class InelasticCollisionEngine extends CollisionEngine {
 
     // Set the velocity of every Ball to 0.
     this.rotatingBallCluster.balls.forEach( ball => {
-      ball.velocity = Vector2.ZERO;
+      ball.velocityProperty.value = Vector2.ZERO;
     } );
 
     // Remove all collisions that involves rotatingBallCluster.

@@ -40,11 +40,11 @@ class IntroCollisionEngine extends CollisionEngine {
     if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
 
       // Reference the deltaR vector, which points to the center of body2 when positioned at the center of body2.
-      const deltaR = collision.body2.position.minus( collision.body1.position );
+      const deltaR = collision.body2.positionProperty.value.minus( collision.body1.positionProperty.value );
 
       // The deltaR vector points in the direction of body2. So we set the magnitude to the radius of body1 and add it
       // to the center colliding position of body1 to get the collision-point.
-      const contactPoint = deltaR.setMagnitude( collision.body1.radius ).add( collision.body1.position );
+      const contactPoint = deltaR.setMagnitude( collision.body1.radiusProperty.value ).add( collision.body1.positionProperty.value );
 
       // Pass the calculated information to the IntroBallSystem.
       this.ballSystem.registerChangeInMomentumCollision( contactPoint, collision.time );

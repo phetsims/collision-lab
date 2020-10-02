@@ -94,22 +94,12 @@ class PlayArea {
   //----------------------------------------------------------------------------------------
 
   /**
-   * Gets a boolean that indicates if the PlayArea's border reflects Balls or not.
-   * @public
-   *
-   * @returns {boolean}
-   */
-  get reflectingBorder() {
-    return this.reflectingBorderProperty.value;
-  }
-
-  /**
    * Convenience method to get the elasticity of all collisions, as a DECIMAL.
    * @public
    *
    * @returns {number}
    */
-  get elasticity() {
+  getElasticity() {
     return this.elasticityPercentProperty.value / 100;
   }
 

@@ -115,7 +115,7 @@ class MomentaDiagramVectorNode extends Node {
         if ( options.dimension === PlayArea.Dimension.TWO ) {
 
           // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
-          const yFlip = ( momentaDiagramVector.components.y < 0 ) ? Math.PI : 0;
+          const yFlip = ( momentaDiagramVector.componentsProperty.value.y < 0 ) ? Math.PI : 0;
           const offsetAngleAdjustment = yFlip + ( options.isTotalMomentaVector ? Math.PI / 2 : -Math.PI / 2 );
 
           // Create an offset that is perpendicular to the vector. The angle is negative since the y-axis is inverted.
@@ -132,7 +132,7 @@ class MomentaDiagramVectorNode extends Node {
         else {
 
           // Position the label which depends on the sign of the x-component of the Momenta Vector.
-          labelNode.center = tipViewPosition.plusXY( Math.sign( momentaDiagramVector.components.x ) * adjustedOffset, 0 );
+          labelNode.center = tipViewPosition.plusXY( Math.sign( momentaDiagramVector.componentsProperty.value.x ) * adjustedOffset, 0 );
         }
     } );
   }

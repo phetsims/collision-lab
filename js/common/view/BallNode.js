@@ -200,13 +200,13 @@ class BallNode extends Node {
         ball.dragToPosition( listener.modelPoint );
 
         // Now that the user is dragging the Ball, update the leader-lines.
-        leaderLinesNode.reticle = ballCircle.center;
+        leaderLinesNode.setReticle( ballCircle.center );
       },
 
       // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
       start: ( event, listener ) => {
         ball.dragToPosition( listener.modelPoint );
-        leaderLinesNode.reticle = ballCircle.center;
+        leaderLinesNode.setReticle( ballCircle.center );
 
         leaderLinesNode.visible = true;
         ball.xPositionUserControlledProperty.value = true;
@@ -217,14 +217,14 @@ class BallNode extends Node {
 
         const constrainedBounds = BallUtils.getBallGridSafeConstrainedBounds(
           ball.playArea.bounds,
-          ball.radius,
+          ball.radiusProperty.value,
           10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES
         );
 
         // Round the position to match the displayed value on drag-release. See
         // https://github.com/phetsims/collision-lab/issues/136.
-        ball.position = CollisionLabUtils.roundVectorToNearest(
-          constrainedBounds.closestPointTo( ball.position ),
+        ball.positionProperty.value = CollisionLabUtils.roundVectorToNearest(
+          constrainedBounds.closestPointTo( ball.positionProperty.value ),
           10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES
         );
         // When the user is finished dragging the Ball, bump the Ball away from the other Balls that it is overlapping

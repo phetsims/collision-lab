@@ -40,14 +40,6 @@ class InelasticPlayArea extends PlayArea {
   }
 
   /**
-   * Convenience method to get the inelastic collision type.
-   * @public
-   *
-   * @returns {InelasticCollisionType}
-   */
-  get inelasticCollisionType() { return this.inelasticCollisionTypeProperty.value; }
-
-  /**
    * Resets the InelasticPlayArea.
    * @public
    *

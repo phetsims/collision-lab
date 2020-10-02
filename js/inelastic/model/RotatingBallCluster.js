@@ -54,8 +54,8 @@ class RotatingBallCluster {
    *
    * @returns {number}
    */
-  get boundingCircleRadius() {
-    return Math.max( ...this.balls.map( ball => ball.position.distance( this.centerOfMass.position ) + ball.radius ) );
+  getBoundingCircleRadius() {
+    return Math.max( ...this.balls.map( ball => ball.positionProperty.value.distance( this.centerOfMass.positionProperty.value ) + ball.radiusProperty.value ) );
   }
 
   /**
@@ -103,13 +103,13 @@ class RotatingBallCluster {
     const changeInAngle = this.angularVelocity * dt;
 
     // Compute the position/velocity of the center-of-mass **after** the rotation.
-    const centerOfMassPosition = this.centerOfMass.velocity.times( dt ).add( this.centerOfMass.position );
-    const centerOfMassVelocity = this.centerOfMass.velocity;
+    const centerOfMassPosition = this.centerOfMass.velocityProperty.value.times( dt ).add( this.centerOfMass.positionProperty.value );
+    const centerOfMassVelocity = this.centerOfMass.velocityProperty.value;
 
     this.balls.forEach( ball => {
 
       // Get the position vector of the Ball, relative to the center of mass. This is a change in reference frames.
-      const position = ball.position.minus( this.centerOfMass.position );
+      const position = ball.positionProperty.value.minus( this.centerOfMass.positionProperty.value );
 
       // Rotate the position vector to apply uniform circular motion about the center of mass.
       position.rotate( changeInAngle );
@@ -124,7 +124,7 @@ class RotatingBallCluster {
       const ballState = new BallState(
         position.add( centerOfMassPosition ),
         velocity.add( centerOfMassVelocity ),
-        ball.mass
+        ball.massProperty.value
       );
 
       // Map each Ball to the BallState instance.

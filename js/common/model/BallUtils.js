@@ -85,7 +85,7 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radius );
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radiusProperty.value );
 
     // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minX = Utils.toFixed( gridSafeConstrainedBounds.minX, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
@@ -108,7 +108,7 @@ const BallUtils = {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     // First get the grid-safe constrained Bounds of the Ball. See getBallGridSafeConstrainedBounds() for context.
-    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radius );
+    const gridSafeConstrainedBounds = BallUtils.getBallGridSafeConstrainedBounds( ball.playArea.bounds, ball.radiusProperty.value );
 
     // With the getBallGridSafeConstrainedBounds() computation, there are some floating-point inaccuracies to round off.
     const minY = Utils.toFixed( gridSafeConstrainedBounds.minY, CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
@@ -131,8 +131,8 @@ const BallUtils = {
     assert && assert( ball1 !== ball2, 'ball cannot overlap with itself' );
 
     // Use a distance approach to detect if the Balls are physically overlapping.
-    const distanceBetweenBalls = ball1.position.distance( ball2.position );
-    const distanceThreshold = ball1.radius + ball2.radius;
+    const distanceBetweenBalls = ball1.positionProperty.value.distance( ball2.positionProperty.value );
+    const distanceThreshold = ball1.radiusProperty.value + ball2.radiusProperty.value;
 
     // If the distance between the Balls is less the sum of the radii, they are overlapping. For the 'collision lab'
     // simulation, if the distance between the Balls is exactly equal to the sum of their radii, which would mean that
@@ -161,7 +161,7 @@ const BallUtils = {
     } );
 
     // Get the closest overlappingBall, which has the smallest distance to the passed-in Ball.
-    return _.minBy( overlappingBalls, overlappingBall => ball.position.distance( overlappingBall.position ) );
+    return _.minBy( overlappingBalls, overlappingBall => ball.positionProperty.value.distance( overlappingBall.positionProperty.value ) );
   },
 
   /**
@@ -185,12 +185,12 @@ const BallUtils = {
 
     // Set the directionVector's magnitude to the sum of the radii of ball1 and ball2.
     // The ZERO_THRESHOLD is also added to add a infinitesimally small separation between the Balls.
-    const scaledDirectionVector = directionVector.withMagnitude( ball2.radius
-                                                                 + ball1.radius
+    const scaledDirectionVector = directionVector.withMagnitude( ball2.radiusProperty.value
+                                                                 + ball1.radiusProperty.value
                                                                  + CollisionLabConstants.ZERO_THRESHOLD );
 
     // Set ball1's position, which is the center of ball2 plus the scaledDirectionVector.
-    ball1.position = scaledDirectionVector.add( ball2.position );
+    ball1.positionProperty.value = scaledDirectionVector.add( ball2.positionProperty.value );
 
     // Sanity check to ensure that the Balls are adjacent to each other.
     assert && assert( !BallUtils.areBallsOverlapping( ball1, ball2 ) );
@@ -210,7 +210,7 @@ const BallUtils = {
     balls.forEach( ball => {
 
       // See See https://en.wikipedia.org/wiki/Kinetic_energy.
-      totalKineticEnergy += 0.5 * ball.mass * ball.velocity.magnitudeSquared; // K = 1/2*m*|v|^2
+      totalKineticEnergy += 0.5 * ball.massProperty.value * ball.velocityProperty.value.magnitudeSquared; // K = 1/2*m*|v|^2
     } );
     return totalKineticEnergy;
   }

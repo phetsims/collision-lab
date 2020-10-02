@@ -60,7 +60,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of mass NumberDisplays. Editable by the user.
   'MASS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
-    editValue: ( ball, mass ) => { ball.mass = mass; },
+    editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
@@ -68,7 +68,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of sliders to change the Mass of a Ball. Only shown when 'More Data' is unchecked.
   'MASS_SLIDERS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
-    editValue: ( ball, mass ) => { ball.mass = mass; },
+    editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
@@ -76,7 +76,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of x-position NumberDisplays. Editable by the user.
   'X_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'x' ) ), {
-    editValue: ( ball, xPosition ) => { ball.xPosition = xPosition; },
+    editValue: ( ball, xPosition ) => ball.setXPosition( xPosition ),
     getEditingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'xPositionUserControlledProperty' )
@@ -84,7 +84,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of y-position NumberDisplays. Editable by the user and shown for 2D screens only.
   'Y_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'y' ) ), {
-    editValue: ( ball, yPosition ) => { ball.yPosition = yPosition; },
+    editValue: ( ball, yPosition ) => ball.setYPosition( yPosition ),
     getEditingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'yPositionUserControlledProperty' )
@@ -92,7 +92,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of x-velocity NumberDisplays. Editable by the user.
   'X_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'x' ) ), {
-    editValue: ( ball, xVelocity ) => { ball.xVelocity = xVelocity; },
+    editValue: ( ball, xVelocity ) => ball.setXVelocity( xVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'xVelocityUserControlledProperty' )
@@ -100,7 +100,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of y-velocity NumberDisplays. Editable by the user and shown for 2D screens only.
   'Y_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'y' ) ), {
-    editValue: ( ball, yVelocity ) => { ball.yVelocity = yVelocity; },
+    editValue: ( ball, yVelocity ) => ball.setYVelocity( yVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'yVelocityUserControlledProperty' )

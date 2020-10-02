@@ -50,7 +50,7 @@ class LeaderLinesNode extends Path {
    *
    * @param {Vector2} reticle - in view coordinates
    */
-  set reticle( reticle ) {
+  setReticle( reticle ) {
     assert && assert( reticle instanceof Vector2 && reticle.isFinite(), `invalid reticle: ${reticle}` );
     assert && assert( this.leaderLinesBounds.containsPoint( reticle ), `reticle out of bounds: ${reticle}` );
 

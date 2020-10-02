@@ -104,10 +104,10 @@ class BallVelocityVectorNode extends BallVectorNode {
         const velocity = VELOCITY_BOUNDS.closestPointTo( modelViewTransform.viewToModelDelta( listener.modelPoint ) );
 
         // Update the xVelocity of the Ball first.
-        ball.xVelocity = velocity.x;
+        ball.setXVelocity( velocity.x );
 
         // If the dimensional PlayArea is 2D, then update the yVelocity of the Ball as well.
-        ( dimension === PlayArea.Dimension.TWO ) && ( ball.yVelocity = velocity.y );
+        ( dimension === PlayArea.Dimension.TWO ) && ball.setYVelocity( velocity.y );
       },
 
       // Set the positionUserControlledProperty of the ball and the visibility of the leader-lines when dragging.
@@ -118,7 +118,7 @@ class BallVelocityVectorNode extends BallVectorNode {
       end: () => {
         // Round the velocity vector to match the displayed value on drag-release. See
         // https://github.com/phetsims/collision-lab/issues/136.
-        ball.velocity = CollisionLabUtils.roundVectorToNearest( ball.velocity,
+        ball.velocityProperty.value = CollisionLabUtils.roundVectorToNearest( ball.velocityProperty.value,
           10 ** -CollisionLabConstants.DISPLAY_DECIMAL_PLACES );
 
         ball.xVelocityUserControlledProperty.value = false;

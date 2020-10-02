@@ -107,7 +107,7 @@ const CollisionLabUtils = {
    * roundVectorToNearest( new Vector2( 0.28, 0.24 ), 0.1 ) would return Vector2( 0.3, 0.2 ).
    * @public
    *
-   * @param {Vector2} vector - will be mutated!
+   * @param {Vector2} vector
    * @param {number} multiple - the nearest multiple to round the Bounds in to.
    * @returns {Vector2}
    */
@@ -115,7 +115,7 @@ const CollisionLabUtils = {
     assert && assert( vector instanceof Vector2, `invalid vector: ${vector}` );
     assert && assert( typeof multiple === 'number', `invalid multiple: ${multiple}` );
 
-    return vector.divideScalar( multiple ).roundSymmetric().multiply( multiple );
+    return vector.dividedScalar( multiple ).roundSymmetric().multiply( multiple );
   },
 
   /**

@@ -153,15 +153,15 @@ class MomentaDiagram {
 
     // First update the components of the Vectors.
     this.balls.forEach( ball => {
-      this.ballToMomentaVectorMap.get( ball ).components = ball.momentum;
+      this.ballToMomentaVectorMap.get( ball ).componentsProperty.value = ball.momentumProperty.value;
     } );
 
     // Compute the components of the total Momenta Vector.
     const totalMomentum = Vector2.ZERO.copy();
 
     // Loop through and calculate the total momentum of the Balls in the BallSystem.
-    this.balls.forEach( ball => { totalMomentum.add( ball.momentum ); } );
-    this.totalMomentumVector.components = totalMomentum;
+    this.balls.forEach( ball => { totalMomentum.add( ball.momentumProperty.value ); } );
+    this.totalMomentumVector.componentsProperty.value = totalMomentum;
 
     //----------------------------------------------------------------------------------------
 
@@ -175,19 +175,19 @@ class MomentaDiagram {
     if ( this.dimension === PlayArea.Dimension.TWO ) {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at the origin.
-      firstMomentaVector.tail = this.boundsProperty.value.center;
-      this.totalMomentumVector.tail = this.boundsProperty.value.center;
+      firstMomentaVector.tailPositionProperty.value = this.boundsProperty.value.center;
+      this.totalMomentumVector.tailPositionProperty.value = this.boundsProperty.value.center;
     }
     else {
 
       // Set the first Momenta Vector's tail and the total Momenta Vector's tail at x = 0.
-      firstMomentaVector.tailX = 0;
-      this.totalMomentumVector.tailX = 0;
+      firstMomentaVector.tailPositionProperty.value = new Vector2( 0, firstMomentaVector.tailPositionProperty.value.y );
+      this.totalMomentumVector.tailPositionProperty.value = new Vector2( 0, this.totalMomentumVector.tailPositionProperty.value.y );
 
       // Set the y-value of the first Momenta Vector's tail and the total Momenta Vector's tail which depends on the
       // number of balls in the system.
-      firstMomentaVector.tailY = verticalSpacing * ( this.balls.length / 2 + 0.9 );
-      this.totalMomentumVector.tailY = firstMomentaVector.tailY - this.balls.length * verticalSpacing;
+      firstMomentaVector.tailPositionProperty.value = new Vector2( firstMomentaVector.tailPositionProperty.value.x, verticalSpacing * ( this.balls.length / 2 + 0.9 ) );
+      this.totalMomentumVector.tailPositionProperty.value = new Vector2( this.totalMomentumVector.tailPositionProperty.value.x, firstMomentaVector.tailPositionProperty.value.y - this.balls.length * verticalSpacing );
     }
 
     // Position the rest of the Momentum vectors. Loop in pairs.
@@ -198,15 +198,15 @@ class MomentaDiagram {
       if ( this.dimension === PlayArea.Dimension.TWO ) {
 
         // tip-to-tail
-        momentaVector.tail = previousMomentaVector.tip;
+        momentaVector.tailPositionProperty.value = previousMomentaVector.tipPositionProperty.value;
       }
       else {
 
         // tipX-to-tailX
-        momentaVector.tailX = previousMomentaVector.tipX;
+        momentaVector.tailPositionProperty.value = new Vector2( previousMomentaVector.tipPositionProperty.value.x, momentaVector.tailPositionProperty.value.y );
 
         // Stack vertically on top of each other by progressively decrementing the tipY.
-        momentaVector.tailY = previousMomentaVector.tailY - verticalSpacing;
+        momentaVector.tailPositionProperty.value = new Vector2( momentaVector.tailPositionProperty.value.x, previousMomentaVector.tailPositionProperty.value.y - verticalSpacing );
       }
     } );
   }

@@ -77,7 +77,7 @@ class InelasticBallSystem extends BallSystem {
     // Observe when the user manipulates any of the two Balls and set the InelasticPreset to CUSTOM. Link is never
     // removed since InelasticBallSystems are never disposed.
     this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
-      ballSystemUserControlled && ( this.inelasticPreset = InelasticPreset.CUSTOM );
+      ballSystemUserControlled && ( this.inelasticPresetProperty.value = InelasticPreset.CUSTOM );
     } );
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
@@ -96,22 +96,6 @@ class InelasticBallSystem extends BallSystem {
   }
 
   /**
-   * Gets the value of the inelasticPresetProperty.
-   * @public
-   *
-   * @returns {InelasticPreset}
-   */
-  get inelasticPreset() { return this.inelasticPresetProperty.value; }
-
-  /**
-   * Sets the value of the inelasticPresetProperty.
-   * @public
-   *
-   * @param {InelasticPreset} inelasticPreset
-   */
-  set inelasticPreset( inelasticPreset ) { this.inelasticPresetProperty.value = inelasticPreset; }
-
-  /**
    * Resets the InelasticBallSystem.
    * @public
    *
@@ -121,7 +105,6 @@ class InelasticBallSystem extends BallSystem {
     super.reset();
     this.inelasticPresetProperty.reset();
   }
-
 
   /**
    * Computes the angular momentum of the entire BallSystem, relative to the center-of-mass, using the L = r x p formula
@@ -136,8 +119,8 @@ class InelasticBallSystem extends BallSystem {
     this.balls.forEach( ball => {
 
       // Get the position vector (r) and momentum (p) relative to the center-of-mass
-      const r = ball.position.minus( this.centerOfMass.position );
-      const p = ball.velocity.minus( this.centerOfMass.velocity ).multiplyScalar( ball.mass );
+      const r = ball.positionProperty.value.minus( this.centerOfMass.positionProperty.value );
+      const p = ball.velocityProperty.value.minus( this.centerOfMass.velocityProperty.value ).multiplyScalar( ball.massProperty.value );
 
       // L = r x p (relative to the center-of-mass)
       totalAngularMomentum += r.crossScalar( p );

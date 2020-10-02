@@ -59,104 +59,12 @@ class MomentaDiagramVector {
    *----------------------------------------------------------------------------*/
 
   /**
-   * Gets the tail position of the Vector, in kg*(m/s).
-   * @public
-   *
-   * @returns {Vector2}
-   */
-  get tail() { return this.tailPositionProperty.value; }
-
-  /**
-   * Gets the tail's x-coordinate, in kg*(m/s).
-   * @public
-   *
-   * @returns {number}
-   */
-  get tailX() { return this.tail.x; }
-
-  /**
-   * Gets the tail's y-coordinate, in kg*(m/s).
-   * @public
-   *
-   * @returns {number}
-   */
-  get tailY() { return this.tail.y; }
-
-  /**
-   * Sets the tail position, in kg*(m/s).
-   * @public
-   *
-   * @param {Vector2} tail - in kg*(m/s).
-   */
-  set tail( tail ) { this.tailPositionProperty.value = tail; }
-
-  /**
-   * Sets the tail's x-coordinate, keeping the components constant.
-   * @public
-   *
-   * @param {number} tailX - in kg*(m/s).
-   */
-  set tailX( tailX ) { this.tail = new Vector2( tailX, this.tailY ); }
-
-  /**
-   * Sets the tail's y-coordinate, keeping the components constant.
-   * @public
-   *
-   * @param {number} tailY - in kg*(m/s).
-   */
-  set tailY( tailY ) { this.tail = new Vector2( this.tailX, tailY ); }
-
-  //----------------------------------------------------------------------------------------
-
-  /**
-   * Gets the tip position of the Vector, in kg*(m/s).
-   * @public
-   *
-   * @returns {Vector2}
-   */
-  get tip() { return this.tipPositionProperty.value; }
-
-  /**
-   * Gets the tip's x-coordinate.
-   * @public
-   *
-   * @returns {number} - in kg*(m/s)
-   */
-  get tipX() { return this.tip.x; }
-
-  /**
-   * Gets the tip's y-coordinate.
-   * @public
-   *
-   * @returns {number} - in kg*(m/s)
-   */
-  get tipY() { return this.tip.y; }
-
-  //----------------------------------------------------------------------------------------
-
-  /**
-   * Gets the components of the Vector.
-   * @public
-   *
-   * @returns {Vector2} - in kg*(m/s).
-   */
-  get components() { return this.componentsProperty.value; }
-
-  /**
-   * Sets the components of the Vector.
-   * @public
-   *
-   * @param {Vector2} components - in kg*(m/s).
-   */
-  set components( components ) { this.componentsProperty.value = components; }
-
-  /**
    * Gets the center position of the Vector.
    * @public
    *
    * @returns {Vector2} - in kg*(m/s).
    */
-  get center() { return this.components.times( 0.5 ).add( this.tail ); }
+  get center() { return this.componentsProperty.value.times( 0.5 ).add( this.tailPositionProperty.value ); }
 
   /**
    * Gets the magnitude of the MomentaDiagramVector, which is always positive.
@@ -164,7 +72,7 @@ class MomentaDiagramVector {
    *
    * @returns {number} - in kg*(m/s).
    */
-  get magnitude() { return this.components.magnitude; }
+  get magnitude() { return this.componentsProperty.value.magnitude; }
 
   /**
    * Gets the angle of the MomentaDiagramVector in radians, measured clockwise from the horizontal. Null when the
@@ -174,7 +82,7 @@ class MomentaDiagramVector {
    * @returns {number|null} - in radians.
    */
   get angle() {
-    return this.magnitude <= CollisionLabConstants.ZERO_THRESHOLD ? null : this.components.angle;
+    return this.magnitude <= CollisionLabConstants.ZERO_THRESHOLD ? null : this.componentsProperty.value.angle;
   }
 }
 

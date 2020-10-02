@@ -127,7 +127,7 @@ class CollisionEngine {
       sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
       sceneryLog && sceneryLog.Sim && this.ballSystem.balls.forEach( ball => {
-        sceneryLog.Sim( `#${ball.index} velocity:${ball.velocity.toString()}` );
+        sceneryLog.Sim( `#${ball.index} velocity:${ball.velocityProperty.value.toString()}` );
       } );
 
       // First detect all potential collisions that have not already been detected.
@@ -333,9 +333,9 @@ class CollisionEngine {
          * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
          *----------------------------------------------------------------------------*/
 
-        this.deltaR.set( ball2.position ).subtract( ball1.position );
-        this.deltaV.set( ball2.velocity ).subtract( ball1.velocity ).multiply( velocityMultipier );
-        const sumOfRadiiSquared = ( ball1.radius + ball2.radius ) ** 2;
+        this.deltaR.set( ball2.positionProperty.value ).subtract( ball1.positionProperty.value );
+        this.deltaV.set( ball2.velocityProperty.value ).subtract( ball1.velocityProperty.value ).multiply( velocityMultipier );
+        const sumOfRadiiSquared = ( ball1.radiusProperty.value + ball2.radiusProperty.value ) ** 2;
 
         const relativeDotProduct = this.deltaV.dot( this.deltaR );
 
@@ -387,22 +387,22 @@ class CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
     // Convenience references to known ball values.
-    const m1 = ball1.mass;
-    const m2 = ball2.mass;
-    const elasticity = this.playArea.elasticity;
+    const m1 = ball1.massProperty.value;
+    const m2 = ball2.massProperty.value;
+    const elasticity = this.playArea.getElasticity();
 
     // Set the Normal and Tangential vector, called the 'line of impact' and 'plane of contact' respectively.
-    const normal = ball2.position.minus( ball1.position ).normalize();
+    const normal = ball2.positionProperty.value.minus( ball1.positionProperty.value ).normalize();
     const tangent = new Vector2( -normal.y, normal.x );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `normal ${normal}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `tangent ${tangent}` );
 
     // Reference the 'normal' and 'tangential' components of the Ball velocities. This is a switch in coordinate frames.
-    const v1n = ball1.velocity.dot( normal );
-    const v2n = ball2.velocity.dot( normal );
-    const v1t = ball1.velocity.dot( tangent );
-    const v2t = ball2.velocity.dot( tangent );
+    const v1n = ball1.velocityProperty.value.dot( normal );
+    const v2n = ball2.velocityProperty.value.dot( normal );
+    const v1t = ball1.velocityProperty.value.dot( tangent );
+    const v2t = ball2.velocityProperty.value.dot( tangent );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1n ${v1n}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1t ${v1t}` );
@@ -423,8 +423,8 @@ class CollisionEngine {
     const v2xP = tangent.dotXY( v2t, v2nP );
     const v1yP = normal.dotXY( v1t, v1nP );
     const v2yP = normal.dotXY( v2t, v2nP );
-    ball1.velocity = normal.setXY( v1xP, v1yP );
-    ball2.velocity = tangent.setXY( v2xP, v2yP );
+    ball1.velocityProperty.value = normal.setXY( v1xP, v1yP );
+    ball2.velocityProperty.value = tangent.setXY( v2xP, v2yP );
 
     // Remove all collisions that involves either of the Balls.
     this.invalidateCollisions( ball1 );
@@ -452,7 +452,7 @@ class CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'detectBallToBorderCollisions' );
     sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
-    if ( this.playArea.reflectingBorder ) {
+    if ( this.playArea.reflectingBorderProperty.value ) {
       for ( let i = this.ballSystem.balls.length - 1; i >= 0; i-- ) {
         const ball = this.ballSystem.balls[ i ];
 
@@ -460,7 +460,7 @@ class CollisionEngine {
         if ( !this.hasCollisionBetween( ball, this.playArea ) ) {
 
           // Calculate when the Ball will collide with the border.
-          const collisionTime = this.getBorderCollisionTime( ball.position, ball.velocity, ball.radius, elapsedTime );
+          const collisionTime = this.getBorderCollisionTime( ball.positionProperty.value, ball.velocityProperty.value, ball.radiusProperty.value, elapsedTime );
 
           const collision = Collision.createFromPool( ball, this.playArea, collisionTime );
 
@@ -544,21 +544,21 @@ class CollisionEngine {
     const velocityMultipier = this.timeStepDirectionProperty.value;
 
     // Update the velocity after the collision.
-    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.xVelocity * velocityMultipier < 0 ) ||
-         ( this.playArea.isBallTouchingRight( ball ) && ball.xVelocity * velocityMultipier > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.velocityProperty.value.x * velocityMultipier < 0 ) ||
+         ( this.playArea.isBallTouchingRight( ball ) && ball.velocityProperty.value.x * velocityMultipier > 0 ) ) {
 
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border X bounce` );
 
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
-      ball.xVelocity *= -this.playArea.elasticity;
+      ball.setXVelocity( ball.velocityProperty.value.x * -this.playArea.getElasticity() );
     }
-    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.yVelocity * velocityMultipier < 0 ) ||
-         ( this.playArea.isBallTouchingTop( ball ) && ball.yVelocity * velocityMultipier > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.velocityProperty.value.y * velocityMultipier < 0 ) ||
+         ( this.playArea.isBallTouchingTop( ball ) && ball.velocityProperty.value.y * velocityMultipier > 0 ) ) {
 
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border Y bounce` );
 
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
-      ball.yVelocity *= -this.playArea.elasticity;
+      ball.setYVelocity( ball.velocityProperty.value.y * -this.playArea.getElasticity() );
     }
 
     // Remove all collisions that involves the involved Ball.

@@ -259,7 +259,7 @@ class BallSystem {
    * @param {Ball} ball
    */
   bumpBallIntoPlayArea( ball ) {
-    ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radius ).closestPointTo( ball.positionProperty.value );
+    ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radiusProperty.value ).closestPointTo( ball.positionProperty.value );
   }
 
   /**
@@ -302,8 +302,8 @@ class BallSystem {
       // Get the DirectionVector, which is the unit vector from the center of the overlappingBall that points in the
       // direction of the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of
       // each other.
-      const directionVector = !ball.position.equals( overlappingBall.position ) ?
-                                ball.position.minus( overlappingBall.position ).normalize() :
+      const directionVector = !ball.positionProperty.value.equals( overlappingBall.positionProperty.value ) ?
+                                ball.positionProperty.value.minus( overlappingBall.positionProperty.value ).normalize() :
                                 Vector2.X_UNIT.copy();
 
       // Round the direction vector to match the displayed value on drag-release. See
