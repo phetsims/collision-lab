@@ -23,7 +23,6 @@
  * @author Brandon Li
  */
 
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
@@ -48,12 +47,12 @@ class MomentaDiagram {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
-   * @param {AxonArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
+   * @param {ObservableArrayDef.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {number} dimension - the dimension of the PlayArea, used for positioning differences. Either 1 or 2.
    */
   constructor( prepopulatedBalls, balls, dimension ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
-    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
     // @public {Property.<number>} - the zoom factor of the MomentaDiagram. This is set externally in the view.
@@ -93,7 +92,7 @@ class MomentaDiagram {
     // @public (read-only) {MomentaDiagramVector} - the total sum of the Momenta Vectors of the system.
     this.totalMomentumVector = new MomentaDiagramVector();
 
-    // @private {AxonArray.<Balls>} - reference to the Balls in the BallSystem.
+    // @private {ObservableArrayDef.<Balls>} - reference to the Balls in the BallSystem.
     this.balls = balls;
 
     // @public {number} - reference to the passed-in dimension of the PlayArea.

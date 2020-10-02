@@ -35,7 +35,7 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Iterates through an array (or an AxonArray) for all possible pairs, without duplicating calls. For instance,
+   * Iterates through an array (or an ObservableArrayDef) for all possible pairs, without duplicating calls. For instance,
    * forEachPossiblePair( [ 1, 2, 3 ], f ) would invoke f( 1 , 2 ), f( 1, 3 ), and f( 2, 3 ), in that order.
    * @public
    *
@@ -119,7 +119,7 @@ const CollisionLabUtils = {
   },
 
   /**
-   * Determines whether an array (or an AxonArray) is strictly sorted in ascending order (non-inclusive) by a criterion
+   * Determines whether an array (or an ObservableArrayDef) is strictly sorted in ascending order (non-inclusive) by a criterion
    * function that numerically ranks each element of the array. Each element is passed into the criterion function.
    * @public
    *

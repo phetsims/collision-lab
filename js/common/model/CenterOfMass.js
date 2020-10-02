@@ -15,7 +15,6 @@
  * @author Martin Veillette
  */
 
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -29,7 +28,7 @@ class CenterOfMass {
 
   /**
    * @param {Balls[]} prepopulatedBalls - an array of All possible balls in the system.
-   * @param {AxonArray.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
+   * @param {ObservableArrayDef.<Ball>} balls - the balls in the system. Must belong in prepopulatedBalls.
    * @param {Property.<boolean>} centerOfMassVisibleProperty - indicates if the center of mass is currently visible.
    *                                                           Needed since the CenterOfMass's trailing 'Path' is empty
    *                                                           if this is false and can only be updated if this is true.
@@ -37,13 +36,13 @@ class CenterOfMass {
    */
   constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty, pathsVisibleProperty ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
-    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
 
     //----------------------------------------------------------------------------------------
 
-    // @private {AxonArray.<Ball>} - reference to the balls that were passed in.
+    // @private {ObservableArrayDef.<Ball>} - reference to the balls that were passed in.
     this.balls = balls;
 
     // Gather the massProperty, positionProperty, and velocityProperty of ALL possible balls into their respective

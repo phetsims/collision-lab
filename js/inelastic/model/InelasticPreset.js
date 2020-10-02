@@ -12,7 +12,6 @@
  * @author Brandon Li
  */
 
-import AxonArray from '../../../../axon/js/AxonArray.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -40,10 +39,10 @@ class InelasticPresetValue {
    * If the preset doesn't have any associated BallStates, then nothing happens.
    * @public
    *
-   * @param {AxonArray.<Ball>} balls
+   * @param {ObservableArrayDef.<Ball>} balls
    */
   setBalls( balls ) {
-    assert && assert( balls instanceof AxonArray ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( !this.ballStates || this.ballStates.length === balls.length );
 
     this.ballStates && balls.forEach( ( ball, index ) => {
