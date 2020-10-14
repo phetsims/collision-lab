@@ -124,7 +124,8 @@ class BallNode extends Node {
       modelViewTransform );
 
     // Create the number display for the speed of the Ball, which appears above the ball. To be positioned later.
-    const speedNumberDisplay = new PlayAreaNumberDisplay( ball.speedProperty, valuesVisibleProperty, {
+    const speedNumberDisplay = new PlayAreaNumberDisplay( ball.speedProperty, {
+      visibleProperty: valuesVisibleProperty,
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.velocity,
         units: collisionLabStrings.units.metersPerSecond
@@ -132,7 +133,8 @@ class BallNode extends Node {
     } );
 
     // Create the number display for the momentum of the Ball, which appears below the ball. To be positioned later.
-    const momentumNumberDisplay = new PlayAreaNumberDisplay( ball.momentumMagnitudeProperty, valuesVisibleProperty, {
+    const momentumNumberDisplay = new PlayAreaNumberDisplay( ball.momentumMagnitudeProperty, {
+      visibleProperty: valuesVisibleProperty,
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.momentum,
         units: collisionLabStrings.units.kilogramMetersPerSecond

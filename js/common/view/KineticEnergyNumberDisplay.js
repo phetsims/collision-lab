@@ -24,12 +24,10 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
   /**
    * @param {Property.<number>} totalKineticEnergyProperty
-   * @param {Property.<boolean>} kineticEnergyVisibleProperty
    * @param {Object} [options]
    */
-  constructor( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options ) {
+  constructor( totalKineticEnergyProperty, options ) {
     assert && AssertUtils.assertPropertyOf( totalKineticEnergyProperty, 'number' );
-    assert && AssertUtils.assertPropertyOf( kineticEnergyVisibleProperty, 'boolean' );
 
     options = merge( {
 
@@ -44,7 +42,7 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
     }, options );
 
-    super( totalKineticEnergyProperty, kineticEnergyVisibleProperty, options );
+    super( totalKineticEnergyProperty, options );
   }
 
   /**

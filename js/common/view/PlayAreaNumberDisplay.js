@@ -29,12 +29,10 @@ class PlayAreaNumberDisplay extends NumberDisplay {
 
   /**
    * @param {Property.<number>} numberProperty
-   * @param {Property.<boolean<} visibleProperty
    * @param {Object} [options]
    */
-  constructor( numberProperty, visibleProperty, options ) {
+  constructor( numberProperty, options ) {
     assert && AssertUtils.assertPropertyOf( numberProperty, 'number' );
-    assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
 
     //----------------------------------------------------------------------------------------
 
@@ -42,9 +40,6 @@ class PlayAreaNumberDisplay extends NumberDisplay {
 
       // {Range} - display range for the NumberDisplay, for determining the width.
       displayRange: new Range( 0, 9 ),
-
-      // {null|Property.<boolean>} - optional visibility property, which toggles the visibility of this Node.
-      visibleProperty: null,
 
       // {number} - the opacity (alpha) of the background of the NumberDisplay.
       backgroundOpacity: 0.6,
@@ -69,10 +64,6 @@ class PlayAreaNumberDisplay extends NumberDisplay {
     //----------------------------------------------------------------------------------------
 
     super( numberProperty, options.displayRange, options );
-
-    // Observe when the visibleProperty changes to update the visibility of this Node.
-    // Link is never unlinked since PlayAreaNumberDisplays are never disposed.
-    visibleProperty.linkAttribute( this, 'visible' );
   }
 }
 

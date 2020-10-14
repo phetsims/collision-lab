@@ -38,9 +38,9 @@ import KeypadDialog from './KeypadDialog.js';
 import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
-import PlayAreaTopRightControls from './PlayAreaTopRightControls.js';
 import PlayAreaNode from './PlayAreaNode.js';
 import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
+import PlayAreaTopRightControls from './PlayAreaTopRightControls.js';
 import RestartButton from './RestartButton.js';
 import ReturnBallsButton from './ReturnBallsButton.js';
 
@@ -109,8 +109,8 @@ class CollisionLabScreenView extends ScreenView {
 
     // Kinetic Energy NumberDisplay
     const kineticEnergyNumberDisplay = new KineticEnergyNumberDisplay(
-      model.ballSystem.totalKineticEnergyProperty,
-      viewProperties.kineticEnergyVisibleProperty, {
+      model.ballSystem.totalKineticEnergyProperty, {
+        visibleProperty: viewProperties.kineticEnergyVisibleProperty,
         left: playAreaViewBounds.left + 5,
         bottom: playAreaViewBounds.bottom - 3
       } );

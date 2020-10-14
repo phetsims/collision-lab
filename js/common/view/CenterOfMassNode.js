@@ -48,7 +48,7 @@ class CenterOfMassNode extends Node {
                playAreaBounds,
                modelViewTransform,
                options
-             ) {
+  ) {
     assert && assert( centerOfMass instanceof CenterOfMass, `Invalid centerOfMass: ${centerOfMass}` );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( valuesVisibleProperty, 'boolean' );
@@ -63,7 +63,8 @@ class CenterOfMassNode extends Node {
     const xNode = new XNode();
 
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
-    const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, valuesVisibleProperty, {
+    const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
+      visibleProperty: valuesVisibleProperty,
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.velocity,
         units: collisionLabStrings.units.metersPerSecond
