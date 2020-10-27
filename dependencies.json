@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.1.0-dev.11 Tue Oct 27 2020 09:17:39 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.1.0-dev.12 Tue Oct 27 2020 10:25:48 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "49aa67d01046326d85dcd8f265db91e8753038a1",
     "branch": "master"
@@ -17,7 +17,7 @@
     "branch": "master"
   },
   "collision-lab": {
-    "sha": "d5e954a15ee9ba693b2e05ae454fc2bae78a34d7",
+    "sha": "62711a5eecacd879d692675165b6d68289b29fd0",
     "branch": "master"
   },
   "dot": {
@@ -65,7 +65,7 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "66dd703dea19db2cae95fdec3f2ebb83dd6b7c83",
+    "sha": "7ec9b68e27df27a95a7a7bc051f11b1f82ae25e5",
     "branch": "master"
   },
   "scenery-phet": {
