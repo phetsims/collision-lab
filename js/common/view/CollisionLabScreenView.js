@@ -97,8 +97,8 @@ class CollisionLabScreenView extends ScreenView {
     // PlayArea
     const playAreaNode = new PlayAreaNode( model.playArea, model.playArea.gridVisibleProperty, modelViewTransform );
 
-    // BallSystem
-    const ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
+    // @private {BallSystem}
+    this.ballSystemNode = this.createBallSystemNode( model, viewProperties, modelViewTransform );
 
     // Scale Bar
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
@@ -193,6 +193,7 @@ class CollisionLabScreenView extends ScreenView {
       listener: () => {
         model.reset();
         viewProperties.reset();
+        this.ballSystemNode.reset();
       },
       right: this.layoutBounds.maxX - CollisionLabConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - CollisionLabConstants.SCREEN_VIEW_Y_MARGIN
@@ -213,7 +214,7 @@ class CollisionLabScreenView extends ScreenView {
       controlPanel,
       momentaDiagram,
       kineticEnergyNumberDisplay,
-      ballSystemNode,
+      this.ballSystemNode,
       returnBallsButton
     ];
 

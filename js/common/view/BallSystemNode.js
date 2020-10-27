@@ -69,6 +69,9 @@ class BallSystemNode extends Node {
     // Create the container for all Ball Nodes.
     const ballNodeContainer = new Node();
 
+    // @private {Array.<Node>} - Ordered ball nodes, so we can reset ordering.
+    this.ballNodes = [];
+
     // Loop through each possible Ball. These Balls are NOT necessarily the Balls currently within the BallSystem,
     // so we are responsible for updating its visibility based on whether or not it is the system.
     ballSystem.prepopulatedBalls.forEach( ball => {
@@ -85,6 +88,7 @@ class BallSystemNode extends Node {
 
       // Add the BallNode to the container.
       ballNodeContainer.addChild( ballNode );
+      this.ballNodes.push( ballNode );
 
       // Observe when Balls are added or removed from the BallSystem, meaning its visibility could change if it is
       // added or removed from the system. It should only be visible if the ball is in the BallSystem.
@@ -124,6 +128,14 @@ class BallSystemNode extends Node {
       ballNodeContainer,
       centerOfMassNode
     ];
+  }
+
+  /**
+   * Resets values to their original state
+   * @public
+   */
+  reset() {
+    this.ballNodes.forEach( node => node.moveToFront() );
   }
 }
 
