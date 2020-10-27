@@ -112,6 +112,12 @@ class BallSystem {
     // Link is never disposed as BallSystems are never disposed.
     this.numberOfBallsProperty.link( this.updateBalls.bind( this ) );
 
+    this.numberOfBallsProperty.link( ( newQuantity, oldQuantity ) => {
+      if ( newQuantity > oldQuantity ) {
+        this.balls.slice( oldQuantity ).forEach( ball => this.bumpBallAwayFromOthers( ball ) );
+      }
+    } );
+
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {CenterOfMass} - the center of mass of the system of Balls.
