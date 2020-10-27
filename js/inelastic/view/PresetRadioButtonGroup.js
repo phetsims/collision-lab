@@ -13,13 +13,13 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import RadioButtonGroup from '../../../../sun/js/buttons/RadioButtonGroup.js';
+import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
 import CollisionLabIconFactory from '../../common/view/CollisionLabIconFactory.js';
 import InelasticPreset from '../model/InelasticPreset.js';
 
-class PresetRadioButtonGroup extends RadioButtonGroup {
+class PresetRadioButtonGroup extends RectangularRadioButtonGroup {
 
   /**
    * @param {Property.<InelasticPreset>} presetProperty
@@ -44,9 +44,7 @@ class PresetRadioButtonGroup extends RadioButtonGroup {
 
     }, options );
 
-    //----------------------------------------------------------------------------------------
-
-    // Create the content of the RadioButtonGroup.
+    // Create the description of the radio buttons
     const content = InelasticPreset.VALUES.map( preset => {
       return {
         value: preset,

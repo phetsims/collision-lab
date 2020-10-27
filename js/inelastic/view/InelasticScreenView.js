@@ -40,7 +40,7 @@ class InelasticScreenView extends CollisionLabScreenView {
 
     //----------------------------------------------------------------------------------------
 
-    // Preset RadioButtonGroup
+    // Preset radio button group
     const presetRadioButtonGroup = new PresetRadioButtonGroup( model.ballSystem.inelasticPresetProperty, {
       leftTop: this.ballValuesPanel.leftBottom.addXY( 0, 10 )
     } );
