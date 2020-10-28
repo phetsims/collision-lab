@@ -33,7 +33,6 @@ class MomentaDiagramZoomControlSet extends HBox {
       // {Object} - passed to both ZoomButton instances.
       zoomButtonOptions: {
         baseColor: ColorConstants.LIGHT_BLUE,
-        disabledBaseColor: ColorConstants.LIGHT_GRAY,
         radius: 8,
         xMargin: 5,
         yMargin: 3,
