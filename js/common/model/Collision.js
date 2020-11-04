@@ -132,9 +132,7 @@ class Collision {
   }
 }
 
-Poolable.mixInto( Collision, {
-  initialize: Collision.prototype.initialize
-} );
+Poolable.mixInto( Collision );
 
 collisionLab.register( 'Collision', Collision );
 export default Collision;
