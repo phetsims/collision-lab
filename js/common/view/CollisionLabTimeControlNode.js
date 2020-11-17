@@ -51,12 +51,6 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     assert && AssertUtils.assertPropertyOf( elasticityProperty, 'number' );
 
     options = merge( {
-      playPauseStepButtonOptions: {
-        playPauseStepXSpacing: 9,
-        playPauseButtonOptions: { radius: 30 },
-        stepBackwardButtonOptions: { radius: 20 },
-        stepForwardButtonOptions: { radius: 20 }
-      },
       speedRadioButtonGroupOptions: {
         labelOptions: {
           font: new PhetFont( 13 ),
