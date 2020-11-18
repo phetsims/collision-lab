@@ -51,7 +51,7 @@ const CollisionLabConstants = {
   BALL_CONSTANT_RADIUS: 0.15, // Radius of Balls if constant-radius is on, in meters.
 
   // Momenta Diagram
-  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 7, 6 ),
+  MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 7, 5.7 ),
   MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 4, 2 ),
 
   //----------------------------------------------------------------------------------------
