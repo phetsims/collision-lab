@@ -52,7 +52,7 @@ const CollisionLabConstants = {
 
   // Momenta Diagram
   MOMENTA_DIAGRAM_ASPECT_RATIO: new Dimension2( 7, 5.7 ),
-  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.25, 4, 2 ),
+  MOMENTA_DIAGRAM_ZOOM_RANGE: new RangeWithValue( 0.125, 4, 2 ),
 
   //----------------------------------------------------------------------------------------
 
