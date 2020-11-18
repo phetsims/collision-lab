@@ -33,7 +33,6 @@ import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import Explore2DBallSystem from '../../explore2D/model/Explore2DBallSystem.js';
 import InelasticPreset from '../../inelastic/model/InelasticPreset.js';
-import IntroBallSystem from '../../intro/model/IntroBallSystem.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
@@ -51,7 +50,10 @@ const CollisionLabIconFactory = {
    *
    * @returns {ScreenIcon}
    */
-  createIntroScreenIcon() { return createScreenIcon( IntroBallSystem.INITIAL_BALL_STATES ); },
+  createIntroScreenIcon() { return createScreenIcon( [
+    new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
+    new BallState( Vector2.ZERO, new Vector2( -0.5, 0 ), 1.5 )
+  ] ); },
 
   /**
    * Creates the icon for the 'Explore 1D' Screen.

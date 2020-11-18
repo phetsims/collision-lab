@@ -236,7 +236,7 @@ class IntroBallSystem extends BallSystem {
 // @public (read-only) {BallState[]} - the initial BallStates of all Balls in the 'Intro' screen.
 IntroBallSystem.INITIAL_BALL_STATES = [
   new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
-  new BallState( Vector2.ZERO, new Vector2( -0.5, 0 ), 1.5 )
+  new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.5 )
 ];
 
 collisionLab.register( 'IntroBallSystem', IntroBallSystem );
