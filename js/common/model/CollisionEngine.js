@@ -319,6 +319,9 @@ class CollisionEngine {
           continue;
         }
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `checking ball-ball: ${ball1.index} ${ball2.index}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.push();
+
         // Reference the multiplier of the velocity of the Ball. When the sim is being reversed, Balls are essentially
         // moving in the opposite direction of its velocity vector. For calculating if Balls will collide, reverse the
         // velocity of the ball for convenience and reverse the collisionTime back at the end.
@@ -337,9 +340,17 @@ class CollisionEngine {
         this.deltaV.set( ball2.velocityProperty.value ).subtract( ball1.velocityProperty.value ).multiply( velocityMultipier );
         const sumOfRadiiSquared = ( ball1.radiusProperty.value + ball2.radiusProperty.value ) ** 2;
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `deltaR: ${this.deltaR}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `deltaV: ${this.deltaV}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `sumOfRadiiSquared: ${sumOfRadiiSquared}` );
+
         const relativeDotProduct = this.deltaV.dot( this.deltaR );
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `relativeDotProduct: ${relativeDotProduct}` );
+
         const isEffectivelyParallel = Math.abs( relativeDotProduct ) < 1e-10;
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `isEffectivelyParallel: ${isEffectivelyParallel}` );
 
         // Solve for the possible roots of the quadratic outlined in the document above.
         const possibleRoots = Utils.solveQuadraticRootsReal(
@@ -347,12 +358,19 @@ class CollisionEngine {
                                 relativeDotProduct * 2,
                                 CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
 
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `clampedDeltaRSub: ${CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared )}` );
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `possibleRoots: ${possibleRoots}` );
+
         // The minimum root of the quadratic is when the Balls will first collide.
         const root = possibleRoots ? Math.min( ...possibleRoots ) : null;
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `root: ${root}` );
 
         // If the quadratic root is finite and the collisionTime is positive, the collision is detected and should be
         // registered.
         const collisionTime = ( Number.isFinite( root ) && root >= 0 && !isEffectivelyParallel ) ? elapsedTime + root * velocityMultipier : null;
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `collisionTime: ${collisionTime}` );
 
         const collision = Collision.createFromPool( ball1, ball2, collisionTime );
 
@@ -360,6 +378,8 @@ class CollisionEngine {
 
         // Register the collision and encapsulate information in a Collision instance.
         this.collisions.push( collision );
+
+        sceneryLog && sceneryLog.Sim && sceneryLog.pop();
       }
     }
 
