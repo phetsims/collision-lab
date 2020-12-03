@@ -22,6 +22,7 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
@@ -73,6 +74,18 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       xMargin: 10,
       decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
     }, options );
+
+    const decimalPlaces = options.decimalPlaces;
+    options = _.omit( options, [ 'decimalPlaces' ] );
+    options.numberFormatter = value => {
+      let numberString = Utils.toFixed( value, decimalPlaces );
+
+      if ( value > 1e-9 && value < 0.01 ) {
+        numberString = '< 0.01';
+      }
+
+      return numberString;
+    };
 
     super( ballProperty, DISPLAY_RANGE, options );
 

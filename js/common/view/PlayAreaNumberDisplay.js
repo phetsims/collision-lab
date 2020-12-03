@@ -16,8 +16,10 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Color from '../../../../scenery/js/util/Color.js';
@@ -56,6 +58,21 @@ class PlayAreaNumberDisplay extends NumberDisplay {
         font: new PhetFont( 14 )
       }
     }, options );
+
+    const valuePattern = options.valuePattern;
+    const decimalPlaces = options.decimalPlaces;
+    options = _.omit( options, [ 'valuePattern', 'decimalPlaces' ] );
+    options.numberFormatter = value => {
+      let numberString = Utils.toFixed( value, decimalPlaces );
+
+      if ( value > 1e-9 && value < 0.01 ) {
+        numberString = '< 0.01';
+      }
+
+      return StringUtils.fillIn( valuePattern, {
+        value: numberString
+      } );
+    };
 
     // Set the background opacity of the NumberDisplay.
     assert && assert( !options.backgroundFill, 'PlayAreaNumberDisplay sets backgroundFill.' );
