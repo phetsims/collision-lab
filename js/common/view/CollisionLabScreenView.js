@@ -47,7 +47,7 @@ import ReturnBallsButton from './ReturnBallsButton.js';
 // constants
 const MODEL_TO_VIEW_SCALE = 152; // Meter to view coordinates scale factor.
 const PLAY_AREA_LEFT = 55;
-const BALL_VALUES_PANEL_TOP = 420;
+const BALL_VALUES_PANEL_TOP = 410;
 
 // @abstract
 class CollisionLabScreenView extends ScreenView {

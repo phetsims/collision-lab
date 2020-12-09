@@ -43,7 +43,8 @@ const CollisionLabColors = {
     new Color( 37, 221, 222 ),
     new Color( 255, 37, 173 ),
     new Color( 149, 27, 235 ),
-    new Color( 255, 90, 0 )
+    new Color( 255, 90, 0 ),
+    new Color( 247, 248, 16 )
   ],
 
   // Vector Colors
