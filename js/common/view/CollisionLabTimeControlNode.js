@@ -26,7 +26,6 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import collisionLab from '../../collisionLab.js';
-import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
 
@@ -58,6 +57,9 @@ class CollisionLabTimeControlNode extends TimeControlNode {
         },
         radioButtonGroupOptions: { spacing: 5 }
       },
+      playPauseStepButtonOptions: {
+        includeStepBackwardButton: true
+      },
       buttonGroupXSpacing: 20
     }, options );
 
@@ -65,12 +67,10 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
     assert && assert( !options.timeSpeedProperty, 'CollisionLabTimeControlNode sets options.timeSpeedProperty' );
     assert && assert( !options.enabledProperty, 'CollisionLabTimeControlNode sets options.enabledProperty' );
-    assert && assert( !options.playPauseStepButtonOptions.includeStepBackwardButton, 'CollisionLabTimeControlNode sets includeStepBackwardButton' );
     assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.isPlayingProperty' );
 
     // Set options that cannot be overridden.
     options.timeSpeedProperty = timeSpeedProperty;
-    options.playPauseStepButtonOptions.includeStepBackwardButton = true;
 
     // The step-backward button is only enabled when the sim is paused, the elasticity is 100%, and the total elapsed
     // time isn't 0. There isn't any support to provide a custom enabledProperty to step-buttons. So, we use a
@@ -79,7 +79,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // CollisionLabTimeControlNode persists for the lifetime of simulation.
     options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
       [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
-        return isPlaying || elapsedTime === 0 || elasticity < CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
+        return isPlaying || elapsedTime === 0 || elasticity === 0;
       }, {
         valueType: 'boolean'
       } );

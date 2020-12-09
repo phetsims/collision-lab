@@ -83,6 +83,12 @@ class CollisionLabModel {
         this.isPlayingProperty.value = wasPlaying;
       }
     } );
+
+    // When the elasticity changes, we reset elapsed time to provide proper step-back support.
+    // See https://github.com/phetsims/collision-lab/issues/183
+    this.playArea.elasticityPercentProperty.lazyLink( elasticity => {
+      this.elapsedTimeProperty.reset();
+    } );
   }
 
   /**

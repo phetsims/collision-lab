@@ -32,8 +32,9 @@ class InelasticScreenView extends CollisionLabScreenView {
 
       playAreaTopRightControlsOptions: {
         includeNumberOfBallsSpinner: false
-      }
+      },
 
+      includeStepBack: false
     }, options );
 
     super( model, tandem, options );

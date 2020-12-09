@@ -69,6 +69,9 @@ class CollisionLabScreenView extends ScreenView {
       // {boolean} - indicates if the PlayAreaTopRightControls is included.
       includePlayAreaTopRightControls: true,
 
+      // {boolean}
+      includeStepBack: true,
+
       // {Object} - options to passed to the PlayAreaTopRightControls, if it is included.
       playAreaTopRightControlsOptions: null
 
@@ -138,7 +141,8 @@ class CollisionLabScreenView extends ScreenView {
       model.playArea.elasticityPercentProperty, {
         playPauseStepButtonOptions: {
           stepBackwardButtonOptions: { listener: model.stepBackwards.bind( model ) },
-          stepForwardButtonOptions: { listener: model.stepForwards.bind( model ) }
+          stepForwardButtonOptions: { listener: model.stepForwards.bind( model ) },
+          includeStepBackwardButton: options.includeStepBack
         }
       } );
     timeControlNode.setPlayPauseButtonCenter( playAreaViewBounds.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );

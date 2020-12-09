@@ -140,8 +140,9 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @override
    *
    * @param {Collision} collision - the Collision instance.
+   * @param {number} dt
    */
-  handleCollision( collision ) {
+  handleCollision( collision, dt ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'InelasticCollisionEngine.handleCollision' );
@@ -152,7 +153,7 @@ class InelasticCollisionEngine extends CollisionEngine {
       this.handleBallClusterToBorderCollision( collision );
     }
     else {
-      super.handleCollision( collision );
+      super.handleCollision( collision, dt );
     }
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
@@ -168,8 +169,9 @@ class InelasticCollisionEngine extends CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} dt
    */
-  handleBallToBallCollision( ball1, ball2 ) {
+  handleBallToBallCollision( ball1, ball2, dt ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball2: ${ball2}` );
     assert && assert( this.playArea.getElasticity() === 0, 'must be perfectly inelastic for Inelastic screen' );
@@ -178,7 +180,7 @@ class InelasticCollisionEngine extends CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `InelasticCollisionEngine.handleBallToBallCollision #${ball1.index} #${ball2.index}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
-    super.handleBallToBallCollision( ball1, ball2 );
+    super.handleBallToBallCollision( ball1, ball2, dt );
 
     // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionType.STICK ) {
@@ -214,14 +216,15 @@ class InelasticCollisionEngine extends CollisionEngine {
    * @protected
    *
    * @param {Ball} ball - the Ball involved in the collision.
+   * @param {number} dt
    */
-  handleBallToBorderCollision( ball ) {
+  handleBallToBorderCollision( ball, dt ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `InelasticCollisionEngine.handleBallToBorderCollision #${ball.index}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.push();
 
-    super.handleBallToBorderCollision( ball );
+    super.handleBallToBorderCollision( ball, dt );
 
     // Handle collisions that 'stick'.
     if ( this.playArea.inelasticCollisionTypeProperty.value === InelasticCollisionType.STICK ) {

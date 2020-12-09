@@ -180,7 +180,7 @@ class CollisionEngine {
 
         // Handle the response for the Collision depending on the type of collision.
         for ( let i = this.nextCollisions.length - 1; i >= 0; i-- ) {
-          this.handleCollision( this.nextCollisions[ i ] );
+          this.handleCollision( this.nextCollisions[ i ], dt );
         }
 
         // Continue on to the next iteration
@@ -254,8 +254,9 @@ class CollisionEngine {
    * @protected - can be overridden in subclasses.
    *
    * @param {Collision} collision - the Collision instance.
+   * @param {number} dt
    */
-  handleCollision( collision ) {
+  handleCollision( collision, dt ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( 'CollisionEngine.handleCollision' );
@@ -263,8 +264,8 @@ class CollisionEngine {
 
     // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
     collision.includes( this.playArea ) ?
-          this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2 ) :
-          this.handleBallToBallCollision( collision.body1, collision.body2, collision.time );
+          this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2, dt ) :
+          this.handleBallToBallCollision( collision.body1, collision.body2, dt );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
@@ -378,8 +379,9 @@ class CollisionEngine {
    *
    * @param {Ball} ball1 - the first Ball involved in the collision.
    * @param {Ball} ball2 - the second Ball involved in the collision.
+   * @param {number} dt
    */
-  handleBallToBallCollision( ball1, ball2 ) {
+  handleBallToBallCollision( ball1, ball2, dt ) {
     assert && assert( ball1 instanceof Ball, `invalid ball1: ${ball1}` );
     assert && assert( ball2 instanceof Ball, `invalid ball1: ${ball1}` );
 
@@ -390,6 +392,9 @@ class CollisionEngine {
     const m1 = ball1.massProperty.value;
     const m2 = ball2.massProperty.value;
     const elasticity = this.playArea.getElasticity();
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball1 v: ${ball1.velocityProperty.value}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball2 v: ${ball2.velocityProperty.value}` );
 
     // Set the Normal and Tangential vector, called the 'line of impact' and 'plane of contact' respectively.
     const normal = ball2.positionProperty.value.minus( ball1.positionProperty.value ).normalize();
@@ -410,13 +415,25 @@ class CollisionEngine {
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2t ${v2t}` );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
-    let v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
-    let v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
+    let v1nP;
+    let v2nP;
+    if ( dt >= 0 ) {
+      v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
+      v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
+    }
+    else {
+      // Reversed computations for stepping backward with elasticity
+      v1nP = ( ( v1n * ( m1 + m2 ) ) - m2 * v2n * ( 1 + elasticity ) ) / ( m1 - m2 * elasticity );
+      v2nP = ( ( v2n * ( m2 + m1 ) ) - m1 * v1n * ( 1 + elasticity ) ) / ( m2 - m1 * elasticity );
+    }
 
     // Remove negligible normal velocities to prevent oscillations,
     // see https://github.com/phetsims/collision-lab/issues/171
     if ( Math.abs( v1nP ) < 1e-8 ) { v1nP = 0; }
     if ( Math.abs( v2nP ) < 1e-8 ) { v2nP = 0; }
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1nP ${v1nP}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2nP ${v2nP}` );
 
     // Change coordinate frames back into the standard x-y coordinate frame.
     const v1xP = tangent.dotXY( v1t, v1nP );
@@ -425,6 +442,9 @@ class CollisionEngine {
     const v2yP = normal.dotXY( v2t, v2nP );
     ball1.velocityProperty.value = normal.setXY( v1xP, v1yP );
     ball2.velocityProperty.value = tangent.setXY( v2xP, v2yP );
+
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball1 v: ${ball1.velocityProperty.value}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball2 v: ${ball2.velocityProperty.value}` );
 
     // Remove all collisions that involves either of the Balls.
     this.invalidateCollisions( ball1 );
@@ -530,8 +550,9 @@ class CollisionEngine {
    * @protected - can be overridden in subclasses.
    *
    * @param {Ball} ball - the Ball involved in the collision.
+   * @param {number} dt
    */
-  handleBallToBorderCollision( ball ) {
+  handleBallToBorderCollision( ball, dt ) {
     assert && assert( ball instanceof Ball, `invalid ball: ${ball}` );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `CollisionEngine.handleBallToBorderCollision #${ball.index}` );

@@ -28,13 +28,14 @@ class IntroCollisionEngine extends CollisionEngine {
    * @override
    *
    * @param {Collision} collision - the Collision instance.
+   * @param {number} dt
    */
-  handleCollision( collision ) {
+  handleCollision( collision, dt ) {
     assert && assert( collision instanceof Collision, `invalid collision: ${collision}` );
     assert && assert( collision.body1 instanceof Ball && collision.body2 instanceof Ball, 'only ball-ball for intro' );
 
     // Forward collision response to the super-class.
-    super.handleCollision( collision );
+    super.handleCollision( collision, dt );
 
     // Only register the 'Change in Momentum' contact point if the 'Change in Momentum' checkbox is checked.
     if ( this.ballSystem.changeInMomentumVisibleProperty.value ) {
