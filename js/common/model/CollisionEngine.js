@@ -391,7 +391,13 @@ class CollisionEngine {
     // Convenience references to known ball values.
     const m1 = ball1.massProperty.value;
     const m2 = ball2.massProperty.value;
-    const elasticity = this.playArea.getElasticity();
+    let elasticity = this.playArea.getElasticity();
+
+    assert && assert( dt >= 0 || elasticity > 0, 'We cannot step backwards with zero elasticity' );
+
+    if ( dt < 0 ) {
+      elasticity = 1 / elasticity;
+    }
 
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball1 v: ${ball1.velocityProperty.value}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `ball2 v: ${ball2.velocityProperty.value}` );
@@ -409,23 +415,17 @@ class CollisionEngine {
     const v1t = ball1.velocityProperty.value.dot( tangent );
     const v2t = ball2.velocityProperty.value.dot( tangent );
 
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `m1 ${m1}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `m2 ${m2}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1n ${v1n}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v1t ${v1t}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2n ${v2n}` );
     sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `v2t ${v2t}` );
+    sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `elasticity ${elasticity}` );
 
     // Compute the 'normal' components of velocities after collision (P for prime = after).
-    let v1nP;
-    let v2nP;
-    if ( dt >= 0 ) {
-      v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
-      v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
-    }
-    else {
-      // Reversed computations for stepping backward with elasticity
-      v1nP = ( ( v1n * ( m1 + m2 ) ) - m2 * v2n * ( 1 + elasticity ) ) / ( m1 - m2 * elasticity );
-      v2nP = ( ( v2n * ( m2 + m1 ) ) - m1 * v1n * ( 1 + elasticity ) ) / ( m2 - m1 * elasticity );
-    }
+    let v1nP = ( ( m1 - m2 * elasticity ) * v1n + m2 * ( 1 + elasticity ) * v2n ) / ( m1 + m2 );
+    let v2nP = ( ( m2 - m1 * elasticity ) * v2n + m1 * ( 1 + elasticity ) * v1n ) / ( m1 + m2 );
 
     // Remove negligible normal velocities to prevent oscillations,
     // see https://github.com/phetsims/collision-lab/issues/171
@@ -564,6 +564,14 @@ class CollisionEngine {
     // unless it is moving towards that respective side.
     const velocityMultipier = this.timeStepDirectionProperty.value;
 
+    let elasticity = this.playArea.getElasticity();
+
+    assert && assert( dt >= 0 || elasticity > 0, 'We cannot step backwards with zero elasticity' );
+
+    if ( dt < 0 ) {
+      elasticity = 1 / elasticity;
+    }
+
     // Update the velocity after the collision.
     if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.velocityProperty.value.x * velocityMultipier < 0 ) ||
          ( this.playArea.isBallTouchingRight( ball ) && ball.velocityProperty.value.x * velocityMultipier > 0 ) ) {
@@ -571,7 +579,7 @@ class CollisionEngine {
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border X bounce` );
 
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
-      ball.setXVelocity( ball.velocityProperty.value.x * -this.playArea.getElasticity() );
+      ball.setXVelocity( -ball.velocityProperty.value.x * elasticity );
     }
     if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.velocityProperty.value.y * velocityMultipier < 0 ) ||
          ( this.playArea.isBallTouchingTop( ball ) && ball.velocityProperty.value.y * velocityMultipier > 0 ) ) {
@@ -579,7 +587,7 @@ class CollisionEngine {
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border Y bounce` );
 
       // Top and Bottom ball-to-border collisions incur a flip in vertical velocity, scaled by the elasticity.
-      ball.setYVelocity( ball.velocityProperty.value.y * -this.playArea.getElasticity() );
+      ball.setYVelocity( -ball.velocityProperty.value.y * elasticity );
     }
 
     // Remove all collisions that involves the involved Ball.
