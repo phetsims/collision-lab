@@ -88,6 +88,7 @@ class CollisionLabModel {
     // See https://github.com/phetsims/collision-lab/issues/183
     this.playArea.elasticityPercentProperty.lazyLink( elasticity => {
       this.elapsedTimeProperty.reset();
+      this.collisionEngine.reset();
     } );
   }
 
