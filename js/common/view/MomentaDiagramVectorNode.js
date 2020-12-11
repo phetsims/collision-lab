@@ -127,7 +127,7 @@ class MomentaDiagramVectorNode extends Node {
         else if ( options.isTotalMomentaVector ) {
 
           // Position the label below the Momenta Vector.
-          labelNode.centerTop = centerViewPosition.plusXY( 0, adjustedOffset );
+          labelNode.centerTop = centerViewPosition.plusXY( 0, adjustedOffset * 0.5 );
         }
         else {
 
