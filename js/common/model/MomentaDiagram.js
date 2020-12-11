@@ -41,7 +41,7 @@ import PlayArea from './PlayArea.js';
 const MOMENTA_DIAGRAM_ZOOM_RANGE = CollisionLabConstants.MOMENTA_DIAGRAM_ZOOM_RANGE;
 const MOMENTA_DIAGRAM_ASPECT_RATIO = CollisionLabConstants.MOMENTA_DIAGRAM_ASPECT_RATIO;
 const ZOOM_MULTIPLIER = 2;
-const DEFAULT_1D_VERTICAL_SPACING = 0.4;
+const DEFAULT_1D_VERTICAL_SPACING = 0.3;
 
 class MomentaDiagram {
 
