@@ -193,6 +193,10 @@ class BallSystem {
         this.centerOfMass.path.clear();
       }
     } );
+
+    this.ballsConstantSizeProperty.lazyLink( () => {
+      this.balls.forEach( ball => this.bumpBallAwayFromOthers( ball ) );
+    } );
   }
 
   /**
