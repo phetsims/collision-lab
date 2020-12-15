@@ -142,5 +142,8 @@
   },
   "inelasticCollision": {
     "value": "Inelastic Collision"
+  },
+  "approximatePattern": {
+    "value": "~{{value}}"
   }
 }

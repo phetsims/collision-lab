@@ -24,10 +24,12 @@
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
+import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import collisionLab from '../../collisionLab.js';
+import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
@@ -80,8 +82,15 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     options.numberFormatter = value => {
       let numberString = Utils.toFixed( value, decimalPlaces );
 
-      if ( value > 1e-9 && value < 0.01 ) {
-        numberString = '< 0.01';
+      const absValue = Math.abs( value );
+      // For non-position columns, show approximates, see https://github.com/phetsims/collision-lab/issues/182
+      if ( columnType !== BallValuesPanelColumnTypes.X_POSITION &&
+           columnType !== BallValuesPanelColumnTypes.Y_POSITION &&
+           absValue > 1e-9 &&
+           absValue < 0.005 ) {
+        numberString = StringUtils.fillIn( collisionLabStrings.approximatePattern, {
+          value: '0.00'
+        } );
       }
 
       return numberString;
