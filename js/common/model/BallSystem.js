@@ -199,6 +199,7 @@ class BallSystem {
 
     this.ballsConstantSizeProperty.lazyLink( () => {
       this.balls.forEach( ball => this.bumpBallAwayFromOthers( ball ) );
+      tryToSaveBallStates();
     } );
   }
 
