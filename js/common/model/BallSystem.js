@@ -175,14 +175,8 @@ class BallSystem {
       this.balls.every( ball => ball.insidePlayAreaProperty.value ) && this.balls.forEach( ball => ball.saveState() );
     } );
 
-    // Observe when the user is done controlling any of the Balls to:
-    //   1. Save the states of all Balls if every ball is inside the PlayArea's bounds.
-    //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
-    //   3. Reset the rotation of Balls relative to their centers.
-    //
-    // Link lasts for the life-time of the sim as BallSystems are never disposed.
-    this.ballSystemUserControlledProperty.lazyLink( ballSystemUserControlled => {
-      if ( !ballSystemUserControlled && this.balls.every( ball => ball.insidePlayAreaProperty.value ) ) {
+    const tryToSaveBallStates = () => {
+      if ( !this.ballSystemUserControlledProperty.value && this.balls.every( ball => ball.insidePlayAreaProperty.value ) ) {
         this.balls.forEach( ball => {
 
           // Save the state of each Ball.
@@ -192,7 +186,16 @@ class BallSystem {
         } );
         this.centerOfMass.path.clear();
       }
-    } );
+    };
+
+    // Observe when the user is done controlling any of the Balls to:
+    //   1. Save the states of all Balls if every ball is inside the PlayArea's bounds.
+    //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
+    //   3. Reset the rotation of Balls relative to their centers.
+    //
+    // Link lasts for the life-time of the sim as BallSystems are never disposed.
+    this.ballSystemUserControlledProperty.lazyLink( tryToSaveBallStates );
+    playArea.elasticityPercentProperty.lazyLink( tryToSaveBallStates );
 
     this.ballsConstantSizeProperty.lazyLink( () => {
       this.balls.forEach( ball => this.bumpBallAwayFromOthers( ball ) );
