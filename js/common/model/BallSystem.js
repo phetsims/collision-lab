@@ -112,9 +112,10 @@ class BallSystem {
     // Link is never disposed as BallSystems are never disposed.
     this.numberOfBallsProperty.link( this.updateBalls.bind( this ) );
 
-    this.numberOfBallsProperty.link( ( newQuantity, oldQuantity ) => {
+    this.numberOfBallsProperty.lazyLink( ( newQuantity, oldQuantity ) => {
       if ( newQuantity > oldQuantity ) {
         this.balls.slice( oldQuantity ).forEach( ball => this.bumpBallAwayFromOthers( ball ) );
+        this.tryToSaveBallStates();
       }
     } );
 
@@ -175,31 +176,18 @@ class BallSystem {
       this.balls.every( ball => ball.insidePlayAreaProperty.value ) && this.balls.forEach( ball => ball.saveState() );
     } );
 
-    const tryToSaveBallStates = () => {
-      if ( !this.ballSystemUserControlledProperty.value && this.balls.every( ball => ball.insidePlayAreaProperty.value ) ) {
-        this.balls.forEach( ball => {
-
-          // Save the state of each Ball.
-          ball.insidePlayAreaProperty.value && ball.saveState();
-          ball.path.clear();
-          ball.rotationProperty.reset();
-        } );
-        this.centerOfMass.path.clear();
-      }
-    };
-
     // Observe when the user is done controlling any of the Balls to:
     //   1. Save the states of all Balls if every ball is inside the PlayArea's bounds.
     //   2. Clear the trailing Paths of all Balls and the Path of the CenterOfMass.
     //   3. Reset the rotation of Balls relative to their centers.
     //
     // Link lasts for the life-time of the sim as BallSystems are never disposed.
-    this.ballSystemUserControlledProperty.lazyLink( tryToSaveBallStates );
-    playArea.elasticityPercentProperty.lazyLink( tryToSaveBallStates );
+    this.ballSystemUserControlledProperty.lazyLink( this.tryToSaveBallStates.bind( this ) );
+    playArea.elasticityPercentProperty.lazyLink( this.tryToSaveBallStates.bind( this ) );
 
     this.ballsConstantSizeProperty.lazyLink( () => {
       this.balls.forEach( ball => this.bumpBallAwayFromOthers( ball ) );
-      tryToSaveBallStates();
+      this.tryToSaveBallStates();
     } );
   }
 
@@ -253,6 +241,23 @@ class BallSystem {
   }
 
   /**
+   * Attemps to save ball states
+   * @private
+   */
+  tryToSaveBallStates() {
+    if ( !this.ballSystemUserControlledProperty.value && this.balls.every( ball => ball.insidePlayAreaProperty.value ) ) {
+      this.balls.forEach( ball => {
+
+        // Save the state of each Ball.
+        ball.insidePlayAreaProperty.value && ball.saveState();
+        ball.path.clear();
+        ball.rotationProperty.reset();
+      } );
+      this.centerOfMass.path.clear();
+    }
+  }
+
+  /**
    * Updates the trailing 'Paths' of all Balls in the system and the trailing 'Path' of the CenterOfMass.
    * @public
    *
@@ -274,6 +279,8 @@ class BallSystem {
    */
   bumpBallIntoPlayArea( ball ) {
     ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radiusProperty.value ).closestPointTo( ball.positionProperty.value );
+
+    this.tryToSaveBallStates();
   }
 
   /**
@@ -350,6 +357,8 @@ class BallSystem {
 
     // Sanity check that the Ball is now not overlapping with any other Balls.
     assert && assert( !BallUtils.getClosestOverlappingBall( ball, this.balls ) );
+
+    this.tryToSaveBallStates();
   }
 
   /**
