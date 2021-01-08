@@ -107,7 +107,8 @@ class BallNode extends Node {
     const labelNode = new Text( ball.index, {
       font: LABEL_FONT,
       stroke: Color.BLACK,
-      fill: Color.WHITE
+      fill: Color.WHITE,
+      pickable: false
     } );
 
     // Create the Vector Node for the velocity vector of the Ball. To be positioned later.
