@@ -80,6 +80,7 @@ class BallVelocityVectorNode extends BallVectorNode {
 
     // Create the Text instance that displays the velocity symbol. Position to be updated later.
     const velocitySymbolText = new Text( collisionLabStrings.symbol.velocity, {
+      pickable: false,
       font: CollisionLabConstants.CONTROL_FONT,
       maxWidth: 15 // constrain width for i18n, determined empirically.
     } );
