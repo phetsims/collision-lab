@@ -84,6 +84,11 @@ class CollisionLabModel {
       }
     } );
 
+    // Reset time when constant-size is toggled, see https://github.com/phetsims/collision-lab/issues/193
+    this.ballSystem.ballsConstantSizeProperty.lazyLink( () => {
+      this.elapsedTimeProperty.reset();
+    } );
+
     // When the elasticity changes, we reset elapsed time to provide proper step-back support.
     // See https://github.com/phetsims/collision-lab/issues/183
     this.playArea.elasticityPercentProperty.lazyLink( elasticity => {
