@@ -89,6 +89,12 @@ class CollisionLabModel {
       this.elapsedTimeProperty.reset();
     } );
 
+    // Reset time when the quantity of balls changes, see
+    // https://github.com/phetsims/collision-lab/issues/183#issuecomment-756429346
+    this.ballSystem.balls.lengthProperty.lazyLink( () => {
+      this.elapsedTimeProperty.reset();
+    } );
+
     // When the elasticity changes, we reset elapsed time to provide proper step-back support.
     // See https://github.com/phetsims/collision-lab/issues/183
     this.playArea.elasticityPercentProperty.lazyLink( elasticity => {

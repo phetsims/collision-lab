@@ -168,12 +168,14 @@ class BallSystem {
     // of the simulation since BallSystems are never disposed.
     this.balls.elementRemovedEmitter.addListener( ball => {
       ball.path.clear();
+      this.tryToSaveBallStates();
     } );
 
     // Observe when Balls are added to the system and save the states of all balls in the system. Listener lasts for the
     // life-time of the simulation since BallSystems are never disposed.
     this.balls.elementAddedEmitter.addListener( ball => {
       this.balls.every( ball => ball.insidePlayAreaProperty.value ) && this.balls.forEach( ball => ball.saveState() );
+      this.tryToSaveBallStates();
     } );
 
     // Observe when the user is done controlling any of the Balls to:
