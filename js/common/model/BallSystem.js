@@ -21,12 +21,13 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
+import pairs from '../../../../phet-core/js/pairs.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -318,6 +319,8 @@ class BallSystem {
     // Array of the overlappingBalls that we have 'bumped' away from. This is used to break infinite loops.
     const bumpedAwayFromBalls = [];
 
+    let count = 0;
+
     // We use a while loop to fully ensure that the Ball isn't overlapping with any other Balls in scenarios where Balls
     // are placed in the middle of a cluster, and 'bumping' a Ball may lead to it overlapping with another Ball.
     while ( overlappingBall ) {
@@ -355,12 +358,50 @@ class BallSystem {
       // Recompute the overlappingBall for the next iteration.
       bumpedAwayFromBalls.push( overlappingBall );
       overlappingBall = BallUtils.getClosestOverlappingBall( ball, this.balls );
+
+      if ( overlappingBall && ++count > 10 ) {
+        this.repelBalls();
+        overlappingBall = false;
+      }
     }
 
     // Sanity check that the Ball is now not overlapping with any other Balls.
     assert && assert( !BallUtils.getClosestOverlappingBall( ball, this.balls ) );
 
     this.tryToSaveBallStates();
+  }
+
+  /**
+   * Causes all balls to repel from each other, while staying inside the boundaries.
+   * @private
+   */
+  repelBalls() {
+    let hadOverlap = true;
+
+    const ballPairs = pairs( this.balls );
+
+    while ( hadOverlap ) {
+      hadOverlap = false;
+
+      ballPairs.forEach( pair => {
+        if ( BallUtils.areBallsOverlapping( pair[ 0 ], pair[ 1 ] ) ) {
+          hadOverlap = true;
+
+          const directionVector = !pair[ 0 ].positionProperty.value.equals( pair[ 1 ].positionProperty.value ) ?
+                                  pair[ 0 ].positionProperty.value.minus( pair[ 1 ].positionProperty.value ).normalize() :
+                                  Vector2.X_UNIT.copy();
+
+          pair[ 0 ].positionProperty.value = pair[ 0 ].playArea.bounds.eroded( pair[ 0 ].radiusProperty.value ).closestPointTo( pair[ 0 ].positionProperty.value.plus(
+            // Slow bump away
+            directionVector.timesScalar( 0.05 )
+          ) );
+          pair[ 1 ].positionProperty.value = pair[ 1 ].playArea.bounds.eroded( pair[ 1 ].radiusProperty.value ).closestPointTo( pair[ 1 ].positionProperty.value.plus(
+            // Slow bump away
+            directionVector.timesScalar( -0.05 )
+          ) );
+        }
+      } );
+    }
   }
 
   /**
