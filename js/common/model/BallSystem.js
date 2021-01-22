@@ -24,6 +24,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -343,10 +344,10 @@ class BallSystem {
       // a random direction.
       if ( bumpedAwayFromBalls.length > 5 ) {
         if ( ball.positionProperty.value.y === 0 ) {
-          directionVector.setXY( phet.joist.random.nextBoolean() ? 1 : -1, 0 );
+          directionVector.setXY( dotRandom.nextBoolean() ? 1 : -1, 0 );
         }
         else {
-          directionVector.rotate( 2 * Math.PI * phet.joist.random.nextDouble() );
+          directionVector.rotate( 2 * Math.PI * dotRandom.nextDouble() );
         }
       }
 
