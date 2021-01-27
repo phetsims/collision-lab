@@ -149,7 +149,10 @@ class CollisionLabScreenView extends ScreenView {
 
     // Restart Button
     const restartButton = new RestartButton( {
-      listener: model.restart.bind( model ),
+      listener: () => {
+        this.interruptSubtreeInput();
+        model.restart();
+      },
       right: playAreaViewBounds.right,
       centerY: elapsedTimeNumberDisplay.centerY
     } );
