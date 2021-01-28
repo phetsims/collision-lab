@@ -43,6 +43,8 @@ class BallVectorNode extends Node {
 
     options = merge( {
 
+      pickable: false,
+
       // {Object} - passed to the ArrowNode instance.
       arrowOptions: merge( {}, CollisionLabConstants.ARROW_OPTIONS )
 
