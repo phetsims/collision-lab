@@ -19,6 +19,7 @@
  * @author Brandon Li
  */
 
+import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -117,7 +118,9 @@ class BallSystemNode extends Node {
       ballSystem.prepopulatedBalls,
       ballSystem.centerOfMass.path,
       playArea.bounds,
-      modelViewTransform
+      modelViewTransform, {
+        clipArea: Shape.bounds( modelViewTransform.modelToViewBounds( playArea.bounds ) )
+      }
     );
 
     //----------------------------------------------------------------------------------------
