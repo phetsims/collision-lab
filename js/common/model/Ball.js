@@ -142,6 +142,11 @@ class Ball {
 
     // @public (read-only) {PlayArea} - reference to the passed-in PlayArea.
     this.playArea = playArea;
+
+    // Clear the path when the ball is repositioned, see https://github.com/phetsims/collision-lab/issues/200
+    this.userControlledProperty.lazyLink( () => {
+      this.path.clear();
+    } );
   }
 
   /**
