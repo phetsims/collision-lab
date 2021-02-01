@@ -154,7 +154,7 @@ class CollisionLabScreenView extends ScreenView {
         model.restart();
       },
       right: playAreaViewBounds.right,
-      centerY: elapsedTimeNumberDisplay.centerY
+      top: elapsedTimeNumberDisplay.top
     } );
 
     //----------------------------------------------------------------------------------------
