@@ -74,18 +74,26 @@ class InelasticBallSystem extends BallSystem {
 
     //----------------------------------------------------------------------------------------
 
+    let wasSetToCustomAutomatically = false;
+
     // Observe when the user manipulates any of the two Balls and set the InelasticPreset to CUSTOM. Link is never
     // removed since InelasticBallSystems are never disposed.
     this.ballSystemUserControlledProperty.link( ballSystemUserControlled => {
-      ballSystemUserControlled && ( this.inelasticPresetProperty.value = InelasticPreset.CUSTOM );
+      if ( ballSystemUserControlled && this.inelasticPresetProperty.value !== InelasticPreset.CUSTOM ) {
+        wasSetToCustomAutomatically = true;
+        this.inelasticPresetProperty.value = InelasticPreset.CUSTOM;
+        wasSetToCustomAutomatically = false;
+      }
     } );
 
     // Observe when the InelasticPreset changes to do the functionality described at the top of the file. Link is never
     // removed since InelasticBallSystems are never disposed.
     this.inelasticPresetProperty.link( inelasticPreset => {
 
-      // Pause the sim.
-      isPlayingProperty.value = false;
+      if ( !wasSetToCustomAutomatically ) {
+        // Pause the sim.
+        isPlayingProperty.value = false;
+      }
 
       // Set the elapsed time to 0.
       elapsedTimeProperty.reset();
