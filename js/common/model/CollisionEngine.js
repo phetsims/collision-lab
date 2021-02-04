@@ -145,7 +145,7 @@ class CollisionEngine {
       // If there are collisions within the given time-step, only handle and progress the 'earliest' collision.
       // Find and reference the next Collision that will occur of the collisions that will occur in this step.
       this.nextCollisions.length = 0;
-      let bestPotentialCollisionTime = elapsedTime + dt;
+      let bestPotentialCollisionTime = elapsedTime + dt * ( 1 + 1e-7 );
       for ( let i = this.collisions.length - 1; i >= 0; i-- ) {
         const collision = this.collisions[ i ];
         if ( collision.inRange( elapsedTime, bestPotentialCollisionTime ) ) {
@@ -170,7 +170,7 @@ class CollisionEngine {
       }
       else {
         // Reference when the collision will occur (in terms of both elapsedTime and a time-delta, respectively).
-        const collisionTime = bestPotentialCollisionTime;
+        const collisionTime = Math.max( 0, bestPotentialCollisionTime );
         const timeUntilCollision = collisionTime - elapsedTime;
 
         sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `collision in step in ${timeUntilCollision}` );
