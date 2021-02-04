@@ -26,6 +26,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
 
@@ -79,7 +80,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // CollisionLabTimeControlNode persists for the lifetime of simulation.
     options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
       [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
-        return isPlaying || elapsedTime === 0 || elasticity === 0;
+        return isPlaying || elapsedTime === 0 || elasticity < CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
       }, {
         valueType: 'boolean'
       } );
