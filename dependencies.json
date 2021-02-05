@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.1.0-rc.1 Wed Jan 27 2021 14:29:22 GMT-0700 (Mountain Standard Time)",
+  "comment": "# collision-lab 1.1.0-rc.2 Fri Feb 05 2021 09:15:01 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "3df8c5ff9a465b031f84195a90bbb7e1be10a14d",
     "branch": "HEAD"
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "d030ba957448c727ea66722b8a6f2134ca5797c3",
+    "sha": "421359168d05d48d9daa60abcf9fb4785d9ef45c",
     "branch": "1.1"
   },
   "dot": {
@@ -30,7 +30,7 @@
   },
   "joist": {
     "sha": "46810f6f6dcf3d06e61706c058e2e40f0b714b1b",
-    "branch": "collision-lab-1.1"
+    "branch": "HEAD"
   },
   "kite": {
     "sha": "b9a0e9a4a2e9c36846d61ca66ce828662d894c87",
