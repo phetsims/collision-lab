@@ -62,6 +62,9 @@ class BallSystem {
 
     assert && assert( options.numberOfBallsRange.max === initialBallStates.length );
 
+    // @private {PlayArea}
+    this.playArea = playArea;
+
     //----------------------------------------------------------------------------------------
 
     // @public (read-only) {Range} - reference to the numeric Range of the number of balls in the system.
@@ -282,7 +285,11 @@ class BallSystem {
    * @param {Ball} ball
    */
   bumpBallIntoPlayArea( ball ) {
-    ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radiusProperty.value ).closestPointTo( ball.positionProperty.value );
+    // Don't bump balls into the play area if there is no reflecting border, see
+    // https://github.com/phetsims/collision-lab/issues/206
+    if ( this.playArea.reflectingBorderProperty.value ) {
+      ball.positionProperty.value = ball.playArea.bounds.eroded( ball.radiusProperty.value ).closestPointTo( ball.positionProperty.value );
+    }
 
     this.tryToSaveBallStates();
   }
@@ -392,14 +399,24 @@ class BallSystem {
                                   pair[ 0 ].positionProperty.value.minus( pair[ 1 ].positionProperty.value ).normalize() :
                                   Vector2.X_UNIT.copy();
 
-          pair[ 0 ].positionProperty.value = pair[ 0 ].playArea.bounds.eroded( pair[ 0 ].radiusProperty.value ).closestPointTo( pair[ 0 ].positionProperty.value.plus(
+          let pair0Position = pair[ 0 ].positionProperty.value.plus(
             // Slow bump away
             directionVector.timesScalar( 0.05 )
-          ) );
-          pair[ 1 ].positionProperty.value = pair[ 1 ].playArea.bounds.eroded( pair[ 1 ].radiusProperty.value ).closestPointTo( pair[ 1 ].positionProperty.value.plus(
+          );
+          let pair1Position = pair[ 1 ].positionProperty.value.plus(
             // Slow bump away
             directionVector.timesScalar( -0.05 )
-          ) );
+          );
+
+          // Don't bump balls into the play area if there is no reflecting border, see
+          // https://github.com/phetsims/collision-lab/issues/206
+          if ( this.playArea.reflectingBorderProperty.value ) {
+            pair0Position = pair[ 0 ].playArea.bounds.eroded( pair[ 0 ].radiusProperty.value ).closestPointTo( pair0Position );
+            pair1Position = pair[ 1 ].playArea.bounds.eroded( pair[ 1 ].radiusProperty.value ).closestPointTo( pair1Position );
+          }
+
+          pair[ 0 ].positionProperty.value = pair0Position;
+          pair[ 1 ].positionProperty.value = pair1Position;
         }
       } );
     }
