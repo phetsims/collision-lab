@@ -50,11 +50,14 @@ class KeypadDialog extends Dialog {
       contentSpacing: 10, // {number} - vertical spacing between the content of the KeypadDialog.
 
       keypadOptions: {
-        // {number} - maximum number of digits that can be entered on the keypad.
-        maxDigits: 8,
+        accumulatorOptions: {
 
-        // {number} - maximum number of decimal places that can be entered on the keypad.
-        maxDigitsRightOfMantissa: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+          // {number} - maximum number of digits that can be entered on the keypad.
+          maxDigits: 8,
+
+          // {number} - maximum number of decimal places that can be entered on the keypad.
+          maxDigitsRightOfMantissa: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+        }
       },
 
       // super-class options
