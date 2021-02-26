@@ -56,10 +56,10 @@ class BallValuesPanelColumnType {
 const BallValuesPanelColumnTypes = Enumeration.byMap( {
 
   // Column of Ball Icons. For displaying purposes only.
-  'BALL_ICONS': new BallValuesPanelColumnType( null, null ),
+  BALL_ICONS: new BallValuesPanelColumnType( null, null ),
 
   // Column of mass NumberDisplays. Editable by the user.
-  'MASS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
+  MASS: new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
@@ -67,7 +67,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of sliders to change the Mass of a Ball. Only shown when 'More Data' is unchecked.
-  'MASS_SLIDERS': new BallValuesPanelColumnType( _.property( 'massProperty' ), {
+  MASS_SLIDERS: new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
     editingUnit: collisionLabStrings.units.kilograms,
@@ -75,7 +75,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of x-position NumberDisplays. Editable by the user.
-  'X_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'x' ) ), {
+  X_POSITION: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xPosition ) => ball.setXPosition( xPosition ),
     getEditingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
@@ -83,7 +83,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of y-position NumberDisplays. Editable by the user and shown for 2D screens only.
-  'Y_POSITION': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'y' ) ), {
+  Y_POSITION: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yPosition ) => ball.setYPosition( yPosition ),
     getEditingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
     editingUnit: collisionLabStrings.units.meters,
@@ -91,7 +91,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of x-velocity NumberDisplays. Editable by the user.
-  'X_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'x' ) ), {
+  X_VELOCITY: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xVelocity ) => ball.setXVelocity( xVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
@@ -99,7 +99,7 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of y-velocity NumberDisplays. Editable by the user and shown for 2D screens only.
-  'Y_VELOCITY': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'y' ) ), {
+  Y_VELOCITY: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yVelocity ) => ball.setYVelocity( yVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
     editingUnit: collisionLabStrings.units.metersPerSecond,
@@ -107,10 +107,10 @@ const BallValuesPanelColumnTypes = Enumeration.byMap( {
   } ),
 
   // Column of x-momentum NumberDisplays. NOT editable by the user.
-  'X_MOMENTUM': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'x' ) ), null ),
+  X_MOMENTUM: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'x' ) ), null ),
 
   // Column of y-momentum NumberDisplays. NOT editable by the user and shown for 2D screens only.
-  'Y_MOMENTUM': new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'y' ) ), null )
+  Y_MOMENTUM: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.momentumProperty ], _.property( 'y' ) ), null )
 
 } );
 
