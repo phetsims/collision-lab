@@ -181,8 +181,11 @@ class PlayArea {
    * @returns {boolean}
    */
   isBallTouchingTop( ball ) { return Utils.equalsEpsilon( ball.top, this.top, EPSILON ); } // @public
+
   isBallTouchingLeft( ball ) { return Utils.equalsEpsilon( ball.left, this.left, EPSILON ); } // @public
+
   isBallTouchingRight( ball ) { return Utils.equalsEpsilon( ball.right, this.right, EPSILON ); } // @public
+
   isBallTouchingBottom( ball ) { return Utils.equalsEpsilon( ball.bottom, this.bottom, EPSILON ); } // @public
 
   /**
