@@ -87,7 +87,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
 
       // Constrain width for i18n. Determined empirically (also based on the orientation).
       maxWidth: options.scaleBarOrientation === Orientation.HORIZONTAL ?
-                  modelViewTransform.modelToViewDeltaX( length ) * 0.75 : 35
+                modelViewTransform.modelToViewDeltaX( length ) * 0.75 : 35
     } );
 
     /*----------------------------------------------------------------------------*

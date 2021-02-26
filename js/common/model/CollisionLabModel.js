@@ -188,8 +188,8 @@ class CollisionLabModel {
   step( dt ) {
     assert && assert( typeof dt === 'number', `invalid dt: ${dt}` );
     const timeSpeedFactor = this.timeSpeedProperty.value === TimeSpeed.NORMAL ?
-                              CollisionLabConstants.NORMAL_SPEED_FACTOR :
-                              CollisionLabConstants.SLOW_SPEED_FACTOR;
+                            CollisionLabConstants.NORMAL_SPEED_FACTOR :
+                            CollisionLabConstants.SLOW_SPEED_FACTOR;
 
     this.isPlayingProperty.value && this.stepManual( dt * timeSpeedFactor );
   }

@@ -60,12 +60,12 @@ class Explore2DScreenView extends CollisionLabScreenView {
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     return new BallSystemNode( model.ballSystem,
-        model.playArea,
-        viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVectorVisibleProperty,
-        viewProperties.momentumVectorVisibleProperty,
-        model.isPlayingProperty,
-        modelViewTransform );
+      model.playArea,
+      viewProperties.valuesVisibleProperty,
+      viewProperties.velocityVectorVisibleProperty,
+      viewProperties.momentumVectorVisibleProperty,
+      model.isPlayingProperty,
+      modelViewTransform );
   }
 }
 

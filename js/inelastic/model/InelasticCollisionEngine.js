@@ -295,22 +295,22 @@ class InelasticCollisionEngine extends CollisionEngine {
     // Get the lower-bound of when the cluster will collide with the border, which is when bounding circle of the
     // cluster collides with the border.
     const minCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.positionProperty.value,
-                                                          this.ballSystem.centerOfMass.velocityProperty.value,
-                                                          this.rotatingBallCluster.getBoundingCircleRadius(),
-                                                          elapsedTime );
+      this.ballSystem.centerOfMass.velocityProperty.value,
+      this.rotatingBallCluster.getBoundingCircleRadius(),
+      elapsedTime );
 
     // Get the upper-bound of when the cluster will collide with the border, which is when the center-of-mass collides
     // with the border.
     const maxCollisionTime = this.getBorderCollisionTime( this.ballSystem.centerOfMass.positionProperty.value,
-                                                          this.ballSystem.centerOfMass.velocityProperty.value,
-                                                          0,
-                                                          elapsedTime );
+      this.ballSystem.centerOfMass.velocityProperty.value,
+      0,
+      elapsedTime );
 
     // Use the bisection method to approximate when the cluster exactly collides with the border.
     const collisionTime = ( !Number.isFinite( minCollisionTime ) || !Number.isFinite( maxCollisionTime ) ) ? null :
-      CollisionLabUtils.bisection( time => this.willBallClusterCollideWithBorderIn( time - elapsedTime ),
-        minCollisionTime,
-        maxCollisionTime );
+                          CollisionLabUtils.bisection( time => this.willBallClusterCollideWithBorderIn( time - elapsedTime ),
+                            minCollisionTime,
+                            maxCollisionTime );
 
     // Register the collision and encapsulate information in a Collision instance.
     const collision = Collision.createFromPool( this.rotatingBallCluster, this.playArea, collisionTime );
@@ -355,9 +355,9 @@ class InelasticCollisionEngine extends CollisionEngine {
       const bottom = position.y - radius;
 
       if ( left < this.playArea.left ||
-          right > this.playArea.right ||
-          bottom < this.playArea.bottom ||
-          top > this.playArea.top ) {
+           right > this.playArea.right ||
+           bottom < this.playArea.bottom ||
+           top > this.playArea.top ) {
         overlapping += 1;
       }
       else if ( Utils.equalsEpsilon( left, this.playArea.left, TOLERANCE ) ||

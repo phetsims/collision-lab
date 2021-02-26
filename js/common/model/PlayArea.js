@@ -132,8 +132,11 @@ class PlayArea {
    * @returns {number} - in meters.
    */
   get left() { return this.bounds.minX; }
+
   get right() { return this.bounds.maxX; }
+
   get bottom() { return this.bounds.minY; }
+
   get top() { return this.bounds.maxY; }
 
   //----------------------------------------------------------------------------------------

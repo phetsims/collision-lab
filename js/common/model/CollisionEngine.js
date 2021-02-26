@@ -264,8 +264,8 @@ class CollisionEngine {
 
     // CollisionEngine only deals with detecting 2 types of collisions, but sub-types might not ('Inelastic' screen).
     collision.includes( this.playArea ) ?
-          this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2, dt ) :
-          this.handleBallToBallCollision( collision.body1, collision.body2, dt );
+    this.handleBallToBorderCollision( collision.body2 === this.playArea ? collision.body1 : collision.body2, dt ) :
+    this.handleBallToBallCollision( collision.body1, collision.body2, dt );
 
     sceneryLog && sceneryLog.Sim && sceneryLog.pop();
   }
@@ -344,9 +344,9 @@ class CollisionEngine {
 
         // Solve for the possible roots of the quadratic outlined in the document above.
         const possibleRoots = Utils.solveQuadraticRootsReal(
-                                this.deltaV.magnitudeSquared,
-                                relativeDotProduct * 2,
-                                CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
+          this.deltaV.magnitudeSquared,
+          relativeDotProduct * 2,
+          CollisionLabUtils.clampDown( this.deltaR.magnitudeSquared - sumOfRadiiSquared ) );
 
         // The minimum root of the quadratic is when the Balls will first collide.
         const root = possibleRoots ? Math.min( ...possibleRoots ) : null;

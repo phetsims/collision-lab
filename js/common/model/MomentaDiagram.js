@@ -52,7 +52,7 @@ class MomentaDiagram {
    */
   constructor( prepopulatedBalls, balls, dimension ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
-    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( PlayArea.Dimension.includes( dimension ), `invalid dimension: ${dimension}` );
 
     // @public {Property.<number>} - the zoom factor of the MomentaDiagram. This is set externally in the view.

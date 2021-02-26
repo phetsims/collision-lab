@@ -36,7 +36,7 @@ class CenterOfMass {
    */
   constructor( prepopulatedBalls, balls, centerOfMassVisibleProperty, pathsVisibleProperty ) {
     assert && AssertUtils.assertArrayOf( prepopulatedBalls, Ball );
-    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && AssertUtils.assertPropertyOf( centerOfMassVisibleProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( pathsVisibleProperty, 'boolean' );
 

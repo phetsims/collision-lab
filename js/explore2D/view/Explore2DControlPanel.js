@@ -20,7 +20,7 @@ import CollisionLabViewProperties from '../../common/view/CollisionLabViewProper
 
 class Explore2DControlPanel extends CollisionLabControlPanel {
 
- /**
+  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {Property.<boolean>} pathsVisibleProperty
@@ -56,12 +56,12 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
     options.elasticityNumberControlOptions.enabledRangeProperty = new Property( enabledElasticityRange );
 
     super( viewProperties,
-           centerOfMassVisibleProperty,
-           pathsVisibleProperty,
-           reflectingBorderProperty,
-           elasticityPercentProperty,
-           ballsConstantSizeProperty,
-           options );
+      centerOfMassVisibleProperty,
+      pathsVisibleProperty,
+      reflectingBorderProperty,
+      elasticityPercentProperty,
+      ballsConstantSizeProperty,
+      options );
 
   }
 }

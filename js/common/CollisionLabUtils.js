@@ -222,7 +222,7 @@ const CollisionLabUtils = {
 
     for ( const value of iterable ) {
       if ( predicate( value ) ) {
-         return true;
+        return true;
       }
     }
     return false;
@@ -244,7 +244,7 @@ const CollisionLabUtils = {
 
     for ( const value of iterable ) {
       if ( predicate( value ) ) {
-         result.push( value );
+        result.push( value );
       }
     }
     return result;

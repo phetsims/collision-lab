@@ -62,13 +62,13 @@ class IntroBallSystemNode extends BallSystemNode {
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     super( ballSystem,
-           playArea,
-           valuesVisibleProperty,
-           velocityVectorVisibleProperty,
-           momentumVectorVisibleProperty,
-           isPlayingProperty,
-           modelViewTransform,
-           options );
+      playArea,
+      valuesVisibleProperty,
+      velocityVectorVisibleProperty,
+      momentumVectorVisibleProperty,
+      isPlayingProperty,
+      modelViewTransform,
+      options );
 
     //----------------------------------------------------------------------------------------
 
@@ -102,8 +102,8 @@ class IntroBallSystemNode extends BallSystemNode {
       font: CollisionLabConstants.DISPLAY_FONT,
       maxWidth: 160, // Constrain width for i18n. Determined empirically.
       top: modelViewTransform.modelToViewY( playArea.bounds.centerY )
-            - ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET
-            - CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET
+           - ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET
+           - CHANGE_IN_MOMENTUM_TEXT_Y_OFFSET
     } );
 
     // Add the 'Change in Momentum' text as a child of this Node.

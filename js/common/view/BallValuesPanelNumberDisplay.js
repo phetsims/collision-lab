@@ -54,8 +54,8 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
     assert && assert( ballSystem instanceof BallSystem, `invalid ballSystem: ${ballSystem}` );
     assert && assert( keypadDialog instanceof KeypadDialog, `invalid keypadDialog: ${keypadDialog}` );
     assert && assert( BallValuesPanelColumnTypes.includes( columnType )
-      && columnType !== BallValuesPanelColumnTypes.BALL_ICONS
-      && columnType !== BallValuesPanelColumnTypes.MASS_SLIDERS, `invalid columnType: ${columnType}` );
+    && columnType !== BallValuesPanelColumnTypes.BALL_ICONS
+    && columnType !== BallValuesPanelColumnTypes.MASS_SLIDERS, `invalid columnType: ${columnType}` );
 
     // Indicates if the Ball Property can be edited.
     const canEdit = columnType.editConfig !== null;
@@ -110,7 +110,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
       // are never disposed.
       userControlledProperty.link( userControlled => {
         this.backgroundFill = userControlled ? CollisionLabColors.HIGHLIGHTED_NUMBER_DISPLAY_FILL :
-                                               options.backgroundFill;
+                              options.backgroundFill;
       } );
 
       // Get the unit displayed when the user is editing the BallProperty.

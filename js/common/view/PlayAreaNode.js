@@ -86,8 +86,8 @@ class PlayAreaNode extends Node {
 
       // Update the stroke color of the Border.
       border.stroke = reflectingBorder ?
-        CollisionLabColors.REFLECTING_PLAY_AREA_BORDER :
-        CollisionLabColors.NON_REFLECTING_PLAY_AREA_BORDER;
+                      CollisionLabColors.REFLECTING_PLAY_AREA_BORDER :
+                      CollisionLabColors.NON_REFLECTING_PLAY_AREA_BORDER;
     } );
 
     //----------------------------------------------------------------------------------------

@@ -267,8 +267,11 @@ class Ball {
    * @returns {number} - in meters.
    */
   get left() { return this.positionProperty.value.x - this.radiusProperty.value; }
+
   get right() { return this.positionProperty.value.x + this.radiusProperty.value; }
+
   get top() { return this.positionProperty.value.y + this.radiusProperty.value; }
+
   get bottom() { return this.positionProperty.value.y - this.radiusProperty.value; }
 
   /**

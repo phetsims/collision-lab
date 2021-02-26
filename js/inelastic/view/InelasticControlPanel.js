@@ -27,7 +27,7 @@ import StickSlipABSwitch from './StickSlipABSwitch.js';
 
 class InelasticControlPanel extends CollisionLabControlPanel {
 
- /**
+  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} centerOfMassVisibleProperty
    * @param {Property.<boolean>} pathsVisibleProperty
@@ -59,12 +59,12 @@ class InelasticControlPanel extends CollisionLabControlPanel {
     }, options );
 
     super( viewProperties,
-           centerOfMassVisibleProperty,
-           pathsVisibleProperty,
-           reflectingBorderProperty,
-           elasticityPercentProperty,
-           ballsConstantSizeProperty,
-           options );
+      centerOfMassVisibleProperty,
+      pathsVisibleProperty,
+      reflectingBorderProperty,
+      elasticityPercentProperty,
+      ballsConstantSizeProperty,
+      options );
 
     //----------------------------------------------------------------------------------------
 
@@ -86,11 +86,13 @@ class InelasticControlPanel extends CollisionLabControlPanel {
     // Create the 'Stick' vs 'Slip' ABSwitch.
     const stickSlipSwitch = new StickSlipABSwitch( inelasticCollisionTypeProperty );
 
-    const elasticityControls = new VBox( { spacing: 4, children: [
-      elasticityReadout,
-      new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false } ),
-      stickSlipSwitch
-    ] } );
+    const elasticityControls = new VBox( {
+      spacing: 4, children: [
+        elasticityReadout,
+        new HStrut( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { pickable: false } ),
+        stickSlipSwitch
+      ]
+    } );
 
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), inelasticCollisionTitle );
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.constantSizeCheckbox ), elasticityControls );

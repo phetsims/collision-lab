@@ -109,7 +109,7 @@ class Collision {
     assert && assert( typeof time2 === 'number', `invalid time2: ${time2}` );
 
     return Number.isFinite( this.time ) && ( ( time2 >= time1 ) ? ( this.time >= time1 && this.time <= time2 ) :
-                                                                  ( this.time >= time2 && this.time <= time1 ) );
+                                             ( this.time >= time2 && this.time <= time1 ) );
   }
 
   /**

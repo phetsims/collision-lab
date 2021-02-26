@@ -42,7 +42,7 @@ class InelasticPresetValue {
    * @param {ObservableArrayDef.<Ball>} balls
    */
   setBalls( balls ) {
-    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
     assert && assert( !this.ballStates || this.ballStates.length === balls.length );
 
     this.ballStates && balls.forEach( ( ball, index ) => {

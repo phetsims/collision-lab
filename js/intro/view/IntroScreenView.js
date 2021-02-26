@@ -85,12 +85,12 @@ class IntroScreenView extends CollisionLabScreenView {
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
     return new IntroBallSystemNode( model.ballSystem,
-        model.playArea,
-        viewProperties.valuesVisibleProperty,
-        viewProperties.velocityVectorVisibleProperty,
-        viewProperties.momentumVectorVisibleProperty,
-        model.isPlayingProperty,
-        modelViewTransform );
+      model.playArea,
+      viewProperties.valuesVisibleProperty,
+      viewProperties.velocityVectorVisibleProperty,
+      viewProperties.momentumVectorVisibleProperty,
+      model.isPlayingProperty,
+      modelViewTransform );
   }
 }
 

@@ -337,8 +337,8 @@ class BallSystem {
       // direction of the passed-in Ball. Account for a scenario when Balls are placed exactly concentrically on-top of
       // each other.
       const directionVector = !ball.positionProperty.value.equals( overlappingBall.positionProperty.value ) ?
-                                ball.positionProperty.value.minus( overlappingBall.positionProperty.value ).normalize() :
-                                Vector2.X_UNIT.copy();
+                              ball.positionProperty.value.minus( overlappingBall.positionProperty.value ).normalize() :
+                              Vector2.X_UNIT.copy();
 
       // Round the direction vector to match the displayed value on drag-release. See
       // https://github.com/phetsims/collision-lab/issues/136.

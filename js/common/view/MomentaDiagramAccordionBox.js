@@ -53,7 +53,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
    */
   constructor( momentaDiagram, balls, options ) {
     assert && assert( momentaDiagram instanceof MomentaDiagram, `invalid momentaDiagram: ${momentaDiagram}` );
-    assert && assert( Array.isArray(balls) ) && AssertUtils.assertArrayOf( balls, Ball );
+    assert && assert( Array.isArray( balls ) ) && AssertUtils.assertArrayOf( balls, Ball );
 
     //----------------------------------------------------------------------------------------
 

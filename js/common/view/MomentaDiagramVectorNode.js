@@ -92,48 +92,50 @@ class MomentaDiagramVectorNode extends Node {
       momentaDiagramVector.tipPositionProperty,
       modelViewTransformProperty ], ( tailPosition, tipPosition, modelViewTransform ) => {
 
-        // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
-        arrowNode.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
-        labelNode.visible = arrowNode.visible;
-        if ( !arrowNode.visible ) { /** exit **/ return; }
+      // Only display the Vector and its label if the momentaDiagramVector has a magnitude that isn't effectively 0.
+      arrowNode.visible = ( momentaDiagramVector.magnitude > CollisionLabConstants.ZERO_THRESHOLD );
+      labelNode.visible = arrowNode.visible;
+      if ( !arrowNode.visible ) { /** exit **/
+        return;
+      }
 
-        // Get the position of the tail, center, and tip in view coordinates.
-        const tailViewPosition = modelViewTransform.modelToViewPosition( tailPosition );
-        const tipViewPosition = modelViewTransform.modelToViewPosition( tipPosition );
-        const centerViewPosition = modelViewTransform.modelToViewPosition( momentaDiagramVector.center );
+      // Get the position of the tail, center, and tip in view coordinates.
+      const tailViewPosition = modelViewTransform.modelToViewPosition( tailPosition );
+      const tipViewPosition = modelViewTransform.modelToViewPosition( tipPosition );
+      const centerViewPosition = modelViewTransform.modelToViewPosition( momentaDiagramVector.center );
 
-        // Update the positioning of the ArrowNode to match the MomentaDiagramVector.
-        arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
+      // Update the positioning of the ArrowNode to match the MomentaDiagramVector.
+      arrowNode.setTailAndTip( tailViewPosition.x, tailViewPosition.y, tipViewPosition.x, tipViewPosition.y );
 
-        //----------------------------------------------------------------------------------------
+      //----------------------------------------------------------------------------------------
 
-        // Compute the adjusted offset of the label in view coordinates. It adds extra offset to consider the size
-        // of the label.
-        const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
+      // Compute the adjusted offset of the label in view coordinates. It adds extra offset to consider the size
+      // of the label.
+      const adjustedOffset = options.labelArrowMargin + Math.max( labelNode.height, labelNode.width ) / 2;
 
-        // Position the Label, which depends on the dimension and whether or not this the total momenta Vector.
-        if ( options.dimension === PlayArea.Dimension.TWO ) {
+      // Position the Label, which depends on the dimension and whether or not this the total momenta Vector.
+      if ( options.dimension === PlayArea.Dimension.TWO ) {
 
-          // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
-          const yFlip = ( momentaDiagramVector.componentsProperty.value.y < 0 ) ? Math.PI : 0;
-          const offsetAngleAdjustment = yFlip + ( options.isTotalMomentaVector ? Math.PI / 2 : -Math.PI / 2 );
+        // Determine how the label should be positioned based on the type of Momenta Vector and what quadrant it's in.
+        const yFlip = ( momentaDiagramVector.componentsProperty.value.y < 0 ) ? Math.PI : 0;
+        const offsetAngleAdjustment = yFlip + ( options.isTotalMomentaVector ? Math.PI / 2 : -Math.PI / 2 );
 
-          // Create an offset that is perpendicular to the vector. The angle is negative since the y-axis is inverted.
-          const offset = Vector2.createPolar( adjustedOffset, -( momentaDiagramVector.angle + offsetAngleAdjustment ) );
+        // Create an offset that is perpendicular to the vector. The angle is negative since the y-axis is inverted.
+        const offset = Vector2.createPolar( adjustedOffset, -( momentaDiagramVector.angle + offsetAngleAdjustment ) );
 
-          // Position the label.
-          labelNode.center = centerViewPosition.plus( offset );
-        }
-        else if ( options.isTotalMomentaVector ) {
+        // Position the label.
+        labelNode.center = centerViewPosition.plus( offset );
+      }
+      else if ( options.isTotalMomentaVector ) {
 
-          // Position the label below the Momenta Vector.
-          labelNode.centerTop = centerViewPosition.plusXY( 0, adjustedOffset * 0.5 );
-        }
-        else {
+        // Position the label below the Momenta Vector.
+        labelNode.centerTop = centerViewPosition.plusXY( 0, adjustedOffset * 0.5 );
+      }
+      else {
 
-          // Position the label which depends on the sign of the x-component of the Momenta Vector.
-          labelNode.center = tipViewPosition.plusXY( Math.sign( momentaDiagramVector.componentsProperty.value.x ) * adjustedOffset, 0 );
-        }
+        // Position the label which depends on the sign of the x-component of the Momenta Vector.
+        labelNode.center = tipViewPosition.plusXY( Math.sign( momentaDiagramVector.componentsProperty.value.x ) * adjustedOffset, 0 );
+      }
     } );
   }
 }

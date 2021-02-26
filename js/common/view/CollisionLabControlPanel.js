@@ -64,7 +64,7 @@ class CollisionLabControlPanel extends Panel {
       // {number} - the spacing between the content Nodes of the Panel
       contentSpacing: 7,
 
-       // {boolean} - indicates if the reflecting border checkbox is included.
+      // {boolean} - indicates if the reflecting border checkbox is included.
       includeReflectingBorderCheckbox: true,
 
       // {boolean} - indicates if the 'Path' checkbox is included.

@@ -21,7 +21,7 @@ import CollisionLabViewProperties from '../../common/view/CollisionLabViewProper
 
 class IntroControlPanel extends CollisionLabControlPanel {
 
- /**
+  /**
    * @param {CollisionLabViewProperties} viewProperties
    * @param {Property.<boolean>} changeInMomentumVisibleProperty
    * @param {Property.<boolean>} centerOfMassVisibleProperty
@@ -55,12 +55,12 @@ class IntroControlPanel extends CollisionLabControlPanel {
     }, options );
 
     super( viewProperties,
-           centerOfMassVisibleProperty,
-           pathsVisibleProperty,
-           reflectingBorderProperty,
-           elasticityPercentProperty,
-           ballsConstantSizeProperty,
-           options );
+      centerOfMassVisibleProperty,
+      pathsVisibleProperty,
+      reflectingBorderProperty,
+      elasticityPercentProperty,
+      ballsConstantSizeProperty,
+      options );
 
     //----------------------------------------------------------------------------------------
 

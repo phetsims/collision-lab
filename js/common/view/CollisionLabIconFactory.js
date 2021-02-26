@@ -50,10 +50,12 @@ const CollisionLabIconFactory = {
    *
    * @returns {ScreenIcon}
    */
-  createIntroScreenIcon() { return createScreenIcon( [
-    new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
-    new BallState( Vector2.ZERO, new Vector2( -0.5, 0 ), 1.5 )
-  ] ); },
+  createIntroScreenIcon() {
+    return createScreenIcon( [
+      new BallState( new Vector2( -1, 0 ), new Vector2( 1, 0 ), 0.5 ),
+      new BallState( Vector2.ZERO, new Vector2( -0.5, 0 ), 1.5 )
+    ] );
+  },
 
   /**
    * Creates the icon for the 'Explore 1D' Screen.
@@ -173,7 +175,7 @@ const CollisionLabIconFactory = {
    *
    * @returns {Node}
    */
-   createRestartIcon() {
+  createRestartIcon() {
 
     // A solution using common-code components was investigated, and it was decided to use the FontAwesomeNode 'undo'
     // character. See https://github.com/phetsims/collision-lab/issues/54
