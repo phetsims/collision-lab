@@ -340,7 +340,7 @@ class CollisionEngine {
 
         const relativeDotProduct = this.deltaV.dot( this.deltaR );
 
-        const isEffectivelyParallel = Math.abs( relativeDotProduct ) < 1e-10;
+        const isEffectivelyParallel = Math.abs( relativeDotProduct ) < 3e-11;
 
         // Solve for the possible roots of the quadratic outlined in the document above.
         const possibleRoots = Utils.solveQuadraticRootsReal(
