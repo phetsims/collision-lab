@@ -24,7 +24,7 @@
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_es6_eslintrc.js",
     "globals": {
-      "sceneryLog": false
+      "sceneryLog": "readonly"
     }
   }
 }
