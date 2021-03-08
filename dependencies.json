@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.0.1 Wed Sep 16 2020 14:38:56 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.0.1 Mon Mar 08 2021 12:58:49 GMT-0500 (Eastern Standard Time)",
   "assert": {
     "sha": "1a41cef653bbed1025af5768bea958d7e3e0f8ae",
     "branch": "HEAD"
@@ -14,10 +14,10 @@
   },
   "chipper": {
     "sha": "46296febee731b976c1b8a317087080a3d2fcf8e",
-    "branch": "collision-lab-1.0"
+    "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "3f12db8e84e4b4e7a376589dfb27450771ebb368",
+    "sha": "d3c4ebe9c40f5d9ce64792241ff58331b1ab1c6c",
     "branch": "1.0"
   },
   "dot": {
@@ -57,8 +57,8 @@
     "branch": "HEAD"
   },
   "phetmarks": {
-    "sha": "6bd57c29c52507cc00213f3eb51629fc468f38b8",
-    "branch": "HEAD"
+    "sha": "7d869dff1eadf203ff2ac0f701228eb59024d16b",
+    "branch": "collision-lab-1.0"
   },
   "query-string-machine": {
     "sha": "7f3ccebb4232a2e3eccdb68b1ea051cff3b5fa45",
