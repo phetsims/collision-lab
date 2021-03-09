@@ -24,8 +24,8 @@ class Explore2DScreen extends Screen {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const createModel = () => new Explore2DModel( tandem.createTandem( 'explore2DModel' ) );
-    const createView = model => new Explore2DScreenView( model, tandem.createTandem( 'explore2DScreenView' ) );
+    const createModel = () => new Explore2DModel( tandem.createTandem( 'model' ) );
+    const createView = model => new Explore2DScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
       name: collisionLabStrings.screen.explore2D,

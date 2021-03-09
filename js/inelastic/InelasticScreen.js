@@ -24,8 +24,8 @@ class InelasticScreen extends Screen {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const createModel = () => new InelasticModel( tandem.createTandem( 'inelasticModel' ) );
-    const createView = model => new InelasticScreenView( model, tandem.createTandem( 'inslasticScreenView' ) );
+    const createModel = () => new InelasticModel( tandem.createTandem( 'model' ) );
+    const createView = model => new InelasticScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
       name: collisionLabStrings.screen.inelastic,

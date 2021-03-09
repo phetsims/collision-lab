@@ -24,8 +24,8 @@ class IntroScreen extends Screen {
   constructor( tandem ) {
     assert && assert( tandem instanceof Tandem, `invalid tandem: ${tandem}` );
 
-    const createModel = () => new IntroModel( tandem.createTandem( 'introModel' ) );
-    const createView = model => new IntroScreenView( model, tandem.createTandem( 'introScreenView' ) );
+    const createModel = () => new IntroModel( tandem.createTandem( 'model' ) );
+    const createView = model => new IntroScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
       name: collisionLabStrings.screen.intro,
