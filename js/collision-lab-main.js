@@ -20,7 +20,7 @@ const simOptions = {
     leadDesign: 'Michael Dubson, Amy Rouinfar',
     softwareDevelopment: 'Brandon Li, Martin Veillette, Jonathan Olson',
     team: 'Trish Loeblein, Ariel Paul, Kathy Perkins',
-    qualityAssurance: 'Kathryn Woessner, Liam Mulhall, Devon Quispe, Brooklyn Lash, Logan Bray',
+    qualityAssurance: 'Kathryn Woessner, Liam Mulhall, Devon Quispe, Brooklyn Lash, Logan Bray, Steele Dalton, Matthew Moore',
     graphicArts: '',
     soundDesign: '',
     thanks: ''
