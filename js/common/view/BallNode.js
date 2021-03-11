@@ -129,7 +129,7 @@ class BallNode extends Node {
       visibleProperty: valuesVisibleProperty,
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.velocity,
-        units: collisionLabStrings.units.metersPerSecond
+        units: 'm/s'
       } )
     } );
 
@@ -138,7 +138,7 @@ class BallNode extends Node {
       visibleProperty: valuesVisibleProperty,
       valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
         symbol: collisionLabStrings.symbol.momentum,
-        units: collisionLabStrings.units.kilogramMetersPerSecond
+        units: 'kg\u00b7m/s'
       } )
     } );
 
