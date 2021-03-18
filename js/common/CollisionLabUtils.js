@@ -6,6 +6,7 @@
  * @author Brandon Li
  */
 
+import stepTimer from '../../../axon/js/stepTimer.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Utils from '../../../dot/js/Utils.js';
 import Vector2 from '../../../dot/js/Vector2.js';
@@ -320,7 +321,7 @@ const CollisionLabUtils = {
    */
   sleep( time ) {
     if ( assert ) {
-      return new Promise( resolve => setTimeout( resolve, time * 1000 ) );
+      return new Promise( resolve => stepTimer.setTimeout( resolve, time * 1000 ) );
     }
     else {
       throw new Error( 'CollisionLabUtils.sleep must be used with assertions on' );
