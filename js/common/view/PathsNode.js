@@ -123,7 +123,7 @@ class PathsNode extends CanvasNode {
 
       // Using built-in toFixed for performance reasons (similar to Color.computeCSS()), and in addition avoiding a lot
       // of the mutation and overhead by just directly creating the CSS color string.
-      context.strokeStyle = `rgba(${baseColor.r},${baseColor.g},${baseColor.b},${alpha.toFixed( 20 )})`;
+      context.strokeStyle = `rgba(${baseColor.r},${baseColor.g},${baseColor.b},${Utils.toFixed( alpha, 20 )})`;
       context.stroke();
     }
   }
