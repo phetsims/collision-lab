@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * CenterOfMass is the model representation for the center of mass (COM) of a system of Balls. Each BallSystem has one

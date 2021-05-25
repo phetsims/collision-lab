@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * InelasticBallSystem is a BallSystem sub-type for the 'Inelastic' screen. InelasticBallSystems only have 2 fixed Balls

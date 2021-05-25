@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * PlayArea is the model for the main container of colliding Balls in the 'collision lab' simulation. It is a

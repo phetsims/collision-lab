@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * Enumeration of the different 'presets' for the 'Inelastic' screen. Each preset maps to a class that stores

@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * PlayAreaNode is the view representation of a single PlayArea, which appears in all screens of the 'Collision Lab'

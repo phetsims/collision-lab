@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * Abstract class for the top-level model of every screen in the 'Collision Lab' simulation. Should be subclassed for

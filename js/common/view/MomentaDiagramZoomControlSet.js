@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * A view specialized to display Controls for the user to change the zoom factor of the 'Momenta Diagram'. For the

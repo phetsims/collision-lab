@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * IntroBallSystemNode is a BallSystemNode sub-type for the 'Intro' screen. See BallSystemNode for context. Like the

@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * The Model representation for the 'Momenta Diagram', which appears at the bottom right of each screen. Features the

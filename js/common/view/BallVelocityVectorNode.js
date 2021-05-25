@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * BallVelocityVectorNode is a BallVectorNode subtype for a single Ball's velocity vector. They appear in all screens

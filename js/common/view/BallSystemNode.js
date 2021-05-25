@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * BallSystemNode is the corresponding view for BallSystems for displaying a collection of Balls. They appear inside of
