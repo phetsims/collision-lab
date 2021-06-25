@@ -159,6 +159,9 @@ class MomentaDiagramAccordionBox extends AccordionBox {
         isTotalMomentaVector: true,
         arrowOptions: {
           fill: CollisionLabColors.TOTAL_MOMENTUM_VECTOR_FILL
+        },
+        textOptions: {
+          maxWidth: 50
         }
       } );
     momentaVectorContainer.addChild( sumMomentaVectorNode );
