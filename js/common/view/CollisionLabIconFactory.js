@@ -24,11 +24,12 @@ import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import Path from '../../../../scenery/js/nodes/Path.js';
 import Spacer from '../../../../scenery/js/nodes/Spacer.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
-import FontAwesomeNode from '../../../../sun/js/FontAwesomeNode.js';
+import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import Explore2DBallSystem from '../../explore2D/model/Explore2DBallSystem.js';
@@ -176,10 +177,7 @@ const CollisionLabIconFactory = {
    * @returns {Node}
    */
   createRestartIcon() {
-
-    // A solution using common-code components was investigated, and it was decided to use the FontAwesomeNode 'undo'
-    // character. See https://github.com/phetsims/collision-lab/issues/54
-    return new FontAwesomeNode( 'undo', { scale: 0.5 } );
+    return new Path( undoSolidShape, { scale: 0.038, fill: 'black' } );
   },
 
   /*————————————————————————————— Inelastic Preset Icons —————————————————————————————————*/
