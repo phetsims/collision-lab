@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.1.3-rc.1 Tue Sep 14 2021 13:53:27 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# collision-lab 1.1.3 Wed Sep 22 2021 21:32:01 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "3df8c5ff9a465b031f84195a90bbb7e1be10a14d",
     "branch": "HEAD"
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "85aafebdda3416b56c8c2f624ba52bdbe27a9cd3",
+    "sha": "74d67d1c08dd7036eef06a2a370a80914131e825",
     "branch": "1.1"
   },
   "dot": {
