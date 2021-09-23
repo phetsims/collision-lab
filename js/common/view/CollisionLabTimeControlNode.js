@@ -68,7 +68,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
     assert && assert( !options.timeSpeedProperty, 'CollisionLabTimeControlNode sets options.timeSpeedProperty' );
     assert && assert( !options.enabledProperty, 'CollisionLabTimeControlNode sets options.enabledProperty' );
-    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.isPlayingProperty' );
+    assert && assert( !options.playPauseStepButtonOptions.stepBackwardButtonOptions.enabledProperty, 'CollisionLabTimeControlNode sets stepBackwardButtonOptions.enabledProperty' );
 
     // Set options that cannot be overridden.
     options.timeSpeedProperty = timeSpeedProperty;
@@ -78,9 +78,9 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     // a workaround. See https://github.com/phetsims/scenery-phet/issues/606 and
     // https://github.com/phetsims/collision-lab/issues/66. DerivedProperty never disposed since
     // CollisionLabTimeControlNode persists for the lifetime of simulation.
-    options.playPauseStepButtonOptions.stepBackwardButtonOptions.isPlayingProperty = new DerivedProperty(
+    options.playPauseStepButtonOptions.stepBackwardButtonOptions.enabledProperty = new DerivedProperty(
       [ isPlayingProperty, elapsedTimeProperty, elasticityProperty ], ( isPlaying, elapsedTime, elasticity ) => {
-        return isPlaying || elapsedTime === 0 || elasticity < CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
+        return !isPlaying && elapsedTime > 0 && elasticity === CollisionLabConstants.ELASTICITY_PERCENT_RANGE.max;
       }, {
         valueType: 'boolean'
       } );
