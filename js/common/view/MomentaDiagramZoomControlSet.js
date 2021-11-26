@@ -13,7 +13,7 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import ZoomButton from '../../../../scenery-phet/js/buttons/ZoomButton.js';
-import HBox from '../../../../scenery/js/nodes/HBox.js';
+import { HBox } from '../../../../scenery/js/imports.js';
 import ColorConstants from '../../../../sun/js/ColorConstants.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';

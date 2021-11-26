@@ -22,9 +22,9 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import AlignGroup from '../../../../scenery/js/nodes/AlignGroup.js';
-import RichText from '../../../../scenery/js/nodes/RichText.js';
-import VBox from '../../../../scenery/js/nodes/VBox.js';
+import { AlignGroup } from '../../../../scenery/js/imports.js';
+import { RichText } from '../../../../scenery/js/imports.js';
+import { VBox } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
