@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * CollisionLabCheckbox is a Checkbox sub-type for the 'collision lab' sim. It appears mostly in control-panels but

@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2021, University of Colorado Boulder
 
 /**
  * ElapsedTimeNumberDisplay is a subclass of NumberDisplay for displaying the total elapsed time of the sim.

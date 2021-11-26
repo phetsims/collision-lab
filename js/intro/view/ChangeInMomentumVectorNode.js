@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * A view that renders a 'Change in Momentum' vector for a Ball in the 'Intro' screen, using the IntroBallSystem's

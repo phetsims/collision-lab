@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * ReturnBallsButton is RectangularPushButton sub-type that displays 'Return returnBalls'. It appears when the
