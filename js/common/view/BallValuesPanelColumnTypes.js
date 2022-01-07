@@ -10,7 +10,7 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
+import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -53,7 +53,7 @@ class BallValuesPanelColumnType {
   }
 }
 
-const BallValuesPanelColumnTypes = Enumeration.byMap( {
+const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
 
   // Column of Ball Icons. For displaying purposes only.
   BALL_ICONS: new BallValuesPanelColumnType( null, null ),

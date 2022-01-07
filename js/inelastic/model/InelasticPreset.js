@@ -13,7 +13,7 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
+import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
 import Ball from '../../common/model/Ball.js';
@@ -63,7 +63,7 @@ class InelasticPresetValue {
   }
 }
 
-const InelasticPreset = Enumeration.byMap( {
+const InelasticPreset = EnumerationDeprecated.byMap( {
 
   // The custom preset, which indicates that the user can set up a 'custom' collision scenario. When the preset
   // is set to CUSTOM, none of the balls are changed, so there are no BallStates that are associated with this Preset.

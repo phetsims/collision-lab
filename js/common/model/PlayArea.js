@@ -21,7 +21,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
+import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -206,8 +206,8 @@ class PlayArea {
 // @public (read-only) {Bounds2} - the default bounds of the PlayArea.
 PlayArea.DEFAULT_BOUNDS = new Bounds2( -2, -1, 2, 1 );
 
-// @public (read-only) {Enumeration} - Enumeration of the possible 'dimension' of a PlayArea.
-PlayArea.Dimension = Enumeration.byKeys( [ 'ONE', 'TWO' ] );
+// @public (read-only) {EnumerationDeprecated} - Enumeration of the possible 'dimension' of a PlayArea.
+PlayArea.Dimension = EnumerationDeprecated.byKeys( [ 'ONE', 'TWO' ] );
 
 collisionLab.register( 'PlayArea', PlayArea );
 export default PlayArea;
