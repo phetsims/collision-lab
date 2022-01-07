@@ -1,4 +1,4 @@
-// Copyright 2020-2021, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * Enumeration of the possible 'types' of columns in the BallValuesPanel at the bottom of all screens. This Enumeration
