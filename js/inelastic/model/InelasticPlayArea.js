@@ -6,7 +6,7 @@
  * @author Brandon Li
  */
 
-import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import EnumerationDeprecatedProperty from '../../../../axon/js/EnumerationDeprecatedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
 import collisionLab from '../../collisionLab.js';
 import PlayArea from '../../common/model/PlayArea.js';
@@ -31,7 +31,7 @@ class InelasticPlayArea extends PlayArea {
 
     // @public {Property.<InelasticCollisionType>} - the type of perfectly inelastic collision. Ignored
     //                                                           if the elasticity isn't 0.
-    this.inelasticCollisionTypeProperty = new EnumerationProperty( InelasticCollisionType,
+    this.inelasticCollisionTypeProperty = new EnumerationDeprecatedProperty( InelasticCollisionType,
       InelasticCollisionType.STICK );
 
 

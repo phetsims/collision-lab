@@ -15,7 +15,7 @@
  * @author Brandon Li
  */
 
-import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import EnumerationDeprecatedProperty from '../../../../axon/js/EnumerationDeprecatedProperty.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -70,7 +70,7 @@ class InelasticBallSystem extends BallSystem {
     }
 
     // @public {Property.<InelasticPreset>} - the current InelasticPreset.
-    this.inelasticPresetProperty = new EnumerationProperty( InelasticPreset, InelasticPreset.CUSTOM );
+    this.inelasticPresetProperty = new EnumerationDeprecatedProperty( InelasticPreset, InelasticPreset.CUSTOM );
 
     //----------------------------------------------------------------------------------------
 
