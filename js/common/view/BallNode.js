@@ -1,4 +1,4 @@
-// Copyright 2019-2021, University of Colorado Boulder
+// Copyright 2019-2022, University of Colorado Boulder
 
 /**
  * BallNode is the view representation of a single spherical Ball, which appears in all screens of the 'Collision Lab'
