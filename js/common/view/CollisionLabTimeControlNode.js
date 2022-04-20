@@ -52,11 +52,11 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
     options = merge( {
       speedRadioButtonGroupOptions: {
+        spacing: 5,
         labelOptions: {
           font: new PhetFont( 13 ),
           maxWidth: 120
-        },
-        radioButtonGroupOptions: { spacing: 5 }
+        }
       },
       playPauseStepButtonOptions: {
         includeStepBackwardButton: true
