@@ -14,7 +14,7 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import EnumerationDeprecatedProperty from '../../../../axon/js/EnumerationDeprecatedProperty.js';
+import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
@@ -40,8 +40,8 @@ class CollisionLabModel {
     // @public (read-only) {Property.<number>} - the total elapsed time of the simulation, in seconds.
     this.elapsedTimeProperty = new NumberProperty( 0, { isValidValue: value => value >= 0 } );
 
-    // @public {Property.<TimeSpeed>} - the speed rate of the simulation. Set externally in the view.
-    this.timeSpeedProperty = new EnumerationDeprecatedProperty( TimeSpeed, TimeSpeed.NORMAL );
+    // @public the speed rate of the simulation. Set externally in the view.
+    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed.NORMAL );
 
     //----------------------------------------------------------------------------------------
 

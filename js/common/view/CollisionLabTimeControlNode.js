@@ -24,7 +24,7 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
-import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
+import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -32,7 +32,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
 
   /**
    * @param {Property.<boolean>} isPlayingProperty
-   * @param {Property.<TimeSpeed>} timeSpeedProperty
+   * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
    * @param {Property.<number>} elapsedTimeProperty
    * @param {Property.<boolean>} ballSystemUserControlledProperty
    * @param {Property.<number>} elasticityProperty
@@ -45,7 +45,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
                elasticityProperty,
                options ) {
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
-    assert && AssertUtils.assertEnumerationPropertyOf( timeSpeedProperty, TimeSpeed );
+    assert && assert( timeSpeedProperty instanceof EnumerationProperty );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
     assert && AssertUtils.assertPropertyOf( ballSystemUserControlledProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityProperty, 'number' );
