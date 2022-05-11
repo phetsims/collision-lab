@@ -26,7 +26,7 @@ class XNode extends PlusNode {
     options = merge( {
 
       legThickness: 6, // {number} - thickness of the legs of the 'x'
-      length: 22,      // {number} - the length of the diagonal of the 'x'
+      length: 22,      // {number} - the length of the diagonal of the 'x'.
 
       // super-class options
       lineWidth: 1.5,
