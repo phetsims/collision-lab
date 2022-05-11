@@ -39,7 +39,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallState from '../model/BallState.js';
 import BallUtils from '../model/BallUtils.js';
-import XNode from './XNode.js';
+import XNode from '../../../../scenery-phet/js/XNode.js';
 
 const CollisionLabIconFactory = {
 
@@ -135,7 +135,9 @@ const CollisionLabIconFactory = {
     return new XNode( {
       lineWidth: 1,
       length: 15,
-      legThickness: 3.3
+      legThickness: 3.3,
+      fill: CollisionLabColors.CENTER_OF_MASS_FILL,
+      stroke: CollisionLabColors.CENTER_OF_MASS_STROKE
     } );
   },
 

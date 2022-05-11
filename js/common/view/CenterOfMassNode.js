@@ -30,7 +30,8 @@ import collisionLabStrings from '../../collisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CenterOfMass from '../model/CenterOfMass.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
-import XNode from './XNode.js';
+import XNode from '../../../../scenery-phet/js/XNode.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 
 class CenterOfMassNode extends Node {
 
@@ -60,7 +61,10 @@ class CenterOfMassNode extends Node {
     //----------------------------------------------------------------------------------------
 
     // Create the XNode to represent the visual mark of the CenterOfMass's position. Position set later.
-    const xNode = new XNode();
+    const xNode = new XNode( {
+      fill: CollisionLabColors.CENTER_OF_MASS_FILL,
+      stroke: CollisionLabColors.CENTER_OF_MASS_STROKE
+    });
 
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
