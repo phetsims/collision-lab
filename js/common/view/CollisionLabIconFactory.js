@@ -1,4 +1,4 @@
-// Copyright 2020-2021, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * Factory for creating the various icons that appear in the 'Collision Lab' simulation. All methods are static.
