@@ -64,7 +64,7 @@ class CenterOfMassNode extends Node {
     const xNode = new XNode( {
       fill: CollisionLabColors.CENTER_OF_MASS_FILL,
       stroke: CollisionLabColors.CENTER_OF_MASS_STROKE
-    });
+    } );
 
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
