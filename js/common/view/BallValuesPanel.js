@@ -26,10 +26,7 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import { AlignGroup } from '../../../../scenery/js/imports.js';
-import { HBox } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
-import { VBox } from '../../../../scenery/js/imports.js';
+import { AlignGroup, HBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -154,7 +151,7 @@ class BallValuesPanel extends Panel {
     // The content of the entire Panel when "More Data" is checked.
     const moreDataBox = new HBox( {
       children: [
-        massSectionNode,
+        new Node( { children: [ massSectionNode ] } ),
         positionSectionNode,
         velocitySectionNode,
         momentumSectionNode
@@ -166,7 +163,7 @@ class BallValuesPanel extends Panel {
     // The content of the entire Panel when "More Data" is not checked.
     const lessDataBox = new HBox( {
       children: [
-        massSectionNode,
+        new Node( { children: [ massSectionNode ] } ),
         massSlidersColumnNode
       ],
       spacing: options.columnGroupSpacing,
