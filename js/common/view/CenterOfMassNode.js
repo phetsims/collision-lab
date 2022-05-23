@@ -18,7 +18,7 @@
  * @author Alex Schor
  */
 
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -94,7 +94,7 @@ class CenterOfMassNode extends Node {
     // positioning of the xNode and speedNumberDisplay and the visibility of this Node. This Node is only visible if the
     // CenterOfMass is visible AND the position is inside the PlayArea's Bounds. Link is never unlinked since
     // CenterOfMassNodes are never disposed.
-    Property.multilink(
+    Multilink.multilink(
       [ centerOfMassVisibleProperty, centerOfMass.positionProperty ],
       ( centerOfMassVisible, position ) => {
         this.visible = centerOfMassVisible && playAreaBounds.containsPoint( position );

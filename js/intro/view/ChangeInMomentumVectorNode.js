@@ -15,7 +15,7 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -90,7 +90,7 @@ class ChangeInMomentumVectorNode extends Node {
     // Observe when either the position of the Ball changes or when the components of the Change in Momentum vector
     // changes and update the arrow and the connecting line. This Multilink is never disposed since
     // ChangeInMomentumVectorNodes and Balls are never disposed.
-    Property.multilink( [ ballPositionProperty, changeInMomentumProperty ], ( ballPosition, changeInMomentum ) => {
+    Multilink.multilink( [ ballPositionProperty, changeInMomentumProperty ], ( ballPosition, changeInMomentum ) => {
 
       // Get the position of the Ball in view coordinates.
       const ballViewPosition = modelViewTransform.modelToViewPosition( ballPosition );

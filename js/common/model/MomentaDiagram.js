@@ -26,7 +26,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -110,7 +110,7 @@ class MomentaDiagram {
     //  - this.zoomProperty, since changing the zoom changes the vertical spacing between vectors for 1D screens.
     //
     // This Multilink is never disposed and lasts for the lifetime of the sim.
-    Property.multilink(
+    Multilink.multilink(
       [ this.expandedProperty, ...prepopulatedBalls.map( ball => ball.momentumProperty ), balls.lengthProperty, this.zoomProperty ],
       expanded => {
         expanded && this.updateVectors(); // Only update if the MomentaDiagram is visible (expanded).

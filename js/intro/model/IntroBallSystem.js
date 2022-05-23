@@ -27,6 +27,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Range from '../../../../dot/js/Range.js';
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -127,7 +128,7 @@ class IntroBallSystem extends BallSystem {
     // Observe when the collision-point is set or when the elapsedTimeProperty changes. If the collision-time is
     // defined, meaning that a collision between the two balls has occurred, the changeInMomentumOpacityProperty
     // is degraded based on how far the total elapsed time has passed the time of collision. Multilink never disposed.
-    Property.multilink( [ this.collisionPointProperty, elapsedTimeProperty ], ( collisionPoint, elapsedTime ) => {
+    Multilink.multilink( [ this.collisionPointProperty, elapsedTimeProperty ], ( collisionPoint, elapsedTime ) => {
       if ( Number.isFinite( this.collisionContactTime ) ) {
 
         // Compute the time since the collision.

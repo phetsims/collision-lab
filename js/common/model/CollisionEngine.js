@@ -36,7 +36,7 @@
  */
 
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import collisionLab from '../../collisionLab.js';
@@ -80,7 +80,7 @@ class CollisionEngine {
     // Ball is user-controlled, when the number of Balls in the system changes, when the 'Constant' size checkbox is
     // toggled, or when the 'direction' of time progression changes. In all of these scenarios, existing Collisions may
     // be incorrect and collisions should be re-detected. Multilink persists for the lifetime of the simulation.
-    Property.lazyMultilink( [
+    Multilink.lazyMultilink( [
       ballSystem.ballSystemUserControlledProperty,
       ballSystem.numberOfBallsProperty,
       ballSystem.ballsConstantSizeProperty,

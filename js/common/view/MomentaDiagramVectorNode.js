@@ -15,7 +15,7 @@
  * @author Brandon Li
  */
 
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
@@ -88,7 +88,7 @@ class MomentaDiagramVectorNode extends Node {
 
     // Observe changes to the tail/tip of the Momenta Vector, or when the modelViewTransformProperty changes,
     // and mirror the positioning of the arrow and label in the view.
-    Property.multilink( [ momentaDiagramVector.tailPositionProperty,
+    Multilink.multilink( [ momentaDiagramVector.tailPositionProperty,
       momentaDiagramVector.tipPositionProperty,
       modelViewTransformProperty ], ( tailPosition, tipPosition, modelViewTransform ) => {
 

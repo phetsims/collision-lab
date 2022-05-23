@@ -23,7 +23,7 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import { Shape } from '../../../../kite/js/imports.js';
@@ -180,7 +180,7 @@ class BallNode extends Node {
     // Listen to when the when the Ball's radius changes and update the radius of the ballCircle. It was decided
     // to decrease the line-width with elasticity; a thicker stroke could indicate a rubbery coating which would be
     // inelastic. See https://github.com/phetsims/collision-lab/issues/38. Link persists for the lifetime of the sim.
-    Property.multilink( [ ball.radiusProperty, elasticityPercentProperty ], ( radius, elasticity ) => {
+    Multilink.multilink( [ ball.radiusProperty, elasticityPercentProperty ], ( radius, elasticity ) => {
 
       // Update the line-width based on the elasticity using a linear mapping.
       ballCircle.lineWidth = Utils.linear( ELASTICITY_PERCENT_RANGE.min,
@@ -256,7 +256,7 @@ class BallNode extends Node {
 
     // Observe when either the position of the Ball changes or when the radius of the Ball changes, which changes
     // the positioning of the speed and momentum NumberDisplays. Link persists for the lifetime of the simulation.
-    Property.multilink( [ valuesVisibleProperty, ball.positionProperty, ball.radiusProperty ], valuesVisible => {
+    Multilink.multilink( [ valuesVisibleProperty, ball.positionProperty, ball.radiusProperty ], valuesVisible => {
 
       if ( valuesVisible ) { // Only update positioning if the NumberDisplays are visible.
 
