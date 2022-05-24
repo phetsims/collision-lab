@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * IntroBallSystem is a BallSystem sub-type for the 'Intro' screen. IntroBallSystems only have 2 fixed Balls and the
