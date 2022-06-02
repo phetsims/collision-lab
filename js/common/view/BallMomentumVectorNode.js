@@ -29,14 +29,14 @@ class BallMomentumVectorNode extends BallVectorNode {
 
   /**
    * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball, in meters.
-   * @param {Property.<Vector2>} momentumProperty - the momentum of the Ball, in kg*(m/s).
+   * @param {AbstractProperty.<Vector2>} momentumProperty - the momentum of the Ball, in kg*(m/s).
    * @param {Property.<boolean>} momentumVectorVisibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]
    */
   constructor( ballPositionProperty, momentumProperty, momentumVectorVisibleProperty, modelViewTransform, options ) {
     assert && AssertUtils.assertPropertyOf( ballPositionProperty, Vector2 );
-    assert && AssertUtils.assertPropertyOf( momentumProperty, Vector2 );
+    assert && AssertUtils.assertAbstractPropertyOf( momentumProperty, Vector2 );
     assert && AssertUtils.assertPropertyOf( momentumVectorVisibleProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 

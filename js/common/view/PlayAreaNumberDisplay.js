@@ -31,11 +31,11 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 class PlayAreaNumberDisplay extends NumberDisplay {
 
   /**
-   * @param {Property.<number>} numberProperty
+   * @param {AbstractProperty.<number>} numberProperty
    * @param {Object} [options]
    */
   constructor( numberProperty, options ) {
-    assert && AssertUtils.assertPropertyOf( numberProperty, 'number' );
+    assert && AssertUtils.assertAbstractPropertyOf( numberProperty, 'number' );
 
     //----------------------------------------------------------------------------------------
 

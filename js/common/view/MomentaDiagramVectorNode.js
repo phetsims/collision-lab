@@ -35,13 +35,13 @@ class MomentaDiagramVectorNode extends Node {
   /**
    * @param {MomentaDiagramVector} momentaDiagramVector
    * @param {string|number} label - what to label the MomentaDiagramVectorNode. Usually, this is the Balls index.
-   * @param {Property.<ModelViewTransform2>} modelViewTransformProperty - for the MomentaDiagramAccordionBox
+   * @param {AbstractProperty.<ModelViewTransform2>} modelViewTransformProperty - for the MomentaDiagramAccordionBox
    * @param {Object} [options]
    */
   constructor( momentaDiagramVector, label, modelViewTransformProperty, options ) {
     assert && assert( momentaDiagramVector instanceof MomentaDiagramVector, `invalid momentaDiagramVector: ${momentaDiagramVector}` );
     assert && assert( typeof label === 'number' || typeof label === 'string', `invalid label: ${label}` );
-    assert && AssertUtils.assertPropertyOf( modelViewTransformProperty, ModelViewTransform2 );
+    assert && AssertUtils.assertAbstractPropertyOf( modelViewTransformProperty, ModelViewTransform2 );
 
     options = merge( {
 

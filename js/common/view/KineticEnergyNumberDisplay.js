@@ -23,11 +23,11 @@ import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
   /**
-   * @param {Property.<number>} totalKineticEnergyProperty
+   * @param {AbstractProperty.<number>} totalKineticEnergyProperty
    * @param {Object} [options]
    */
   constructor( totalKineticEnergyProperty, options ) {
-    assert && AssertUtils.assertPropertyOf( totalKineticEnergyProperty, 'number' );
+    assert && AssertUtils.assertAbstractPropertyOf( totalKineticEnergyProperty, 'number' );
 
     options = merge( {
 

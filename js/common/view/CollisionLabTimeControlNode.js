@@ -34,7 +34,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
    * @param {Property.<boolean>} isPlayingProperty
    * @param {EnumerationProperty.<TimeSpeed>} timeSpeedProperty
    * @param {Property.<number>} elapsedTimeProperty
-   * @param {Property.<boolean>} ballSystemUserControlledProperty
+   * @param {AbstractProperty.<boolean>} ballSystemUserControlledProperty
    * @param {Property.<number>} elasticityProperty
    * @param {Object} [options]
    */
@@ -47,7 +47,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
     assert && AssertUtils.assertPropertyOf( isPlayingProperty, 'boolean' );
     assert && assert( timeSpeedProperty instanceof EnumerationProperty );
     assert && AssertUtils.assertPropertyOf( elapsedTimeProperty, 'number' );
-    assert && AssertUtils.assertPropertyOf( ballSystemUserControlledProperty, 'boolean' );
+    assert && AssertUtils.assertAbstractPropertyOf( ballSystemUserControlledProperty, 'boolean' );
     assert && AssertUtils.assertPropertyOf( elasticityProperty, 'number' );
 
     options = merge( {

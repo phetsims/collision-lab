@@ -23,12 +23,12 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 class ReturnBallsButton extends RectangularPushButton {
 
   /**
-   * @param {Property.<boolean>} ballsNotInsidePlayAreaProperty - indicates if all of the Balls in the system are NOT
+   * @param {AbstractProperty.<boolean>} ballsNotInsidePlayAreaProperty - indicates if all of the Balls in the system are NOT
    *                                                              inside the PlayArea's bounds.
    * @param {Object} [options]
    */
   constructor( ballsNotInsidePlayAreaProperty, options ) {
-    assert && AssertUtils.assertPropertyOf( ballsNotInsidePlayAreaProperty, 'boolean' );
+    assert && AssertUtils.assertAbstractPropertyOf( ballsNotInsidePlayAreaProperty, 'boolean' );
 
     options = merge( {
 

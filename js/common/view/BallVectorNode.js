@@ -29,7 +29,7 @@ class BallVectorNode extends Node {
 
   /**
    * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball, in meters.
-   * @param {Property.<Vector2>} ballValueProperty - either the momentum or velocity Ball-value Property. Regardless,
+   * @param {AbstractProperty.<Vector2>} ballValueProperty - either the momentum or velocity Ball-value Property. Regardless,
    *                                                 its value represents the components of the BallVectorNode.
    * @param {Property.<boolean>} visibleProperty
    * @param {ModelViewTransform2} modelViewTransform
@@ -37,7 +37,7 @@ class BallVectorNode extends Node {
    */
   constructor( ballPositionProperty, ballValueProperty, visibleProperty, modelViewTransform, options ) {
     assert && AssertUtils.assertPropertyOf( ballPositionProperty, Vector2 );
-    assert && AssertUtils.assertPropertyOf( ballValueProperty, Vector2 );
+    assert && AssertUtils.assertAbstractPropertyOf( ballValueProperty, Vector2 );
     assert && AssertUtils.assertPropertyOf( visibleProperty, 'boolean' );
     assert && assert( modelViewTransform instanceof ModelViewTransform2, `invalid modelViewTransform: ${modelViewTransform}` );
 
