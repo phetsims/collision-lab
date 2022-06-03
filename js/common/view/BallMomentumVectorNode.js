@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2022, University of Colorado Boulder
 
 /**
  * BallMomentumVectorNode is a BallVectorNode subtype for a single Ball's momentum vector. They appear in all screens

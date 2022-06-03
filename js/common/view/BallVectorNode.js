@@ -1,4 +1,4 @@
-// Copyright 2019-2021, University of Colorado Boulder
+// Copyright 2019-2022, University of Colorado Boulder
 
 /**
  * BallVectorNode is the root class (to be subclassed) view representation of a single Ball's vector, used for the
