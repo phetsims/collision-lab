@@ -33,8 +33,8 @@ const PATH_DATA_POINT_LIFETIME = CollisionLabQueryParameters.pathPointLifetime;
 class CollisionLabPath {
 
   /**
-   * @param {AbstractProperty.<Vector2>} positionProperty - the position of the moving object, in meters.
-   * @param {AbstractProperty.<boolean>} pathsVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
+   * @param {ReadOnlyProperty.<Vector2>} positionProperty - the position of the moving object, in meters.
+   * @param {ReadOnlyProperty.<boolean>} pathsVisibleProperty - indicates if the 'Path' is visible. PathDataPoints are
    *                                                    only recorded if this is true and are cleared when set to false.
    */
   constructor( positionProperty, pathsVisibleProperty ) {

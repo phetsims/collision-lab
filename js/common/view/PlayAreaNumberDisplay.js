@@ -31,7 +31,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 class PlayAreaNumberDisplay extends NumberDisplay {
 
   /**
-   * @param {AbstractProperty.<number>} numberProperty
+   * @param {ReadOnlyProperty.<number>} numberProperty
    * @param {Object} [options]
    */
   constructor( numberProperty, options ) {

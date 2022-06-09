@@ -35,7 +35,7 @@ class MomentaDiagramVectorNode extends Node {
   /**
    * @param {MomentaDiagramVector} momentaDiagramVector
    * @param {string|number} label - what to label the MomentaDiagramVectorNode. Usually, this is the Balls index.
-   * @param {AbstractProperty.<ModelViewTransform2>} modelViewTransformProperty - for the MomentaDiagramAccordionBox
+   * @param {ReadOnlyProperty.<ModelViewTransform2>} modelViewTransformProperty - for the MomentaDiagramAccordionBox
    * @param {Object} [options]
    */
   constructor( momentaDiagramVector, label, modelViewTransformProperty, options ) {

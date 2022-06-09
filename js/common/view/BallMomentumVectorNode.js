@@ -29,7 +29,7 @@ class BallMomentumVectorNode extends BallVectorNode {
 
   /**
    * @param {Property.<Vector2>} ballPositionProperty - the position of the Ball, in meters.
-   * @param {AbstractProperty.<Vector2>} momentumProperty - the momentum of the Ball, in kg*(m/s).
+   * @param {ReadOnlyProperty.<Vector2>} momentumProperty - the momentum of the Ball, in kg*(m/s).
    * @param {Property.<boolean>} momentumVectorVisibleProperty
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Object} [options]

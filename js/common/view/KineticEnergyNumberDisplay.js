@@ -23,7 +23,7 @@ import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
   /**
-   * @param {AbstractProperty.<number>} totalKineticEnergyProperty
+   * @param {ReadOnlyProperty.<number>} totalKineticEnergyProperty
    * @param {Object} [options]
    */
   constructor( totalKineticEnergyProperty, options ) {
