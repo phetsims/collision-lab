@@ -68,7 +68,7 @@ class CollisionLabCheckbox extends Checkbox {
       labelText.maxWidth = options.maxWidth - options.boxWidth - options.spacing;
     }
 
-    super( contentNode, checkboxProperty, options );
+    super( checkboxProperty, contentNode, options );
 
     // Dilate 'touch area', if provided.
     if ( options.touchAreaXDilation || options.touchAreaYDilation ) {
