@@ -29,19 +29,18 @@ class PresetRadioButtonGroup extends RectangularRadioButtonGroup {
     assert && AssertUtils.assertEnumerationPropertyOf( presetProperty, InelasticPreset );
 
     options = merge( {
-
-      // super-class options
-      deselectedLineWidth: 1,
-      selectedLineWidth: 1.5,
-      cornerRadius: 8,
-      deselectedButtonOpacity: 0.35,
-      buttonContentXMargin: 12,
-      buttonContentYMargin: 4,
       orientation: 'horizontal',
-      baseColor: CollisionLabColors.RADIO_BUTTON_BASE_COLOR,
-      selectedStroke: CollisionLabColors.RADIO_BUTTON_SELECTED_STROKE,
-      deselectedStroke: CollisionLabColors.RADIO_BUTTON_DESELECTED_STROKE
-
+      radioButtonOptions: {
+        deselectedLineWidth: 1,
+        selectedLineWidth: 1.5,
+        cornerRadius: 8,
+        deselectedButtonOpacity: 0.35,
+        xMargin: 12,
+        yMargin: 4,
+        baseColor: CollisionLabColors.RADIO_BUTTON_BASE_COLOR,
+        selectedStroke: CollisionLabColors.RADIO_BUTTON_SELECTED_STROKE,
+        deselectedStroke: CollisionLabColors.RADIO_BUTTON_DESELECTED_STROKE
+      }
     }, options );
 
     // Create the description of the radio buttons
