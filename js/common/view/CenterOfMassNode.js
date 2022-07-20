@@ -24,14 +24,14 @@ import { Shape } from '../../../../kite/js/imports.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import XNode from '../../../../scenery-phet/js/XNode.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CenterOfMass from '../model/CenterOfMass.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
-import XNode from '../../../../scenery-phet/js/XNode.js';
-import CollisionLabColors from '../CollisionLabColors.js';
 
 class CenterOfMassNode extends Node {
 

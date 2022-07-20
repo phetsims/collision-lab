@@ -22,13 +22,8 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Circle } from '../../../../scenery/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { Spacer } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
-import { PaintDef } from '../../../../scenery/js/imports.js';
+import XNode from '../../../../scenery-phet/js/XNode.js';
+import { Circle, Color, Node, PaintDef, Path, Spacer, Text } from '../../../../scenery/js/imports.js';
 import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -39,7 +34,6 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallState from '../model/BallState.js';
 import BallUtils from '../model/BallUtils.js';
-import XNode from '../../../../scenery-phet/js/XNode.js';
 
 const CollisionLabIconFactory = {
 
