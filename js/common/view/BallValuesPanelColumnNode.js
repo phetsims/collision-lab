@@ -1,4 +1,4 @@
-// Copyright 2020-2021, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * A single column in the BallValuesPanel: usually displays a column of NumberDisplays of a single type of Ball Values

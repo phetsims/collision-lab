@@ -1,4 +1,4 @@
-// Copyright 2020-2021, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * A view that renders the trailing 'Paths' behind all Balls and the Center of Mass, using their PathDataPoints array.
