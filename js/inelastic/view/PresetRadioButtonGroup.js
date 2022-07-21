@@ -31,15 +31,17 @@ class PresetRadioButtonGroup extends RectangularRadioButtonGroup {
     options = merge( {
       orientation: 'horizontal',
       radioButtonOptions: {
-        deselectedLineWidth: 1,
-        selectedLineWidth: 1.5,
+        baseColor: CollisionLabColors.RADIO_BUTTON_BASE_COLOR,
         cornerRadius: 8,
-        deselectedButtonOpacity: 0.35,
         xMargin: 12,
         yMargin: 4,
-        baseColor: CollisionLabColors.RADIO_BUTTON_BASE_COLOR,
-        selectedStroke: CollisionLabColors.RADIO_BUTTON_SELECTED_STROKE,
-        deselectedStroke: CollisionLabColors.RADIO_BUTTON_DESELECTED_STROKE
+        buttonAppearanceStrategyOptions: {
+          deselectedLineWidth: 1,
+          selectedLineWidth: 1.5,
+          deselectedButtonOpacity: 0.35,
+          selectedStroke: CollisionLabColors.RADIO_BUTTON_SELECTED_STROKE,
+          deselectedStroke: CollisionLabColors.RADIO_BUTTON_DESELECTED_STROKE
+        }
       }
     }, options );
 
