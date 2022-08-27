@@ -23,7 +23,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import XNode from '../../../../scenery-phet/js/XNode.js';
-import { Circle, Color, Node, PaintDef, Path, Spacer, Text } from '../../../../scenery/js/imports.js';
+import { Rectangle, Circle, Color, Node, PaintDef, Path, Spacer, Text } from '../../../../scenery/js/imports.js';
 import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
 import collisionLabStrings from '../../collisionLabStrings.js';
@@ -190,10 +190,16 @@ const CollisionLabIconFactory = {
 
     // For the 'Custom' preset, the icon is just a Text instance that displays 'Custom'.
     if ( inelasticPreset === InelasticPreset.CUSTOM ) {
-      return new Text( collisionLabStrings.custom, {
+      const text = new Text( collisionLabStrings.custom, {
         font: CollisionLabConstants.CONTROL_FONT,
         maxWidth: 120 // constrain width for i18n, determined empirically
       } );
+      if ( text.height < 10 ) {
+        return new Rectangle( 0, 0, text.width, 10, {
+          children: [ text ]
+        } );
+      }
+      return text;
     }
     else {
       return createBallSystemSnapshotIcon( inelasticPreset.ballStates );
