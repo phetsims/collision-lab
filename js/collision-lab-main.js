@@ -29,7 +29,7 @@ const simOptions = {
 
 // Launch the 'Collision Lab' simulation.
 simLauncher.launch( () => {
-  const sim = new Sim( collisionLabStrings[ 'collision-lab' ].title, [
+  const sim = new Sim( collisionLabStrings[ 'collision-lab' ].titleStringProperty, [
     new IntroScreen( Tandem.ROOT.createTandem( 'introScreen' ) ),
     new Explore1DScreen( Tandem.ROOT.createTandem( 'explore1DScreen' ) ),
     new Explore2DScreen( Tandem.ROOT.createTandem( 'explore2DScreen' ) ),
