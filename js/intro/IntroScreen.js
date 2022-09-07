@@ -10,7 +10,7 @@ import Property from '../../../axon/js/Property.js';
 import Screen from '../../../joist/js/Screen.js';
 import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
-import collisionLabStrings from '../collisionLabStrings.js';
+import CollisionLabStrings from '../CollisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
 import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import IntroModel from './model/IntroModel.js';
@@ -28,7 +28,7 @@ class IntroScreen extends Screen {
     const createView = model => new IntroScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
-      name: collisionLabStrings.screen.intro,
+      name: CollisionLabStrings.screen.intro,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       homeScreenIcon: CollisionLabIconFactory.createIntroScreenIcon(),
       tandem: tandem

@@ -26,7 +26,7 @@ import XNode from '../../../../scenery-phet/js/XNode.js';
 import { Rectangle, Circle, Color, Node, PaintDef, Path, Spacer, Text } from '../../../../scenery/js/imports.js';
 import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import Explore2DBallSystem from '../../explore2D/model/Explore2DBallSystem.js';
 import InelasticPreset from '../../inelastic/model/InelasticPreset.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -190,7 +190,7 @@ const CollisionLabIconFactory = {
 
     // For the 'Custom' preset, the icon is just a Text instance that displays 'Custom'.
     if ( inelasticPreset === InelasticPreset.CUSTOM ) {
-      const text = new Text( collisionLabStrings.custom, {
+      const text = new Text( CollisionLabStrings.custom, {
         font: CollisionLabConstants.CONTROL_FONT,
         maxWidth: 120 // constrain width for i18n, determined empirically
       } );

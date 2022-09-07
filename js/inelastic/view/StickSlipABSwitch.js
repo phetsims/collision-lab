@@ -16,7 +16,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import { AlignGroup, Text } from '../../../../scenery/js/imports.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import InelasticCollisionType from '../model/InelasticCollisionType.js';
 
@@ -50,8 +50,8 @@ class StickSlipABSwitch extends ABSwitch {
     const labelAlignGroup = new AlignGroup( { matchHorizontal: true, matchVertical: false } );
 
     // Create the Labels of the ABSwitch.
-    const stickLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.stick, options.textOptions ) );
-    const slipLabel = labelAlignGroup.createBox( new Text( collisionLabStrings.slip, options.textOptions ) );
+    const stickLabel = labelAlignGroup.createBox( new Text( CollisionLabStrings.stick, options.textOptions ) );
+    const slipLabel = labelAlignGroup.createBox( new Text( CollisionLabStrings.slip, options.textOptions ) );
 
     // Create the 'Stick' vs 'Slip' ABSwitch.
     super( inelasticCollisionTypeProperty,

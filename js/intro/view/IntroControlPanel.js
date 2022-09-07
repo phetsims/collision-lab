@@ -14,7 +14,7 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabCheckbox from '../../common/view/CollisionLabCheckbox.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -65,7 +65,7 @@ class IntroControlPanel extends CollisionLabControlPanel {
     //----------------------------------------------------------------------------------------
 
     // 'Change in Momentum' visibility Checkbox.
-    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, collisionLabStrings.changeInMomentum );
+    const changeInMomentumCheckbox = new CollisionLabCheckbox( changeInMomentumVisibleProperty, CollisionLabStrings.changeInMomentum );
 
     // Add the Change in Momentum Checkbox before the Center of Mass Checkbox.
     this.contentNode.insertChild( this.contentNode.indexOfChild( this.centerOfMassCheckbox ), changeInMomentumCheckbox );

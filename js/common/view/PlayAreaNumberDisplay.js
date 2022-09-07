@@ -24,7 +24,7 @@ import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Color, PaintDef } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class PlayAreaNumberDisplay extends NumberDisplay {
@@ -69,7 +69,7 @@ class PlayAreaNumberDisplay extends NumberDisplay {
       // For non-position columns, show approximates, see https://github.com/phetsims/collision-lab/issues/182
       if ( absValue > 1e-9 &&
            absValue < 0.005 ) {
-        numberString = StringUtils.fillIn( collisionLabStrings.approximatePattern, {
+        numberString = StringUtils.fillIn( CollisionLabStrings.approximatePattern, {
           value: '0.00'
         } );
       }

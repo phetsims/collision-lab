@@ -27,7 +27,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import XNode from '../../../../scenery-phet/js/XNode.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CenterOfMass from '../model/CenterOfMass.js';
@@ -69,9 +69,9 @@ class CenterOfMassNode extends Node {
     // Create the number display for the speed of the CenterOfMass, which appears above the xNode. Position set later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( centerOfMass.speedProperty, {
       visibleProperty: valuesVisibleProperty,
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
-        symbol: collisionLabStrings.symbol.velocity,
-        units: collisionLabStrings.units.metersPerSecond
+      valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
+        symbol: CollisionLabStrings.symbol.velocity,
+        units: CollisionLabStrings.units.metersPerSecond
       } )
     } );
 

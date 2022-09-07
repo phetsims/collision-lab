@@ -22,7 +22,7 @@ import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Color, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 // constants
@@ -59,8 +59,8 @@ class ElasticityNumberControl extends NumberControl {
         thumbSize: new Dimension2( 14, 24 )
       },
       numberDisplayOptions: {
-        valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueUnits, {
-          units: collisionLabStrings.units.percent
+        valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.valueUnits, {
+          units: CollisionLabStrings.units.percent
         } ),
         textOptions: { font: CollisionLabConstants.DISPLAY_FONT, maxWidth: 90 },
         backgroundStroke: Color.BLACK,
@@ -78,8 +78,8 @@ class ElasticityNumberControl extends NumberControl {
     assert && assert( !options.sliderOptions.trackSize, 'ElasticityNumberControl sets trackSize' );
 
     // Create the 'Inelastic' and 'Elastic' tick labels.
-    const inelasticLabel = new Text( collisionLabStrings.inelastic, options.tickTextOptions );
-    const elasticLabel = new Text( collisionLabStrings.elastic, options.tickTextOptions );
+    const inelasticLabel = new Text( CollisionLabStrings.inelastic, options.tickTextOptions );
+    const elasticLabel = new Text( CollisionLabStrings.elastic, options.tickTextOptions );
 
     // Compute the width of the track to ensure the NumberControl fits in control-panels.
     const trackWidth = CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH
@@ -92,7 +92,7 @@ class ElasticityNumberControl extends NumberControl {
       { value: ELASTICITY_PERCENT_RANGE.max, label: elasticLabel }
     ];
 
-    super( collisionLabStrings.elasticity, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, options );
+    super( CollisionLabStrings.elasticity, elasticityPercentProperty, ELASTICITY_PERCENT_RANGE, options );
   }
 }
 

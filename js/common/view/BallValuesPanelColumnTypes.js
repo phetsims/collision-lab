@@ -12,7 +12,7 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallUtils from '../model/BallUtils.js';
 
@@ -62,7 +62,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   MASS: new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
-    editingUnit: collisionLabStrings.units.kilograms,
+    editingUnit: CollisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
   } ),
 
@@ -70,7 +70,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   MASS_SLIDERS: new BallValuesPanelColumnType( _.property( 'massProperty' ), {
     editValue: ( ball, mass ) => { ball.massProperty.value = mass; },
     getEditingRange: () => CollisionLabConstants.MASS_RANGE,
-    editingUnit: collisionLabStrings.units.kilograms,
+    editingUnit: CollisionLabStrings.units.kilograms,
     getUserControlledProperty: _.property( 'massUserControlledProperty' )
   } ),
 
@@ -78,7 +78,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   X_POSITION: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xPosition ) => ball.setXPosition( xPosition ),
     getEditingRange: ball => BallUtils.getKeypadXPositionRange( ball ),
-    editingUnit: collisionLabStrings.units.meters,
+    editingUnit: CollisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'xPositionUserControlledProperty' )
   } ),
 
@@ -86,7 +86,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   Y_POSITION: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.positionProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yPosition ) => ball.setYPosition( yPosition ),
     getEditingRange: ball => BallUtils.getKeypadYPositionRange( ball ),
-    editingUnit: collisionLabStrings.units.meters,
+    editingUnit: CollisionLabStrings.units.meters,
     getUserControlledProperty: _.property( 'yPositionUserControlledProperty' )
   } ),
 
@@ -94,7 +94,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   X_VELOCITY: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'x' ) ), {
     editValue: ( ball, xVelocity ) => ball.setXVelocity( xVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
-    editingUnit: collisionLabStrings.units.metersPerSecond,
+    editingUnit: CollisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'xVelocityUserControlledProperty' )
   } ),
 
@@ -102,7 +102,7 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
   Y_VELOCITY: new BallValuesPanelColumnType( ball => new DerivedProperty( [ ball.velocityProperty ], _.property( 'y' ) ), {
     editValue: ( ball, yVelocity ) => ball.setYVelocity( yVelocity ),
     getEditingRange: () => CollisionLabConstants.VELOCITY_RANGE,
-    editingUnit: collisionLabStrings.units.metersPerSecond,
+    editingUnit: CollisionLabStrings.units.metersPerSecond,
     getUserControlledProperty: _.property( 'yVelocityUserControlledProperty' )
   } ),
 

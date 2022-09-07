@@ -25,7 +25,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Circle, Color, DragListener, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
@@ -76,7 +76,7 @@ class BallVelocityVectorNode extends BallVectorNode {
     //----------------------------------------------------------------------------------------
 
     // Create the Text instance that displays the velocity symbol. Position to be updated later.
-    const velocitySymbolText = new Text( collisionLabStrings.symbol.velocity, {
+    const velocitySymbolText = new Text( CollisionLabStrings.symbol.velocity, {
       pickable: false,
       font: CollisionLabConstants.CONTROL_FONT,
       maxWidth: 15 // constrain width for i18n, determined empirically.

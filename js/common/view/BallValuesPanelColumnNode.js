@@ -24,7 +24,7 @@ import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import { AlignGroup, RichText, VBox } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
@@ -147,28 +147,28 @@ class BallValuesPanelColumnNode extends VBox {
     assert && assert( BallValuesPanelColumnTypes.includes( columnType ), `invalid columnType: ${columnType}` );
 
     // Convenience function that gets the label for a component BallValuesPanelColumnType.
-    const getComponentLabel = ( label, component ) => StringUtils.fillIn( collisionLabStrings.pattern.symbolSubSymbol, {
+    const getComponentLabel = ( label, component ) => StringUtils.fillIn( CollisionLabStrings.pattern.symbolSubSymbol, {
       symbol1: label,
       symbol2: component
     } );
 
     if ( columnType === BallValuesPanelColumnTypes.X_POSITION ) {
-      return collisionLabStrings.symbol.x;
+      return CollisionLabStrings.symbol.x;
     }
     else if ( columnType === BallValuesPanelColumnTypes.Y_POSITION ) {
-      return collisionLabStrings.symbol.y;
+      return CollisionLabStrings.symbol.y;
     }
     else if ( columnType === BallValuesPanelColumnTypes.X_VELOCITY ) {
-      return getComponentLabel( collisionLabStrings.symbol.velocity, collisionLabStrings.symbol.x );
+      return getComponentLabel( CollisionLabStrings.symbol.velocity, CollisionLabStrings.symbol.x );
     }
     else if ( columnType === BallValuesPanelColumnTypes.Y_VELOCITY ) {
-      return getComponentLabel( collisionLabStrings.symbol.velocity, collisionLabStrings.symbol.y );
+      return getComponentLabel( CollisionLabStrings.symbol.velocity, CollisionLabStrings.symbol.y );
     }
     else if ( columnType === BallValuesPanelColumnTypes.X_MOMENTUM ) {
-      return getComponentLabel( collisionLabStrings.symbol.momentum, collisionLabStrings.symbol.x );
+      return getComponentLabel( CollisionLabStrings.symbol.momentum, CollisionLabStrings.symbol.x );
     }
     else if ( columnType === BallValuesPanelColumnTypes.Y_MOMENTUM ) {
-      return getComponentLabel( collisionLabStrings.symbol.momentum, collisionLabStrings.symbol.y );
+      return getComponentLabel( CollisionLabStrings.symbol.momentum, CollisionLabStrings.symbol.y );
     }
     else {
       // At this point, the column doesn't have a specific label, so return the empty string.

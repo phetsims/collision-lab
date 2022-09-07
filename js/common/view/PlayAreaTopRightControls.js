@@ -25,7 +25,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Text, VBox } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class PlayAreaTopRightControls extends VBox {
@@ -93,7 +93,7 @@ class PlayAreaTopRightControls extends VBox {
     if ( options.includeNumberOfBallsSpinner ) {
 
       // Create the title Text of the PlayAreaTopRightControls.
-      const ballsText = new Text( collisionLabStrings.balls, options.titleTextOptions );
+      const ballsText = new Text( CollisionLabStrings.balls, options.titleTextOptions );
 
       // Create the NumberSpinner of the PlayAreaTopRightControls to allow the user to change the number of balls.
       const numberOfBallsSpinner = new NumberSpinner( numberOfBallsProperty,

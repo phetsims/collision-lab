@@ -16,7 +16,7 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
 
@@ -31,9 +31,9 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
 
     options = merge( {
 
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueSpaceUnits, {
-        label: collisionLabStrings.kineticEnergy,
-        units: collisionLabStrings.units.joules
+      valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.labelEqualsValueSpaceUnits, {
+        label: CollisionLabStrings.kineticEnergy,
+        units: CollisionLabStrings.units.joules
       } ),
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT

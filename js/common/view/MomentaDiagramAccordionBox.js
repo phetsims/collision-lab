@@ -26,7 +26,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import { Color, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
@@ -64,7 +64,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
       contentWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH,
 
       // superclass options
-      titleNode: new Text( collisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),
+      titleNode: new Text( CollisionLabStrings.momentaDiagram, { font: CollisionLabConstants.DISPLAY_FONT } ),
       expandedProperty: momentaDiagram.expandedProperty,
       cornerRadius: PANEL_CORNER_RADIUS,
       contentXMargin: PANEL_X_MARGIN,
@@ -150,7 +150,7 @@ class MomentaDiagramAccordionBox extends AccordionBox {
 
     // Create the Momenta Vector Node for the 'total' sum of the momenta Vectors and add it to the container.
     const sumMomentaVectorNode = new MomentaDiagramVectorNode( momentaDiagram.totalMomentumVector,
-      collisionLabStrings.total,
+      CollisionLabStrings.total,
       modelViewTransformProperty, {
         dimension: options.dimension,
         isTotalMomentaVector: true,

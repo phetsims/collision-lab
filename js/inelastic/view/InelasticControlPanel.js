@@ -17,7 +17,7 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { HStrut, Text, VBox } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -67,14 +67,14 @@ class InelasticControlPanel extends CollisionLabControlPanel {
     //----------------------------------------------------------------------------------------
 
 
-    const inelasticCollisionTitle = new Text( collisionLabStrings.inelasticCollision, {
+    const inelasticCollisionTitle = new Text( CollisionLabStrings.inelasticCollision, {
       font: CollisionLabConstants.PANEL_TITLE_FONT,
       maxWidth: CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH // constrain width for i18n
     } );
 
-    const elasticityReadout = new Text( StringUtils.fillIn( collisionLabStrings.pattern.labelEqualsValueUnits, {
-      label: collisionLabStrings.elasticity,
-      units: collisionLabStrings.units.percent,
+    const elasticityReadout = new Text( StringUtils.fillIn( CollisionLabStrings.pattern.labelEqualsValueUnits, {
+      label: CollisionLabStrings.elasticity,
+      units: CollisionLabStrings.units.percent,
       value: elasticityPercentProperty.value
     } ), {
       font: new PhetFont( 12 ),

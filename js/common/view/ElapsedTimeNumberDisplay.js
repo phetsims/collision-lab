@@ -20,7 +20,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StopwatchNode from '../../../../scenery-phet/js/StopwatchNode.js';
 import { Color } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class ElapsedTimeNumberDisplay extends NumberDisplay {
@@ -41,8 +41,8 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
       yMargin: 6,
       xMargin: 6,
       backgroundStroke: Color.BLACK,
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.valueSpaceUnits, {
-        units: collisionLabStrings.units.seconds
+      valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.valueSpaceUnits, {
+        units: CollisionLabStrings.units.seconds
       } ),
       textOptions: {
         maxWidth: 70, // constrain width for i18n, determined empirically

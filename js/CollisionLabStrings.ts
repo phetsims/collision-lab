@@ -119,8 +119,8 @@ type StringsType = {
   'approximatePatternStringProperty': TReadOnlyProperty<string>;
 };
 
-const collisionLabStrings = getStringModule( 'COLLISION_LAB' ) as StringsType;
+const CollisionLabStrings = getStringModule( 'COLLISION_LAB' ) as StringsType;
 
-collisionLab.register( 'collisionLabStrings', collisionLabStrings );
+collisionLab.register( 'CollisionLabStrings', CollisionLabStrings );
 
-export default collisionLabStrings;
+export default CollisionLabStrings;

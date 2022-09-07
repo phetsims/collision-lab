@@ -22,7 +22,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import { HBox, LayoutBox, Line, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -73,9 +73,9 @@ class PlayAreaScaleBarNode extends LayoutBox {
     //----------------------------------------------------------------------------------------
 
     // Concatenate the label string. Looks like '0.5 m'
-    const labelString = StringUtils.fillIn( collisionLabStrings.pattern.valueSpaceUnits, {
+    const labelString = StringUtils.fillIn( CollisionLabStrings.pattern.valueSpaceUnits, {
       value: length,
-      units: collisionLabStrings.units.meters
+      units: CollisionLabStrings.units.meters
     } );
 
     // Create the Label of the scale-bar.

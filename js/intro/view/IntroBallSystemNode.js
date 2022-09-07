@@ -22,7 +22,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
@@ -97,7 +97,7 @@ class IntroBallSystemNode extends BallSystemNode {
     //----------------------------------------------------------------------------------------
 
     // Create the 'Change in Momentum' text, which is displayed above the collision point.
-    const changeInMomentumText = new Text( collisionLabStrings.changeInMomentum, {
+    const changeInMomentumText = new Text( CollisionLabStrings.changeInMomentum, {
       font: CollisionLabConstants.DISPLAY_FONT,
       maxWidth: 160, // Constrain width for i18n. Determined empirically.
       top: modelViewTransform.modelToViewY( playArea.bounds.centerY )

@@ -28,7 +28,7 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import { Color, FireListener } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
@@ -87,7 +87,7 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
            columnType !== BallValuesPanelColumnTypes.Y_POSITION &&
            absValue > 1e-9 &&
            absValue < 0.005 ) {
-        numberString = StringUtils.fillIn( collisionLabStrings.approximatePattern, {
+        numberString = StringUtils.fillIn( CollisionLabStrings.approximatePattern, {
           value: '0.00'
         } );
       }

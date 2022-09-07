@@ -26,7 +26,7 @@ import { Color, VBox } from '../../../../scenery/js/imports.js';
 import HSeparator from '../../../../sun/js/HSeparator.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
@@ -96,28 +96,28 @@ class CollisionLabControlPanel extends Panel {
     //----------------------------------------------------------------------------------------
 
     // 'Velocity' visibility Checkbox
-    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVectorVisibleProperty, collisionLabStrings.velocity, {
+    const velocityCheckbox = new CollisionLabCheckbox( viewProperties.velocityVectorVisibleProperty, CollisionLabStrings.velocity, {
       icon: CollisionLabIconFactory.createVelocityVectorIcon()
     } );
 
     // 'Momentum' visibility Checkbox
-    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVectorVisibleProperty, collisionLabStrings.momentum, {
+    const momentumCheckbox = new CollisionLabCheckbox( viewProperties.momentumVectorVisibleProperty, CollisionLabStrings.momentum, {
       icon: CollisionLabIconFactory.createMomentumVectorIcon()
     } );
 
     // @protected {Checkbox} - 'Center of Mass' visibility Checkbox. This is referenced for ordering in sub-classes.
-    this.centerOfMassCheckbox = new CollisionLabCheckbox( centerOfMassVisibleProperty, collisionLabStrings.centerOfMass, {
+    this.centerOfMassCheckbox = new CollisionLabCheckbox( centerOfMassVisibleProperty, CollisionLabStrings.centerOfMass, {
       icon: CollisionLabIconFactory.createCenterOfMassIcon()
     } );
 
     // 'Kinetic Energy' visibility Checkbox
-    const kineticEnergyCheckbox = new CollisionLabCheckbox( viewProperties.kineticEnergyVisibleProperty, collisionLabStrings.kineticEnergy );
+    const kineticEnergyCheckbox = new CollisionLabCheckbox( viewProperties.kineticEnergyVisibleProperty, CollisionLabStrings.kineticEnergy );
 
     // 'Values' visibility Checkbox. This is referenced for ordering in sub-classes.
-    const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, collisionLabStrings.values );
+    const valuesCheckbox = new CollisionLabCheckbox( viewProperties.valuesVisibleProperty, CollisionLabStrings.values );
 
     // @protected {Checkbox} - 'Constant Size' Checkbox. Exposed to sub-classes for layouting.
-    this.constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, collisionLabStrings.constantSize );
+    this.constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, CollisionLabStrings.constantSize );
 
     // HSeparator
     const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
@@ -138,7 +138,7 @@ class CollisionLabControlPanel extends Panel {
 
       // 'Reflecting Border' Checkbox
       const reflectingBorderCheckbox = new CollisionLabCheckbox( reflectingBorderProperty,
-        collisionLabStrings.reflectingBorder );
+        CollisionLabStrings.reflectingBorder );
 
       // Add the Reflecting Border Checkbox after the values Checkbox.
       contentNode.addChild( reflectingBorderCheckbox );
@@ -148,7 +148,7 @@ class CollisionLabControlPanel extends Panel {
     if ( options.includePathCheckbox ) {
 
       // Create the 'Path' visibility Checkbox.
-      const pathCheckbox = new CollisionLabCheckbox( pathsVisibleProperty, collisionLabStrings.path );
+      const pathCheckbox = new CollisionLabCheckbox( pathsVisibleProperty, CollisionLabStrings.path );
 
       // Add the 'Path' Checkbox after the 'Values' Checkbox.
       contentNode.addChild( pathCheckbox );

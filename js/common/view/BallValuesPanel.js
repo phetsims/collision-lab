@@ -29,7 +29,7 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import { AlignGroup, HBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
@@ -107,7 +107,7 @@ class BallValuesPanel extends Panel {
 
     // Convenience function to create the title-label that appears above each column group.
     const createTitleLabel = ( label, units, maxWidth = options.componentGroupTitleMaxWidth ) => {
-      const titleString = StringUtils.fillIn( collisionLabStrings.pattern.labelParenthesesUnits, {
+      const titleString = StringUtils.fillIn( CollisionLabStrings.pattern.labelParenthesesUnits, {
         label: label,
         units: units
       } );
@@ -120,10 +120,10 @@ class BallValuesPanel extends Panel {
     };
 
     // Create the Title Labels for each section of the BallValuesPanel.
-    const massTitleNode = createTitleLabel( collisionLabStrings.mass, collisionLabStrings.units.kilograms, options.massTitleMaxWidth );
-    const momentumTitleNode = createTitleLabel( collisionLabStrings.momentum, collisionLabStrings.units.kilogramMetersPerSecond );
-    const positionTitleNode = createTitleLabel( collisionLabStrings.position, collisionLabStrings.units.meters );
-    const velocityTitleNode = createTitleLabel( collisionLabStrings.velocity, collisionLabStrings.units.metersPerSecond );
+    const massTitleNode = createTitleLabel( CollisionLabStrings.mass, CollisionLabStrings.units.kilograms, options.massTitleMaxWidth );
+    const momentumTitleNode = createTitleLabel( CollisionLabStrings.momentum, CollisionLabStrings.units.kilogramMetersPerSecond );
+    const positionTitleNode = createTitleLabel( CollisionLabStrings.position, CollisionLabStrings.units.meters );
+    const velocityTitleNode = createTitleLabel( CollisionLabStrings.velocity, CollisionLabStrings.units.metersPerSecond );
 
     //----------------------------------------------------------------------------------------
 

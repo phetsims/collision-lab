@@ -16,7 +16,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import { Text } from '../../../../scenery/js/imports.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -45,7 +45,7 @@ class ReturnBallsButton extends RectangularPushButton {
     //----------------------------------------------------------------------------------------
 
     assert && assert( !options.content, 'ReturnBallsButton sets content' );
-    options.content = new Text( collisionLabStrings.returnBalls, {
+    options.content = new Text( CollisionLabStrings.returnBalls, {
       font: options.labelFont,
       maxWidth: 150 // constrain width for i18n. determined empirically
     } );

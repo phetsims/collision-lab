@@ -13,7 +13,7 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 
 class MoreDataCheckbox extends CollisionLabCheckbox {
@@ -34,7 +34,7 @@ class MoreDataCheckbox extends CollisionLabCheckbox {
 
     }, options );
 
-    super( moreDataVisibleProperty, collisionLabStrings.moreData, options );
+    super( moreDataVisibleProperty, CollisionLabStrings.moreData, options );
   }
 }
 

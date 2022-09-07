@@ -24,7 +24,7 @@ import { Color, Node, Rectangle, Text, VBox } from '../../../../scenery/js/impor
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import Dialog from '../../../../sun/js/Dialog.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -105,7 +105,7 @@ class KeypadDialog extends Dialog {
     const enterButton = new RectangularPushButton( {
       listener: this.submitEdit.bind( this ),
       baseColor: CollisionLabColors.KEYPAD_ENTER_BUTTON,
-      content: new Text( collisionLabStrings.enter, {
+      content: new Text( CollisionLabStrings.enter, {
         font: options.font,
         maxWidth: this.keypad.width // constrain width for i18n
       } )
@@ -159,7 +159,7 @@ class KeypadDialog extends Dialog {
     this.editFinishedCallback = editFinishedCallback;
 
     // Update the rangeText message.
-    const rangeMessage = StringUtils.fillIn( collisionLabStrings.pattern.range, {
+    const rangeMessage = StringUtils.fillIn( CollisionLabStrings.pattern.range, {
       min: valueRange.min,
       max: valueRange.max,
       units: unitsString ? unitsString : ''

@@ -33,7 +33,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Circle, Color, DragListener, Node, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
-import collisionLabStrings from '../../collisionLabStrings.js';
+import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
@@ -123,8 +123,8 @@ class BallNode extends Node {
     // Create the number display for the speed of the Ball, which appears above the ball. To be positioned later.
     const speedNumberDisplay = new PlayAreaNumberDisplay( ball.speedProperty, {
       visibleProperty: valuesVisibleProperty,
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
-        symbol: collisionLabStrings.symbol.velocity,
+      valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
+        symbol: CollisionLabStrings.symbol.velocity,
         units: 'm/s'
       } )
     } );
@@ -132,8 +132,8 @@ class BallNode extends Node {
     // Create the number display for the momentum of the Ball, which appears below the ball. To be positioned later.
     const momentumNumberDisplay = new PlayAreaNumberDisplay( ball.momentumMagnitudeProperty, {
       visibleProperty: valuesVisibleProperty,
-      valuePattern: StringUtils.fillIn( collisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
-        symbol: collisionLabStrings.symbol.momentum,
+      valuePattern: StringUtils.fillIn( CollisionLabStrings.pattern.vectorSymbolEqualsValueSpaceUnits, {
+        symbol: CollisionLabStrings.symbol.momentum,
         units: 'kg\u00b7m/s'
       } )
     } );

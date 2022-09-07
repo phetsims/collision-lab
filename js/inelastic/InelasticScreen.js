@@ -10,7 +10,7 @@ import Property from '../../../axon/js/Property.js';
 import Screen from '../../../joist/js/Screen.js';
 import Tandem from '../../../tandem/js/Tandem.js';
 import collisionLab from '../collisionLab.js';
-import collisionLabStrings from '../collisionLabStrings.js';
+import CollisionLabStrings from '../CollisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
 import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
 import InelasticModel from './model/InelasticModel.js';
@@ -28,7 +28,7 @@ class InelasticScreen extends Screen {
     const createView = model => new InelasticScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
-      name: collisionLabStrings.screen.inelastic,
+      name: CollisionLabStrings.screen.inelastic,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       homeScreenIcon: CollisionLabIconFactory.createInelasticScreenIcon(),
       tandem: tandem
