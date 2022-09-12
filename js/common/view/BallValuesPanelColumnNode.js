@@ -32,7 +32,7 @@ import BallMassSlider from './BallMassSlider.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import BallValuesPanelNumberDisplay from './BallValuesPanelNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
-import KeypadDialog from './KeypadDialog.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // AlignGroups for the content and label Nodes of every BallValuesPanelColumnNode. Created to match the vertical height
 // of each component in the BallValuesPanel across screens every screen.

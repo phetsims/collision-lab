@@ -57,10 +57,6 @@ const CollisionLabColors = {
   CENTER_OF_MASS_FILL: new Color( 70, 70, 70 ),
   CENTER_OF_MASS_STROKE: Color.BLACK,
 
-  // Keypad
-  KEYPAD_DEFAULT_TEXT: Color.BLACK,
-  KEYPAD_ERROR_TEXT: Color.RED,
-
   // Scale Bar
   SCALE_BAR_COLOR: Color.BLACK,
 

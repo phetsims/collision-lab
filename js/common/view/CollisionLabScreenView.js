@@ -27,6 +27,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
+import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
 import PlayArea from '../model/PlayArea.js';
@@ -34,7 +35,7 @@ import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
-import KeypadDialog from './KeypadDialog.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
@@ -163,7 +164,22 @@ class CollisionLabScreenView extends ScreenView {
     const keypadDialog = new KeypadDialog( {
       layoutStrategy: ( keypadDialog, simBounds, screenBounds, scale ) => {
         keypadDialog.leftBottom = this.ballValuesPanel.rightBottom.plusXY( 10, 0 );
-      }
+      },
+      keypadOptions: {
+        accumulatorOptions: {
+
+          // {number} - maximum number of digits that can be entered on the keypad.
+          maxDigits: 8,
+
+          // {number} - maximum number of decimal places that can be entered on the keypad.
+          maxDigitsRightOfMantissa: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
+        }
+      },
+      enterButtonOptions: {
+        baseColor: CollisionLabColors.KEYPAD_ENTER_BUTTON
+      },
+      fill: CollisionLabColors.PANEL_FILL,
+      stroke: CollisionLabColors.PANEL_STROKE
     } );
 
     // @protected - BallValuesPanel, exposed to sub-classes for layout.

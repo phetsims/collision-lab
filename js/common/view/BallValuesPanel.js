@@ -35,7 +35,7 @@ import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
-import KeypadDialog from './KeypadDialog.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // AlignGroup for each group of x (and y) component columns that display the components of vector values of Balls. This
 // is to match the width of column groups across screens, regardless of whether or not the y-component column is

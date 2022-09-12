@@ -21,6 +21,7 @@
  * @author Brandon Li
  */
 
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
@@ -34,7 +35,7 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
-import KeypadDialog from './KeypadDialog.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // constants
 const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDisplay (used to determine width).
@@ -127,7 +128,9 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
           // Get the editing Range of the BallProperty. Must be recomputed every time the KeypadDialog is opened.
           const editingRange = columnType.editConfig.getEditingRange( ball );
 
-          keypadDialog.beginEdit( editValue, editingRange, unit, () => {
+          keypadDialog.beginEdit( editValue, editingRange, new PatternStringProperty( CollisionLabStrings.pattern.rangeStringProperty, {
+            units: unit || ''
+          } ), () => {
 
             // When the user is finished editing the BallProperty, bump the Ball away from the other Balls that it is
             // overlapping with. See https://github.com/phetsims/collision-lab/issues/100.
