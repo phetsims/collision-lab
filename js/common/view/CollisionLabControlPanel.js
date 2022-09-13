@@ -23,7 +23,7 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import { Color, VBox } from '../../../../scenery/js/imports.js';
-import HSeparator from '../../../../sun/js/HSeparator.js';
+import HSeparatorDeprecated from '../../../../sun/js/HSeparatorDeprecated.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
@@ -119,8 +119,8 @@ class CollisionLabControlPanel extends Panel {
     // @protected {Checkbox} - 'Constant Size' Checkbox. Exposed to sub-classes for layouting.
     this.constantSizeCheckbox = new CollisionLabCheckbox( ballsConstantSizeProperty, CollisionLabStrings.constantSize );
 
-    // HSeparator
-    const hSeparator = new HSeparator( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
+    // HSeparatorDeprecated
+    const hSeparator = new HSeparatorDeprecated( CollisionLabConstants.CONTROL_PANEL_CONTENT_WIDTH, { stroke: Color.BLACK } );
 
     //----------------------------------------------------------------------------------------
 
