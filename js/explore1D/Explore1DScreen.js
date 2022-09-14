@@ -28,7 +28,7 @@ class Explore1DScreen extends Screen {
     const createView = model => new Explore1DScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
-      name: CollisionLabStrings.screen.explore1D,
+      name: CollisionLabStrings.screen.explore1DStringProperty,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       homeScreenIcon: CollisionLabIconFactory.createExplore1DScreenIcon(),
       tandem: tandem

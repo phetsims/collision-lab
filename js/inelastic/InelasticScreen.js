@@ -28,7 +28,7 @@ class InelasticScreen extends Screen {
     const createView = model => new InelasticScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
-      name: CollisionLabStrings.screen.inelastic,
+      name: CollisionLabStrings.screen.inelasticStringProperty,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       homeScreenIcon: CollisionLabIconFactory.createInelasticScreenIcon(),
       tandem: tandem

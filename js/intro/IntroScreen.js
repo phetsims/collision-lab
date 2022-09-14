@@ -28,7 +28,7 @@ class IntroScreen extends Screen {
     const createView = model => new IntroScreenView( model, tandem.createTandem( 'view' ) );
 
     super( createModel, createView, {
-      name: CollisionLabStrings.screen.intro,
+      name: CollisionLabStrings.screen.introStringProperty,
       backgroundColorProperty: new Property( CollisionLabColors.SCREEN_BACKGROUND ),
       homeScreenIcon: CollisionLabIconFactory.createIntroScreenIcon(),
       tandem: tandem
