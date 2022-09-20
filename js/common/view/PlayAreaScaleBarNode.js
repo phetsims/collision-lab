@@ -20,13 +20,13 @@ import Orientation from '../../../../phet-core/js/Orientation.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
-import { HBox, LayoutBox, Line, Text } from '../../../../scenery/js/imports.js';
+import { FlowBox, HBox, Line, Text } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
-class PlayAreaScaleBarNode extends LayoutBox {
+class PlayAreaScaleBarNode extends FlowBox {
 
   /**
    * @param {number} length - the width or height of the scale-bar, in model units (meters).
@@ -127,7 +127,7 @@ class PlayAreaScaleBarNode extends LayoutBox {
 
     // Set the spacing and orientation of the LayoutBox.
     options.spacing = options.labelMargin;
-    options.orientation = options.scaleBarOrientation.opposite.layoutBoxOrientation;
+    options.orientation = options.scaleBarOrientation.opposite.flowBoxOrientation;
 
     super( options );
   }

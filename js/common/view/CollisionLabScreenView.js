@@ -44,6 +44,7 @@ import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
 import PlayAreaTopRightControls from './PlayAreaTopRightControls.js';
 import RestartButton from './RestartButton.js';
 import ReturnBallsButton from './ReturnBallsButton.js';
+import { ManualConstraint } from '../../../../scenery/js/imports.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 152; // Meter to view coordinates scale factor.
@@ -108,8 +109,14 @@ class CollisionLabScreenView extends ScreenView {
     const scaleBar = new PlayAreaScaleBarNode( 0.5, modelViewTransform, {
       scaleBarOrientation: model.playArea.dimension === PlayArea.Dimension.ONE ? Orientation.HORIZONTAL : Orientation.VERTICAL
     } );
-    model.playArea.dimension === PlayArea.Dimension.ONE && scaleBar.setLeftBottom( playAreaViewBounds.leftTop.minusXY( 0, 5 ) );
-    model.playArea.dimension === PlayArea.Dimension.TWO && scaleBar.setRightTop( playAreaViewBounds.leftTop.minusXY( 5, 0 ) );
+    ManualConstraint.create( this, [ scaleBar ], scaleBarProxy => {
+      if ( model.playArea.dimension === PlayArea.Dimension.ONE ) {
+        scaleBarProxy.leftBottom = playAreaViewBounds.leftTop.minusXY( 0, 5 );
+      }
+      else {
+        scaleBarProxy.rightTop = playAreaViewBounds.leftTop.minusXY( 5, 0 );
+      }
+    } );
 
     // Kinetic Energy NumberDisplay
     const kineticEnergyNumberDisplay = new KineticEnergyNumberDisplay(
