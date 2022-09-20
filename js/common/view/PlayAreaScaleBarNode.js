@@ -119,13 +119,13 @@ class PlayAreaScaleBarNode extends FlowBox {
 
     //----------------------------------------------------------------------------------------
 
-    // Set the children of the LayoutBox.
+    // Set the children of the FlowBox.
     options.children = [
       labelNode,
       sideBarsAndArrowsContainer
     ];
 
-    // Set the spacing and orientation of the LayoutBox.
+    // Set the spacing and orientation of the FlowBox.
     options.spacing = options.labelMargin;
     options.orientation = options.scaleBarOrientation.opposite.flowBoxOrientation;
 
