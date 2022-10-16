@@ -53,7 +53,11 @@ class PlayAreaTopRightControls extends VBox {
       numberSpinnerToGridCheckboxMargin: 12,
 
       // {Object} - options passed to the GridCheckbox instance.
-      gridCheckboxOptions: merge( { gridSize: 26 }, CollisionLabConstants.CHECKBOX_OPTIONS ),
+      gridCheckboxOptions: merge( {
+        iconOptions: {
+          iconSize: 26
+        }
+      }, CollisionLabConstants.CHECKBOX_OPTIONS ),
 
       // {Object} - passed to the title Text instance.
       titleTextOptions: {
