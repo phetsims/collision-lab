@@ -323,7 +323,7 @@ class CollisionEngine {
         // Reference the multiplier of the velocity of the Ball. When the sim is being reversed, Balls are essentially
         // moving in the opposite direction of its velocity vector. For calculating if Balls will collide, reverse the
         // velocity of the ball for convenience and reverse the collisionTime back at the end.
-        const velocityMultipier = this.timeStepDirectionProperty.value;
+        const velocityMultiplier = this.timeStepDirectionProperty.value;
 
         /*----------------------------------------------------------------------------*
          * This calculation for detecting if the balls will collide comes from the
@@ -335,7 +335,7 @@ class CollisionEngine {
          *----------------------------------------------------------------------------*/
 
         this.deltaR.set( ball2.positionProperty.value ).subtract( ball1.positionProperty.value );
-        this.deltaV.set( ball2.velocityProperty.value ).subtract( ball1.velocityProperty.value ).multiply( velocityMultipier );
+        this.deltaV.set( ball2.velocityProperty.value ).subtract( ball1.velocityProperty.value ).multiply( velocityMultiplier );
         const sumOfRadiiSquared = ( ball1.radiusProperty.value + ball2.radiusProperty.value ) ** 2;
 
         const relativeDotProduct = this.deltaV.dot( this.deltaR );
@@ -353,7 +353,7 @@ class CollisionEngine {
 
         // If the quadratic root is finite and the collisionTime is positive, the collision is detected and should be
         // registered.
-        const collisionTime = ( Number.isFinite( root ) && root >= 0 && !isEffectivelyParallel ) ? elapsedTime + root * velocityMultipier : null;
+        const collisionTime = ( Number.isFinite( root ) && root >= 0 && !isEffectivelyParallel ) ? elapsedTime + root * velocityMultiplier : null;
 
         const collision = Collision.createFromPool( ball1, ball2, collisionTime );
 
