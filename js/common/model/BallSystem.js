@@ -248,7 +248,7 @@ class BallSystem {
   }
 
   /**
-   * Attemps to save ball states
+   * Attempts to save ball states
    * @private
    */
   tryToSaveBallStates() {
