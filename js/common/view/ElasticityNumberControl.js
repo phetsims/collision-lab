@@ -2,7 +2,7 @@
 
 /**
  * ElasticityNumberControl is a NumberControl sub-type to display and allow the user to manipulate the elasticity
- * of all all ball collisions in a system. It appears inside of control-panels on all screens.
+ * of all ball collisions in a system. It appears inside of control-panels on all screens.
  *
  * The ElasticityNumberControl is labeled with 'Inelastic' and 'Elastic' instead of the percentages as ticks. Some
  * screens use the enabledRangeProperty to disable perfectly inelastic collisions, while some screens use it to
