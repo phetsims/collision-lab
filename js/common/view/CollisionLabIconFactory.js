@@ -23,7 +23,7 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import XNode from '../../../../scenery-phet/js/XNode.js';
-import { Rectangle, Circle, Color, Node, PaintDef, Path, Spacer, Text } from '../../../../scenery/js/imports.js';
+import { Circle, Color, Node, PaintDef, Path, Rectangle, Spacer, Text } from '../../../../scenery/js/imports.js';
 import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
@@ -252,7 +252,7 @@ function createBallSystemSnapshotIcon( ballStates, options ) {
     // {number} - the scale of the dimensions (i.e. tailWidth, headWidth, headHeight, etc.) of velocity vectors.
     velocityVectorDimensionsScale: 1 / 100,
 
-    // {number} - the scale to multiple the magnitude of the velocity vectors.
+    // {number} - the scale to multiply the magnitude of the velocity vectors.
     velocityMultiplier: 1
 
   }, options );

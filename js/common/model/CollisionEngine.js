@@ -562,7 +562,7 @@ class CollisionEngine {
     // essentially moving in the opposite direction of its velocity vector. This is used to determine the direction
     // that the Ball is moving towards; even if a Ball is touching a side(s) of the border, it's velocity doesn't change
     // unless it is moving towards that respective side.
-    const velocityMultipier = this.timeStepDirectionProperty.value;
+    const velocityMultiplier = this.timeStepDirectionProperty.value;
 
     let elasticity = this.playArea.getElasticity();
 
@@ -573,16 +573,16 @@ class CollisionEngine {
     }
 
     // Update the velocity after the collision.
-    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.velocityProperty.value.x * velocityMultipier < 0 ) ||
-         ( this.playArea.isBallTouchingRight( ball ) && ball.velocityProperty.value.x * velocityMultipier > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingLeft( ball ) && ball.velocityProperty.value.x * velocityMultiplier < 0 ) ||
+         ( this.playArea.isBallTouchingRight( ball ) && ball.velocityProperty.value.x * velocityMultiplier > 0 ) ) {
 
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border X bounce` );
 
       // Left and Right ball-to-border collisions incur a flip in horizontal velocity, scaled by the elasticity.
       ball.setXVelocity( -ball.velocityProperty.value.x * elasticity );
     }
-    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.velocityProperty.value.y * velocityMultipier < 0 ) ||
-         ( this.playArea.isBallTouchingTop( ball ) && ball.velocityProperty.value.y * velocityMultipier > 0 ) ) {
+    if ( ( this.playArea.isBallTouchingBottom( ball ) && ball.velocityProperty.value.y * velocityMultiplier < 0 ) ||
+         ( this.playArea.isBallTouchingTop( ball ) && ball.velocityProperty.value.y * velocityMultiplier > 0 ) ) {
 
       sceneryLog && sceneryLog.Sim && sceneryLog.Sim( `#${ball.index} border Y bounce` );
 
