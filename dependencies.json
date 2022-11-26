@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "9a9bdc590a67e678a6f76beec9e8c62833403132",
+    "sha": "3b41f309eb5dede4e87be52a9d7df40a13b19ac1",
     "branch": "1.1"
   },
   "dot": {
@@ -29,7 +29,7 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "17b293d7ed114007b22dee44a3a06b656ac66934",
+    "sha": "62ef2075b8e90eb59fd4880cac17d02b111feb6e",
     "branch": "HEAD"
   },
   "kite": {
