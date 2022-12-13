@@ -13,11 +13,11 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "6189b0ad3c679eb8e29adfea53149593c8d4c2ac",
+    "sha": "ff00cfc44ede261df93251740df0167a308e3006",
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "5cd5528ee664a56016271af8869eb1cb627e0bee",
+    "sha": "d528cc1400c943b434a844d8e9af695a80b85c03",
     "branch": "1.1"
   },
   "dot": {
