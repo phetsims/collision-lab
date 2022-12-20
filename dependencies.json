@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "df9dbe58300a8141f77c2e41e0e1e4a4f206da48",
+    "sha": "d25e9905f87b113336f521963058e90c0736a080",
     "branch": "1.1"
   },
   "dot": {
@@ -65,7 +65,7 @@
     "branch": "HEAD"
   },
   "scenery": {
-    "sha": "e13104801c1bcd0deb3db90e0fa66ae55aaf4307",
+    "sha": "b52e48a9a6c952e76af75271b8c52240f3825730",
     "branch": "HEAD"
   },
   "scenery-phet": {
