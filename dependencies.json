@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.1.8 Wed Dec 14 2022 19:18:39 GMT-0700 (Mountain Standard Time)",
+  "comment": "# collision-lab 1.1.9-rc.1 Tue Dec 20 2022 20:06:39 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "3df8c5ff9a465b031f84195a90bbb7e1be10a14d",
     "branch": "HEAD"
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "d25e9905f87b113336f521963058e90c0736a080",
+    "sha": "425ef527c69e2b700af8b37192bbfcb19ce6915c",
     "branch": "1.1"
   },
   "dot": {
