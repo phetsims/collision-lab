@@ -26,7 +26,7 @@ class PresetRadioButtonGroup extends RectangularRadioButtonGroup {
    * @param {Object} [options]
    */
   constructor( presetProperty, options ) {
-    assert && AssertUtils.assertEnumerationPropertyOf( presetProperty, InelasticPreset );
+    assert && AssertUtils.assertEnumerationDeprecatedPropertyOf( presetProperty, InelasticPreset );
 
     options = merge( {
       orientation: 'horizontal',

@@ -27,7 +27,7 @@ class StickSlipABSwitch extends ABSwitch {
    * @param {Object} [options]
    */
   constructor( inelasticCollisionTypeProperty, options ) {
-    assert && AssertUtils.assertEnumerationPropertyOf( inelasticCollisionTypeProperty, InelasticCollisionType );
+    assert && AssertUtils.assertEnumerationDeprecatedPropertyOf( inelasticCollisionTypeProperty, InelasticCollisionType );
 
     options = merge( {
 
