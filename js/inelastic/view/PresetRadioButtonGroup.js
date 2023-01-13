@@ -49,7 +49,7 @@ class PresetRadioButtonGroup extends RectangularRadioButtonGroup {
     const content = InelasticPreset.VALUES.map( preset => {
       return {
         value: preset,
-        createNode: tandem => CollisionLabIconFactory.createInelasticPresetIcon( preset )
+        createNode: () => CollisionLabIconFactory.createInelasticPresetIcon( preset )
       };
     } );
 
