@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2023, University of Colorado Boulder
 
 /**
  * PresetRadioButtonGroup is a RationButtonGroup sub-type that allows the user to select the different 'Presets'. It
