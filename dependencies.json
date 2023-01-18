@@ -1,5 +1,5 @@
 {
-  "comment": "# collision-lab 1.1.10-rc.1 Fri Jan 13 2023 09:43:42 GMT-0700 (Mountain Standard Time)",
+  "comment": "# collision-lab 1.1.10 Wed Jan 18 2023 11:44:46 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "3df8c5ff9a465b031f84195a90bbb7e1be10a14d",
     "branch": "HEAD"
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "f498cc95ec09fb61789e8ae54b9690049e4885c0",
+    "sha": "65c45cf335f7c950ad9a4d76f90fdde4e0f84cae",
     "branch": "1.1"
   },
   "dot": {
