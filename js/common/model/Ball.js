@@ -55,12 +55,12 @@ class Ball {
 
     // @public {Property.<Vector2>} - Property of the center-position of the Ball, in meters.
     this.positionProperty = new Vector2Property( initialBallState.position, {
-      useDeepEquality: true
+      valueComparisonStrategy: 'equalsFunction'
     } );
 
     // @public {Property.<Vector2>} - Property of the velocity of the Ball, in m/s.
     this.velocityProperty = new Vector2Property( initialBallState.velocity, {
-      useDeepEquality: true
+      valueComparisonStrategy: 'equalsFunction'
     } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
