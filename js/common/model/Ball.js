@@ -1,4 +1,4 @@
-// Copyright 2019-2021, University of Colorado Boulder
+// Copyright 2019-2023, University of Colorado Boulder
 
 /**
  * A Ball is the model for a single spherical moving object that appears in all screens. Each Ball is a apart of a
