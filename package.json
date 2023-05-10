@@ -19,6 +19,12 @@
     "supportedBrands": [
       "phet",
       "adapted-from-phet"
+    ],
+    "screenNameKeys": [
+      "COLLISION_LAB/screen.intro",
+      "COLLISION_LAB/screen.explore1D",
+      "COLLISION_LAB/screen.explore2D",
+      "COLLISION_LAB/screen.inelastic"
     ]
   },
   "eslintConfig": {
