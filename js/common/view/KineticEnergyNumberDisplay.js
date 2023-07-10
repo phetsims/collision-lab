@@ -38,19 +38,11 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
       textOptions: {
         font: CollisionLabConstants.DISPLAY_FONT
       },
-      maxWidth: 300 // constrain width for i18n, determined empirically.
-
+      maxWidth: 300, // constrain width for i18n, determined empirically.
+      isDisposable: false
     }, options );
 
     super( totalKineticEnergyProperty, options );
-  }
-
-  /**
-   * @public
-   * @override
-   */
-  dispose() {
-    assert && assert( false, 'KineticEnergyNumberDisplay is not intended to be disposed' );
   }
 }
 

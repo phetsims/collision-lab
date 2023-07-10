@@ -53,19 +53,11 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
           size: CollisionLabConstants.DISPLAY_FONT.size
         } )
       },
-      decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES
-
+      decimalPlaces: CollisionLabConstants.DISPLAY_DECIMAL_PLACES,
+      isDisposable: false
     }, options );
 
     super( elapsedTimeProperty, options.displayRange, options );
-  }
-
-  /**
-   * @public
-   * @override
-   */
-  dispose() {
-    assert && assert( false, 'ElapsedTimeNumberDisplay is not intended to be disposed' );
   }
 }
 
