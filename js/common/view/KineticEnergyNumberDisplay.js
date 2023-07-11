@@ -1,4 +1,4 @@
-// Copyright 2019-2022, University of Colorado Boulder
+// Copyright 2019-2023, University of Colorado Boulder
 
 /**
  * KineticEnergyNumberDisplay is a subclass of PlayAreaNumberDisplay for displaying the total kinetic energy of a
