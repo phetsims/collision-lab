@@ -9,7 +9,7 @@
  *   - CollisionEngine deals with 2 types of collisions: ball-ball and ball-border collisions. Both of these collisions
  *     are detected *before* the collision occurs to avoid tunneling scenarios where Balls would pass through each
  *     other with high velocities and/or time-steps. The algorithm for detecting ball-ball collisions is described fully
- *     in https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
+ *     in https://github.com/phetsims/collision-lab/blob/main/doc/algorithms/ball-to-ball-collision-detection.md
  *
  *   - On each time-step, every ball-ball and ball-border combination is encapsulated in a Collision data structure
  *     instance, along with if and when the respective bodies will collide. These Collision instances are saved to
@@ -331,7 +331,7 @@ class CollisionEngine {
          * exactly equal to the sum of their radii.
          *
          * Documenting the derivation was beyond the scope of code comments. Please reference
-         * https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md
+         * https://github.com/phetsims/collision-lab/blob/main/doc/algorithms/ball-to-ball-collision-detection.md
          *----------------------------------------------------------------------------*/
 
         this.deltaR.set( ball2.positionProperty.value ).subtract( ball1.positionProperty.value );

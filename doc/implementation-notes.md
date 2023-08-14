@@ -3,9 +3,9 @@
 This document contains notes related to the implementation of Collision Lab. This is not an exhaustive description of the implementation. The intention is to provide a high-level overview and to supplement the internal documentation (source code comments) and external documentation (design documents).  
 
 Before reading this document, you are encouraged to read:
-* [model.md](https://github.com/phetsims/collision-lab/blob/master/doc/model.md), a high-level description of the simulation model
-* [PhET Development Overview](https://github.com/phetsims/phet-info/blob/master/doc/phet-development-overview.md)  
-* [PhET Software Design Patterns](https://github.com/phetsims/phet-info/blob/master/doc/phet-software-design-patterns.md)
+* [model.md](https://github.com/phetsims/collision-lab/blob/main/doc/model.md), a high-level description of the simulation model
+* [PhET Development Overview](https://github.com/phetsims/phet-info/blob/main/doc/phet-development-overview.md)  
+* [PhET Software Design Patterns](https://github.com/phetsims/phet-info/blob/main/doc/phet-software-design-patterns.md)
 * [Collision Lab HTML5](https://docs.google.com/document/d/1FwMnpv8LyMZfMYPcASYhI2jtgCXyWrgAjTOx3Po_MsE/), the design document
 
 ## Terminology
@@ -25,17 +25,17 @@ Much of the terminology for this sim is identified by labels that are visible in
 
 This section describes how this simulation addresses implementation considerations that are typically encountered in PhET simulations.
 
-**Coordinate Transforms**: The model coordinate frame is in meters (m), with +x right, +y up. The standard (scenery) view coordinate frame has +x right, +y down. Thus, Collision Lab uses a [ModelViewTransform2](https://github.com/phetsims/phetcommon/blob/master/js/view/ModelViewTransform2.js) scaling transformation that inverts the y-axis.
+**Coordinate Transforms**: The model coordinate frame is in meters (m), with +x right, +y up. The standard (scenery) view coordinate frame has +x right, +y down. Thus, Collision Lab uses a [ModelViewTransform2](https://github.com/phetsims/phetcommon/blob/main/js/view/ModelViewTransform2.js) scaling transformation that inverts the y-axis.
 
 **Query Parameters**: Query parameters are used to enable sim-specific features, mainly for debugging and testing. Sim-specific query parameters are documented in [CollisionLabQueryParameters](../js/common/CollisionLabQueryParameters.js).
 
 **Assertions**: The implementation makes heavy use of `assert` to verify pre/post assumptions and perform type checking. This sim performs type-checking for almost all function arguments via `assert`. If you are making modifications to this sim, do so with assertions enabled via the `?ea` query parameter.
 
-**Memory Management**: The only dynamically allocated objects in the simulation are [PathDataPoint](../js/common/model/PathDataPoint.js), [BallState](../js/common/model/BallState.js), [Collision](../js/common/model/Collision.js), and [RotatingBallCluster](../js/inelastic/model/RotatingBallCluster.js). However, none of these data structures hold onto any [Properties](https://github.com/phetsims/axon/blob/master/js/Property.js) or listeners, so simply un-referencing them will allow the garbage collector to free the memory.
+**Memory Management**: The only dynamically allocated objects in the simulation are [PathDataPoint](../js/common/model/PathDataPoint.js), [BallState](../js/common/model/BallState.js), [Collision](../js/common/model/Collision.js), and [RotatingBallCluster](../js/inelastic/model/RotatingBallCluster.js). However, none of these data structures hold onto any [Properties](https://github.com/phetsims/axon/blob/main/js/Property.js) or listeners, so simply un-referencing them will allow the garbage collector to free the memory.
 
 Otherwise, there are no dynamically allocated objects in the simulation. The same Ball objects (both model and view) are used with the same number of Balls, meaning Balls are created at the start of the sim and persist for the lifetime of the sim. See [BallSystem](../js/common/model/BallSystem.js) for details.
 
-For the view, the simulation takes advantage of this and creates scenery [Nodes](https://github.com/phetsims/scenery/blob/master/js/nodes/Node.js) that represent each Ball (for the [Ball Values Panel](../js/common/view/BallValuesPanel.js), [Paths](../js/common/view/PathsNode.js), [BallNodes](../js/common/view/BallNode.js), etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
+For the view, the simulation takes advantage of this and creates scenery [Nodes](https://github.com/phetsims/scenery/blob/main/js/nodes/Node.js) that represent each Ball (for the [Ball Values Panel](../js/common/view/BallValuesPanel.js), [Paths](../js/common/view/PathsNode.js), [BallNodes](../js/common/view/BallNode.js), etc.), regardless of whether or not the Ball is currently visible and adjusts visibility based on whether or not it is in the system. There is no performance loss since Balls not in the system are not stepped or updated. 
 
 Thus, all observer/observable relationships exist for the lifetime of the sim, so there is no need to call the various memory-management functions associated with these objects (`unlink`, `dispose`, `removeListener`, etc.).
 
@@ -71,7 +71,7 @@ This section describes the **main** classes that are common to multiple screens.
 
 ### Screen-specific classes
 
-All screens have screen-specific classes to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/master/model.md).
+All screens have screen-specific classes to account for the described [screen differences](https://github.com/phetsims/collision-lab/blob/main/model.md).
 
 The top-level classes ([CollisionLabModel](../js/common/model/CollisionLabModel.js) and [CollisionBallScreenView](../js/common/view/CollisionBallScreenView.js)) use the [Factory Method Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) to allow screens to specify and provide screen-specific sub-classes while still allowing the base-classes to handle the instance.
 
@@ -79,11 +79,11 @@ Commonly sub-typed classes are [BallSystem](../js/common/model/BallSystem.js), [
 
 ### Inelastic Screen
 
-The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [model description](https://github.com/phetsims/collision-lab/blob/master/model.md).
+The _Inelastic_ screen introduces many components and behaviors that are unique to it, as described in the [model description](https://github.com/phetsims/collision-lab/blob/main/model.md).
 
 [InelasticCollisionType](../js/inelastic/model/InelasticCollisionType.js) is an Enumeration of the different types of perfectly inelastic collisions ("Stick" vs "Slip").
 
-[InelasticCollisionEngine](../js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/master/doc/implementation-notes.md#collision-implementation).
+[InelasticCollisionEngine](../js/inelastic/model/InelasticCollisionEngine.js) implements collision detection and responses for perfectly inelastic collisions that "stick." Most notably, it handles rotations of Ball clusters. Reference the [Collision Implementation](https://github.com/phetsims/collision-lab/blob/main/doc/implementation-notes.md#collision-implementation).
 
 [InelasticPreset](../js/inelastic/model/InelasticPreset.js) is a rich Enumeration which maps to a `PresetValue` that sets the states of the Balls. The different _presets_ are visible in the [PresetRadioButtonGroup](../js/inelastic/view/PresetRadioButtonGroup.js).
 
@@ -93,7 +93,7 @@ The motion of Balls is based on the fact that they are under-going uniform-motio
 
 On each time-step, every combination of physical bodies is encapsulated in a [Collision](../js/common/model/Collision.js) data structure instance, along with if and when these respective bodies will collide. These [Collision](../js/common/model/Collision.js) instances are saved to optimize the number of redundant collision-detection checks. On successive time-steps, [Collision](../js/common/model/Collision.js) instances are only created for ball-ball and ball-border combinations that haven't already been created. [Collision](../js/common/model/Collision.js) instances are removed when a collision is handled or some other state in the simulation changes.
 
-The algorithm for detecting ball-ball collisions is described fully in https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/ball-to-ball-collision-detection.md.
+The algorithm for detecting ball-ball collisions is described fully in https://github.com/phetsims/collision-lab/blob/main/doc/algorithms/ball-to-ball-collision-detection.md.
 
 Then, after [Collisions](../js/common/model/Collision) have been created for every ball-ball and ball-border combination, we check if any of the saved collisions that have associated collision times are in between the previous and current step, meaning a collision will occur in this time-step. To fully ensure that collisions are simulated correctly — even with extremely high time-steps — only the earliest collision is handled and progressed. All Collision instances that store the involved bodies are removed. This detection-response loop is then repeated until there are no collisions detected within the time-step.
 

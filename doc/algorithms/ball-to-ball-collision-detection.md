@@ -4,7 +4,7 @@ Author: [@brandonLi8](https://github.com/brandonLi8)
 #### Background:
 The discrete nature of computers forces the physics engine of the Collision Lab simulation to follow a time-discretization approach to detecting and processing ball collisions. When balls collide the collision likely occurred in-between time steps. The flash implementation uses a traditional discrete collisions detection algorithm, where collisions are detected when Balls physically overlap. However, with sufficiently high-velocity balls and/or large time steps (low frame rates), Ball collisions could go undetected, resulting in Balls "tunneling" through each other.
 
-Thus, the HTML5 implementation uses a [_priori_ Collision Detection](https://en.wikipedia.org/wiki/Collision_detection#A_posteriori_(discrete)_versus_a_priori_(continuous)) algorithm, where the [CollisionEngine](https://github.com/phetsims/collision-lab/blob/master/js/common/model/CollisionEngine.js) checks and processes collisions **before** they’ve happened.
+Thus, the HTML5 implementation uses a [_priori_ Collision Detection](https://en.wikipedia.org/wiki/Collision_detection#A_posteriori_(discrete)_versus_a_priori_(continuous)) algorithm, where the [CollisionEngine](https://github.com/phetsims/collision-lab/blob/main/js/common/model/CollisionEngine.js) checks and processes collisions **before** they’ve happened.
 
 The question, answered in this document, is how the physics engine computes _if_ any Balls will collide within a given time-step, and if so, _when_ the balls exactly collided. The solution must work generally for both forwards and reverse collisions. This method is called `detectBallToBallCollisions` in the model.
 
@@ -33,7 +33,7 @@ Since Balls are undergoing uniform-motion, they are traveling in a straight line
 
 <img src="https://render.githubusercontent.com/render/math?math=\large \qquad\quad \vec{r}_{\contact\2} = \vec{r}_2 %2B \textrm{time} \cdot\vec{v}_2">
 
-<img src="https://github.com/phetsims/collision-lab/blob/master/doc/algorithms/images/ball-contact-diagram.png" width="380">
+<img src="https://github.com/phetsims/collision-lab/blob/main/doc/algorithms/images/ball-contact-diagram.png" width="380">
 
 Additionally, based on this picture, we know that when the Balls are exactly colliding, the distance between the centers of the balls is equal to the sum of the radii of the ball:
 
