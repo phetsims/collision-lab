@@ -78,7 +78,7 @@ class CenterOfMass {
       [ ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
       () => this.computeVelocity(), {
         valueType: Vector2,
-        accessNonDependencies: true
+        strictAxonDependencies: false
       } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
