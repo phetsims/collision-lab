@@ -78,7 +78,7 @@ class CenterOfMass {
       [ ...ballMassProperties, ...ballVelocityProperties, balls.lengthProperty ],
       () => this.computeVelocity(), {
         valueType: Vector2,
-        strictAxonDependencies: false
+        strictAxonDependencies: false //TODO https://github.com/phetsims/collision-lab/issues/219
       } );
 
     // @public {Property.<number>} speedProperty - Property of the speed of the Ball, in m/s.
