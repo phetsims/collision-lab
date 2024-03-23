@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2024, University of Colorado Boulder
 
 /**
  * BallSystem is the model for an isolated system of different Ball objects. It is the complete collection of Balls,

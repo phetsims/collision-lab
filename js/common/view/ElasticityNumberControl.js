@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2024, University of Colorado Boulder
 
 /**
  * ElasticityNumberControl is a NumberControl sub-type to display and allow the user to manipulate the elasticity

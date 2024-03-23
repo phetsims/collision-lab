@@ -1,4 +1,4 @@
-// Copyright 2019-2023, University of Colorado Boulder
+// Copyright 2019-2024, University of Colorado Boulder
 
 /**
  * CollisionEngine handles all collision detection and responses of Ball collisions. It is the physics engine that is
