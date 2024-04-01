@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "26e6f8c4117534605b9f60743739e4c52e4a2364",
+    "sha": "ca785bb8aac23236b7e3c553b44cf13b11575dc2",
     "branch": "1.1"
   },
   "dot": {
@@ -53,7 +53,7 @@
     "branch": "HEAD"
   },
   "phetcommon": {
-    "sha": "82924831318f244c2c76d7bf48c60bb78432fcbd",
+    "sha": "d05162991b0e4efe36a1b27db0bdbe0145785b6c",
     "branch": "HEAD"
   },
   "phetmarks": {
