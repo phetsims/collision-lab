@@ -41,7 +41,7 @@
         ],
         "parserOptions": {
           "project": [
-            "../collision-lab/tsconfig.json"
+            "../chipper/tsconfig/eslint-all/tsconfig.json"
           ]
         }
       }
