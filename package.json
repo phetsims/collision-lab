@@ -33,6 +33,18 @@
     "extends": "../chipper/eslint/sim_eslintrc.js",
     "globals": {
       "sceneryLog": "readonly"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.ts"
+        ],
+        "parserOptions": {
+          "project": [
+            "../collision-lab/tsconfig.json"
+          ]
+        }
+      }
+    ]
   }
 }
