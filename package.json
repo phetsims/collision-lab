@@ -28,11 +28,5 @@
       "COLLISION_LAB/screen.explore2D",
       "COLLISION_LAB/screen.inelastic"
     ]
-  },
-  "eslintConfig": {
-    "extends": "../chipper/eslint/sim_eslintrc.js",
-    "globals": {
-      "sceneryLog": "readonly"
-    }
   }
 }
