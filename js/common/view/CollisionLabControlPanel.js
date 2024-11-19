@@ -1,4 +1,4 @@
-// Copyright 2019-2023, University of Colorado Boulder
+// Copyright 2019-2024, University of Colorado Boulder
 
 /**
  * Control Panel at the upper-right corner of each screen that allows the user to manipulate certain Properties of
