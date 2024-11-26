@@ -221,7 +221,6 @@ class CollisionLabScreenView extends ScreenView {
     // Reset All Button
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        this.interruptSubtreeInput();
         model.reset();
         viewProperties.reset();
         this.ballSystemNode.reset();
