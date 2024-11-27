@@ -22,6 +22,7 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import { AlignGroup, RichText, VBox } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
@@ -32,7 +33,6 @@ import BallMassSlider from './BallMassSlider.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
 import BallValuesPanelNumberDisplay from './BallValuesPanelNumberDisplay.js';
 import CollisionLabIconFactory from './CollisionLabIconFactory.js';
-import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // AlignGroups for the content and label Nodes of every BallValuesPanelColumnNode. Created to match the vertical height
 // of each component in the BallValuesPanel across screens every screen.

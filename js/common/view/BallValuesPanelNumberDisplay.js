@@ -26,6 +26,7 @@ import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import merge from '../../../../phet-core/js/merge.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import { Color, FireListener } from '../../../../scenery/js/imports.js';
 import collisionLab from '../../collisionLab.js';
@@ -35,7 +36,6 @@ import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
 import BallSystem from '../model/BallSystem.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
-import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // constants
 const DISPLAY_RANGE = new Range( -10, 10 ); // Display range for the NumberDisplay (used to determine width).

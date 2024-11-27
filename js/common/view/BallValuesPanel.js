@@ -26,6 +26,7 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import { AlignGroup, HBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import Panel from '../../../../sun/js/Panel.js';
 import collisionLab from '../../collisionLab.js';
@@ -35,7 +36,6 @@ import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
 import BallValuesPanelColumnNode from './BallValuesPanelColumnNode.js';
 import BallValuesPanelColumnTypes from './BallValuesPanelColumnTypes.js';
-import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 
 // AlignGroup for each group of x (and y) component columns that display the components of vector values of Balls. This
 // is to match the width of column groups across screens, regardless of whether or not the y-component column is

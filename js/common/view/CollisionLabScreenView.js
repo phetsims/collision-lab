@@ -25,6 +25,8 @@ import merge from '../../../../phet-core/js/merge.js';
 import Orientation from '../../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
+import { ManualConstraint } from '../../../../scenery/js/imports.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -35,7 +37,6 @@ import BallValuesPanel from './BallValuesPanel.js';
 import CollisionLabTimeControlNode from './CollisionLabTimeControlNode.js';
 import CollisionLabViewProperties from './CollisionLabViewProperties.js';
 import ElapsedTimeNumberDisplay from './ElapsedTimeNumberDisplay.js';
-import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import KineticEnergyNumberDisplay from './KineticEnergyNumberDisplay.js';
 import MomentaDiagramAccordionBox from './MomentaDiagramAccordionBox.js';
 import MoreDataCheckbox from './MoreDataCheckbox.js';
@@ -44,7 +45,6 @@ import PlayAreaScaleBarNode from './PlayAreaScaleBarNode.js';
 import PlayAreaTopRightControls from './PlayAreaTopRightControls.js';
 import RestartButton from './RestartButton.js';
 import ReturnBallsButton from './ReturnBallsButton.js';
-import { ManualConstraint } from '../../../../scenery/js/imports.js';
 
 // constants
 const MODEL_TO_VIEW_SCALE = 152; // Meter to view coordinates scale factor.
