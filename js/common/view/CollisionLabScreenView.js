@@ -153,7 +153,8 @@ class CollisionLabScreenView extends ScreenView {
           includeStepBackwardButton: options.includeStepBack
         }
       } );
-    timeControlNode.setPlayPauseButtonCenter( playAreaViewBounds.centerBottom.plusXY( 0, timeControlNode.height / 2 + 10 ) );
+    timeControlNode.setPlayPauseButtonCenterX( this, playAreaViewBounds.center.x );
+    timeControlNode.top = playAreaViewBounds.bottom + 10;
 
     // Restart Button
     const restartButton = new RestartButton( {
