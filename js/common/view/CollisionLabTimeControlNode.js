@@ -61,7 +61,7 @@ class CollisionLabTimeControlNode extends TimeControlNode {
       playPauseStepButtonOptions: {
         includeStepBackwardButton: true
       },
-      buttonGroupXSpacing: 20
+      flowBoxSpacing: 20
     }, options );
 
     //----------------------------------------------------------------------------------------
