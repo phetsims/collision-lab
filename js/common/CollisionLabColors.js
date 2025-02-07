@@ -8,7 +8,7 @@
  */
 
 import PhetColorScheme from '../../../scenery-phet/js/PhetColorScheme.js';
-import { Color } from '../../../scenery/js/imports.js';
+import Color from '../../../scenery/js/util/Color.js';
 import ColorConstants from '../../../sun/js/ColorConstants.js';
 import collisionLab from '../collisionLab.js';
 
