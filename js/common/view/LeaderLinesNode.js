@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2025, University of Colorado Boulder
 
 /**
  * LeaderLinesNode is a specialized view to display guiding dashed lines from a location to the edge of a bounding box.

@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2025, University of Colorado Boulder
 
 /**
  * MomentaDiagramAccordionBox appears on the bottom-right side of all Screens. It's a feature ported from the flash

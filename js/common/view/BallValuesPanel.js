@@ -1,4 +1,4 @@
-// Copyright 2019-2024, University of Colorado Boulder
+// Copyright 2019-2025, University of Colorado Boulder
 
 /**
  * BallValuesPanel is the Panel at the bottom of all screens which displays and allows the user to modify the values

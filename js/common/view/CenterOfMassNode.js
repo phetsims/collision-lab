@@ -1,4 +1,4 @@
-// Copyright 2019-2022, University of Colorado Boulder
+// Copyright 2019-2025, University of Colorado Boulder
 
 /**
  * CenterOfMassNode is the view representation of a BallSystem's CenterOfMass, which appears in all screens of the

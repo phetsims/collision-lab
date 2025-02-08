@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2025, University of Colorado Boulder
 
 /**
  * PlayAreaScaleBarNode is a specialized view to display a arrow scale-bar, which samples some portion of a

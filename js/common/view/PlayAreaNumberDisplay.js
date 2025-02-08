@@ -1,4 +1,4 @@
-// Copyright 2020-2022, University of Colorado Boulder
+// Copyright 2020-2025, University of Colorado Boulder
 
 /**
  * PlayAreaNumberDisplay is a subclass of NumberDisplay for displaying a numeric value for objects and values that
