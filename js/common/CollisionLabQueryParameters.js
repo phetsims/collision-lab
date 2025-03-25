@@ -6,6 +6,7 @@
  * @author Brandon Li
  */
 
+import { QueryStringMachine } from '../../../query-string-machine/js/QueryStringMachineModule.js';
 import collisionLab from '../collisionLab.js';
 
 const CollisionLabQueryParameters = QueryStringMachine.getAll( {
