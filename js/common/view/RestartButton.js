@@ -23,8 +23,8 @@ class RestartButton extends RestartUndoButton {
     options = merge( {
 
       // super-class
-      baseColor: CollisionLabColors.RESTART_BUTTON
-
+      baseColor: CollisionLabColors.RESTART_BUTTON,
+      lineWidth: 0
     }, options );
 
     super( options );
