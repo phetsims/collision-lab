@@ -25,13 +25,11 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import XNode from '../../../../scenery-phet/js/XNode.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Spacer from '../../../../scenery/js/nodes/Spacer.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
-import undoSolidShape from '../../../../sherpa/js/fontawesome-5/undoSolidShape.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import Explore2DBallSystem from '../../explore2D/model/Explore2DBallSystem.js';
@@ -169,18 +167,6 @@ const CollisionLabIconFactory = {
     } );
 
     return new Node( { children: [ ballCircle, labelNode ] } );
-  },
-
-  /*————————————————————————————————— Button Icons ———————————————————————————————————————*/
-
-  /**
-   * Creates the icon used on the Restart button just outside the bottom-right corner of the PlayArea.
-   * @public
-   *
-   * @returns {Node}
-   */
-  createRestartIcon() {
-    return new Path( undoSolidShape, { scale: 0.038, fill: 'black' } );
   },
 
   /*————————————————————————————— Inelastic Preset Icons —————————————————————————————————*/

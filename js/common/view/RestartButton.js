@@ -8,12 +8,11 @@
  */
 
 import merge from '../../../../phet-core/js/merge.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import RestartUndoButton from '../../../../scenery-phet/js/buttons/RestartUndoButton.js';
 import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
-import CollisionLabIconFactory from './CollisionLabIconFactory.js';
 
-class RestartButton extends RectangularPushButton {
+class RestartButton extends RestartUndoButton {
 
   /**
    * @param {Object} [options]
@@ -24,17 +23,9 @@ class RestartButton extends RectangularPushButton {
     options = merge( {
 
       // super-class
-      baseColor: CollisionLabColors.RESTART_BUTTON,
-      lineWidth: 0,
-      xMargin: 6,
-      yMargin: 5,
-      touchAreaXDilation: 8,
-      touchAreaYDilation: 8
+      baseColor: CollisionLabColors.RESTART_BUTTON
 
     }, options );
-
-    assert && assert( !options.content, 'RestartButton sets content' );
-    options.content = CollisionLabIconFactory.createRestartIcon();
 
     super( options );
   }
