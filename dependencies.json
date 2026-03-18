@@ -9,7 +9,7 @@
     "branch": "HEAD"
   },
   "brand": {
-    "sha": "d810fd0d5ab5584d21995089c0d4be0b8d884685",
+    "sha": "0fca7c4f9e3dd7f784ab0d6d5a7bc1214171d79e",
     "branch": "HEAD"
   },
   "chipper": {
@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "collision-lab": {
-    "sha": "017e23af472bc08e003ab9b159fde044e40d83c4",
+    "sha": "e83b44b566e275acae33c423e270490187fa54c4",
     "branch": "1.1"
   },
   "dot": {
