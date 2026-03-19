@@ -11,7 +11,6 @@ import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
@@ -215,5 +214,4 @@ const BallUtils = {
   }
 };
 
-collisionLab.register( 'BallUtils', BallUtils );
 export default BallUtils;

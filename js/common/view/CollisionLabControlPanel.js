@@ -26,7 +26,6 @@ import HSeparator from '../../../../scenery/js/layout/nodes/HSeparator.js';
 import VBox from '../../../../scenery/js/layout/nodes/VBox.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import Panel from '../../../../sun/js/Panel.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
@@ -173,5 +172,4 @@ class CollisionLabControlPanel extends Panel {
   }
 }
 
-collisionLab.register( 'CollisionLabControlPanel', CollisionLabControlPanel );
 export default CollisionLabControlPanel;

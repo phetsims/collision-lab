@@ -16,7 +16,6 @@
  */
 
 import Poolable from '../../../../phet-core/js/Poolable.js';
-import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
 import PlayArea from './PlayArea.js';
 
@@ -134,5 +133,4 @@ class Collision {
 
 Poolable.mixInto( Collision );
 
-collisionLab.register( 'Collision', Collision );
 export default Collision;

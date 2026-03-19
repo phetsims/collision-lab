@@ -7,7 +7,6 @@
  */
 
 import Range from '../../../../dot/js/Range.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import PlayArea from '../../common/model/PlayArea.js';
 
@@ -37,5 +36,4 @@ class Explore2DPlayArea extends PlayArea {
   }
 }
 
-collisionLab.register( 'Explore2DPlayArea', Explore2DPlayArea );
 export default Explore2DPlayArea;

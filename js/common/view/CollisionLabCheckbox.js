@@ -14,7 +14,6 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Checkbox from '../../../../sun/js/Checkbox.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class CollisionLabCheckbox extends Checkbox {
@@ -77,5 +76,4 @@ class CollisionLabCheckbox extends Checkbox {
   }
 }
 
-collisionLab.register( 'CollisionLabCheckbox', CollisionLabCheckbox );
 export default CollisionLabCheckbox;

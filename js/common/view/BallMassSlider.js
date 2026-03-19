@@ -12,7 +12,6 @@
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import HSlider from '../../../../sun/js/HSlider.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import Ball from '../model/Ball.js';
@@ -59,5 +58,4 @@ class BallMassSlider extends HSlider {
   }
 }
 
-collisionLab.register( 'BallMassSlider', BallMassSlider );
 export default BallMassSlider;

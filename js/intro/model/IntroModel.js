@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import IntroBallSystem from './IntroBallSystem.js';
 import IntroCollisionEngine from './IntroCollisionEngine.js';
@@ -59,5 +58,4 @@ class IntroModel extends CollisionLabModel {
   }
 }
 
-collisionLab.register( 'IntroModel', IntroModel );
 export default IntroModel;

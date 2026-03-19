@@ -35,7 +35,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabQueryParameters from '../../common/CollisionLabQueryParameters.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
@@ -240,5 +239,4 @@ IntroBallSystem.INITIAL_BALL_STATES = [
   new BallState( new Vector2( 1, 0 ), new Vector2( -0.5, 0 ), 1.5 )
 ];
 
-collisionLab.register( 'IntroBallSystem', IntroBallSystem );
 export default IntroBallSystem;

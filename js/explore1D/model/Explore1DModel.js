@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import Explore1DBallSystem from './Explore1DBallSystem.js';
 import Explore1DCollisionEngine from './Explore1DCollisionEngine.js';
@@ -59,5 +58,4 @@ class Explore1DModel extends CollisionLabModel {
   }
 }
 
-collisionLab.register( 'Explore1DModel', Explore1DModel );
 export default Explore1DModel;

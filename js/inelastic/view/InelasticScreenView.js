@@ -9,7 +9,6 @@
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import collisionLab from '../../collisionLab.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -103,5 +102,4 @@ class InelasticScreenView extends CollisionLabScreenView {
   }
 }
 
-collisionLab.register( 'InelasticScreenView', InelasticScreenView );
 export default InelasticScreenView;

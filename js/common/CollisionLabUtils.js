@@ -10,7 +10,6 @@ import stepTimer from '../../../axon/js/stepTimer.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Utils from '../../../dot/js/Utils.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import collisionLab from '../collisionLab.js';
 import CollisionLabConstants from './CollisionLabConstants.js';
 
 const CollisionLabUtils = {
@@ -329,5 +328,4 @@ const CollisionLabUtils = {
   }
 };
 
-collisionLab.register( 'CollisionLabUtils', CollisionLabUtils );
 export default CollisionLabUtils;

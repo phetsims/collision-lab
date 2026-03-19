@@ -22,7 +22,6 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class BallVectorNode extends Node {
@@ -89,5 +88,4 @@ class BallVectorNode extends Node {
   }
 }
 
-collisionLab.register( 'BallVectorNode', BallVectorNode );
 export default BallVectorNode;

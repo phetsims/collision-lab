@@ -22,7 +22,6 @@ import NumberControl from '../../../../scenery-phet/js/NumberControl.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -97,5 +96,4 @@ class ElasticityNumberControl extends NumberControl {
   }
 }
 
-collisionLab.register( 'ElasticityNumberControl', ElasticityNumberControl );
 export default ElasticityNumberControl;

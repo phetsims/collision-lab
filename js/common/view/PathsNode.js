@@ -25,7 +25,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import Ball from '../model/Ball.js';
 import CollisionLabPath from '../model/CollisionLabPath.js';
@@ -152,5 +151,4 @@ class PathsNode extends CanvasNode {
   }
 }
 
-collisionLab.register( 'PathsNode', PathsNode );
 export default PathsNode;

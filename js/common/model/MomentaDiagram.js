@@ -30,7 +30,6 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
@@ -227,5 +226,4 @@ class MomentaDiagram {
   }
 }
 
-collisionLab.register( 'MomentaDiagram', MomentaDiagram );
 export default MomentaDiagram;

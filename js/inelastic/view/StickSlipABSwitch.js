@@ -16,7 +16,6 @@ import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import AlignGroup from '../../../../scenery/js/layout/constraints/AlignGroup.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import InelasticCollisionType from '../model/InelasticCollisionType.js';
@@ -62,5 +61,4 @@ class StickSlipABSwitch extends ABSwitch {
   }
 }
 
-collisionLab.register( 'StickSlipABSwitch', StickSlipABSwitch );
 export default StickSlipABSwitch;

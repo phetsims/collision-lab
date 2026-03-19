@@ -7,7 +7,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionEngine from '../../common/model/CollisionEngine.js';
 
 class Explore1DCollisionEngine extends CollisionEngine {
@@ -88,5 +87,4 @@ class Explore1DCollisionEngine extends CollisionEngine {
   }
 }
 
-collisionLab.register( 'Explore1DCollisionEngine', Explore1DCollisionEngine );
 export default Explore1DCollisionEngine;

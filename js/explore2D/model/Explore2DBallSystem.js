@@ -11,7 +11,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import Explore2DPlayArea from './Explore2DPlayArea.js';
@@ -50,5 +49,4 @@ Explore2DBallSystem.INITIAL_BALL_STATES = [
   new BallState( new Vector2( 0.20, -0.65 ), new Vector2( 1.10, 0.200 ), 1.00 )
 ];
 
-collisionLab.register( 'Explore2DBallSystem', Explore2DBallSystem );
 export default Explore2DBallSystem;

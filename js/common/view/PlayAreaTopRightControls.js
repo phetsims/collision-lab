@@ -25,7 +25,6 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import VBox from '../../../../scenery/js/layout/nodes/VBox.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -127,5 +126,4 @@ class PlayAreaTopRightControls extends VBox {
   }
 }
 
-collisionLab.register( 'PlayAreaTopRightControls', PlayAreaTopRightControls );
 export default PlayAreaTopRightControls;

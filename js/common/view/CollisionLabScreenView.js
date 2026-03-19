@@ -28,7 +28,6 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import ManualConstraint from '../../../../scenery/js/layout/constraints/ManualConstraint.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabModel from '../model/CollisionLabModel.js';
@@ -297,5 +296,4 @@ class CollisionLabScreenView extends ScreenView {
   createBallSystemNode( model, viewProperties, modelViewTransform ) { assert && assert( false, 'abstract method must be overridden' ); }
 }
 
-collisionLab.register( 'CollisionLabScreenView', CollisionLabScreenView );
 export default CollisionLabScreenView;

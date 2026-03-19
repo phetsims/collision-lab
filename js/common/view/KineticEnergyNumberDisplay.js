@@ -15,7 +15,6 @@
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayAreaNumberDisplay from './PlayAreaNumberDisplay.js';
@@ -46,5 +45,4 @@ class KineticEnergyNumberDisplay extends PlayAreaNumberDisplay {
   }
 }
 
-collisionLab.register( 'KineticEnergyNumberDisplay', KineticEnergyNumberDisplay );
 export default KineticEnergyNumberDisplay;

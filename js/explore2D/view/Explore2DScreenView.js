@@ -7,7 +7,6 @@
  */
 
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import collisionLab from '../../collisionLab.js';
 import BallSystemNode from '../../common/view/BallSystemNode.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -69,5 +68,4 @@ class Explore2DScreenView extends CollisionLabScreenView {
   }
 }
 
-collisionLab.register( 'Explore2DScreenView', Explore2DScreenView );
 export default Explore2DScreenView;

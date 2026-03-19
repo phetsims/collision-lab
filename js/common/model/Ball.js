@@ -27,7 +27,6 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import BallState from './BallState.js';
@@ -311,5 +310,4 @@ class Ball {
   }
 }
 
-collisionLab.register( 'Ball', Ball );
 export default Ball;

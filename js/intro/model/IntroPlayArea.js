@@ -12,7 +12,6 @@
 
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import merge from '../../../../phet-core/js/merge.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import PlayArea from '../../common/model/PlayArea.js';
 
@@ -52,5 +51,4 @@ class IntroPlayArea extends PlayArea {
   }
 }
 
-collisionLab.register( 'IntroPlayArea', IntroPlayArea );
 export default IntroPlayArea;

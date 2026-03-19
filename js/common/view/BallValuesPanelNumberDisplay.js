@@ -30,7 +30,6 @@ import KeypadDialog from '../../../../scenery-phet/js/keypad/KeypadDialog.js';
 import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import FireListener from '../../../../scenery/js/listeners/FireListener.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -147,5 +146,4 @@ class BallValuesPanelNumberDisplay extends NumberDisplay {
   }
 }
 
-collisionLab.register( 'BallValuesPanelNumberDisplay', BallValuesPanelNumberDisplay );
 export default BallValuesPanelNumberDisplay;

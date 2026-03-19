@@ -24,7 +24,6 @@ import FlowBox from '../../../../scenery/js/layout/nodes/FlowBox.js';
 import HBox from '../../../../scenery/js/layout/nodes/HBox.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -136,5 +135,4 @@ class PlayAreaScaleBarNode extends FlowBox {
   }
 }
 
-collisionLab.register( 'PlayAreaScaleBarNode', PlayAreaScaleBarNode );
 export default PlayAreaScaleBarNode;

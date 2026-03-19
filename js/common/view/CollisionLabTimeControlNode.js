@@ -25,7 +25,6 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
 class CollisionLabTimeControlNode extends TimeControlNode {
@@ -97,5 +96,4 @@ class CollisionLabTimeControlNode extends TimeControlNode {
   }
 }
 
-collisionLab.register( 'CollisionLabTimeControlNode', CollisionLabTimeControlNode );
 export default CollisionLabTimeControlNode;

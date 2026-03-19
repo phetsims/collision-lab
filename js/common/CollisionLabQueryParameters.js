@@ -7,7 +7,6 @@
  */
 
 import { QueryStringMachine } from '../../../query-string-machine/js/QueryStringMachineModule.js';
-import collisionLab from '../collisionLab.js';
 
 const CollisionLabQueryParameters = QueryStringMachine.getAll( {
 
@@ -62,5 +61,4 @@ const CollisionLabQueryParameters = QueryStringMachine.getAll( {
   }
 } );
 
-collisionLab.register( 'CollisionLabQueryParameters', CollisionLabQueryParameters );
 export default CollisionLabQueryParameters;

@@ -13,7 +13,6 @@
 import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
-import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import Explore1DPlayArea from './Explore1DPlayArea.js';
@@ -64,5 +63,4 @@ class Explore1DBallSystem extends BallSystem {
   }
 }
 
-collisionLab.register( 'Explore1DBallSystem', Explore1DBallSystem );
 export default Explore1DBallSystem;

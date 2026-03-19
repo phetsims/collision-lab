@@ -16,7 +16,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallVectorNode from './BallVectorNode.js';
@@ -59,5 +58,4 @@ class BallMomentumVectorNode extends BallVectorNode {
   }
 }
 
-collisionLab.register( 'BallMomentumVectorNode', BallMomentumVectorNode );
 export default BallMomentumVectorNode;

@@ -26,7 +26,6 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import XNode from '../../../../scenery-phet/js/XNode.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -108,5 +107,4 @@ class CenterOfMassNode extends Node {
   }
 }
 
-collisionLab.register( 'CenterOfMassNode', CenterOfMassNode );
 export default CenterOfMassNode;

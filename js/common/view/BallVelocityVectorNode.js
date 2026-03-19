@@ -27,7 +27,6 @@ import DragListener from '../../../../scenery/js/listeners/DragListener.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -148,5 +147,4 @@ class BallVelocityVectorNode extends BallVectorNode {
   }
 }
 
-collisionLab.register( 'BallVelocityVectorNode', BallVelocityVectorNode );
 export default BallVelocityVectorNode;

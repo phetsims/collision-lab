@@ -28,7 +28,6 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabColors from '../CollisionLabColors.js';
@@ -198,5 +197,4 @@ class MomentaDiagramAccordionBox extends AccordionBox {
   }
 }
 
-collisionLab.register( 'MomentaDiagramAccordionBox', MomentaDiagramAccordionBox );
 export default MomentaDiagramAccordionBox;

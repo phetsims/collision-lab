@@ -11,7 +11,6 @@
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallUtils from '../model/BallUtils.js';
@@ -114,5 +113,4 @@ const BallValuesPanelColumnTypes = EnumerationDeprecated.byMap( {
 
 } );
 
-collisionLab.register( 'BallValuesPanelColumnTypes', BallValuesPanelColumnTypes );
 export default BallValuesPanelColumnTypes;

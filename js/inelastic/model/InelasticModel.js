@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import InelasticBallSystem from './InelasticBallSystem.js';
 import InelasticCollisionEngine from './InelasticCollisionEngine.js';
@@ -83,5 +82,4 @@ class InelasticModel extends CollisionLabModel {
   }
 }
 
-collisionLab.register( 'InelasticModel', InelasticModel );
 export default InelasticModel;

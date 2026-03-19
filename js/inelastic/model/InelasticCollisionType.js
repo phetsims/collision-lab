@@ -9,7 +9,6 @@
  */
 
 import EnumerationDeprecated from '../../../../phet-core/js/EnumerationDeprecated.js';
-import collisionLab from '../../collisionLab.js';
 
 const InelasticCollisionType = EnumerationDeprecated.byKeys( [
 
@@ -32,5 +31,4 @@ const InelasticCollisionType = EnumerationDeprecated.byKeys( [
 
 ] );
 
-collisionLab.register( 'InelasticCollisionType', InelasticCollisionType );
 export default InelasticCollisionType;

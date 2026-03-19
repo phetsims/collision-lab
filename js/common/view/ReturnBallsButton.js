@@ -15,7 +15,6 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
@@ -61,5 +60,4 @@ class ReturnBallsButton extends RectangularPushButton {
   }
 }
 
-collisionLab.register( 'ReturnBallsButton', ReturnBallsButton );
 export default ReturnBallsButton;

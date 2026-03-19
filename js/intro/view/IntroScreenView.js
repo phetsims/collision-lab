@@ -9,7 +9,6 @@
 import merge from '../../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabScreenView from '../../common/view/CollisionLabScreenView.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
@@ -94,5 +93,4 @@ class IntroScreenView extends CollisionLabScreenView {
   }
 }
 
-collisionLab.register( 'IntroScreenView', IntroScreenView );
 export default IntroScreenView;

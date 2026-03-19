@@ -18,7 +18,6 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import Ball from './Ball.js';
 import CollisionLabPath from './CollisionLabPath.js';
 
@@ -160,5 +159,4 @@ class CenterOfMass {
   }
 }
 
-collisionLab.register( 'CenterOfMass', CenterOfMass );
 export default CenterOfMass;

@@ -24,7 +24,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../../common/CollisionLabColors.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 
@@ -123,5 +122,4 @@ class ChangeInMomentumVectorNode extends Node {
 // @public (read-only) {number} - vertical offset between the Ball's center and the Vectors.
 ChangeInMomentumVectorNode.CHANGE_IN_MOMENTUM_Y_OFFSET = 120;
 
-collisionLab.register( 'ChangeInMomentumVectorNode', ChangeInMomentumVectorNode );
 export default ChangeInMomentumVectorNode;

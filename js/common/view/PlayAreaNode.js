@@ -24,7 +24,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import PlayArea from '../model/PlayArea.js';
@@ -164,5 +163,4 @@ class PlayAreaNode extends Node {
   }
 }
 
-collisionLab.register( 'PlayAreaNode', PlayAreaNode );
 export default PlayAreaNode;

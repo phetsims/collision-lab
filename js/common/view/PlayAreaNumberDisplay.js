@@ -24,7 +24,6 @@ import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -90,5 +89,4 @@ class PlayAreaNumberDisplay extends NumberDisplay {
   }
 }
 
-collisionLab.register( 'PlayAreaNumberDisplay', PlayAreaNumberDisplay );
 export default PlayAreaNumberDisplay;

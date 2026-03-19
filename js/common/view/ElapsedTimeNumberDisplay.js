@@ -19,7 +19,6 @@ import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StopwatchNode from '../../../../scenery-phet/js/StopwatchNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 
@@ -61,5 +60,4 @@ class ElapsedTimeNumberDisplay extends NumberDisplay {
   }
 }
 
-collisionLab.register( 'ElapsedTimeNumberDisplay', ElapsedTimeNumberDisplay );
 export default ElapsedTimeNumberDisplay;

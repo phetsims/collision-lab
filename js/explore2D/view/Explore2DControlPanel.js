@@ -14,7 +14,6 @@
 import Property from '../../../../axon/js/Property.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
 import CollisionLabViewProperties from '../../common/view/CollisionLabViewProperties.js';
 
@@ -66,5 +65,4 @@ class Explore2DControlPanel extends CollisionLabControlPanel {
   }
 }
 
-collisionLab.register( 'Explore2DControlPanel', Explore2DControlPanel );
 export default Explore2DControlPanel;

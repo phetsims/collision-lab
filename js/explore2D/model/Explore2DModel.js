@@ -6,7 +6,6 @@
  * @author Brandon Li
  */
 
-import collisionLab from '../../collisionLab.js';
 import CollisionLabModel from '../../common/model/CollisionLabModel.js';
 import Explore2DBallSystem from './Explore2DBallSystem.js';
 import Explore2DPlayArea from './Explore2DPlayArea.js';
@@ -41,5 +40,4 @@ class Explore2DModel extends CollisionLabModel {
   }
 }
 
-collisionLab.register( 'Explore2DModel', Explore2DModel );
 export default Explore2DModel;

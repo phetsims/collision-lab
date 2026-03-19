@@ -24,7 +24,6 @@ import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import MomentaDiagramVector from '../model/MomentaDiagramVector.js';
@@ -140,5 +139,4 @@ class MomentaDiagramVectorNode extends Node {
   }
 }
 
-collisionLab.register( 'MomentaDiagramVectorNode', MomentaDiagramVectorNode );
 export default MomentaDiagramVectorNode;

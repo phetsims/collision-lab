@@ -24,7 +24,6 @@ import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import collisionLab from '../../collisionLab.js';
 import BallSystem from '../model/BallSystem.js';
 import PlayArea from '../model/PlayArea.js';
 import BallNode from './BallNode.js';
@@ -142,5 +141,4 @@ class BallSystemNode extends Node {
   }
 }
 
-collisionLab.register( 'BallSystemNode', BallSystemNode );
 export default BallSystemNode;

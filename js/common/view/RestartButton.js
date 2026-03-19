@@ -9,7 +9,6 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import RestartUndoButton from '../../../../scenery-phet/js/buttons/RestartUndoButton.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 
 class RestartButton extends RestartUndoButton {
@@ -31,5 +30,4 @@ class RestartButton extends RestartUndoButton {
   }
 }
 
-collisionLab.register( 'RestartButton', RestartButton );
 export default RestartButton;

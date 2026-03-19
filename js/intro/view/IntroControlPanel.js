@@ -13,7 +13,6 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabCheckbox from '../../common/view/CollisionLabCheckbox.js';
 import CollisionLabControlPanel from '../../common/view/CollisionLabControlPanel.js';
@@ -72,5 +71,4 @@ class IntroControlPanel extends CollisionLabControlPanel {
   }
 }
 
-collisionLab.register( 'IntroControlPanel', IntroControlPanel );
 export default IntroControlPanel;

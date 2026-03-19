@@ -8,7 +8,6 @@
 
 import EnumerationDeprecatedProperty from '../../../../axon/js/EnumerationDeprecatedProperty.js';
 import merge from '../../../../phet-core/js/merge.js';
-import collisionLab from '../../collisionLab.js';
 import PlayArea from '../../common/model/PlayArea.js';
 import InelasticCollisionType from './InelasticCollisionType.js';
 
@@ -51,5 +50,4 @@ class InelasticPlayArea extends PlayArea {
   }
 }
 
-collisionLab.register( 'InelasticPlayArea', InelasticPlayArea );
 export default InelasticPlayArea;

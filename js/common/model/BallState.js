@@ -25,7 +25,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import collisionLab from '../../collisionLab.js';
 
 class BallState {
 
@@ -73,5 +72,4 @@ class BallState {
   }
 }
 
-collisionLab.register( 'BallState', BallState );
 export default BallState;

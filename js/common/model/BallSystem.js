@@ -30,7 +30,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import pairs from '../../../../phet-core/js/pairs.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import CollisionLabUtils from '../CollisionLabUtils.js';
 import Ball from './Ball.js';
@@ -454,5 +453,4 @@ class BallSystem {
   }
 }
 
-collisionLab.register( 'BallSystem', BallSystem );
 export default BallSystem;

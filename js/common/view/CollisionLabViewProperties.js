@@ -8,7 +8,6 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import collisionLab from '../../collisionLab.js';
 
 class CollisionLabViewProperties {
 
@@ -45,5 +44,4 @@ class CollisionLabViewProperties {
   }
 }
 
-collisionLab.register( 'CollisionLabViewProperties', CollisionLabViewProperties );
 export default CollisionLabViewProperties;

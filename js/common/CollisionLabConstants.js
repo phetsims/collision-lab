@@ -11,7 +11,6 @@ import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import RangeWithValue from '../../../dot/js/RangeWithValue.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
-import collisionLab from '../collisionLab.js';
 import CollisionLabColors from './CollisionLabColors.js';
 import CollisionLabQueryParameters from './CollisionLabQueryParameters.js';
 
@@ -101,5 +100,4 @@ const CollisionLabConstants = {
   CONTROL_FONT: new PhetFont( 16 ) // Default font for controls (buttons, checkboxes, ...).
 };
 
-collisionLab.register( 'CollisionLabConstants', CollisionLabConstants );
 export default CollisionLabConstants;

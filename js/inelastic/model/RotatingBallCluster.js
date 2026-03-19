@@ -21,7 +21,6 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import Ball from '../../common/model/Ball.js';
 import BallState from '../../common/model/BallState.js';
 import CenterOfMass from '../../common/model/CenterOfMass.js';
@@ -135,5 +134,4 @@ class RotatingBallCluster {
   }
 }
 
-collisionLab.register( 'RotatingBallCluster', RotatingBallCluster );
 export default RotatingBallCluster;

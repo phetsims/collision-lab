@@ -9,7 +9,6 @@
 import Property from '../../../axon/js/Property.js';
 import Screen from '../../../joist/js/Screen.js';
 import Tandem from '../../../tandem/js/Tandem.js';
-import collisionLab from '../collisionLab.js';
 import CollisionLabStrings from '../CollisionLabStrings.js';
 import CollisionLabColors from '../common/CollisionLabColors.js';
 import CollisionLabIconFactory from '../common/view/CollisionLabIconFactory.js';
@@ -36,5 +35,4 @@ class IntroScreen extends Screen {
   }
 }
 
-collisionLab.register( 'IntroScreen', IntroScreen );
 export default IntroScreen;

@@ -20,7 +20,6 @@ import RangeWithValue from '../../../../dot/js/RangeWithValue.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import BallState from '../../common/model/BallState.js';
 import BallSystem from '../../common/model/BallSystem.js';
 import InelasticPlayArea from './InelasticPlayArea.js';
@@ -137,5 +136,4 @@ class InelasticBallSystem extends BallSystem {
   }
 }
 
-collisionLab.register( 'InelasticBallSystem', InelasticBallSystem );
 export default InelasticBallSystem;

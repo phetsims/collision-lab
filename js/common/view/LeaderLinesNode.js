@@ -17,7 +17,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import merge from '../../../../phet-core/js/merge.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabColors from '../CollisionLabColors.js';
 
 class LeaderLinesNode extends Path {
@@ -64,5 +63,4 @@ class LeaderLinesNode extends Path {
   }
 }
 
-collisionLab.register( 'LeaderLinesNode', LeaderLinesNode );
 export default LeaderLinesNode;

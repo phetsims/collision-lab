@@ -12,7 +12,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import collisionLab from '../../collisionLab.js';
 
 class PathDataPoint {
 
@@ -42,5 +41,4 @@ class PathDataPoint {
   }
 }
 
-collisionLab.register( 'PathDataPoint', PathDataPoint );
 export default PathDataPoint;

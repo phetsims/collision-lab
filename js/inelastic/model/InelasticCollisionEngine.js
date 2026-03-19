@@ -39,7 +39,6 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../../common/CollisionLabConstants.js';
 import CollisionLabUtils from '../../common/CollisionLabUtils.js';
 import Ball from '../../common/model/Ball.js';
@@ -396,5 +395,4 @@ class InelasticCollisionEngine extends CollisionEngine {
   }
 }
 
-collisionLab.register( 'InelasticCollisionEngine', InelasticCollisionEngine );
 export default InelasticCollisionEngine;

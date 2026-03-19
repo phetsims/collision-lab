@@ -30,7 +30,6 @@ import Spacer from '../../../../scenery/js/nodes/Spacer.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import PaintDef from '../../../../scenery/js/util/PaintDef.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import Explore2DBallSystem from '../../explore2D/model/Explore2DBallSystem.js';
 import InelasticPreset from '../../inelastic/model/InelasticPreset.js';
@@ -319,5 +318,4 @@ function createScreenIcon( ballStates, options ) {
   return new ScreenIcon( icon.addChild( snapshot ) );
 }
 
-collisionLab.register( 'CollisionLabIconFactory', CollisionLabIconFactory );
 export default CollisionLabIconFactory;

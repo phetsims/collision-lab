@@ -18,7 +18,6 @@ import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabConstants from '../CollisionLabConstants.js';
 import BallSystem from './BallSystem.js';
 import CollisionEngine from './CollisionEngine.js';
@@ -231,5 +230,4 @@ class CollisionLabModel {
   stepForwards() { this.stepManual( CollisionLabConstants.TIME_STEP_DURATION ); }
 }
 
-collisionLab.register( 'CollisionLabModel', CollisionLabModel );
 export default CollisionLabModel;

@@ -12,7 +12,6 @@
 
 import merge from '../../../../phet-core/js/merge.js';
 import AssertUtils from '../../../../phetcommon/js/AssertUtils.js';
-import collisionLab from '../../collisionLab.js';
 import CollisionLabStrings from '../../CollisionLabStrings.js';
 import CollisionLabCheckbox from './CollisionLabCheckbox.js';
 
@@ -38,5 +37,4 @@ class MoreDataCheckbox extends CollisionLabCheckbox {
   }
 }
 
-collisionLab.register( 'MoreDataCheckbox', MoreDataCheckbox );
 export default MoreDataCheckbox;
