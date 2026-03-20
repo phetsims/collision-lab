@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * Explore1DPlayArea is a PlayArea sub-type for the 'Explore 1D' screen.

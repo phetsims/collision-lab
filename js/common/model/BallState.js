@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * A multipurpose data structure that immutably contains information about the mass, position, and velocity of a Ball.

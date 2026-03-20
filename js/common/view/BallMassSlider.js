@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * BallMassSlider is a HSlider sub-type that appears in the BallValuesPanel when 'More Data' is off. It allows the user

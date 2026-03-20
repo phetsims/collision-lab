@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * A model for a single Vector that appears in the 'Momenta Diagram' accordion box. This model is intended to be used by

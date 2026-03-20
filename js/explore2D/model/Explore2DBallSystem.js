@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * Explore2DBallSystem is a BallSystem sub-type for the 'Explore 2D' screen.

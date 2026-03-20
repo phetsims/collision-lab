@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2026, University of Colorado Boulder
 
 /**
  * IntroCollisionEngine is a CollisionEngine sub-type for the 'Intro' screen.
