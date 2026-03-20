@@ -124,4 +124,6 @@ type StringsType = {
 
 const CollisionLabStrings = getStringModule( 'COLLISION_LAB' ) as StringsType;
 
+collisionLab.register( 'CollisionLabStrings', CollisionLabStrings );
+
 export default CollisionLabStrings;
